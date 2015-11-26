@@ -231,7 +231,7 @@ class GigController extends Controller {
         $search_text = isset($_REQUEST['s']) ? $_REQUEST['s'] : '';
 
         $criteria = new CDbCriteria;
-        $alias = (new Gig)->getTableAlias(false, false);
+        $alias = $model->getTableAlias(false, false);
 
         $sort_by = $page_size = '';
         $cat_ids = array();
