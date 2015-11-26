@@ -19,10 +19,11 @@ class GigExtra extends CActiveRecord {
 
     const ALLOW_FILE_TYPES = 'jpg, gif, png';
     const ALLOW_FILE_SIZE = 2; //In MB
-    
+
     /**
      * @return string the associated database table name
      */
+
     public function tableName() {
         return '{{gig_extra}}';
     }
@@ -39,7 +40,7 @@ class GigExtra extends CActiveRecord {
             )
         );
     }
-    
+
     /**
      * @return array validation rules for model attributes.
      */
@@ -139,4 +140,18 @@ class GigExtra extends CActiveRecord {
         $this->extra_price = $this->extra_price + 0;
         return parent::afterFind();
     }
+
+    protected function beforeSave() {
+        if (isset($_FILES['Gig']['name']['extra_file']) && !empty($_FILES['Gig']['name']['extra_file'])) {
+            $user_path = $upl_dir = UPLOAD_DIR . '/users/' . $this->gig->tutor_id;
+            $user_extra_path = $user_path . '/gigextra/';
+            $this->setUploadDirectory($user_extra_path);
+            $newName = trim(md5(time())) . '.' . CFileHelper::getExtension($_FILES['Gig']['name']['extra_file']);
+            $dir = DIRECTORY_SEPARATOR . strtolower(get_class($this)) . DIRECTORY_SEPARATOR;
+            if (move_uploaded_file($_FILES['Gig']['tmp_name']['extra_file'], $user_extra_path . $newName))
+                $this->extra_file = $dir . $newName;
+        }
+        return parent::beforeSave();
+    }
+
 }

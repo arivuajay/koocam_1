@@ -93,17 +93,6 @@ class GigController extends Controller {
                         );
                         $extra_model->setAttribute('extra_file', isset($_FILES['Gig']['name']['extra_file']) ? $_FILES['Gig']['name']['extra_file'] : '');
                         if ($extra_model->validate()) {
-                            /* temp solution */
-                            if (!empty($_FILES['Gig']['name']['extra_file'])) {
-                                $user_path = $upl_dir = UPLOAD_DIR . '/users/' . $model->tutor_id;
-                                $user_extra_path = $user_path . '/gigextra/';
-                                $extra_model->setUploadDirectory($user_extra_path);
-                                $newName = trim(md5(time())) . '.' . CFileHelper::getExtension($_FILES['Gig']['name']['extra_file']);
-                                $dir = DIRECTORY_SEPARATOR . strtolower(get_class($extra_model)) . DIRECTORY_SEPARATOR;
-                                if (move_uploaded_file($_FILES['Gig']['tmp_name']['extra_file'], $user_extra_path . $newName))
-                                    $extra_model->extra_file = $dir . $newName;
-                            }
-                            /* end */
                             $extra_model->save(false);
                         }
                     }
@@ -154,26 +143,11 @@ class GigController extends Controller {
                             'extra_description' => $model->extra_description,
                             'gig_id' => $model->gig_id,
                         );
-                        $extra_model->setAttribute('extra_file', isset($_FILES['Gig']['name']['extra_file']) ? $_FILES['Gig']['name']['extra_file'] : '');
-                        if ($extra_model->validate()) {
-                            /* temp solution */
-                            if (!empty($_FILES['Gig']['name']['extra_file'])) {
-                                $user_path = $upl_dir = UPLOAD_DIR . '/users/' . $model->tutor_id;
-                                $user_extra_path = $user_path . '/gigextra/';
-                                $extra_model->setUploadDirectory($user_extra_path);
-                                $newName = trim(md5(time())) . '.' . CFileHelper::getExtension($_FILES['Gig']['name']['extra_file']);
-                                $dir = DIRECTORY_SEPARATOR . strtolower(get_class($extra_model)) . DIRECTORY_SEPARATOR;
-                                if (move_uploaded_file($_FILES['Gig']['tmp_name']['extra_file'], $user_extra_path . $newName))
-                                    $extra_model->extra_file = $dir . $newName;
-                            } else {
-                                unset($extra_model->extra_file);
-                            }
-                            /* end */
-                            $extra_model->save(false);
+                        if(isset($_FILES['Gig']['name']['extra_file']) && !empty($_FILES['Gig']['name']['extra_file'])){
+                            $extra_model->setAttribute('extra_file', $_FILES['Gig']['name']['extra_file']);
                         }
-                    } else {
-                        if (!empty($model->gigExtras)) {
-                            $extra_model->delete();
+                        if ($extra_model->validate()) {
+                            $extra_model->save(false);
                         }
                     }
 

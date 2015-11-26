@@ -184,7 +184,7 @@ class UserProfile extends RActiveRecord {
     }
 
     protected function afterSave() {
-        if ($this->prof_picture) {
+        if ($this->prof_picture && isset($_FILES['User']['name']['prof_picture']) && !empty($_FILES['User']['name']['prof_picture'])) {
             $user_path = UPLOAD_DIR . '/users/' . $this->user_id;
             $source = $destination1 = $user_path . $this->prof_picture;
 

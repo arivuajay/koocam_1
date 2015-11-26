@@ -44,7 +44,9 @@ $this->rightCornerLink = CHtml::link('<i class="fa fa-plus"></i> Create gig', ar
                         'class' => 'booster.widgets.TbToggleColumn',
                         'toggleAction' => 'gig/toggle',
                         'name' => 'status',
-                        'header' => 'Toggle',
+                        'uncheckedButtonLabel' => 'In-active',
+                        'checkedButtonLabel' => 'Active',
+                        'afterToggle'=>'function(success,data){ if (success) alert("Status Changed successfuly"); }',
                     ),
                     array(
                         'name' => 'created_at',

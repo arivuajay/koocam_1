@@ -119,7 +119,6 @@ class Gig extends RActiveRecord {
             array('gig_price, extra_price', 'length', 'max' => 10),
             array('gig_duration', 'numerical', 'integerOnly' => true, 'min' => self::GIG_MIN_DURATION, 'max' => self::GIG_MAX_DURATION),
             array('gig_price', 'numerical', 'integerOnly' => false, 'min' => self::GIG_MIN_AMT, 'max' => self::GIG_MAX_AMT),
-            array('extra_price', 'numerical', 'integerOnly' => false, 'min' => self::EXTRA_MIN_AMT, 'max' => self::EXTRA_MAX_AMT),
             array('gig_avail_visual, status', 'length', 'max' => 1),
             array('gig_title, slug', 'unique'),
             array('gig_media', 'file', 'types' => self::GIG_ALLOW_FILE_TYPES, 'maxSize' => 1024 * 1024 * self::GIG_ALLOW_FILE_SIZE, 'tooLarge' => 'File has to be smaller than ' . self::GIG_ALLOW_FILE_SIZE . 'MB', 'allowEmpty' => false, 'on' => 'create'), array('gig_media', 'file', 'types' => self::GIG_ALLOW_FILE_TYPES, 'maxSize' => 1024 * 1024 * self::GIG_ALLOW_FILE_SIZE, 'tooLarge' => 'File has to be smaller than ' . self::GIG_ALLOW_FILE_SIZE . 'MB', 'allowEmpty' => true, 'on' => 'update'),
@@ -340,12 +339,15 @@ class Gig extends RActiveRecord {
     }
 
     protected function afterSave() {
-        if ($this->gig_media && isset($_FILES['Gig']['name']['gig_media'])) {
+        if ($this->gig_media && isset($_FILES['Gig']['name']['gig_media']) && !empty($_FILES['Gig']['name']['gig_media'])) {
             $gig_path = UPLOAD_DIR . '/users/' . $this->tutor_id;
             $source = $destination1 = $gig_path . $this->gig_media;
 
             $width1 = self::IMG_WIDTH;
             $height1 = self::IMG_HEIGHT;
+            
+            $img = new Img;
+            $img->resampleGD($source, $gig_path , $this->gig_media, $width1, $height1, 1, 0);
 
             $this->setUploadDirectory($gig_path . '/thumb/gig');
             $destination2 = $gig_path . '/thumb' . $this->gig_media;
@@ -353,12 +355,12 @@ class Gig extends RActiveRecord {
             $height2 = self::THUMB_HEIGHT;
 
             $image = Yii::app()->image->load($source);
-
-            $image->resize($width1, $height1, Image::NONE);
-            $image->save($destination1);
-
             $image->resize($width2, $height2, Image::NONE);
             $image->save($destination2);
+        }
+        
+        if ($this->is_extra == 'N' && !empty($this->gigExtras)) {
+            $this->gigExtras->delete();
         }
 
         return parent::afterSave();
@@ -372,6 +374,7 @@ class Gig extends RActiveRecord {
     public function beforeValidate() {
         if ($this->is_extra == 'Y') {
             $this->validatorList->add(CValidator::createValidator('required', $this, 'extra_price, extra_description', array()));
+            $this->validatorList->add(CValidator::createValidator('numerical', $this, 'extra_price', array('min' => self::EXTRA_MIN_AMT, 'max' => self::EXTRA_MAX_AMT, 'integerOnly' => false)));
         }
 
         return parent::beforeValidate();
