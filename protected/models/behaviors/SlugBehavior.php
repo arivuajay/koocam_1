@@ -137,8 +137,8 @@ class SlugBehavior extends CActiveRecordBehavior {
             $title = urldecode($title);
         }
 
-        if (strpos($title, '-') !== false) {
-            $title .= '-' . Myclass::getRandomString(5);
+        if (strpos($title, '-') === false) {
+            $title .= '-' . strtolower(Myclass::getRandomString(5));
         }
 
         return $title;
