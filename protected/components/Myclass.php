@@ -134,4 +134,12 @@ class Myclass extends CController {
         }
         return $limits;
     }
+    
+    public static function getStatus(){
+        return array(
+            "0" => "In-Active",
+            "1" => "Active",
+            "2" => "Delete"
+        );
+    }
 }

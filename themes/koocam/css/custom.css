@@ -15,3 +15,7 @@ label{
 .has-error .bootstrap-select .dropdown-toggle, .error .bootstrap-select .dropdown-toggle{
     border-color: #e2e0e0 !important;
 }
+
+.alert {
+  margin: 20px 0 10px !important;
+}

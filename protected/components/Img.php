@@ -77,11 +77,7 @@ class Img {
 
     public function mkdir($targetdir) {
         if (!is_dir($targetdir)) {
-            App::uses('Folder', 'Utility');
-            $dir = new Folder($targetdir, true, 0777);
-            if (!$dir) {
-                return false;
-            }
+            mkdir($targetdir, 0777);
         }
         return true;
     }
@@ -99,7 +95,7 @@ class Img {
     public function resampleGD($srcPath, $targetdir, $image, $dst_w = null, $dst_h = null, $fixedSize = false, $centerCrop = false) {
 
         $dstPath = $targetdir . $image;
-//		$this->mkdir($targetdir);
+        $this->mkdir($targetdir);
 
         list($src_w, $src_h, $type) = getimagesize($srcPath);
 
@@ -158,7 +154,24 @@ class Img {
         }
 
         ImageCopyResampled($dst, $src, $dst_x, $dst_y, 0, 0, $new_w, $new_h, $src_w, $src_h);
-        imagejpeg($dst, $dstPath, 100);
+
+        switch ($ext) {
+            case 'gif' :
+                imagegif($dst, $dstPath);
+                break;
+            case 'png' :
+                imagepng($dst, $dstPath);
+                break;
+            case 'jpg' :
+                imagejpeg($dst, $dstPath, 100);
+                break;
+            case 'jpeg' :
+                imagejpeg($dst, $dstPath, 100);
+                break;
+            default :
+                imagejpeg($dst, $dstPath, 100);
+                break;
+        }
 
         @chmod($dst, 0777);
 

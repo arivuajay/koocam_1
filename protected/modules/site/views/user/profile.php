@@ -14,7 +14,7 @@ $themeUrl = $this->themeUrl;
                 <h2> 
                     <?php echo CHtml::link($model->fullname, array('/site/user/profile', 'slug' => $model->slug)); ?> 
                     <?php if (!Yii::app()->user->isGuest) { ?>
-                        <button class="btn btn-default" data-toggle="modal" data-target=".bs-example-modal-sm2" data-dismiss=".bs-example-modal-sm2"> <i class="fa fa-pencil"></i> </button>
+                        <button class="btn btn-default edit-btn" data-toggle="modal" data-target=".bs-example-modal-sm2" data-dismiss=".bs-example-modal-sm2"> <i class="fa fa-pencil"></i> </button>
                     <?php } ?>
 
                 </h2>

@@ -27,7 +27,7 @@ img {
 }
 #home:before {
 	content: "";
-	background-color: rgba(0, 0, 0, 0.7);
+	background-color: rgba(0, 0, 0, 0.6);
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -730,6 +730,10 @@ a:hover {
 	width:100%;
 	float:left;
 	position:relative;
+	-webkit-box-shadow: 1px 1px 5px 0px rgba(0, 0, 0, 0.5);
+-moz-box-shadow:    1px 1px 5px 0px rgba(0, 0, 0, 0.5);
+box-shadow:         1px 1px 5px 0px rgba(0, 0, 0, 0.5);
+border:#ffffff solid 1px;
 }
 .price-bg {
 	width:100px;
@@ -1212,4 +1216,29 @@ label {
 {
 	background:#b81a1e;
 	color:#ffffff;
+}
+
+
+.panel-heading .accordion-toggle:after {
+    /* symbol for "opening" panels */
+    font-family: 'Glyphicons Halflings';  /* essential for enabling glyphicon */
+    content: "\e114";    /* adjust as needed, taken from bootstrap.css */
+    float: right;        /* adjust as needed */
+    color: grey;         /* adjust as needed */
+}
+.panel-heading .accordion-toggle.collapsed:after {
+    /* symbol for "collapsed" panels */
+    content: "\e080";    /* adjust as needed, taken from bootstrap.css */
+}
+
+.panel-heading h4
+{
+	margin:0px;
+	padding:0px;
+}
+
+.accordion-toggle
+{
+	width:100%;
+	display:block
 }

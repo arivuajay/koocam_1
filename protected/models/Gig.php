@@ -33,7 +33,6 @@ class Gig extends RActiveRecord {
     public $extra_price;
     public $extra_description;
     public $extra_file;
-    public $is_age;
     public $tutorUserName;
     public $gigCategory;
 
@@ -111,10 +110,9 @@ class Gig extends RActiveRecord {
         // will receive user inputs.
         return array(
             array('gig_title, cat_id, gig_tag, gig_description, gig_duration, gig_price', 'required'),
-            array('tutor_id, gig_title, cat_id, gig_tag, gig_description, gig_duration, gig_price', 'required', 'on' => 'admin_create'),
-            array('tutor_id, gig_title, cat_id, gig_tag, gig_description, gig_duration, gig_price', 'required', 'on' => 'admin_update'),
+            array('tutor_id', 'required', 'on' => 'admin_create'),
+            array('tutor_id', 'required', 'on' => 'admin_update'),
             array('tutor_id, cat_id, created_by, modified_by', 'numerical', 'integerOnly' => true),
-            array('is_age', 'required', 'on' => 'create', 'message' => 'Age must be 16 years or greater'),
             array('gig_title', 'length', 'max' => 100),
             array('gig_media', 'length', 'max' => 500),
             array('gig_tag', 'length', 'max' => 255),
@@ -124,8 +122,10 @@ class Gig extends RActiveRecord {
             array('extra_price', 'numerical', 'integerOnly' => false, 'min' => self::EXTRA_MIN_AMT, 'max' => self::EXTRA_MAX_AMT),
             array('gig_avail_visual, status', 'length', 'max' => 1),
             array('gig_title, slug', 'unique'),
-            array('gig_media', 'file', 'types' => self::GIG_ALLOW_FILE_TYPES, 'maxSize' => 1024 * 1024 * self::GIG_ALLOW_FILE_SIZE, 'tooLarge' => 'File has to be smaller than ' . self::GIG_ALLOW_FILE_SIZE . 'MB', 'allowEmpty' => false, 'on' => 'create'),
-            array('gig_media', 'file', 'types' => self::GIG_ALLOW_FILE_TYPES, 'maxSize' => 1024 * 1024 * self::GIG_ALLOW_FILE_SIZE, 'tooLarge' => 'File has to be smaller than ' . self::GIG_ALLOW_FILE_SIZE . 'MB', 'allowEmpty' => true, 'on' => 'update'),
+            array('gig_media', 'file', 'types' => self::GIG_ALLOW_FILE_TYPES, 'maxSize' => 1024 * 1024 * self::GIG_ALLOW_FILE_SIZE, 'tooLarge' => 'File has to be smaller than ' . self::GIG_ALLOW_FILE_SIZE . 'MB', 'allowEmpty' => false, 'on' => 'create'), array('gig_media', 'file', 'types' => self::GIG_ALLOW_FILE_TYPES, 'maxSize' => 1024 * 1024 * self::GIG_ALLOW_FILE_SIZE, 'tooLarge' => 'File has to be smaller than ' . self::GIG_ALLOW_FILE_SIZE . 'MB', 'allowEmpty' => true, 'on' => 'update'),
+            
+            array('gig_media', 'file', 'types' => self::GIG_ALLOW_FILE_TYPES, 'maxSize' => 1024 * 1024 * self::GIG_ALLOW_FILE_SIZE, 'tooLarge' => 'File has to be smaller than ' . self::GIG_ALLOW_FILE_SIZE . 'MB', 'allowEmpty' => false, 'on' => 'admin_create'), 
+            array('gig_media', 'file', 'types' => self::GIG_ALLOW_FILE_TYPES, 'maxSize' => 1024 * 1024 * self::GIG_ALLOW_FILE_SIZE, 'tooLarge' => 'File has to be smaller than ' . self::GIG_ALLOW_FILE_SIZE . 'MB', 'allowEmpty' => true, 'on' => 'admin_update'),            
             array('extra_file', 'file', 'types' => self::EXTRA_ALLOW_FILE_TYPES, 'maxSize' => 1024 * 1024 * self::EXTRA_ALLOW_FILE_SIZE, 'tooLarge' => 'File has to be smaller than ' . self::GIG_ALLOW_FILE_SIZE . 'MB', 'allowEmpty' => true),
             array('gig_price', 'priceValidate'),
             array('gig_description, gig_duration, created_at, modified_at, is_extra, extra_price, extra_description, tutorUserName, gigCategory, extra_file', 'safe'),
@@ -163,7 +163,7 @@ class Gig extends RActiveRecord {
 
         $i = 1;
         $iMax = count($limits);
-        
+
 //      old calculations
 //        foreach ($limits as $calc_timestamp => $calc_price) {
 //            if ($given_price < $calc_price) {
@@ -180,8 +180,8 @@ class Gig extends RActiveRecord {
 //        }
 
         foreach ($limits as $calc_timestamp => $calc_price) {
-            if($given_timestamp >= $calc_timestamp){
-                if($given_price < $calc_price){
+            if ($given_timestamp >= $calc_timestamp) {
+                if ($given_price < $calc_price) {
                     $error = true;
                     $err_price = $calc_price;
                 }
@@ -235,7 +235,6 @@ class Gig extends RActiveRecord {
             'is_extra' => 'Extras',
             'extra_price' => 'Extra File Price ($)',
             'extra_description' => 'About Extra File',
-            'is_age' => 'I am atleast 16years Old',
             'status' => 'Status',
             'gig_important' => 'Important',
             'created_at' => 'Created At',
@@ -341,7 +340,7 @@ class Gig extends RActiveRecord {
     }
 
     protected function afterSave() {
-        if ($this->gig_media) {
+        if ($this->gig_media && isset($_FILES['Gig']['name']['gig_media'])) {
             $gig_path = UPLOAD_DIR . '/users/' . $this->tutor_id;
             $source = $destination1 = $gig_path . $this->gig_media;
 
@@ -366,16 +365,13 @@ class Gig extends RActiveRecord {
     }
 
     protected function beforeSave() {
-        $this->gig_duration = date('H:i:s', mktime(0, $this->gig_duration));
+        $this->gig_duration = date('H:i', mktime(0, $this->gig_duration));
         return parent::beforeSave();
     }
 
     public function beforeValidate() {
         if ($this->is_extra == 'Y') {
-            if($this->isNewRecord)
-                $this->validatorList->add(CValidator::createValidator('required', $this, 'extra_file', array()));
-            $this->validatorList->add(CValidator::createValidator('required', $this, 'extra_price', array()));
-            $this->validatorList->add(CValidator::createValidator('required', $this, 'extra_description', array()));
+            $this->validatorList->add(CValidator::createValidator('required', $this, 'extra_price, extra_description', array()));
         }
 
         return parent::beforeValidate();

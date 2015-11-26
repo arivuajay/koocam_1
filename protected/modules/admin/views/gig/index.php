@@ -32,13 +32,19 @@ $this->rightCornerLink = CHtml::link('<i class="fa fa-plus"></i> Create gig', ar
                     ),
                     'gig_duration',
                     'gig_price',
+//                    array(
+//                        'header' => 'Status',
+//                        'name' => 'status',
+//                        'type' => 'raw',
+//                        'value' => function($data) {
+//                            echo ($data->status == 1) ? '<i class="fa fa-circle text-green-500"></i>' : '<i class="fa fa-circle text-red-500"></i>';
+//                        },
+//                    ),
                     array(
-                        'header' => 'Status',
+                        'class' => 'booster.widgets.TbToggleColumn',
+                        'toggleAction' => 'gig/toggle',
                         'name' => 'status',
-                        'type' => 'raw',
-                        'value' => function($data) {
-                            echo ($data->status == 1) ? '<i class="fa fa-circle text-green-500"></i>' : '<i class="fa fa-circle text-red-500"></i>';
-                        },
+                        'header' => 'Toggle',
                     ),
                     array(
                         'name' => 'created_at',

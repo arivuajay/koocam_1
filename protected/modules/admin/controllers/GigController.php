@@ -28,12 +28,21 @@ class GigController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'delete'),
+                'actions' => array('index', 'view', 'create', 'update', 'delete', 'toggle'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
                 'users' => array('*'),
             ),
+        );
+    }
+
+    public function actions() {
+        return array(
+            'toggle' => array(
+                'class' => 'booster.actions.TbToggleAction',
+                'modelName' => 'Gig',
+            )
         );
     }
 
@@ -66,15 +75,42 @@ class GigController extends Controller {
      */
     public function actionCreate() {
         $model = new Gig('admin_create');
-
-        // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation($model);
 
         if (isset($_POST['Gig'])) {
             $model->attributes = $_POST['Gig'];
-            if ($model->save()) {
-                Yii::app()->user->setFlash('success', 'Gig Created Successfully!!!');
-                $this->redirect(array('/admin/gig/index'));
+            $model->setAttribute('gig_media', isset($_FILES['Gig']['name']['gig_media']) ? $_FILES['Gig']['name']['gig_media'] : '');
+            if ($model->validate()) {
+                $model->setUploadDirectory(UPLOAD_DIR . '/users/' . $model->tutor_id);
+                $model->uploadFile();
+                if ($model->save(false)) {
+                    if ($model->is_extra == 'Y') {
+                        $extra_model = new GigExtra;
+                        $extra_model->attributes = array(
+                            'extra_price' => $model->extra_price,
+                            'extra_description' => $model->extra_description,
+                            'gig_id' => $model->gig_id,
+                        );
+                        $extra_model->setAttribute('extra_file', isset($_FILES['Gig']['name']['extra_file']) ? $_FILES['Gig']['name']['extra_file'] : '');
+                        if ($extra_model->validate()) {
+                            /* temp solution */
+                            if (!empty($_FILES['Gig']['name']['extra_file'])) {
+                                $user_path = $upl_dir = UPLOAD_DIR . '/users/' . $model->tutor_id;
+                                $user_extra_path = $user_path . '/gigextra/';
+                                $extra_model->setUploadDirectory($user_extra_path);
+                                $newName = trim(md5(time())) . '.' . CFileHelper::getExtension($_FILES['Gig']['name']['extra_file']);
+                                $dir = DIRECTORY_SEPARATOR . strtolower(get_class($extra_model)) . DIRECTORY_SEPARATOR;
+                                if (move_uploaded_file($_FILES['Gig']['tmp_name']['extra_file'], $user_extra_path . $newName))
+                                    $extra_model->extra_file = $dir . $newName;
+                            }
+                            /* end */
+                            $extra_model->save(false);
+                        }
+                    }
+
+                    Yii::app()->user->setFlash('success', 'Gig Created Successfully!!!');
+                    $this->redirect(array('/admin/gig/index'));
+                }
             }
         }
 
@@ -92,14 +128,58 @@ class GigController extends Controller {
         $model = $this->loadModel($id);
         $model->scenario = 'admin_update';
 
-        // Uncomment the following line if AJAX validation is needed
+        if (empty($model->gigExtras)) {
+            $extra_model = new GigExtra;
+        } else {
+            $extra_model = $model->gigExtras;
+        }
+
         $this->performAjaxValidation($model);
 
         if (isset($_POST['Gig'])) {
             $model->attributes = $_POST['Gig'];
-            if ($model->save()) {
-                Yii::app()->user->setFlash('success', 'Gig Updated Successfully!!!');
-                $this->redirect(array('/admin/gig/index'));
+            $model->setAttribute('gig_media', isset($_FILES['Gig']['name']['gig_media']) ? $_FILES['Gig']['name']['gig_media'] : '');
+            if ($model->validate()) {
+                if ($model->gig_media) {
+                    $model->setUploadDirectory(UPLOAD_DIR . '/users/' . $model->tutor_id);
+                    $model->uploadFile();
+                } else {
+                    unset($model->gig_media);
+                }
+
+                if ($model->save(false)) {
+                    if ($model->is_extra == 'Y') {
+                        $extra_model->attributes = array(
+                            'extra_price' => $model->extra_price,
+                            'extra_description' => $model->extra_description,
+                            'gig_id' => $model->gig_id,
+                        );
+                        $extra_model->setAttribute('extra_file', isset($_FILES['Gig']['name']['extra_file']) ? $_FILES['Gig']['name']['extra_file'] : '');
+                        if ($extra_model->validate()) {
+                            /* temp solution */
+                            if (!empty($_FILES['Gig']['name']['extra_file'])) {
+                                $user_path = $upl_dir = UPLOAD_DIR . '/users/' . $model->tutor_id;
+                                $user_extra_path = $user_path . '/gigextra/';
+                                $extra_model->setUploadDirectory($user_extra_path);
+                                $newName = trim(md5(time())) . '.' . CFileHelper::getExtension($_FILES['Gig']['name']['extra_file']);
+                                $dir = DIRECTORY_SEPARATOR . strtolower(get_class($extra_model)) . DIRECTORY_SEPARATOR;
+                                if (move_uploaded_file($_FILES['Gig']['tmp_name']['extra_file'], $user_extra_path . $newName))
+                                    $extra_model->extra_file = $dir . $newName;
+                            } else {
+                                unset($extra_model->extra_file);
+                            }
+                            /* end */
+                            $extra_model->save(false);
+                        }
+                    } else {
+                        if (!empty($model->gigExtras)) {
+                            $extra_model->delete();
+                        }
+                    }
+
+                    Yii::app()->user->setFlash('success', 'Gig Updated Successfully!!!');
+                    $this->redirect(array('/admin/gig/index'));
+                }
             }
         }
 
