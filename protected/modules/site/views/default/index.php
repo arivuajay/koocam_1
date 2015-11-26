@@ -1,6 +1,7 @@
 <?php
 /* @var $this DefaultController */
 /* @var $category GigCategory */
+/* @var $form CActiveForm */
 
 $this->title = 'Koocam - Home';
 $themeUrl = $this->themeUrl;
@@ -16,19 +17,7 @@ $themeUrl = $this->themeUrl;
                         learning new skills</h2>
                     <div class="search-bg">
                         <div class="row">
-                            <div class="col-lg-12">
-                                <div class="input-group">
-                                    <input type="text" class="form-control" placeholder="What you want to learn today ?...... ">
-                                    <span class="input-group-btn">
-                                        <button class="btn btn-default search-btn" type="button"> <i class="fa fa-search"></i> </button>
-                                    </span> </div>
-                                <!-- /input-group --> 
-                            </div>
-                            <div class="col-xs-9 col-sm-4 col-md-4 col-lg-4 site-feature"> <i class="fa fa-book"></i> More than 1000 courses </div>
-                            <div class="col-xs-9 col-sm-4 col-md-4 col-lg-4 site-feature"> <i class="fa fa-group"></i> Over 8 million students </div>
-                            <div class="col-xs-9 col-sm-4 col-md-4 col-lg-4 site-feature"> <i class="fa fa-laptop"></i> Learn at your pace on any device</div>
-
-                            <!-- /.col-lg-6 --> 
+                            <?php $this->renderPartial('/gig/_search', compact('model')); ?>
                         </div>
                         <!-- /.row --> 
                     </div>
@@ -46,54 +35,54 @@ $themeUrl = $this->themeUrl;
                 <h2> Popular CATEGORY <br/>
                     <span> Lorem ipsum dolor sit amet, consectetur adipiscing elit. </span></h2>
             </div>
-            <?php 
+            <?php
             $categories = GigCategory::popularCategory();
             $col = array(
                 0 => array(
-                    'xs' => 12, 
-                    'sm' => 4, 
-                    'md' => 4, 
-                    'lg' => 4, 
+                    'xs' => 12,
+                    'sm' => 4,
+                    'md' => 4,
+                    'lg' => 4,
                 ),
                 1 => array(
-                    'xs' => 12, 
-                    'sm' => 4, 
-                    'md' => 4, 
-                    'lg' => 4, 
+                    'xs' => 12,
+                    'sm' => 4,
+                    'md' => 4,
+                    'lg' => 4,
                 ),
                 2 => array(
-                    'xs' => 12, 
-                    'sm' => 4, 
-                    'md' => 4, 
-                    'lg' => 4, 
+                    'xs' => 12,
+                    'sm' => 4,
+                    'md' => 4,
+                    'lg' => 4,
                 ),
                 3 => array(
-                    'xs' => 12, 
-                    'sm' => 6, 
-                    'md' => 6, 
-                    'lg' => 6, 
+                    'xs' => 12,
+                    'sm' => 6,
+                    'md' => 6,
+                    'lg' => 6,
                 ),
                 4 => array(
-                    'xs' => 12, 
-                    'sm' => 3, 
-                    'md' => 3, 
-                    'lg' => 3, 
+                    'xs' => 12,
+                    'sm' => 3,
+                    'md' => 3,
+                    'lg' => 3,
                 ),
                 5 => array(
-                    'xs' => 12, 
-                    'sm' => 3, 
-                    'md' => 3, 
-                    'lg' => 3, 
+                    'xs' => 12,
+                    'sm' => 3,
+                    'md' => 3,
+                    'lg' => 3,
                 ),
             );
             foreach ($categories as $key => $category):
-            ?>
-            <div class="col-xs-<?php echo $col[$key]['xs'] ?> col-sm-<?php echo $col[$key]['sm'] ?> col-md-<?php echo $col[$key]['md'] ?> col-lg-<?php echo $col[$key]['lg'] ?> cate-cont">
-                <div class="cate-img">
-                    <div class="cate-bg"> <a href="#"> <?php echo $category->cat_name; ?> </a> </div>
-                    <?php echo CHtml::image($category->getFilePath(), '', array('width' => "640", 'height' => "540")); ?>
+                ?>
+                <div class="col-xs-<?php echo $col[$key]['xs'] ?> col-sm-<?php echo $col[$key]['sm'] ?> col-md-<?php echo $col[$key]['md'] ?> col-lg-<?php echo $col[$key]['lg'] ?> cate-cont">
+                    <div class="cate-img">
+                        <div class="cate-bg"> <a href="#"> <?php echo $category->cat_name; ?> </a> </div>
+                        <?php echo CHtml::image($category->getFilePath(), '', array('width' => "640", 'height' => "540")); ?>
+                    </div>
                 </div>
-            </div>
             <?php endforeach; ?>
             <div class="explore-btn"> <a href="#" class="btn btn-default  btn-lg explorebtn"> Browse All Categories </a> </div>
         </div>
@@ -108,7 +97,7 @@ $themeUrl = $this->themeUrl;
                 <h2> top Instructor <br>
                     <span> Lorem ipsum dolor sit amet, consectetur adipiscing elit. </span></h2>
             </div>
-            <?php 
+            <?php
             $gigs = Gig::topInstructors();
             $this->renderPartial('/gig/_gig_carousal', compact('gigs', 'themeUrl'));
             ?>
@@ -221,7 +210,6 @@ $js = <<< EOD
             pauseOnHover: true,
             interval: 5000,
         });
-
     });
                 
 EOD;

@@ -44,7 +44,9 @@ class DefaultController extends Controller {
     }
 
     public function actionIndex() {
-        $this->render('index');
+        $model = new Gig('search');
+        $this->performAjaxValidation($model);
+        $this->render('index', compact('model'));
     }
 
     public function actionLogin() {

@@ -120,7 +120,7 @@ $categories = GigCategory::getCategoryList();
             </div>
             <div class="form-group">
                 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
-                    <?php echo CHtml::submitButton($model->isNewRecord ? ' Create Your Gig' : ' Update Your Gig', array('class' => 'btn btn-default  btn-lg explorebtn form-btn')) ?>
+                    <?php echo CHtml::submitButton($model->isNewRecord ? ' Create Your Gig' : ' Update Your Gig', array('class' => 'btn btn-default  btn-lg explorebtn form-btn')); ?>
                 </div>
             </div>
 

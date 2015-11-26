@@ -59,7 +59,7 @@ class GigCategory extends RActiveRecord {
         // will receive user inputs.
         return array(
             array('cat_name', 'required'),
-            array('cat_name', 'unique'),
+            array('cat_name, slug', 'unique'),
             array('created_by, modified_by', 'numerical', 'integerOnly' => true),
             array('cat_name', 'length', 'max' => 100),
             array('cat_image', 'length', 'max' => 500),

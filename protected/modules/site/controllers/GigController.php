@@ -28,7 +28,7 @@ class GigController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('view'),
+                'actions' => array('view', 'search'),
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -238,6 +238,49 @@ class GigController extends Controller {
             echo $err_price;
         }
         Yii::app()->end();
+    }
+
+    public function actionSearch() {
+        $model = new Gig('search');
+        $this->performAjaxValidation($model);
+
+        $search_text = isset($_REQUEST['s']) ? $_REQUEST['s'] : '';
+
+        $criteria = new CDbCriteria;
+        $alias = (new Gig)->getTableAlias(false, false);
+
+        $sort_by = $page_size = '';
+        $cat_ids = array();
+        
+        if (isset($_REQUEST['sort_by'])) {
+            $criteria->order = $sort_by = $_REQUEST['sort_by'];
+        }
+        if (isset($_REQUEST['cat_id'])) {
+            $cat_ids = $_REQUEST['cat_id'];
+            $criteria->addInCondition('cat_id', $cat_ids);
+        }
+        if (isset($_REQUEST['page_size'])) {
+            $page_size = $_REQUEST['page_size'];
+        } else {
+            $page_size = Gig::GIG_SEARCH_LIMIT;
+        }
+        
+        $criteria->compare($alias . '.gig_title', $search_text, true);
+
+        $pages = new CPagination(Gig::model()->count($criteria));
+        $pages->pageSize = $page_size;
+        $pages->applyLimit($criteria);
+
+        $results = Gig::model()->findAll($criteria);
+
+        if (Yii::app()->request->isAjaxRequest) {
+            $result = $this->renderPartial('_search_results', compact('results', 'pages'), true);
+            $return = array('item_count' => "({$pages->itemCount} Results Found)", 'result' => $result);
+            echo json_encode($return);
+            Yii::app()->end();
+        } else {
+            $this->render('search', compact('model', 'results', 'search_text', 'pages', 'sort_by', 'page_size', 'cat_ids'));
+        }
     }
 
 }

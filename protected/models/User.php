@@ -26,7 +26,12 @@ class User extends RActiveRecord {
     const GIG_PER_USER = 20;
 
     public function getFullname() {
-        return $this->userProf->prof_firstname . ' ' . $this->userProf->prof_lastname;
+        if($this->userProf->prof_firstname == '' && $this->userProf->prof_lastname == ''){
+            $fullname = $this->username;
+        }else{
+            $fullname = $this->userProf->prof_firstname . ' ' . $this->userProf->prof_lastname;
+        }
+        return $fullname;
     }
 
     public $confirm_password;
@@ -72,7 +77,7 @@ class User extends RActiveRecord {
             array('username, email', 'required', 'on' => 'admin_edit'),
             array('username, password_hash, password_reset_token, email', 'length', 'max' => 255),
             array('status, live_status', 'length', 'max' => 1),
-            array('email, username', 'unique'),
+            array('email, username, slug', 'unique'),
             array('email', 'email'),
             array('password_hash', 'compare', 'compareAttribute' => 'confirm_password', 'on' => 'register'),
             array('created_at, modified_at, user_activation_key, user_login_ip, user_last_login', 'safe'),

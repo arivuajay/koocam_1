@@ -51,6 +51,8 @@ class Gig extends RActiveRecord {
     const IMG_HEIGHT = 528;
     const THUMB_WIDTH = 500;
     const THUMB_HEIGHT = 440;
+    
+    const GIG_SEARCH_LIMIT = 9;
 
     /**
      * @return string the associated database table name
@@ -121,7 +123,7 @@ class Gig extends RActiveRecord {
             array('gig_price', 'numerical', 'integerOnly' => false, 'min' => self::GIG_MIN_AMT, 'max' => self::GIG_MAX_AMT),
             array('extra_price', 'numerical', 'integerOnly' => false, 'min' => self::EXTRA_MIN_AMT, 'max' => self::EXTRA_MAX_AMT),
             array('gig_avail_visual, status', 'length', 'max' => 1),
-            array('gig_title', 'unique'),
+            array('gig_title, slug', 'unique'),
             array('gig_media', 'file', 'types' => self::GIG_ALLOW_FILE_TYPES, 'maxSize' => 1024 * 1024 * self::GIG_ALLOW_FILE_SIZE, 'tooLarge' => 'File has to be smaller than ' . self::GIG_ALLOW_FILE_SIZE . 'MB', 'allowEmpty' => false, 'on' => 'create'),
             array('gig_media', 'file', 'types' => self::GIG_ALLOW_FILE_TYPES, 'maxSize' => 1024 * 1024 * self::GIG_ALLOW_FILE_SIZE, 'tooLarge' => 'File has to be smaller than ' . self::GIG_ALLOW_FILE_SIZE . 'MB', 'allowEmpty' => true, 'on' => 'update'),
             array('extra_file', 'file', 'types' => self::EXTRA_ALLOW_FILE_TYPES, 'maxSize' => 1024 * 1024 * self::EXTRA_ALLOW_FILE_SIZE, 'tooLarge' => 'File has to be smaller than ' . self::GIG_ALLOW_FILE_SIZE . 'MB', 'allowEmpty' => true),
@@ -310,6 +312,10 @@ class Gig extends RActiveRecord {
 
     public static function topInstructors() {
         return Gig::model()->active()->findAll(array('limit' => 10));
+    }
+
+    public static function featuredGigs() {
+        return Gig::model()->active()->findAll(array('limit' => 4));
     }
 
     public function getUploadpath() {

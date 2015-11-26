@@ -92,8 +92,8 @@ $themeUrl = $this->themeUrl;
                                             <?php echo Yii::app()->user->name; ?> <span class="caret"></span>
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu2 pull-right bullet" >
-                                        <li><?php echo CHtml::link(' My Profile ', array('/site/user/profile', 'slug' => Yii::app()->user->slug), array()); ?></li>
-                                        <li><a href="#">My Profile</a></li>
+                                            <?php $slug = User::model()->findByPk(Yii::app()->user->id)->slug; ?>
+                                        <li><?php echo CHtml::link(' My Profile ', array('/site/user/profile', 'slug' => $slug), array()); ?></li>
                                         <li><a href="#">My Purchase</a></li>
                                         <li><a href="#">My Payments</a></li>
                                         <li class="divider" role="separator"></li>
