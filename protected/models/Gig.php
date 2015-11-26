@@ -161,13 +161,25 @@ class Gig extends RActiveRecord {
 
         $i = 1;
         $iMax = count($limits);
+        
+//      old calculations
+//        foreach ($limits as $calc_timestamp => $calc_price) {
+//            if ($given_price < $calc_price) {
+//                if (($given_timestamp > $prev_timestamp && $given_timestamp < $calc_timestamp)) {
+//                    $error = true;
+//                    $err_price = $calc_price;
+//                } else if ($given_timestamp > $calc_timestamp && $i == $iMax) {
+//                    $error = true;
+//                    $err_price = $calc_price;
+//                }
+//            }
+//            $prev_timestamp = $calc_timestamp;
+//            $i++;
+//        }
 
         foreach ($limits as $calc_timestamp => $calc_price) {
-            if ($given_price < $calc_price) {
-                if (($given_timestamp > $prev_timestamp && $given_timestamp <= $calc_timestamp)) {
-                    $error = true;
-                    $err_price = $calc_price;
-                } else if ($given_timestamp > $calc_timestamp && $i == $iMax) {
+            if($given_timestamp >= $calc_timestamp){
+                if($given_price < $calc_price){
                     $error = true;
                     $err_price = $calc_price;
                 }

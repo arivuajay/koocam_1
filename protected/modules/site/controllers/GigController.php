@@ -213,11 +213,22 @@ class GigController extends Controller {
             $i = 1;
             $iMax = count($limits);
 
+//          Old Codings
+//            foreach ($limits as $calc_timestamp => $calc_price) {
+//                if ($given_price < $calc_price) {
+//                    if (($given_timestamp > $prev_timestamp && $given_timestamp <= $calc_timestamp)) {
+//                        $err_price = $calc_price;
+//                    } else if ($given_timestamp > $calc_timestamp && $i == $iMax) {
+//                        $err_price = $calc_price;
+//                    }
+//                }
+//                $prev_timestamp = $calc_timestamp;
+//                $i++;
+//            }
             foreach ($limits as $calc_timestamp => $calc_price) {
-                if ($given_price < $calc_price) {
-                    if (($given_timestamp > $prev_timestamp && $given_timestamp <= $calc_timestamp)) {
-                        $err_price = $calc_price;
-                    } else if ($given_timestamp > $calc_timestamp && $i == $iMax) {
+                if ($given_timestamp >= $calc_timestamp) {
+                    if ($given_price < $calc_price) {
+                        $error = true;
                         $err_price = $calc_price;
                     }
                 }
