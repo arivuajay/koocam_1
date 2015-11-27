@@ -67,6 +67,12 @@ $themeUrl = $this->themeUrl;
             </div>
 
             <div class = "form-group form-control-material static">
+                <?php echo $form->textField($model, 'gig_important', array('class' => 'form-control', 'rows' => 6, 'cols' => 50)); ?>
+                <?php echo $form->labelEx($model, 'gig_important'); ?>
+                <?php echo $form->error($model, 'gig_important'); ?>
+            </div>
+
+            <div class = "form-group form-control-material static">
                 <?php echo $form->textField($model, 'gig_duration', array('class' => 'form-control time')); ?>
                 <?php echo $form->labelEx($model, 'gig_duration'); ?>
                 <?php // echo $form->error($model, 'gig_duration'); ?>
