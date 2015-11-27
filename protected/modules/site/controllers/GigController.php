@@ -133,7 +133,8 @@ class GigController extends Controller {
      */
     public function actionView($slug) {
         $model = $this->loadModelSlug($slug);
-        $this->render('view', compact('model'));
+        $booking_model = new GigBooking();
+        $this->render('view', compact('model', 'booking_model'));
     }
 
     /**

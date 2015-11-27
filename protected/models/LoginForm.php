@@ -70,7 +70,7 @@ class LoginForm extends CFormModel {
         endif;
         if ($this->_identity->errorCode === UserIdentity::ERROR_NONE):
             //$duration= 3600*24*30; // 30 days
-            $duration = $this->rememberMe ? 3600 * 24 * 30 : 0; // 30 days
+            $duration = $this->rememberMe ? 3600 * 24 * 0.5 : 0; // 30 days
 
             if (Yii::app()->user->getStateKeyPrefix() == '_user') {
                 $model = User::model()->findByPk($this->_identity->id);

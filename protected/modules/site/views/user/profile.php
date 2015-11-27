@@ -5,6 +5,7 @@
 
 $this->title = 'Koocam - Profile';
 $themeUrl = $this->themeUrl;
+$is_user = !Yii::app()->user->isGuest && Yii::app()->user->id == $model->user_id;
 ?>
 
 <div id="inner-banner" class="tt-fullHeight3">
@@ -13,7 +14,7 @@ $themeUrl = $this->themeUrl;
             <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8 col-md-offset-1  col-lg-offset-2 page-details ">
                 <h2> 
                     <?php echo CHtml::link($model->fullname, array('/site/user/profile', 'slug' => $model->slug)); ?> 
-                    <?php if (!Yii::app()->user->isGuest) { ?>
+                    <?php if ($is_user) { ?>
                         <button class="btn btn-default edit-btn" data-toggle="modal" data-target=".bs-example-modal-sm2" data-dismiss=".bs-example-modal-sm2"> <i class="fa fa-pencil"></i> </button>
                     <?php } ?>
 
@@ -81,7 +82,7 @@ $themeUrl = $this->themeUrl;
 </div>
 
 <?php
-if (!Yii::app()->user->isGuest) {
+if ($is_user) {
     $this->renderPartial('_profile_edit', compact('model', 'user_profile'));
 }
 ?>

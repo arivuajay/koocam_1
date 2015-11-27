@@ -16,6 +16,9 @@
                             ),
                             'enableAjaxValidation' => true,
                         ));
+                if(empty($model->username) && isset(Yii::app()->request->cookies['koo_username'])){
+                    $model->username = Yii::app()->request->cookies['koo_username'];
+                }
                 ?>
 
                 <div class="form-group"> 

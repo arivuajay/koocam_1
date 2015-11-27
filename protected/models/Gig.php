@@ -50,7 +50,6 @@ class Gig extends RActiveRecord {
     const IMG_HEIGHT = 528;
     const THUMB_WIDTH = 500;
     const THUMB_HEIGHT = 440;
-    
     const GIG_SEARCH_LIMIT = 9;
 
     /**
@@ -122,12 +121,12 @@ class Gig extends RActiveRecord {
             array('gig_avail_visual, status', 'length', 'max' => 1),
             array('gig_title, slug', 'unique'),
             array('gig_media', 'file', 'types' => self::GIG_ALLOW_FILE_TYPES, 'maxSize' => 1024 * 1024 * self::GIG_ALLOW_FILE_SIZE, 'tooLarge' => 'File has to be smaller than ' . self::GIG_ALLOW_FILE_SIZE . 'MB', 'allowEmpty' => false, 'on' => 'create'), array('gig_media', 'file', 'types' => self::GIG_ALLOW_FILE_TYPES, 'maxSize' => 1024 * 1024 * self::GIG_ALLOW_FILE_SIZE, 'tooLarge' => 'File has to be smaller than ' . self::GIG_ALLOW_FILE_SIZE . 'MB', 'allowEmpty' => true, 'on' => 'update'),
-            
-            array('gig_media', 'file', 'types' => self::GIG_ALLOW_FILE_TYPES, 'maxSize' => 1024 * 1024 * self::GIG_ALLOW_FILE_SIZE, 'tooLarge' => 'File has to be smaller than ' . self::GIG_ALLOW_FILE_SIZE . 'MB', 'allowEmpty' => false, 'on' => 'admin_create'), 
-            array('gig_media', 'file', 'types' => self::GIG_ALLOW_FILE_TYPES, 'maxSize' => 1024 * 1024 * self::GIG_ALLOW_FILE_SIZE, 'tooLarge' => 'File has to be smaller than ' . self::GIG_ALLOW_FILE_SIZE . 'MB', 'allowEmpty' => true, 'on' => 'admin_update'),            
+            array('gig_media', 'file', 'types' => self::GIG_ALLOW_FILE_TYPES, 'maxSize' => 1024 * 1024 * self::GIG_ALLOW_FILE_SIZE, 'tooLarge' => 'File has to be smaller than ' . self::GIG_ALLOW_FILE_SIZE . 'MB', 'allowEmpty' => false, 'on' => 'admin_create'),
+            array('gig_media', 'file', 'types' => self::GIG_ALLOW_FILE_TYPES, 'maxSize' => 1024 * 1024 * self::GIG_ALLOW_FILE_SIZE, 'tooLarge' => 'File has to be smaller than ' . self::GIG_ALLOW_FILE_SIZE . 'MB', 'allowEmpty' => true, 'on' => 'admin_update'),
             array('extra_file', 'file', 'types' => self::EXTRA_ALLOW_FILE_TYPES, 'maxSize' => 1024 * 1024 * self::EXTRA_ALLOW_FILE_SIZE, 'tooLarge' => 'File has to be smaller than ' . self::GIG_ALLOW_FILE_SIZE . 'MB', 'allowEmpty' => true),
             array('gig_price', 'priceValidate'),
-            array('gig_description, gig_duration, created_at, modified_at, is_extra, extra_price, extra_description, tutorUserName, gigCategory, extra_file', 'safe'),
+//            array('modified_at', 'date', 'format' => Yii::app()->localtime->getLocalDateTimeFormat('short', 'short')),
+            array('gig_description, gig_duration, created_at, modified_at, is_extra, extra_price, extra_description, tutorUserName, gigCategory, extra_file, gig_important', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('gig_id, tutor_id, gig_title, cat_id, gig_media, gig_tag, gig_description, gig_duration, gig_price, gig_avail_visual, status, created_at, modified_at, created_by, modified_by', 'safe', 'on' => 'search'),
@@ -225,7 +224,7 @@ class Gig extends RActiveRecord {
             'tutor_id' => 'User Id',
             'gig_title' => 'Title',
             'cat_id' => 'Category',
-            'gig_media' => 'Media',
+            'gig_media' => 'Video or Photo',
             'gig_tag' => 'Tag',
             'gig_description' => 'Description',
             'gig_duration' => 'Time (Minutes)',
@@ -345,9 +344,9 @@ class Gig extends RActiveRecord {
 
             $width1 = self::IMG_WIDTH;
             $height1 = self::IMG_HEIGHT;
-            
+
             $img = new Img;
-            $img->resampleGD($source, $gig_path , $this->gig_media, $width1, $height1, 1, 0);
+            $img->resampleGD($source, $gig_path, $this->gig_media, $width1, $height1, 1, 0);
 
             $this->setUploadDirectory($gig_path . '/thumb/gig');
             $destination2 = $gig_path . '/thumb' . $this->gig_media;
@@ -358,7 +357,7 @@ class Gig extends RActiveRecord {
             $image->resize($width2, $height2, Image::NONE);
             $image->save($destination2);
         }
-        
+
         if ($this->is_extra == 'N' && !empty($this->gigExtras)) {
             $this->gigExtras->delete();
         }

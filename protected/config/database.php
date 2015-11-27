@@ -17,4 +17,5 @@ return array(
     'password' => $db_pass,
     'charset' => 'utf8',
     'tablePrefix' => 'koo_',
+    'initSQLs' => array("set time_zone='+00:00';"),
 );

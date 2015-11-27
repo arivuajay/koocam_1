@@ -49,12 +49,12 @@ class Myclass extends CController {
     public static function rememberMe($username, $check) {
         if ($check > 0) {
             $time = time();     // Gets the current server time
-            $cookie = new CHttpCookie('wipo_admin_username', $username);
+            $cookie = new CHttpCookie('koo_username', $username);
 
             $cookie->expire = $time + 60 * 60 * 24 * 30;               // 30 days
-            Yii::app()->request->cookies['wipo_admin_username'] = $cookie;
+            Yii::app()->request->cookies['koo_username'] = $cookie;
         } else {
-            unset(Yii::app()->request->cookies['wipo_admin_username']);
+            unset(Yii::app()->request->cookies['koo_username']);
         }
     }
 

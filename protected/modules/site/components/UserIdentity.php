@@ -9,7 +9,7 @@ class UserIdentity extends CUserIdentity {
 
     const ERROR_ACCOUNT_BLOCKED = 3;
     const ERROR_ACCOUNT_DELETED = 4;
-
+    
     private $_id;
 
     /**
@@ -22,7 +22,7 @@ class UserIdentity extends CUserIdentity {
      */
     public function authenticate() {
         $user = User::model()->find('username = :U OR email = :U', array(':U' => $this->username));
-        
+
         if ($user === null):
             $this->errorCode = self::ERROR_USERNAME_INVALID;
 
@@ -64,6 +64,36 @@ class UserIdentity extends CUserIdentity {
         $this->setState('name', $user->username);
         $this->setState('id', $user->user_id);
         $this->setState('slug', $user->slug);
+
+        if ($user->is_auto_timezone == 'Y') {
+            $ip_info = $this->getTimezone();
+            
+            if(!empty($ip_info)){
+                $attr = array();
+                $attr['user_timezone_id'] = Timezone::getTimezoneByName($ip_info['timezone']);
+                $attr['user_locale_id'] = 124;
+                
+                $user = User::model()->findByPk($this->_id);
+                $user->attributes = $attr;
+                $user->save();
+            }else{
+                //Need to check
+            }
+        }
+        Yii::app()->localtime->Locale = $user->locales->code;
+        Yii::app()->localtime->TimeZone = $user->userTimezone->name;
+        
         return;
     }
+
+    protected function getTimezone() {
+        $ip = $_REQUEST['REMOTE_ADDR'];
+        $query = @unserialize(file_get_contents('http://ip-api.com/php/' . $ip));
+        if ($query && $query['status'] == 'success') {
+            return $query;
+        } else {
+            return null;
+        }
+    }
+    
 }

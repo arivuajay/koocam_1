@@ -9,8 +9,8 @@ return array(
     '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
     'login' => 'site/users/login',
     'home' => 'site/default/index',
-    'gig/<slug:[a-zA-Z0-9-]+>/' => 'site/gig/view',
-    'category/<slug:[a-zA-Z0-9-]+>/' => 'site/gigcategory/view',
-    'page/<slug:[a-zA-Z0-9-]+>/' => 'site/cms/view',
-    'profile/<slug:[a-zA-Z0-9-]+>/' => 'site/user/profile',
+    'gig/<slug:[-\w]+>' => array('site/gig/view', 'urlSuffix' => '.html'),
+    'category/<slug:[-\w]+>' => array('site/gigcategory/view', 'urlSuffix' => '.html'),
+    'page/<slug:[-\w]+>' => array('site/cms/view', 'urlSuffix' => '.html'),
+    'profile/<slug:[-\w]+>' => array('site/user/profile', 'urlSuffix' => '.html'),
 );

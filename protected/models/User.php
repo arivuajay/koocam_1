@@ -17,18 +17,56 @@
  * @property string $created_at
  * @property string $modified_at
  * @property string $slug
+ * @property string $slug
+ * @property string $is_auto_timezone
+ * @property integer $user_locale_id
+ * @property integer $user_timezone_id
  * 
  * The followings are the available model relations:
  * @property UserProfile $userProf
+
+
+  <?php
+
+  /**
+ * This is the model class for table "{{user}}".
+ *
+ * The followings are the available columns in table '{{user}}':
+ * @property integer $user_id
+ * @property string $username
+ * @property string $password_hash
+ * @property string $password_reset_token
+ * @property string $email
+ * @property string $status
+ * @property string $user_activation_key
+ * @property string $user_login_ip
+ * @property string $user_last_login
+ * @property string $status
+ * @property string $live_status
+ * @property string $slug
+ * @property string $is_auto_timezone
+ * @property integer $user_locale_id
+ * @property integer $user_timezone_id
+ * @property string $created_at
+ * @property string $modified_at
+ * @property string $slug
+ * 
+ * The followings are the available model relations:
+ * @property UserProfile $userProfGig[] $gigs
+ * @property GigBooking[] $gigBookings
+ * @property GigComments[] $gigComments
+ * @property Timezone $userTimezone
+ * @property Locales $userLocales
+ * @property UserProfile[] $userProfiles
  */
 class User extends RActiveRecord {
 
     const GIG_PER_USER = 20;
 
     public function getFullname() {
-        if($this->userProf->prof_firstname == '' && $this->userProf->prof_lastname == ''){
+        if ($this->userProf->prof_firstname == '' && $this->userProf->prof_lastname == '') {
             $fullname = $this->username;
-        }else{
+        } else {
             $fullname = $this->userProf->prof_firstname . ' ' . $this->userProf->prof_lastname;
         }
         return $fullname;
@@ -80,7 +118,7 @@ class User extends RActiveRecord {
             array('email, username, slug', 'unique'),
             array('email', 'email'),
             array('password_hash', 'compare', 'compareAttribute' => 'confirm_password', 'on' => 'register'),
-            array('created_at, modified_at, user_activation_key, user_login_ip, user_last_login', 'safe'),
+            array('created_at, modified_at, user_activation_key, user_login_ip, user_last_login, is_auto_timezone, user_locale_id, user_timezone_id', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('user_id, username, password_hash, password_reset_token, email, status, live_status, created_at, modified_at', 'safe', 'on' => 'search'),
@@ -95,6 +133,11 @@ class User extends RActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'userProf' => array(self::HAS_ONE, 'UserProfile', 'user_id'),
+            'locales' => array(self::BELONGS_TO, 'Locales', 'user_locale_id'),
+            'userTimezone' => array(self::BELONGS_TO, 'Timezone', 'user_timezone_id'),
+            'gigs' => array(self::HAS_MANY, 'Gig', 'tutor_id'),
+            'gigBookings' => array(self::HAS_MANY, 'GigBooking', 'book_user_id'),
+            'gigComments' => array(self::HAS_MANY, 'GigComments', 'user_id'),
         );
     }
 
@@ -213,7 +256,7 @@ class User extends RActiveRecord {
     public function getLanguages($return_type = 'string') {
         $lang = '';
         $langArr = CJSON::decode($this->userProf->prof_languages);
-        if($return_type == 'array'){
+        if ($return_type == 'array') {
             return $langArr;
         }
         $languages = Language::model()->findAllByAttributes(array('lang_Id' => $langArr));
@@ -222,8 +265,8 @@ class User extends RActiveRecord {
         }
         return rtrim($lang, ', ');
     }
-    
-    public function getCountry(){
+
+    public function getCountry() {
         $Country = Country::model()->findByPk($this->userProf->country_id);
         return $Country->country_name;
     }
