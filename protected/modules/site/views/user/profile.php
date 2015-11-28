@@ -1,7 +1,8 @@
 <?php
 /* @var $this DefaultController */
 /* @var $model User */
-/* @var $category GigCategory */
+/* @var $user_profile UserProfile */
+/* @var $message Message */
 
 $this->title = 'Koocam - Profile';
 $themeUrl = $this->themeUrl;
@@ -36,9 +37,11 @@ $is_user = !Yii::app()->user->isGuest && Yii::app()->user->id == $model->user_id
                     <?php echo CHtml::image($user_profile->getFilePath(false, '/users/' . $model->user_id), '', array()); ?>
                 </div>
                 <div class="row">
-                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-                        <a href="#" class="big-btn btn  btn-default "> <i class="fa fa-envelope-o"></i> Message </a>
-                    </div>
+                    <?php if (!$is_user && !Yii::app()->user->isGuest) { ?>
+                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                            <a href="#" class="big-btn btn btn-default " data-toggle="modal" data-target=".bs-example-modal-profile-msg" data-dismiss=".bs-example-modal-profile-msg"> <i class="fa fa-envelope-o"></i> Message </a>
+                        </div>
+                    <?php } ?>
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 sharethis-share">
                         <span class='st_facebook_large custom-share' displayText='Facebook'></span>
                         <span class='st_twitter_large custom-share' displayText='Tweet'></span>
@@ -84,6 +87,10 @@ $is_user = !Yii::app()->user->isGuest && Yii::app()->user->id == $model->user_id
 <?php
 if ($is_user) {
     $this->renderPartial('_profile_edit', compact('model', 'user_profile'));
+}
+
+if (!$is_user && !Yii::app()->user->isGuest) {
+    $this->renderPartial('_profile_message', compact('model', 'user_profile', 'message'));
 }
 ?>
 

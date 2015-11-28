@@ -32,7 +32,7 @@ class UserController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('profileupdate'),
+                'actions' => array('profileupdate', 'sendmessage'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -49,7 +49,9 @@ class UserController extends Controller {
         if (empty($user_profile)) {
             $user_profile = new UserProfile;
         }
-        $this->render('profile', compact('model', 'user_profile'));
+
+        $message = new Message;
+        $this->render('profile', compact('model', 'user_profile', 'message'));
     }
 
     public function actionProfileupdate() {
@@ -74,6 +76,36 @@ class UserController extends Controller {
                 }
             }
         } else {
+            $this->redirect(array('/site/user/profile', 'slug' => $model->slug));
+        }
+    }
+
+    public function actionSendmessage() {
+        $message = new Message;
+        $this->performAjaxValidation($message);
+
+        if (Yii::app()->request->isPostRequest && Yii::app()->request->getPost('Message')) {
+            $message->attributes = Yii::app()->request->getPost('Message');
+            $model = $this->loadModelSlug($message->userSlug);
+
+            // Genreate the conversation id
+            $criteria = new CDbCriteria;
+            $criteria->select = 'max(conversation_id) AS maxColumn';
+            $row = Message::model()->find($criteria);
+            $npm_count = $row['maxColumn'];
+            $conversation_id = $npm_count + 1;
+            
+
+
+            $message->conversation_id = $conversation_id; // conversation id
+            $message->user1 = Yii::app()->user->id; // Sender
+            $message->user2 = $model->user_id; // Receiver
+            $message->timestamp = time();
+            $message->user1read = "Y";
+            $message->user2read = "N";
+
+            $message->save(false);
+            Yii::app()->user->setFlash('success', "Message sent successfully!!!");
             $this->redirect(array('/site/user/profile', 'slug' => $model->slug));
         }
     }

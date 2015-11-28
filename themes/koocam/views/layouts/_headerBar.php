@@ -44,64 +44,70 @@ $themeUrl = $this->themeUrl;
                             <ul class="nav navbar-nav">
                                 <li><?php echo CHtml::link(' Sell your time ', array('/site/gig/create'), array()); ?></li>
                                 <li><?php echo CHtml::link(' How its works ', array('/site/cms/view', 'slug' => 'how-it-works'), array()); ?></li>
-                                <?php if(!Yii::app()->user->isGuest){ ?>
-                                <li>
-                                    <a data-toggle="dropdown" class="dropdown-toggle" href="#" aria-expanded="true">
-                                        <?php echo CHtml::image($themeUrl.'/images/my-jobs.png', '', array()); ?> <b> My Jobs </b> <span class="count">15</span>
-                                        <span class="circle"></span>
-                                    </a>
-                                    <ul role="menu" class="dropdown-menu notifications  bullet pull-right" >
-                                        Calender will come :)
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a data-toggle="dropdown" class="dropdown-toggle" href="#" aria-expanded="true">
-                                        <?php echo CHtml::image($themeUrl.'/images/my-message.png', '', array()); ?> <b> My Messages </b> <span class="count">5</span>
-                                        <span class="circle"></span>
-                                    </a>
-                                    <ul role="menu" class="dropdown-menu notifications  bullet pull-right" >
-                                        <li class="notification-header">
-                                            <em>You have 4 Messages</em>
-                                        </li>
-                                        <li><a href="#">Message title 1</a>  <span class="timestamp">1 min ago</span></li>
-                                        <li><a href="#">Message title 2</a>  <span class="timestamp">1 min ago</span></li>
-                                        <li><a href="#">Message title 3</a>  <span class="timestamp">1 min ago</span></li>
-                                        <li><a href="#">Message title 4</a>  <span class="timestamp">1 min ago</span></li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a data-toggle="dropdown" class="dropdown-toggle" href="#" >
-                                        <?php echo CHtml::image($themeUrl.'/images/my-notification.png', '', array()); ?> <b> My Notifications </b> <span class="count">5</span>
-                                        <span class="circle"></span>
-                                    </a>
-                                    <ul role="menu" class="dropdown-menu notifications  bullet pull-right" >
-                                        <li class="notification-header">
-                                            <em>You have 5 notifications</em>
-                                        </li>
-                                        <li><a href="#">New comments For Your Gig</a>  <span class="timestamp">1 min ago</span></li>
-                                        <li><a href="#">New comments For Your Gig</a>  <span class="timestamp">1 min ago</span></li>
-                                        <li><a href="#">New comments For Your Gig</a>  <span class="timestamp">1 min ago</span></li>
-                                        <li><a href="#">New comments For Your Gig</a>  <span class="timestamp">1 min ago</span></li>
-                                        <li><a href="#">New comments For Your Gig</a>  <span class="timestamp">1 min ago</span></li>
+                                <?php if (!Yii::app()->user->isGuest) { ?>
+                                    <li>
+                                        <a data-toggle="dropdown" class="dropdown-toggle" href="#" aria-expanded="true">
+                                            <?php echo CHtml::image($themeUrl . '/images/my-jobs.png', '', array()); ?> <b> My Jobs </b> <span class="count">15</span>
+                                            <span class="circle"></span>
+                                        </a>
+                                        <ul role="menu" class="dropdown-menu notifications  bullet pull-right" >
+                                            Calender will come :)
+                                        </ul>
+                                    </li>
+                                    <?php // if(Message::getMyUnReadMsgCount() > 0){ ?>
+                                    <li>
+                                        <a data-toggle="dropdown" class="dropdown-toggle" href="#" aria-expanded="true">
+                                            <?php echo CHtml::image($themeUrl . '/images/my-message.png', '', array()); ?> 
+                                            <b> My Messages </b> 
+                                            <span class="count">
+                                                
+                                            </span>
+                                            <span class="circle"></span>
+                                        </a>
+                                        <ul role="menu" class="dropdown-menu notifications  bullet pull-right" >
+                                            <li class="notification-header">
+                                                <em>You have 4 Messages</em>
+                                            </li>
+                                            <li><a href="#">Message title 1</a>  <span class="timestamp">1 min ago</span></li>
+                                            <li><a href="#">Message title 2</a>  <span class="timestamp">1 min ago</span></li>
+                                            <li><a href="#">Message title 3</a>  <span class="timestamp">1 min ago</span></li>
+                                            <li><a href="#">Message title 4</a>  <span class="timestamp">1 min ago</span></li>
+                                        </ul>
+                                    </li>
+                                    <?php // } ?>
+                                    <li>
+                                        <a data-toggle="dropdown" class="dropdown-toggle" href="#" >
+                                            <?php echo CHtml::image($themeUrl . '/images/my-notification.png', '', array()); ?> <b> My Notifications </b> <span class="count">5</span>
+                                            <span class="circle"></span>
+                                        </a>
+                                        <ul role="menu" class="dropdown-menu notifications  bullet pull-right" >
+                                            <li class="notification-header">
+                                                <em>You have 5 notifications</em>
+                                            </li>
+                                            <li><a href="#">New comments For Your Gig</a>  <span class="timestamp">1 min ago</span></li>
+                                            <li><a href="#">New comments For Your Gig</a>  <span class="timestamp">1 min ago</span></li>
+                                            <li><a href="#">New comments For Your Gig</a>  <span class="timestamp">1 min ago</span></li>
+                                            <li><a href="#">New comments For Your Gig</a>  <span class="timestamp">1 min ago</span></li>
+                                            <li><a href="#">New comments For Your Gig</a>  <span class="timestamp">1 min ago</span></li>
 
 
-                                    </ul>
-                                </li>
-                                <li role="presentation" class="dropdown">
-                                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                                        </ul>
+                                    </li>
+                                    <li role="presentation" class="dropdown">
+                                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
                                             <?php echo ucfirst(Yii::app()->user->name); ?> <span class="caret"></span>
-                                    </a>
-                                    <ul class="dropdown-menu dropdown-menu2 pull-right bullet" >
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu2 pull-right bullet" >
                                             <?php $slug = User::model()->findByPk(Yii::app()->user->id)->slug; ?>
-                                        <li><?php echo CHtml::link(' My Profile ', array('/site/user/profile', 'slug' => $slug), array()); ?></li>
-                                        <li><a href="#">My Purchase</a></li>
-                                        <li><a href="#">My Payments</a></li>
-                                        <li class="divider" role="separator"></li>
-                                        <li><a href="#"> <i class="fa fa-gears"></i>&nbsp; Account Setting</a></li>    
-                                        <li><?php echo CHtml::link(' Logout', array('/site/default/logout'), array()); ?></li>
-                                    </ul>
-                                </li>
-                                <?php }else{ ?>
+                                            <li><?php echo CHtml::link(' My Profile ', array('/site/user/profile', 'slug' => $slug), array()); ?></li>
+                                            <li><a href="#">My Purchase</a></li>
+                                            <li><a href="#">My Payments</a></li>
+                                            <li class="divider" role="separator"></li>
+                                            <li><a href="#"> <i class="fa fa-gears"></i>&nbsp; Account Setting</a></li>    
+                                            <li><?php echo CHtml::link(' Logout', array('/site/default/logout'), array()); ?></li>
+                                        </ul>
+                                    </li>
+                                <?php } else { ?>
                                     <li><a href="#" data-toggle="modal" data-target=".bs-example-modal-sm1"> Login </a></li>
                                     <li><a href="#" data-toggle="modal" data-target=".bs-example-modal-sm"> Sign up</a></li>
                                 <?php } ?>
