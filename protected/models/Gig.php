@@ -16,6 +16,7 @@
  * @property string $gig_avail_visual
  * @property string $is_extra
  * @property string $status
+ * @property string $slug
  * @property string $created_at
  * @property string $modified_at
  * @property integer $created_by

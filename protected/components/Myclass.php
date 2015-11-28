@@ -122,7 +122,7 @@ class Myclass extends CController {
     }
     
     public static function priceLimitation() {
-        /* min. minutes => min. price */
+        /* max. minutes => min. price */
         $limitations = array(
             '00:05' => 5,
             '00:30' => 10,
@@ -141,5 +141,43 @@ class Myclass extends CController {
             "1" => "Active",
             "2" => "Delete"
         );
+    }
+    
+    public static function guid($opt = true) {
+        $new_guid = Myclass::create_guid($opt);
+        do {
+            $exist_count = GigBooking::model()->countByAttributes(array('book_guid' => $new_guid));
+            if ($exist_count > 0) {
+                $old_guid = $new_guid;
+                $new_guid = Myclass::create_guid($opt);
+            } else {
+                break;
+            }
+        } while ($old_guid != $new_guid);
+        return $new_guid;
+    }
+    
+    public static function create_guid($opt = true) {       //  Set to true/false as your default way to do this.
+        if (function_exists('com_create_guid')) {
+            if ($opt) {
+                return com_create_guid();
+            } else {
+                return trim(com_create_guid(), '{}');
+            }
+        } else {
+            mt_srand((double) microtime() * 10000);    // optional for php 4.2.0 and up.
+            $charid = strtoupper(md5(uniqid(rand(), true)));
+            $hyphen = chr(45);    // "-"
+            $left_curly = $opt ? chr(123) : "";     //  "{"
+            $right_curly = $opt ? chr(125) : "";    //  "}"
+            $uuid = $left_curly
+                    . substr($charid, 0, 8) . $hyphen
+                    . substr($charid, 8, 4) . $hyphen
+                    . substr($charid, 12, 4) . $hyphen
+                    . substr($charid, 16, 4) . $hyphen
+                    . substr($charid, 20, 12)
+                    . $right_curly;
+            return $uuid;
+        }
     }
 }

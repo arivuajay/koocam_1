@@ -54,11 +54,13 @@
                             $lang_array = $model->getLanguages('array');
 
                             $selected = array();
-                            foreach ($lang_array as $value) {
-                                $selected[$value] = array('selected' => 'selected');
+                            if (!empty($lang_array)) {
+                                foreach ($lang_array as $value) {
+                                    $selected[$value] = array('selected' => 'selected');
+                                }
                             }
                             ?>
-                            <?php echo $form->labelEx($user_profile, 'prof_languages'); ?>
+                            <?php echo $form->labelEx($user_profile, 'prof_languages'); ?> 
                             <?php echo $form->dropDownList($user_profile, 'prof_languages', Language::getLanguagesList(), array('class' => 'selectpicker', 'prompt' => '', 'multiple' => true, 'options' => $selected)); ?> 
                             <?php echo $form->error($user_profile, 'prof_languages'); ?>
                         </div>
@@ -66,7 +68,7 @@
 
                     <div class = "form-group form-control-material static">
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            <?php echo $form->labelEx($user_profile, 'prof_interests'); ?>
+                            <?php echo $form->labelEx($user_profile, 'prof_interests'); ?> 
                             <?php echo $form->textArea($user_profile, 'prof_interests', array('class' => 'form-control', 'rows' => 3, 'cols' => 50)); ?>
                             <?php echo $form->error($user_profile, 'prof_interests'); ?>
                         </div>
@@ -76,13 +78,13 @@
                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
                             <?php echo $form->labelEx($user_profile, 'prof_picture'); ?>
                             <span class="btn btn-default btn-file">
-                                <i class="fa fa-upload"></i>  <?php echo $form->labelEx($user_profile, 'prof_picture'); ?>
+                                <i class="fa fa-upload"></i>   <?php echo $form->labelEx($user_profile, 'prof_picture'); ?>
                                 <?php echo $form->fileField($user_profile, 'prof_picture'); ?>
                             </span>
                             <?php echo $form->error($user_profile, 'prof_picture'); ?> 
                         </div>
                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
-                            <?php echo $form->labelEx($user_profile, 'country_id'); ?>
+                            <?php echo $form->labelEx($user_profile, 'country_id'); ?> 
                             <?php echo $form->dropDownList($user_profile, 'country_id', Country::getCountryList(), array('class' => 'selectpicker', 'prompt' => '')); ?> 
                             <?php echo $form->error($user_profile, 'country_id'); ?>
                         </div>
