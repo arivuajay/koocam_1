@@ -90,14 +90,14 @@ class UserController extends Controller {
 
             // Genreate the conversation id
             $criteria = new CDbCriteria;
-            $criteria->select = 'max(conversation_id) AS maxColumn';
+            $criteria->select = 'max(id1) AS maxColumn';
             $row = Message::model()->find($criteria);
+
             $npm_count = $row['maxColumn'];
-            $conversation_id = $npm_count + 1;
-            
+            $id1 = $npm_count + 1;
 
-
-            $message->conversation_id = $conversation_id; // conversation id
+            $message->id1 = $id1; // conversation id
+            $message->id2 = 1; //New conversation start
             $message->user1 = Yii::app()->user->id; // Sender
             $message->user2 = $model->user_id; // Receiver
             $message->timestamp = time();

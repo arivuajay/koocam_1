@@ -54,27 +54,42 @@ $themeUrl = $this->themeUrl;
                                             Calender will come :)
                                         </ul>
                                     </li>
-                                    <?php // if(Message::getMyUnReadMsgCount() > 0){ ?>
-                                    <li>
-                                        <a data-toggle="dropdown" class="dropdown-toggle" href="#" aria-expanded="true">
-                                            <?php echo CHtml::image($themeUrl . '/images/my-message.png', '', array()); ?> 
-                                            <b> My Messages </b> 
-                                            <span class="count">
-                                                
-                                            </span>
-                                            <span class="circle"></span>
-                                        </a>
-                                        <ul role="menu" class="dropdown-menu notifications  bullet pull-right" >
-                                            <li class="notification-header">
-                                                <em>You have 4 Messages</em>
-                                            </li>
-                                            <li><a href="#">Message title 1</a>  <span class="timestamp">1 min ago</span></li>
-                                            <li><a href="#">Message title 2</a>  <span class="timestamp">1 min ago</span></li>
-                                            <li><a href="#">Message title 3</a>  <span class="timestamp">1 min ago</span></li>
-                                            <li><a href="#">Message title 4</a>  <span class="timestamp">1 min ago</span></li>
-                                        </ul>
-                                    </li>
-                                    <?php // } ?>
+                                    <?php if (Message::getMyUnReadMsgCount() > 0) { ?>
+                                        <li>
+                                            <a data-toggle="dropdown" class="dropdown-toggle" href="#" aria-expanded="true">
+                                                <?php echo CHtml::image($themeUrl . '/images/my-message.png', '', array()); ?> 
+                                                <b> My Messages </b> 
+                                                <span class="count">
+                                                    <?php echo Message::getMyUnReadMsgCount(); ?>
+                                                </span>
+                                                <span class="circle"></span>
+                                            </a>
+                                            <ul role="menu" class="dropdown-menu notifications  bullet pull-right" >
+                                                <li class="notification-header">
+                                                    <em>You have <?php echo Message::getMyUnReadMsgCount(); ?> Messages </em>
+                                                </li>
+                                                <?php
+                                                $un_read_msgs = Message::getMyUnReadMsg();
+
+                                                foreach ($un_read_msgs as $un_read_msg) {
+                                                    ?>
+                                                    <li>
+                                                        <?php
+                                                        if(strlen($un_read_msg['message']) > 10)
+                                                            $un_read_msg_text = substr($un_read_msg['message'], 0, 10) . '...';
+                                                        else
+                                                            $un_read_msg_text = $un_read_msg['message'];
+                                                        
+                                                        echo CHtml::link($un_read_msg_text, array('/site/message/readmessage', 'conversation_id' => $un_read_msg['id1']));
+                                                        ?>
+                                                        <span class="timestamp">
+                                                            <?php // echo Myclass::humanTiming(strtotime($un_read_msg['created_at'])); ?>
+                                                        </span>
+                                                    </li>
+                                                <?php } ?>
+                                            </ul>
+                                        </li>
+                                    <?php } ?>
                                     <li>
                                         <a data-toggle="dropdown" class="dropdown-toggle" href="#" >
                                             <?php echo CHtml::image($themeUrl . '/images/my-notification.png', '', array()); ?> <b> My Notifications </b> <span class="count">5</span>

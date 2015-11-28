@@ -31,6 +31,7 @@ return array(
     'CONTACTMAIL' => 'noreply@arkinfotec.com',
     'JS_SHORT_DATE_FORMAT' => 'dd-mm-yy',
     'PHP_SHORT_DATE_FORMAT' => 'd-m-Y',
+    'PHP_SHORT_DATE_TIME_FORMAT' => 'd-m-Y H:i:s',
 
     //Product Settings
     'SITEBASEURL' => 'http://wipocos.byethost16.com',

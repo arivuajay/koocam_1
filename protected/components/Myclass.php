@@ -113,16 +113,16 @@ class Myclass extends CController {
         $str = preg_replace("/\t/", "\\t", $str);
         $str = preg_replace("/\r?\n/", "\\n", $str);
     }
-    
-    public static function getYesOrNo(){
+
+    public static function getYesOrNo() {
         return array(
             "N" => "No",
             "Y" => "Yes"
         );
     }
-    
+
     public static function priceLimitation() {
-        /* max. minutes => min. price */
+        /* min. minutes => min. price */
         $limitations = array(
             '00:05' => 5,
             '00:30' => 10,
@@ -134,8 +134,8 @@ class Myclass extends CController {
         }
         return $limits;
     }
-    
-    public static function getStatus(){
+
+    public static function getStatus() {
         return array(
             "0" => "In-Active",
             "1" => "Active",
@@ -180,4 +180,5 @@ class Myclass extends CController {
             return $uuid;
         }
     }
+
 }

@@ -4,8 +4,9 @@
  * This is the model class for table "{{message}}".
  *
  * The followings are the available columns in table '{{message}}':
- * @property integer $id
- * @property integer $conversation_id
+ * @property integer $message_id
+ * @property integer $id1
+ * @property integer $id2
  * @property integer $user1
  * @property integer $user2
  * @property string $message
@@ -17,11 +18,11 @@
  * @property string $modified_at
  *
  * The followings are the available model relations:
- * @property User $user1
  * @property User $user2
+ * @property User $user1
  */
-class Message extends RActiveRecord {
-    
+class Message extends CActiveRecord {
+
     public $maxColumn;
     public $userSlug;
 
@@ -40,12 +41,12 @@ class Message extends RActiveRecord {
         // will receive user inputs.
         return array(
             array('message', 'required'),
-            array('conversation_id, user1, user2, timestamp, gig_id', 'numerical', 'integerOnly' => true),
+            array('id1, id2, user1, user2, timestamp, gig_id', 'numerical', 'integerOnly' => true),
             array('user1read, user2read', 'length', 'max' => 1),
-            array('modified_at, userSlug, maxColumn', 'safe'),
+            array('modified_at, maxColumn, userSlug', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, conversation_id, user1, user2, message, timestamp, user1read, user2read, gig_id, created_at, modified_at', 'safe', 'on' => 'search'),
+            array('message_id, id1, id2, user1, user2, message, timestamp, user1read, user2read, gig_id, created_at, modified_at', 'safe', 'on' => 'search'),
         );
     }
 
@@ -56,8 +57,8 @@ class Message extends RActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'user1' => array(self::BELONGS_TO, 'User', 'user1'),
             'user2' => array(self::BELONGS_TO, 'User', 'user2'),
+            'user1' => array(self::BELONGS_TO, 'User', 'user1'),
         );
     }
 
@@ -66,8 +67,9 @@ class Message extends RActiveRecord {
      */
     public function attributeLabels() {
         return array(
-            'id' => 'ID',
-            'conversation_id' => 'Conversation',
+            'message_id' => 'Message',
+            'id1' => 'Id1',
+            'id2' => 'Id2',
             'user1' => 'User1',
             'user2' => 'User2',
             'message' => 'Message',
@@ -97,8 +99,9 @@ class Message extends RActiveRecord {
 
         $criteria = new CDbCriteria;
 
-        $criteria->compare('id', $this->id);
-        $criteria->compare('conversation_id', $this->conversation_id);
+        $criteria->compare('message_id', $this->message_id);
+        $criteria->compare('id1', $this->id1);
+        $criteria->compare('id2', $this->id2);
         $criteria->compare('user1', $this->user1);
         $criteria->compare('user2', $this->user2);
         $criteria->compare('message', $this->message, true);
@@ -133,6 +136,28 @@ class Message extends RActiveRecord {
                 'pageSize' => PAGE_SIZE,
             )
         ));
+    }
+
+    public static function getMyMsgListQuery() {
+        $session_userid = Yii::app()->user->id;
+
+        $sql = "SELECT m1.*, count(m2.id1) as reps, user.user_id, user.username FROM {{message}} `m1`, {{message}} `m2`, {{user}} `user` WHERE ((m1.user1 = '{$session_userid}' and user.user_id = m1.user2) or (m1.user2 = '{$session_userid}' and user.user_id = m1.user1)) and m1.id2='1'and m2.id1 = m1.id1 GROUP BY `m1`.`id1` ORDER BY `m1`.`id1` DESC";
+        return $sql;
+    }
+
+    public static function getMyUnReadMsgCount() {
+        $uid = Yii::app()->user->id;
+        $condition_unread = "((user1=" . $uid . " AND user1read='N') OR (user2=" . $uid . " AND user2read='N'))";
+        $dispcount = Message::model()->count($condition_unread);
+        return $dispcount;
+    }
+
+    public static function getMyUnReadMsg() {
+        $session_userid = Yii::app()->user->id;
+        $sql = "SELECT m1.* FROM {{message}} `m1`, {{user}} `user` WHERE ((m1.user2 = '{$session_userid}' and m1.user2read='N' and user.user_id = m1.user1)) ORDER BY `m1`.`message_id` DESC";
+        $total_items = Yii::app()->db->createCommand($sql)->queryAll();
+        
+        return $total_items;
     }
 
 }
