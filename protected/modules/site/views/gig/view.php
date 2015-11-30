@@ -42,7 +42,7 @@ $logged_user = !$is_tutor && !Yii::app()->user->isGuest;
                             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6"> <a href="#" data-toggle="modal" data-target=".bs-example-modal-sm1" data-dismiss=".bs-example-modal-sm" class="big-btn btn big-btn3 btn-default "> <i class="fa fa-envelope-o"></i> Message </a> </div>
                         <?php } ?>
                     <?php } ?>
-                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 sharethis-share"> 
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 sharethis-share">
                         <span class='st_facebook_large custom-share' displayText='Facebook'></span>
                         <span class='st_twitter_large custom-share' displayText='Tweet'></span>
                         <span class='st_googleplus_large custom-share' displayText='Google +'></span>
@@ -69,14 +69,14 @@ $logged_user = !$is_tutor && !Yii::app()->user->isGuest;
             <?php if ($model->is_extra == 'Y') { ?>
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="gig-extras">
-                        <div class="row"> 
-                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12"> 
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                 <h2> Extras </h2>
                             </div>
-                            <div class="col-xs-12 col-sm-10 col-md-11 col-lg-11 extras-txt">  
+                            <div class="col-xs-12 col-sm-10 col-md-11 col-lg-11 extras-txt">
                                 <input type="checkbox" class="book_extra_check" id="book_extra_main" > <?php echo $model->gigExtras->extra_description; ?>
                             </div>
-                            <div class="col-xs-12 col-sm-2 col-md-1 col-lg-1 "> 
+                            <div class="col-xs-12 col-sm-2 col-md-1 col-lg-1 ">
                                 <div class="extras-prices-bg" data-gig_price="<?php echo $gig_price; ?>" data-extra_price="<?php echo $extra_price = (int) $model->gigExtras->extra_price; ?>">
                                     <?php echo $extra_price; ?> $
                                 </div>
@@ -90,7 +90,7 @@ $logged_user = !$is_tutor && !Yii::app()->user->isGuest;
             <h2> Comments </h2>
             <div class="comments-cont">
                 <div class="row">
-                    <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2"> 
+                    <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
                         <?php echo CHtml::image($themeUrl . '/images/profile-pic.png', '', array('class' => "img-circle")); ?>
                     </div>
                     <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10">
@@ -102,7 +102,7 @@ $logged_user = !$is_tutor && !Yii::app()->user->isGuest;
             </div>
             <div class="comments-cont">
                 <div class="row">
-                    <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2"> 
+                    <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
                         <?php echo CHtml::image($themeUrl . '/images/profile-pic.png', '', array('class' => "img-circle")); ?>
                     </div>
                     <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10">
@@ -114,7 +114,7 @@ $logged_user = !$is_tutor && !Yii::app()->user->isGuest;
             </div>
             <div class="comments-cont">
                 <div class="row">
-                    <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2"> 
+                    <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
                         <?php echo CHtml::image($themeUrl . '/images/profile-pic.png', '', array('class' => "img-circle")); ?>
                     </div>
                     <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10">
@@ -125,7 +125,7 @@ $logged_user = !$is_tutor && !Yii::app()->user->isGuest;
                 </div>
             </div>
         </div>
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 comentslist-cont relateditems">  
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 comentslist-cont relateditems">
             <h2> Related Items</h2>
         </div>
     </div>
@@ -155,19 +155,22 @@ $cs->registerScriptFile($themeUrl . '/js/bootstrap-timepicker.js', $cs_pos_end);
 
 $js = <<< EOD
     jQuery(document).ready(function ($) {
-        
+
         extra_div = $('.extras-prices-bg');
-        
+
         $('#book_extra_main').on('ifChecked', function(event){
             var newPrice = parseFloat(extra_div.data('gig_price')) + parseFloat(extra_div.data('extra_price'));
             $('.gig_price_txt').html('$ '+newPrice);
         });
-        
+
         $('#book_extra_main').on('ifUnchecked', function(event){
             var newPrice = parseFloat(extra_div.data('gig_price'));
             $('.gig_price_txt').html('$ '+newPrice);
         });
-        
+
+        $('#booking').on('shown.bs.modal', function () {
+            $('#booking-cal .fc-header span.fc-button-today').trigger( 'click' );
+        });
     });
 EOD;
 Yii::app()->clientScript->registerScript('view', $js);
