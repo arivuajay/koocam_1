@@ -144,9 +144,9 @@ if ($logged_user)
     echo $this->renderPartial('_booking_form', compact('model', 'booking_model'));
 ?>
 
-<script type="text/javascript">var switchTo5x = true;</script>
+<!--<script type="text/javascript">var switchTo5x = true;</script>
 <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
-<script type="text/javascript">stLight.options({publisher: "b111ba58-0a07-447e-92ed-da6eda1af9b3", doNotHash: false, doNotCopy: false, hashAddressBar: false, servicePopup: true});</script>
+<script type="text/javascript">stLight.options({publisher: "b111ba58-0a07-447e-92ed-da6eda1af9b3", doNotHash: false, doNotCopy: false, hashAddressBar: false, servicePopup: true});</script>-->
 
 <?php
 $cs = Yii::app()->getClientScript();

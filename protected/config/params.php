@@ -29,7 +29,7 @@ return array(
     'SMTPSECURE' => 'ssl', // Secure :tls or ssl
     'NOREPLYMAIL' => 'noreply@arkinfotec.com',
     'CONTACTMAIL' => 'noreply@arkinfotec.com',
-    'JS_SHORT_DATE_FORMAT' => 'dd-mm-yy',
+    'JS_SHORT_DATE_FORMAT' => 'dd-MM-yyyy',
     'PHP_SHORT_DATE_FORMAT' => 'd-m-Y',
     'PHP_SHORT_DATE_TIME_FORMAT' => 'd-m-Y H:i:s',
 
