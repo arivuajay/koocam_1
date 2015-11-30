@@ -72,7 +72,7 @@ $bookings = array_values(CHtml::listData(GigBooking::model()->uniqueDays()->find
                                     $('#GigBooking_book_date').val(newdate);
                                     $('.book-calendar table tbody td').removeClass('fc-state-highlight');
                                     $(this).addClass('fc-state-highlight');
-                                    $('#booking-cal').slideUp();
+                                    $('.popup-calendaer-cont').slideUp();
                                     $('#booking_date_txt').html($.format.date(date, '$js_date_format'));
                                 }
                             }"),
@@ -94,7 +94,7 @@ $bookings = array_values(CHtml::listData(GigBooking::model()->uniqueDays()->find
                     <div class="row">
                         <div class="form-group">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                Booking Date : <span id="booking_date_txt" onclick="$('#booking-cal').slideDown();"><?php echo date(PHP_SHORT_DATE_FORMAT); ?></span>
+                                Booking Date : <span id="booking_date_txt" onclick="$('.popup-calendaer-cont').slideDown();"><?php echo date(PHP_SHORT_DATE_FORMAT); ?></span>
                             </div>
                         </div>
                         <div class="form-group">
