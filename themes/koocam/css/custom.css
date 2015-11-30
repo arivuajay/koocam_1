@@ -3,7 +3,7 @@ To change this license header, choose License Headers in Project Properties.
 To change this template file, choose Tools | Templates
 and open the template in the editor.
 */
-/* 
+/*
     Created on : 18 Nov, 2015, 4:41:52 PM
     Author     : ark-05
 */
@@ -17,5 +17,11 @@ label{
 }
 
 .alert {
-  margin: 20px 0 10px !important;
+    margin: 20px 0 10px !important;
+}
+
+#booking_date_txt{
+    color: #b41b20;
+    cursor: pointer;
+    font-size: 20px;
 }
