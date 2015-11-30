@@ -41,14 +41,23 @@ class Controller extends CController {
 
         $this->flashMessages = Yii::app()->user->getFlashes();
         $this->themeUrl = Yii::app()->theme->baseUrl;
+
+        if (Yii::app()->user->hasState('userLocale')) {
+            Yii::app()->localtime->Locale = Yii::app()->user->userLocale;
+        }
+
+        if (Yii::app()->user->hasState('userTimezone')) {
+            Yii::app()->localtime->TimeZone = Yii::app()->user->userTimezone;
+        }
     }
 
     public function goHome() {
         $this->redirect($this->homeUrl);
     }
-    
+
     public function deniedCallback() {
         Yii::app()->user->setFlash('danger', "You must Login to Access !!!");
         $this->goHome();
     }
+
 }

@@ -7,9 +7,6 @@ class RActiveRecord extends CActiveRecord {
     }
 
     protected function beforeSave() {
-//        $sql = "SET time_zone='+00:00';";
-//        Yii::app()->db->createCommand($sql)->queryAll();
-        
         $now = Yii::app()->localtime->UTCNow;
 
         if (!$this->isNewRecord) {
@@ -18,23 +15,6 @@ class RActiveRecord extends CActiveRecord {
             $this->created_at = $now;
         }
 
-        $dateFields = $this->dateFields();
-        if (!empty($dateFields)) {
-            foreach ($dateFields as $key => $field) {
-                if (isset($this->$field)) {
-                    $this->$field = Yii::app()->localtime->fromLocalDateTime($this->$field, 'short');
-                }
-            }
-        }
-
-        $dateTimeFields = $this->dateTimeFields();
-        if (!empty($dateTimeFields)) {
-            foreach ($dateTimeFields as $key => $field) {
-                if (isset($this->$field)) {
-                    $this->$field = Yii::app()->localtime->fromLocalDateTime($this->$field, 'short', 'short');
-                }
-            }
-        }
         return parent::beforeSave();
     }
 
@@ -44,7 +24,27 @@ class RActiveRecord extends CActiveRecord {
         } else {
             $this->modified_at = Yii::app()->localtime->toLocalDateTime($this->modified_at, 'short', 'short');
         }
+        
         $this->created_at = Yii::app()->localtime->toLocalDateTime($this->created_at, 'short', 'short');
+        
+        $dateFields = $this->dateFields();
+        if (!empty($dateFields)) {
+            foreach ($dateFields as $key => $field) {
+                if (isset($this->$field)) {
+                    $this->$field = Yii::app()->localtime->toLocalDateTime($this->$field, 'short');
+                }
+            }
+        }
+
+        $dateTimeFields = $this->dateTimeFields();
+        if (!empty($dateTimeFields)) {
+            foreach ($dateTimeFields as $key => $field) {
+                if (isset($this->$field)) {
+                    $this->$field = Yii::app()->localtime->toLocalDateTime($this->$field, 'short', 'short');
+                }
+            }
+        }
+        
         return parent::afterFind();
     }
 

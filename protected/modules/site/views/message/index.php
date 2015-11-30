@@ -50,7 +50,7 @@ $this->breadcrumbs = array(
                                         <?php echo CHtml::link($mdisplay, array('/site/message/readmessage', 'conversation_id' => $messages['id1'])); ?>
                                     </td>
                                     <td width="18%">
-                                        <?php echo date(PHP_SHORT_DATE_TIME_FORMAT, strtotime($messages['created_at'])); ?>
+                                        <?php echo Yii::app()->localtime->toLocalDateTime($messages['created_at']); ?>
                                     </td>
                                 </tr>
                                 <?php

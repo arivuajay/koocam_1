@@ -16,6 +16,7 @@ if ($u1 != $session_userid) {
 if ($u2 != $session_userid) {
     $userto_id = $u2;
 }
+
 ?>
 <div id="inner-banner" class="tt-fullHeight3">
     <div class="container homepage-txt">
@@ -39,19 +40,19 @@ if ($u2 != $session_userid) {
                                 <th>Message</th>
                                 <th>Sent</th>
                             </tr>
-                            <?php foreach ($mymessages as $minfos) { ?>
+<?php foreach ($mymessages as $minfos) { ?>
                                 <tr>
                                     <td><?php echo $minfos['username']; ?></td>
                                     <td><?php echo $minfos['message']; ?></td>
-                                    <td><?php echo date(PHP_SHORT_DATE_TIME_FORMAT, strtotime($minfos['created_at'])); ?></td>
+                                    <td><?php echo Yii::app()->localtime->toLocalDateTime($minfos['created_at']); ?></td>
                                 </tr>
-                            <?php } ?>
+<?php } ?>
                         </table>
                     </div>
                 </div>     
             </div>    
         </div>
 
-        <?php $this->renderPartial('_reply_message', compact('model', 'userto_id', 'mymessages')); ?>
+<?php $this->renderPartial('_reply_message', compact('model', 'userto_id', 'mymessages')); ?>
     </div>
 </div>

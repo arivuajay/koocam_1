@@ -142,7 +142,7 @@ class Myclass extends CController {
             "2" => "Delete"
         );
     }
-    
+
     public static function guid($opt = true) {
         $new_guid = Myclass::create_guid($opt);
         do {
@@ -156,7 +156,7 @@ class Myclass extends CController {
         } while ($old_guid != $new_guid);
         return $new_guid;
     }
-    
+
     public static function create_guid($opt = true) {       //  Set to true/false as your default way to do this.
         if (function_exists('com_create_guid')) {
             if ($opt) {
@@ -178,6 +178,29 @@ class Myclass extends CController {
                     . substr($charid, 20, 12)
                     . $right_curly;
             return $uuid;
+        }
+    }
+
+    function timeAgo($time) {
+        $cur_time = strtotime(Yii::app()->localtime->toLocalDateTime(date("Y-m-d H:i:s"), 'short', 'short'));
+
+        $time = $cur_time - $time; // to get the time since that moment
+        $time = ($time < 1) ? 1 : $time;
+        $tokens = array(
+            31536000 => 'year',
+            2592000 => 'month',
+            604800 => 'week',
+            86400 => 'day',
+            3600 => 'hour',
+            60 => 'minute',
+            1 => 'second'
+        );
+
+        foreach ($tokens as $unit => $text) {
+            if ($time < $unit)
+                continue;
+            $numberOfUnits = floor($time / $unit);
+            return $numberOfUnits . ' ' . $text . (($numberOfUnits > 1) ? 's' : '');
         }
     }
 

@@ -82,7 +82,8 @@ class UserIdentity extends CUserIdentity {
         }
         Yii::app()->localtime->Locale = $user->locales->code;
         Yii::app()->localtime->TimeZone = $user->userTimezone->name;
-        
+        $this->setState('userLocale', $user->locales->code);
+        $this->setState('userTimezone', $user->userTimezone->name);
         return;
     }
 

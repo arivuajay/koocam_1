@@ -64,7 +64,6 @@ class MessageController extends Controller {
             $model->attributes = $_POST['Message'];
             $valid = $model->validate();
             if ($valid) {
-
                 $model->id1 = $conversation_id; // conversation id
                 $model->user1 = $session_userid; // Sender
                 $model->timestamp = time();
