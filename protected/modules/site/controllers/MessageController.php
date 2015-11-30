@@ -60,7 +60,6 @@ class MessageController extends Controller {
         $mymessages = array();
 
         $this->performAjaxValidation(array($model));
-
         if (isset($_POST['btnSubmit'])) {
             $model->attributes = $_POST['Message'];
             $valid = $model->validate();
@@ -69,11 +68,9 @@ class MessageController extends Controller {
                 $model->id1 = $conversation_id; // conversation id
                 $model->user1 = $session_userid; // Sender
                 $model->timestamp = time();
-                $model->user1read = "Y";
-                $model->user2read = "N";
-
+                $model->user1read = Message::USER_READ_YES;
+                $model->user2read = Message::USER_READ_NO;
                 $model->save(false);
-
                 Yii::app()->user->setFlash('success', "Message send successfully!!!");
                 $this->redirect(array('index'));
             }
@@ -81,7 +78,7 @@ class MessageController extends Controller {
 
         if (isset($conversation_id)) {
             $id1 = intval($conversation_id);
-            $msginfo = Message::model()->findByAttributes(array('id1' => $id1, 'id2' => "1"));
+            $msginfo = Message::model()->findByAttributes(array('id1' => $id1, 'id2' => Message::NEW_CONVERSATION_START));
             $msgcount = count($msginfo);
             //We check if the discussion exists
             if ($msgcount == 1) {
@@ -89,13 +86,13 @@ class MessageController extends Controller {
                 $u2 = $msginfo['user2'];
 
                 if ($u1 == $session_userid || $u2 == $session_userid) {
-
                     // Update the unread messages to read
-                    $sql = "UPDATE {{message}} SET user2read = 'Y' WHERE  user2 = '$session_userid' and id1= '$id1'";
+                    $user_read_yes = Message::USER_READ_YES;
+                    $sql = "UPDATE {{message}} SET user2read = '{$user_read_yes}' WHERE  user2 = '$session_userid' and id1= '$id1'";
                     $command = Yii::app()->db->createCommand($sql)->execute();
 
                     $mymessages = Yii::app()->db->createCommand() //this query contains all the data
-                            ->select('message.timestamp, message.message, user.user_id, user.username')
+                            ->select('message.created_at, message.message, user.user_id, user.username')
                             ->from(array('{{message}} message', '{{user}} user'))
                             ->where("message.id1 = '$id1' and user.user_id = message.user1")
                             ->order('message.id2')

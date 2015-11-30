@@ -16,7 +16,6 @@ if ($u1 != $session_userid) {
 if ($u2 != $session_userid) {
     $userto_id = $u2;
 }
-
 ?>
 <div id="inner-banner" class="tt-fullHeight3">
     <div class="container homepage-txt">
@@ -27,6 +26,7 @@ if ($u2 != $session_userid) {
         </div>
     </div>
 </div>
+
 <div class="innerpage-cont">
     <div class="container">
         <div class="row"> 
@@ -39,69 +39,19 @@ if ($u2 != $session_userid) {
                                 <th>Message</th>
                                 <th>Sent</th>
                             </tr>
-                            <?php
-                            foreach ($mymessages as $minfos) {
-                                ?>
+                            <?php foreach ($mymessages as $minfos) { ?>
                                 <tr>
                                     <td><?php echo $minfos['username']; ?></td>
                                     <td><?php echo $minfos['message']; ?></td>
-                                    <td><?php echo date('m/d/Y H:i:s', $minfos['timestamp']); ?></td>
+                                    <td><?php echo date(PHP_SHORT_DATE_TIME_FORMAT, strtotime($minfos['created_at'])); ?></td>
                                 </tr>
-                                <?php
-                            }
-                            ?>
+                            <?php } ?>
                         </table>
                     </div>
                 </div>     
             </div>    
         </div>
 
-        <div class="row"> 
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 subscribe-btncont"> 
-                <div class="inner-container"> 
-                    <div class="col-xs-12 col-sm-6 col-md-8 col-lg-8"><h2>Reply</h2></div>  
-                    <?php
-                    $form = $this->beginWidget('CActiveForm', array(
-                        'id' => 'message-form',
-                        'clientOptions' => array(
-                            'validateOnSubmit' => true,
-                        ),
-                    ));
-//echo $form->errorSummary(array($model));
-                    ?>
-                    <div class="forms-cont"> 
-                        <div class="row"> 
-
-                            <div class="form-row1"> 
-                                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4"> 
-                                    <?php echo $form->labelEx($model, 'message'); ?>
-                                </div>
-                                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">       
-                                    <?php echo $form->textArea($model, 'message', array('class' => 'form-control', 'maxlength' => 1000, 'rows' => 5, 'cols' => 50)); ?>  
-                                    <?php echo $form->error($model, 'message'); ?>
-                                </div> 
-                            </div>
-
-                            <?php echo $form->hiddenField($model, 'user2', array("value" => $userto_id)); ?>
-                            <?php echo $form->hiddenField($model, 'id2', array("value" => count($mymessages) + 1)); ?>
-
-                            <div class="form-row1"> 
-                                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4 pull-right"> 
-                                    <?php
-                                    echo CHtml::tag('button', array(
-                                        'name' => 'btnSubmit',
-                                        'type' => 'submit',
-                                        'class' => 'submit-btn'
-                                            ), '<i class="fa fa-check-circle"></i> Submit');
-                                    ?>
-                                </div>
-                            </div>  
-
-                        </div>  
-                    </div>    
-                    <?php $this->endWidget(); ?>
-                </div>
-            </div> 
-        </div>  
+        <?php $this->renderPartial('_reply_message', compact('model', 'userto_id', 'mymessages')); ?>
     </div>
 </div>

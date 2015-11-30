@@ -97,14 +97,14 @@ class UserController extends Controller {
             $id1 = $npm_count + 1;
 
             $message->id1 = $id1; // conversation id
-            $message->id2 = 1; //New conversation start
+            $message->id2 = Message::NEW_CONVERSATION_START; //New conversation start
             $message->user1 = Yii::app()->user->id; // Sender
             $message->user2 = $model->user_id; // Receiver
             $message->timestamp = time();
-            $message->user1read = "Y";
-            $message->user2read = "N";
-
+            $message->user1read = Message::USER_READ_YES;
+            $message->user2read = Message::USER_READ_NO;
             $message->save(false);
+            
             Yii::app()->user->setFlash('success', "Message sent successfully!!!");
             $this->redirect(array('/site/user/profile', 'slug' => $model->slug));
         }

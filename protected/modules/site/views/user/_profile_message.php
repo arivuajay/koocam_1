@@ -1,3 +1,10 @@
+<?php
+/* @var $this DefaultController */
+/* @var $model User */
+/* @var $user_profile UserProfile */
+/* @var $message Message */
+?>
+
 <div class="modal fade bs-example-modal-profile-msg" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -28,7 +35,7 @@
                             <?php echo $form->error($message, 'message'); ?>
                         </div>
                     </div>
-                    
+
                     <div class = "form-group form-control-material static hide">
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <?php echo $form->labelEx($message, 'userSlug'); ?>

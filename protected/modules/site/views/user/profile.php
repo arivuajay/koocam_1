@@ -6,7 +6,9 @@
 
 $this->title = 'Koocam - Profile';
 $themeUrl = $this->themeUrl;
+
 $is_user = !Yii::app()->user->isGuest && Yii::app()->user->id == $model->user_id;
+$is_not_my_profile = !Yii::app()->user->isGuest && Yii::app()->user->id != $model->user_id;
 ?>
 
 <div id="inner-banner" class="tt-fullHeight3">
@@ -18,7 +20,6 @@ $is_user = !Yii::app()->user->isGuest && Yii::app()->user->id == $model->user_id
                     <?php if ($is_user) { ?>
                         <button class="btn btn-default edit-btn" data-toggle="modal" data-target=".bs-example-modal-sm2" data-dismiss=".bs-example-modal-sm2"> <i class="fa fa-pencil"></i> </button>
                     <?php } ?>
-
                 </h2>
                 <?php echo CHtml::link($user_profile->prof_tag, '#'); ?>
                 <br/>
@@ -37,7 +38,7 @@ $is_user = !Yii::app()->user->isGuest && Yii::app()->user->id == $model->user_id
                     <?php echo CHtml::image($user_profile->getFilePath(false, '/users/' . $model->user_id), '', array()); ?>
                 </div>
                 <div class="row">
-                    <?php if (!$is_user && !Yii::app()->user->isGuest) { ?>
+                    <?php if ($is_not_my_profile) { ?>
                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                             <a href="#" class="big-btn btn btn-default " data-toggle="modal" data-target=".bs-example-modal-profile-msg" data-dismiss=".bs-example-modal-profile-msg"> <i class="fa fa-envelope-o"></i> Message </a>
                         </div>
@@ -51,18 +52,13 @@ $is_user = !Yii::app()->user->isGuest && Yii::app()->user->id == $model->user_id
                 </div>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 course-details">
-
                 <h2> About <?php echo $model->fullname; ?> </h2>
-
                 <p class="date"> Date of Join : <?php echo date(PHP_SHORT_DATE_FORMAT, strtotime($model->created_at)); ?></p>
                 <p><?php echo $user_profile->prof_about; ?></p>
-
                 <h4> Country </h4>
                 <p> <?php echo $model->country; ?> </p>
-
                 <h4> Languages </h4>
                 <p> <?php echo $model->languages ?> </p>
-
                 <h4> Interests </h4>
                 <p> <?php echo $user_profile->prof_interests; ?></p>
             </div>
@@ -89,7 +85,7 @@ if ($is_user) {
     $this->renderPartial('_profile_edit', compact('model', 'user_profile'));
 }
 
-if (!$is_user && !Yii::app()->user->isGuest) {
+if ($is_not_my_profile) {
     $this->renderPartial('_profile_message', compact('model', 'user_profile', 'message'));
 }
 ?>

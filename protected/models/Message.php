@@ -16,15 +16,20 @@
  * @property integer $gig_id
  * @property string $created_at
  * @property string $modified_at
+ * @property string $userSlug
  *
  * The followings are the available model relations:
  * @property User $user2
  * @property User $user1
  */
-class Message extends CActiveRecord {
+class Message extends RActiveRecord {
 
     public $maxColumn;
     public $userSlug;
+    
+    const NEW_CONVERSATION_START = 1;
+    const USER_READ_YES = "Y";
+    const USER_READ_NO = "N";
 
     /**
      * @return string the associated database table name
@@ -140,23 +145,25 @@ class Message extends CActiveRecord {
 
     public static function getMyMsgListQuery() {
         $session_userid = Yii::app()->user->id;
+        $new_conversation_start = self::NEW_CONVERSATION_START;
 
-        $sql = "SELECT m1.*, count(m2.id1) as reps, user.user_id, user.username FROM {{message}} `m1`, {{message}} `m2`, {{user}} `user` WHERE ((m1.user1 = '{$session_userid}' and user.user_id = m1.user2) or (m1.user2 = '{$session_userid}' and user.user_id = m1.user1)) and m1.id2='1'and m2.id1 = m1.id1 GROUP BY `m1`.`id1` ORDER BY `m1`.`id1` DESC";
+        $sql = "SELECT m1.*, count(m2.id1) as reps, user.user_id, user.username FROM {{message}} `m1`, {{message}} `m2`, {{user}} `user` WHERE ((m1.user1 = '{$session_userid}' and user.user_id = m1.user2) or (m1.user2 = '{$session_userid}' and user.user_id = m1.user1)) and m1.id2='{$new_conversation_start}' and m2.id1 = m1.id1 GROUP BY `m1`.`id1` ORDER BY `m1`.`id1` DESC";
         return $sql;
     }
 
     public static function getMyUnReadMsgCount() {
         $uid = Yii::app()->user->id;
-        $condition_unread = "((user1=" . $uid . " AND user1read='N') OR (user2=" . $uid . " AND user2read='N'))";
+        $user_read_no = self::USER_READ_NO;
+        $condition_unread = "((user1=" . $uid . " AND user1read='{$user_read_no}') OR (user2=" . $uid . " AND user2read='{$user_read_no}'))";
         $dispcount = Message::model()->count($condition_unread);
         return $dispcount;
     }
 
     public static function getMyUnReadMsg() {
         $session_userid = Yii::app()->user->id;
-        $sql = "SELECT m1.* FROM {{message}} `m1`, {{user}} `user` WHERE ((m1.user2 = '{$session_userid}' and m1.user2read='N' and user.user_id = m1.user1)) ORDER BY `m1`.`message_id` DESC";
+        $user_read_no = self::USER_READ_NO;
+        $sql = "SELECT m1.* FROM {{message}} `m1`, {{user}} `user` WHERE ((m1.user2 = '{$session_userid}' and m1.user2read='{$user_read_no}' and user.user_id = m1.user1)) ORDER BY `m1`.`message_id` DESC";
         $total_items = Yii::app()->db->createCommand($sql)->queryAll();
-        
         return $total_items;
     }
 
