@@ -25,3 +25,11 @@ label{
     cursor: pointer;
     font-size: 20px;
 }
+
+#booking-cal table tbody tr td{
+    cursor: pointer;
+}
+
+.fc-state-highlight {
+    background:#fcf8e3 none repeat scroll 0 0;
+}

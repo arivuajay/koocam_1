@@ -33,6 +33,7 @@ class GigBooking extends RActiveRecord {
     public $hours;
     public $minutes;
     public $dist_date;
+    public $is_message;
 
     const GIG_BOOKING_SESSION = 2;
     const HOUR_MIN = 0;
@@ -42,7 +43,8 @@ class GigBooking extends RActiveRecord {
 
     public function init() {
         if ($this->isNewRecord) {
-            $this->book_date = $this->book_start_time = '';
+            $this->book_date = date('Y-m-d');
+            $this->book_start_time = '';
         }
         parent::init();
     }
@@ -73,7 +75,7 @@ class GigBooking extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('gig_id, book_user_id, book_date, book_start_time, book_message, book_session, minutes, hours', 'required'),
+            array('gig_id, book_date, book_start_time, book_session, minutes, hours', 'required'),
             array('gig_id, book_user_id', 'numerical', 'integerOnly' => true),
             array('book_guid', 'length', 'max' => 50),
             array('book_is_extra, book_approve, book_payment_status', 'length', 'max' => 1),
@@ -81,8 +83,9 @@ class GigBooking extends RActiveRecord {
             array('hours', 'numerical', 'min' => self::HOUR_MIN, 'max' => self::HOUR_MAX, 'integerOnly' => true),
             array('minutes', 'numerical', 'min' => self::MINUTE_MIN, 'max' => self::MINUTE_MAX, 'integerOnly' => true),
             array('hours', 'durationValidate'),
+            array('book_start_time', 'bookingValidate'),
 //            array('book_start_time', 'date', 'format' => Yii::app()->localtime->getLocalDateTimeFormat('short', 'short')),
-            array('book_approved_time, book_payment_info, modified_at, book_session', 'safe'),
+            array('book_approved_time, book_payment_info, modified_at, book_session, is_message, book_message', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('book_id, book_guid, gig_id, book_user_id, book_date, book_start_time, book_end_time, book_is_extra, book_gig_price, book_extra_price, book_total_price, book_message, book_approve, book_approved_time, book_payment_status, book_payment_info, created_at, modified_at', 'safe', 'on' => 'search'),
@@ -93,6 +96,19 @@ class GigBooking extends RActiveRecord {
         if ($this->hours == '0') {
             if ($this->minutes == '0')
                 $this->addError($attribute, 'Time should not be Zero');
+        }
+    }
+
+    public function bookingValidate($attribute, $params) {
+        if ($this->book_start_time != '') {
+            $alias = $this->getTableAlias(false, false);
+            $start_time = $this->book_start_time;
+            $booking_exists = self::model()->findAll(array(
+                'condition' => "$alias.book_start_time <= :start_time And $alias.book_end_time >= :start_time And $alias.book_approve = '1'",
+                'params' => array(':start_time' => $start_time)
+            ));
+            if (!empty($booking_exists))
+                $this->addError($attribute, 'Someone Already booked this Time. Try other timings');
         }
     }
 
@@ -131,6 +147,8 @@ class GigBooking extends RActiveRecord {
             'book_payment_info' => 'Payment Info',
             'created_at' => 'Created At',
             'modified_at' => 'Modified At',
+            'book_session' => 'Session',
+            'is_message' => 'Is message',
         );
     }
 
@@ -198,31 +216,88 @@ class GigBooking extends RActiveRecord {
 
     public static function gigSessionPerUser($user_id, $gig_id, $date) {
         $session = self::GIG_BOOKING_SESSION;
-        $booking = self::model()->countByAttributes(array('book_user_id' => $user_id, 'gig_id' => $gig_id, 'book_date' => $date));
-        return ($session - $booking);
+        $bookings = self::model()->findAllByAttributes(array('book_user_id' => $user_id, 'gig_id' => $gig_id, 'book_date' => $date));
+
+        $session_count = 0;
+        foreach ($bookings as $booking) {
+            $session_count += $booking->book_session;
+        }
+        return ($session - $session_count);
+    }
+
+    public static function gigSessionList($user_id, $gig_id, $date) {
+        $session_count = self::gigSessionPerUser($user_id, $gig_id, $date);
+        if ($session_count == 0)
+            return array();
+        $range = range(1, $session_count);
+        return array_combine($range, $range);
     }
 
     protected function beforeSave() {
-        if ($this->isNewRecord) {
+        if ($this->isNewRecord)
             $this->book_guid = Myclass::guid(false);
-        }
 
         $gig = Gig::model()->findByPk($this->gig_id);
         if ($gig):
             $this->book_end_time = date('Y-m-d H:i:s', strtotime("+{$gig->gig_duration} minutes", strtotime($this->book_start_time)));
+            if ($this->book_session == 2)
+                $this->book_end_time = date('Y-m-d H:i:s', strtotime("+{$gig->gig_duration} minutes", strtotime($this->book_end_time)));
+
+            $this->book_gig_price = $gig->gig_price;
+            if ($this->book_is_extra)
+                $this->book_extra_price = $gig->gigExtras->extra_price;
+            $this->book_total_price = $gig->gig_price + $this->book_extra_price;
         endif;
-
-//        $this->book_date = Yii::app()->localtime->fromLocalDateTime($this->book_date, 'short');
-//        $this->book_start_time = Yii::app()->localtime->fromLocalDateTime($this->book_start_time, 'short', 'short');
-//        $this->book_end_time = Yii::app()->localtime->fromLocalDateTime($this->book_end_time, 'short', 'short');
-
+        $this->book_date = $this->book_date . ' 00:00:00';
+        
+        if($this->is_message == 'N')
+            $this->book_message = '';
+        
         return parent::beforeSave();
     }
 
     protected function beforeValidate() {
+        if ($this->is_message == 'Y') {
+//            $this->validatorList->add(CValidator::createValidator('required', $this, 'book_message', array()));
+        }
+
         $seconds = $this->hours * 3600 + $this->minutes * 60;
         $this->book_start_time = $this->book_date . ' ' . gmdate("H:i:s", $seconds);
         return parent::beforeValidate();
+    }
+
+    protected function afterSave() {
+        if ($this->isNewRecord) {
+            $tutor = $this->gig->tutor;
+            $learner = $this->bookUser;
+            $book_date = date(PHP_SHORT_DATE_FORMAT, strtotime($this->book_date));
+
+            $mail = new Sendmail;
+            $trans_array = array(
+                "{SITENAME}" => SITENAME,
+                "{USERNAME}" => $tutor->fullname,
+                "{EMAIL_ID}" => $tutor->email,
+                "{LEARNER}" => $learner->fullname,
+                "{GIG}" => $this->gig->gig_title,
+                "{BOOK_DATE}" => $book_date,
+                "{FROM_TIME}" => date('H:i', strtotime($this->book_start_time)),
+                "{TO_TIME}" => date('H:i', strtotime($this->book_end_time)),
+            );
+            $message = $mail->getMessage('gig_booking_tutor', $trans_array);
+            $Subject = $mail->translate("New Booking For Your GIG ({$this->gig->gig_title})");
+            $mail->send($tutor->email, $Subject, $message);
+            
+            $notifn_model = new Notification();
+            $notifn_model->user_id = $tutor->user_id;
+            if($this->book_message == ''){
+                $message = "You have a new booking from {$learner->fullname}";
+            }else{
+                $message = $this->book_message;
+            }
+            $notifn_model->notifn_message = $message;
+            $notifn_model->save(false);
+        }
+        return parent::afterSave();
     }
 
 }

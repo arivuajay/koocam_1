@@ -13,8 +13,7 @@ $logged_user = !$is_tutor && !Yii::app()->user->isGuest;
     <div class="container homepage-txt">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8 col-md-offset-1  col-lg-offset-2 page-details user-details">
-                <?php $url = Yii::app()->createAbsoluteUrl(UPLOAD_DIR . '/users/' . $tutor->user_id . '/thumb' . $tutor->userProf->prof_picture); ?>
-                <p> <?php echo CHtml::image($url, '', array('class' => 'img-circle')); ?></p>
+                <p><?php echo $tutor->profilethumb; ?></p>
                 <h2><?php echo CHtml::link($tutor->fullname, array('/site/default/profile', 'slug' => $tutor->slug), array()); ?></h2>
                 <?php echo CHtml::link($tutor->userProf->prof_tag, '#', array()); ?><br/>
                 <?php echo CHtml::image($themeUrl . '/images/ratings.png', '', array()); ?> </div>
@@ -29,7 +28,7 @@ $logged_user = !$is_tutor && !Yii::app()->user->isGuest;
                     <div class="price-bg"> <?php echo $model->gig_duration; ?> min<br/>
                         <b class="gig_price_txt"> $ <?php echo $gig_price = (int) $model->gig_price; ?> </b></div>
                     <div class="online" data-toggle="tooltip" data-placement="bottom" title="online"> </div>
-                    <?php echo CHtml::image($model->getFilePath(false, '/users/' . $tutor->user_id), '', array()); ?></div>
+                    <?php echo $model->gigimage; ?></div>
                 <div class="row">
                     <?php if (!$is_tutor) { ?>
                         <?php if ($logged_user) { ?>
@@ -144,9 +143,9 @@ if ($logged_user)
     echo $this->renderPartial('_booking_form', compact('model', 'booking_model'));
 ?>
 
-<!--<script type="text/javascript">var switchTo5x = true;</script>
+<script type="text/javascript">var switchTo5x = true;</script>
 <script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
-<script type="text/javascript">stLight.options({publisher: "b111ba58-0a07-447e-92ed-da6eda1af9b3", doNotHash: false, doNotCopy: false, hashAddressBar: false, servicePopup: true});</script>-->
+<script type="text/javascript">stLight.options({publisher: "b111ba58-0a07-447e-92ed-da6eda1af9b3", doNotHash: false, doNotCopy: false, hashAddressBar: false, servicePopup: true});</script>
 
 <?php
 $cs = Yii::app()->getClientScript();
@@ -169,7 +168,8 @@ $js = <<< EOD
         });
 
         $('#booking').on('shown.bs.modal', function () {
-            $('#booking-cal .fc-header span.fc-button-today').trigger( 'click' );
+            $('#booking-cal').trigger( 'destroy' );
+            $('#booking-cal').fullCalendar('render');
         });
     });
 EOD;

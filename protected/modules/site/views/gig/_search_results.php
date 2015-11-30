@@ -13,7 +13,9 @@ $themeUrl = $this->themeUrl;
                         <div class="courses-thumb-cont">
                             <div class="course-thumbimg">
                                 <div class="online" data-toggle="tooltip" data-placement="bottom" title="online"> </div>
-                                <?php echo CHtml::link(CHtml::image($gig->getFilePath(false, '/users/' . $gig->tutor->user_id . '/thumb'), '', array()), array('/site/gig/view', 'slug' => $gig->slug), array()); ?>
+                                <?php
+                                $image = $gig->gigthumb;
+                                echo CHtml::link($image, array('/site/gig/view', 'slug' => $gig->slug), array()); ?>
                             </div>
                             <div class="course-thumbdetails">
                                 <h2> <?php echo CHtml::link($gig->gig_title, array('/site/gig/view', 'slug' => $gig->slug), array()); ?> </h2>

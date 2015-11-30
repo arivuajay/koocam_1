@@ -16,20 +16,19 @@ $form = $this->beginWidget('CActiveForm', array(
     'enableAjaxValidation' => true,
     'clientOptions' => array(
         'validateOnSubmit' => true,
-        'hideErrorMessage' => true,
+//        'hideErrorMessage' => true,
     ),
         ));
 echo $form->hiddenField($booking_model, 'gig_id', array('value' => $model->gig_id));
-echo $form->hiddenField($booking_model, 'book_date', array('value' => date('Y-m-d')));
+echo $form->hiddenField($booking_model, 'book_date', array());
+echo $form->hiddenField($booking_model, 'book_start_time', array());
 
-$user_sessions = GigBooking::gigSessionPerUser(Yii::app()->user->id, $model->gig_id, date('Y-m-d'));
-$session = range(1, $user_sessions);
+$session = GigBooking::gigSessionList(Yii::app()->user->id, $model->gig_id, date('Y-m-d'));
 $gig_price = (int) $model->gig_price;
-
-$bookings = array_values(CHtml::listData(GigBooking::model()->uniqueDays()->findAll(), 'dist_date', 'dist_date'));
+//$bookings = array_values(CHtml::listData(GigBooking::model()->uniqueDays()->findAll(), 'dist_date', 'dist_date'));
 ?>
 <script type="text/javascript">
-    var avail_dates = <?php echo CJSON::encode($bookings); ?>;
+//    var avail_dates = <?php echo CJSON::encode($bookings); ?>;
 </script>
 <div class="modal fade" id="booking" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
@@ -39,20 +38,29 @@ $bookings = array_values(CHtml::listData(GigBooking::model()->uniqueDays()->find
                 <h4 class="modal-title" id="myModalLabel"><?php echo $model->gig_title; ?></h4>
             </div>
             <div class="modal-body">
-                <?php echo $form->errorSummary($booking_model); ?>
+                <?php // echo $form->errorSummary($booking_model); ?>
 
                 <div class="popup-calendaer-cont">
                     <?php
-                    $event_url = Yii::app()->createAbsoluteUrl('/site/gigbooking/calendarevents');
-                    $js_date_format = JS_SHORT_DATE_FORMAT;
+                    $event_url = Yii::app()->createAbsoluteUrl('/site/gigbooking/calendarevents', array('gig' => $model->gig_id));
+                    $js_date_format = JS_SHORT_DATE_FORMAT_2;
+                    $session_url = Yii::app()->createAbsoluteUrl('/site/gigbooking/getsessionoptions');
+                    $user_id = Yii::app()->user->id;
+                    
                     $this->widget('ext.EFullCalendar.EFullCalendar', array(
-                        'id' =>'booking-cal',
+                        'id' => 'booking-cal',
                         'htmlOptions' => array(
                             'style' => 'width:100%',
                             'class' => 'book-calendar'
                         ),
                         'options' => array(
-                            'defaultDate' => '2015-12-01',
+                            'height' => '450',
+                            'eventLimit' => true,
+                            'views' => array(
+                                'day' => array(
+                                    'eventLimit' => 1
+                                )
+                            ),
                             'header' => array(
                                 'left' => 'prev,next today',
                                 'center' => 'title',
@@ -61,19 +69,33 @@ $bookings = array_values(CHtml::listData(GigBooking::model()->uniqueDays()->find
                             //uncomment if you want to show events
                             'events' => $event_url,
                             'lazyFetching' => false,
-                            'dayClick' => new CJavaScriptExpression("js:function(date, allDay, jsEvent, view) {
+                            'dayClick' => new CJavaScriptExpression("js:function(date, jsEvent, view) {
                                 var myDate = new Date();
                                 var daysToAdd = -1;
                                 myDate.setDate(myDate.getDate() + daysToAdd);
                                 if (date < myDate) {
                                     alert('You cannot book on this day!');
                                 }else{
-                                    newdate = $.format.date(date, 'yyyy-MM-dd');
+                                    newdate = date.format();
                                     $('#GigBooking_book_date').val(newdate);
-                                    $('.book-calendar table tbody td').removeClass('fc-state-highlight');
-                                    $(this).addClass('fc-state-highlight');
+                                    $('.book-calendar table tbody td').removeClass('fc-state-highlight fc-today');
+                                    $('td[data-date='+date.format('YYYY-MM-DD')+']').addClass('fc-state-highlight');
+                                    $(jsEvent.target).addClass('fc-state-highlight');
                                     $('.popup-calendaer-cont').slideUp();
-                                    $('#booking_date_txt').html($.format.date(date, '$js_date_format'));
+                                    $('#booking_date_txt').html(date.format('DD-MM-YYYY'));
+                                    console.log(date.format('$js_date_format'));
+                                    
+                                    $.ajax({
+                                        type: 'POST',
+                                        url: '$session_url',
+                                        data: {user_id: '$user_id', gig_id: '{$model->gig_id}', date: newdate},
+                                        success:function(data){
+                                            $('.selectpicker').html(data).selectpicker('refresh');
+                                        },
+                                        error: function(data) {
+                                            alert('Something went wrong. Try again');
+                                        },
+                                    });
                                 }
                             }"),
                             'dayRender' => new CJavaScriptExpression('js:function (date, cell) {
@@ -94,7 +116,7 @@ $bookings = array_values(CHtml::listData(GigBooking::model()->uniqueDays()->find
                     <div class="row">
                         <div class="form-group">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                Booking Date : <span id="booking_date_txt" onclick="$('.popup-calendaer-cont').slideDown();"><?php echo date(PHP_SHORT_DATE_FORMAT); ?></span>
+                                Booking Date : <span id="booking_date_txt" onclick="$('.popup-calendaer-cont').slideDown();"><?php echo date(PHP_SHORT_DATE_FORMAT, strtotime($booking_model->book_date)); ?></span>
                             </div>
                         </div>
                         <div class="form-group">
@@ -106,6 +128,7 @@ $bookings = array_values(CHtml::listData(GigBooking::model()->uniqueDays()->find
                                     <span class="input-group-addon" data-incr="1">-</span>
                                 </div>
                                 <?php echo $form->error($booking_model, 'hours'); ?>
+                                <?php echo $form->error($booking_model, 'book_start_time'); ?>
                             </div>
 
                             <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 ">
@@ -135,7 +158,7 @@ $bookings = array_values(CHtml::listData(GigBooking::model()->uniqueDays()->find
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10 extras-txt">
-                                            <?php echo $form->checkBox($booking_model, 'book_is_extra', array('class' => 'book_extra_check', 'id' => 'book_extra_inner')); ?>
+                                            <?php echo $form->checkBox($booking_model, 'book_is_extra', array('class' => 'book_extra_check', 'id' => 'book_extra_inner', 'value' => 'Y', 'uncheckValue' => 'N')); ?>
                                             <?php echo $model->gigExtras->extra_description; ?>
                                         </div>
                                         <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2 ">
@@ -148,7 +171,14 @@ $bookings = array_values(CHtml::listData(GigBooking::model()->uniqueDays()->find
                             </div>
                         <?php } ?>
                         <div class="form-group">
-                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 ">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                <?php echo $form->checkBox($booking_model, 'is_message', array('value' => 'Y', 'uncheckValue' => 'N')); ?>
+                                Want to send Message ?
+                                <?php echo $form->error($booking_model, 'is_message'); ?>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 hide" id="message_div">
                                 <?php echo $form->textArea($booking_model, 'book_message', array('class' => 'form-control', 'placeholder' => "Message", 'class' => "form-control form-txtarea", 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "Vivamus sagittis lacus vel augue laoreet rutrum faucibus.")); ?>
                                 <?php echo $form->error($booking_model, 'book_message'); ?>
                             </div>
@@ -174,24 +204,10 @@ $bookings = array_values(CHtml::listData(GigBooking::model()->uniqueDays()->find
 <?php
 $cs = Yii::app()->getClientScript();
 $cs_pos_end = CClientScript::POS_END;
-$cs->registerScriptFile($themeUrl . '/js/bootstrap-timepicker.js', $cs_pos_end);
+$messageId = CHTML::activeId($booking_model, 'is_message');
 
 $js = <<< EOD
     jQuery(document).ready(function ($) {
-
-//        $('#timepicker1').on('changeTime.timepicker', function(e) {
-//            $('#timeDisplay').text(e.time.value);
-//        });
-//
-//        $('#timepicker1').timepicker({
-//            minuteStep: 1,
-//            showMeridian: false
-//        });
-//
-//        setTimeout(function() {
-//              $('#timeDisplay').text($('#timepicker1').val());
-//        }, 100);
-
         $('#book_extra_inner').on('ifChecked', function(event){
             var newPrice = parseFloat(extra_div.data('gig_price')) + parseFloat(extra_div.data('extra_price'));
             $('.total-price').html('Price : $ '+newPrice);
@@ -229,8 +245,6 @@ $js = <<< EOD
                 if(newVal < min)
                     newVal = min;
             }
-            console.log(newVal);
-            console.log(pad(newVal, "2"));
             input_group.find("input").val(pad(newVal, "2")).trigger('change');
         });
 
@@ -239,8 +253,13 @@ $js = <<< EOD
                return false;
         });
 
-//        $('.fc-button-today.fc-button-inner.fc-button-content').click();
-        $('.fc-button-today').click();
+        $('#{$messageId}').on('ifChecked', function(event){
+            $('#message_div').removeClass('hide');
+        });
+        $('#{$messageId}').on('ifUnchecked', function(event){
+            $('#message_div').addClass('hide');
+        });
+        
     });
 
     function pad (str, max) {

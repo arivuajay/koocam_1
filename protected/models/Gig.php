@@ -380,4 +380,19 @@ class Gig extends RActiveRecord {
         return parent::beforeValidate();
     }
 
+    public function getGigimage() {
+        if(!empty($this->gig_media))
+            $path = UPLOAD_DIR . '/users/' . $this->tutor_id . $this->gig_media;
+        if (!isset($path) || !is_file($path))
+            $path = 'themes/'.Yii::app()->theme->name . '/images/course-img.jpg';
+        return CHtml::image(Yii::app()->createAbsoluteUrl($path), '', array('class' => ''));
+    }
+
+    public function getGigthumb() {
+        if(!empty($this->gig_media))
+            $path = UPLOAD_DIR . '/users/' . $this->tutor_id . '/thumb' . $this->gig_media;
+        if (!isset($path) || !is_file($path))
+            $path = 'themes/'.Yii::app()->theme->name . '/images/course1.jpg';
+        return CHtml::image(Yii::app()->createAbsoluteUrl($path), '', array('class' => ''));
+    }
 }

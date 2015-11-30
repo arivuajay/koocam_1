@@ -28,7 +28,7 @@
  * @property GigComments[] $gigComments
  * @property Timezone $userTimezone
  * @property Locales $userLocales
- * @property UserProfile[] $userProfiles
+ * @property UserProfile $userProf
  * @property Message[] $user1Messages
  * @property Message[] $user2Messages
  */
@@ -246,4 +246,19 @@ class User extends RActiveRecord {
         return $Country->country_name;
     }
 
+    public function getProfileimage() {
+        if(!empty($this->userProf->prof_picture))
+            $path = UPLOAD_DIR . '/users/' . $this->user_id . $this->userProf->prof_picture;
+        if (!isset($path) || !is_file($path))
+            $path = 'themes/'. Yii::app()->theme->name . '/images/profile-img.png';
+        return CHtml::image(Yii::app()->createAbsoluteUrl($path), '', array('class' => ''));
+    }
+
+    public function getProfilethumb() {
+        if(!empty($this->userProf->prof_picture))
+            $path = UPLOAD_DIR . '/users/' . $this->user_id . '/thumb' . $this->userProf->prof_picture;
+        if (!isset($path) || !is_file($path))
+            $path = 'themes/'.Yii::app()->theme->name . '/images/profile-pic.png';
+        return CHtml::image(Yii::app()->createAbsoluteUrl($path), '', array('class' => 'img-circle'));
+    }
 }

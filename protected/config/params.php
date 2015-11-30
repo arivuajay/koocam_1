@@ -30,6 +30,7 @@ return array(
     'NOREPLYMAIL' => 'noreply@arkinfotec.com',
     'CONTACTMAIL' => 'noreply@arkinfotec.com',
     'JS_SHORT_DATE_FORMAT' => 'dd-MM-yyyy',
+    'JS_SHORT_DATE_FORMAT_2' => 'DD-MM-YYYY',
     'PHP_SHORT_DATE_FORMAT' => 'd-m-Y',
     'PHP_SHORT_DATE_TIME_FORMAT' => 'd-m-Y H:i:s',
 

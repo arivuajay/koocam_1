@@ -191,8 +191,8 @@ class UserProfile extends RActiveRecord {
             $width1 = self::IMG_WIDTH;
             $height1 = self::IMG_HEIGHT;
             $img = new Img;
-            $img->resampleGD($source, $user_path , $this->prof_picture, $width1, $height1, 1, 0);
-            
+            $img->resampleGD($source, $user_path, $this->prof_picture, $width1, $height1, 1, 0);
+
             $this->setUploadDirectory($user_path . '/thumb/userprofile');
             $destination2 = $user_path . '/thumb' . $this->prof_picture;
             $width2 = self::THUMB_WIDTH;
@@ -205,5 +205,4 @@ class UserProfile extends RActiveRecord {
 
         return parent::afterSave();
     }
-
 }

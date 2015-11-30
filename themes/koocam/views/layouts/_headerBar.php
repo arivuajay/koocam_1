@@ -58,22 +58,7 @@ $themeUrl = $this->themeUrl;
                                         <?php $this->renderPartial('//layouts/_message_box', compact('themeUrl')); ?>
                                     </li>
                                     <li>
-                                        <a data-toggle="dropdown" class="dropdown-toggle" href="#" >
-                                            <?php echo CHtml::image($themeUrl . '/images/my-notification.png', '', array()); ?> <b> My Notifications </b> <span class="count">5</span>
-                                            <span class="circle"></span>
-                                        </a>
-                                        <ul role="menu" class="dropdown-menu notifications  bullet pull-right" >
-                                            <li class="notification-header">
-                                                <em>You have 5 notifications</em>
-                                            </li>
-                                            <li><a href="#">New comments For Your Gig</a>  <span class="timestamp">1 min ago</span></li>
-                                            <li><a href="#">New comments For Your Gig</a>  <span class="timestamp">1 min ago</span></li>
-                                            <li><a href="#">New comments For Your Gig</a>  <span class="timestamp">1 min ago</span></li>
-                                            <li><a href="#">New comments For Your Gig</a>  <span class="timestamp">1 min ago</span></li>
-                                            <li><a href="#">New comments For Your Gig</a>  <span class="timestamp">1 min ago</span></li>
-
-
-                                        </ul>
+                                        <?php $this->renderPartial('//layouts/_notification_box', compact('themeUrl')); ?>
                                     </li>
                                     <li role="presentation" class="dropdown">
                                         <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">

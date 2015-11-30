@@ -32,7 +32,7 @@ class GigbookingController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('booking', 'calendarevents'),
+                'actions' => array('booking', 'calendarevents', 'getsessionoptions'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -60,8 +60,8 @@ class GigbookingController extends Controller {
         }
     }
 
-    public function actionCalendarevents() {
-        $bookings = GigBooking::model()->active()->findAll(array('order' => 'created_at DESC'));
+    public function actionCalendarevents($gig) {
+        $bookings = GigBooking::model()->active()->findAll(array('order' => 'created_at DESC', 'condition' => "gig_id = {$gig}"));
         $limit = 10;
         $date = array();
         foreach ($bookings as $booking) {
@@ -72,18 +72,34 @@ class GigbookingController extends Controller {
             }
 
             if ($date[strtotime($booking->book_date)] <= $limit) {
+                $title = 'Busy ('.date('H:i', strtotime($booking->book_start_time)) . '-' . date('H:i', strtotime($booking->book_end_time)).')';
                 $items[] = array(
                     'state' => 'TRUE',
-                    'title' => 'Booked',
+                    'title' => $title,
                     'start' => date('Y-m-d', strtotime($booking->book_date)),
-                    'color' => '#95e5e7',
-                    //                'start' => $booking->book_date,
-                    'url' => $this->createUrl('/site/journal/listjournal', array('date' => date('Y-m-d', strtotime($booking->book_date))))
+                    'color' => '#7E7E7E',
+                        //                'start' => $booking->book_date,
+//                    'url' => $this->createUrl('/site/journal/listjournal', array('date' => date('Y-m-d', strtotime($booking->book_date))))
                 );
             }
         }
 
         echo CJSON::encode($items);
+        Yii::app()->end();
+    }
+
+    public function actionGetsessionoptions() {
+        $options = '<option value="">Select Session</option>';
+        if (isset($_POST)) {
+            $session_count = GigBooking::gigSessionList($_POST['user_id'], $_POST['gig_id'], $_POST['date']);
+
+            if (!empty($session_count)) {
+                foreach ($session_count as $val) {
+                    $options .= "<option value='$val'>$val</option>";
+                }
+            }
+        }
+        echo $options;
         Yii::app()->end();
     }
 
