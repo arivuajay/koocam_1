@@ -88,7 +88,7 @@ class UserIdentity extends CUserIdentity {
     }
 
     protected function getTimezone() {
-        $ip = $_REQUEST['REMOTE_ADDR'];
+        $ip = CHttpRequest::getUserHostAddress();
         $query = @unserialize(file_get_contents('http://ip-api.com/php/' . $ip));
         if ($query && $query['status'] == 'success') {
             return $query;

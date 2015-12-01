@@ -92,7 +92,6 @@ class GigbookingController extends Controller {
         $options = '<option value="">Select Session</option>';
         if (isset($_POST)) {
             $session_count = GigBooking::gigSessionList($_POST['user_id'], $_POST['gig_id'], $_POST['date']);
-
             if (!empty($session_count)) {
                 foreach ($session_count as $val) {
                     $options .= "<option value='$val'>$val</option>";

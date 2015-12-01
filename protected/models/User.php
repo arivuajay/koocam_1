@@ -250,7 +250,7 @@ class User extends RActiveRecord {
         if(!empty($this->userProf->prof_picture))
             $path = UPLOAD_DIR . '/users/' . $this->user_id . $this->userProf->prof_picture;
         if (!isset($path) || !is_file($path))
-            $path = 'themes/'. Yii::app()->theme->name . '/images/profile-img.png';
+            $path = 'themes/'. Yii::app()->theme->name . '/images/profile-img.jpg';
         return CHtml::image(Yii::app()->createAbsoluteUrl($path), '', array('class' => ''));
     }
 
