@@ -139,8 +139,11 @@ $logged_user = !$is_tutor && !Yii::app()->user->isGuest;
 </div>
 
 <?php
-if ($logged_user)
+if ($logged_user){
     echo $this->renderPartial('_booking_form', compact('model', 'booking_model'));
+    echo $this->renderPartial('_startnow_form', compact('model', 'booking_model', 'booking_temp'));
+}
+    
 ?>
 
 <script type="text/javascript">var switchTo5x = true;</script>
