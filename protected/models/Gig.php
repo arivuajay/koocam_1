@@ -407,11 +407,11 @@ class Gig extends RActiveRecord {
         return CHtml::image(Yii::app()->createAbsoluteUrl($path), '', array('class' => ''));
     }
 
-    public function getStartnowButton($text = '<i class="fa fa-video-camera"></i> Start Now !', $class = 'big-btn btn btn-default') {
+    public function getStartnowButton($text = '<i class="fa fa-video-camera"></i> Start Now !', $class = 'big-btn btn btn-default', $data_target = 'startnow') {
         $button = NULL;
         if (!$this->_is_tutor) :
             if ($this->_logged_user) {
-                $button = CHtml::link($text, '#', array('class' => $class));
+                $button = CHtml::link($text, '#', array('class' => $class, 'data-toggle' => "modal", 'data-target' => "#$data_target"));
             } else {
                 $button = CHtml::link($text, '#', array('class' => $class, 'data-toggle' => "modal", 'data-target' => ".bs-example-modal-sm1", 'data-dismiss' => ".bs-example-modal-sm"));
             }
