@@ -147,6 +147,7 @@ $gig_price = (int) $model->gig_price;
                                 <?php echo $form->dropDownList($booking_model, 'book_session', $session, array('class' => 'selectpicker', "data-style" => "btn-white", "data-size" => "5", 'prompt' => 'Select Session')); ?>
                                 <?php echo $form->error($booking_model, 'book_session'); ?>
                             </div>
+                            
                         </div>
                         <?php if (!empty($model->gigExtras)) { ?>
                             <div class="form-group">

@@ -100,15 +100,18 @@ class GigBooking extends RActiveRecord {
     }
 
     public function bookingValidate($attribute, $params) {
-        if ($this->book_start_time != '') {
-            $alias = $this->getTableAlias(false, false);
-            $start_time = $this->book_start_time;
-            $booking_exists = self::model()->findAll(array(
-                'condition' => "$alias.book_start_time <= :start_time And $alias.book_end_time >= :start_time And $alias.book_approve = '1'",
-                'params' => array(':start_time' => $start_time)
-            ));
-            if (!empty($booking_exists))
-                $this->addError($attribute, 'Someone Already booked this Time. Try other timings');
+        if (!empty($this->book_start_time)) {
+
+            if (!empty($this->gig) && !empty($this->book_session) && $this->book_session > 0):
+                $this->setEndtime();
+            
+                $start_time = Yii::app()->localtime->toUTC($this->book_start_time);
+                $end_time = Yii::app()->localtime->toUTC($this->book_end_time);
+                $booking_exists = self::checkBooking($start_time, $end_time);
+
+                if (!empty($booking_exists))
+                    $this->addError($attribute, 'Someone Already booked this Time. Try other timings');
+            endif;
         }
     }
 
@@ -237,67 +240,98 @@ class GigBooking extends RActiveRecord {
         if ($this->isNewRecord)
             $this->book_guid = Myclass::guid(false);
 
-        $gig = Gig::model()->findByPk($this->gig_id);
-        if ($gig):
-            $this->book_end_time = date('Y-m-d H:i:s', strtotime("+{$gig->gig_duration} minutes", strtotime($this->book_start_time)));
-            if ($this->book_session == 2)
-                $this->book_end_time = date('Y-m-d H:i:s', strtotime("+{$gig->gig_duration} minutes", strtotime($this->book_end_time)));
-
-            $this->book_gig_price = $gig->gig_price;
-            if ($this->book_is_extra)
-                $this->book_extra_price = $gig->gigExtras->extra_price;
-            $this->book_total_price = $gig->gig_price + $this->book_extra_price;
-        endif;
-        $this->book_date = $this->book_date . ' 00:00:00';
-        
-        if($this->is_message == 'N')
+        if ($this->is_message == 'N')
             $this->book_message = '';
         
+        echo '<pre>';
+        print_r($this->attributes);
+        exit;
+
         return parent::beforeSave();
     }
 
     protected function beforeValidate() {
         if ($this->is_message == 'Y') {
-//            $this->validatorList->add(CValidator::createValidator('required', $this, 'book_message', array()));
+            $this->validatorList->add(CValidator::createValidator('required', $this, 'book_message', array()));
         }
 
         $seconds = $this->hours * 3600 + $this->minutes * 60;
         $this->book_start_time = $this->book_date . ' ' . gmdate("H:i:s", $seconds);
+
+        if (!empty($this->gig)):
+            $this->book_gig_price = $this->gig->gig_price;
+            if ($this->book_is_extra)
+                $this->book_extra_price = $this->gig->gigExtras->extra_price;
+            $this->book_total_price = $this->gig->gig_price + $this->book_extra_price;
+        endif;
+        $this->book_date = $this->book_date . ' 00:00:00';
+
         return parent::beforeValidate();
     }
 
     protected function afterSave() {
         if ($this->isNewRecord) {
-            $tutor = $this->gig->tutor;
-            $learner = $this->bookUser;
-            $book_date = date(PHP_SHORT_DATE_FORMAT, strtotime($this->book_date));
-
-            $mail = new Sendmail;
-            $trans_array = array(
-                "{SITENAME}" => SITENAME,
-                "{USERNAME}" => $tutor->fullname,
-                "{EMAIL_ID}" => $tutor->email,
-                "{LEARNER}" => $learner->fullname,
-                "{GIG}" => $this->gig->gig_title,
-                "{BOOK_DATE}" => $book_date,
-                "{FROM_TIME}" => date('H:i', strtotime($this->book_start_time)),
-                "{TO_TIME}" => date('H:i', strtotime($this->book_end_time)),
-            );
-            $message = $mail->getMessage('gig_booking_tutor', $trans_array);
-            $Subject = $mail->translate("New Booking For Your GIG ({$this->gig->gig_title})");
-            $mail->send($tutor->email, $Subject, $message);
-            
-            $notifn_model = new Notification();
-            $notifn_model->user_id = $tutor->user_id;
-            if($this->book_message == ''){
-                $message = "You have a new booking from {$learner->fullname}";
-            }else{
-                $message = $this->book_message;
-            }
-            $notifn_model->notifn_message = $message;
-            $notifn_model->save(false);
+            $this->sendMailtoTutor();
+            $this->insertNotification();
         }
         return parent::afterSave();
+    }
+
+    public function setEndtime() {
+        $this->book_end_time = $this->book_start_time;
+        $i = 1;
+        do {
+            $this->book_end_time = date('Y-m-d H:i:s', strtotime("+{$this->gig->gig_duration} minutes", strtotime($this->book_end_time)));
+            $i++;
+        } while ($i <= $this->book_session);
+    }
+
+    public function insertNotification() {
+        $notifn_model = new Notification();
+        $notifn_model->user_id = $this->gig->tutor->user_id;
+        $notifn_model->notifn_type = 'book';
+        $notifn_model->notifn_rel_id = $this->book_id;
+
+        if ($this->book_message == '') {
+            $message = "You have a new booking from {$this->bookUser->fullname}";
+        } else {
+            $message = $this->book_message;
+        }
+        $notifn_model->notifn_message = $message;
+        $notifn_model->save(false);
+    }
+
+    public function sendMailtoTutor() {
+        $tutor = $this->gig->tutor;
+        $learner = $this->bookUser;
+        $book_date = date(PHP_SHORT_DATE_FORMAT, strtotime($this->book_date));
+
+        $mail = new Sendmail;
+        $trans_array = array(
+            "{SITENAME}" => SITENAME,
+            "{USERNAME}" => $tutor->fullname,
+            "{EMAIL_ID}" => $tutor->email,
+            "{LEARNER}" => $learner->fullname,
+            "{GIG}" => $this->gig->gig_title,
+            "{BOOK_DATE}" => $book_date,
+            "{FROM_TIME}" => date('H:i', strtotime($this->book_start_time)),
+            "{TO_TIME}" => date('H:i', strtotime($this->book_end_time)),
+        );
+        $message = $mail->getMessage('gig_booking_tutor', $trans_array);
+        $Subject = $mail->translate("New Booking For Your GIG ({$this->gig->gig_title})");
+        $mail->send($tutor->email, $Subject, $message);
+    }
+
+    public static function checkBooking($start_time, $end_time) {
+        $alias = self::model()->getTableAlias(false, false);
+        $condition = "(($alias.book_start_time <= :start_time And $alias.book_end_time >= :start_time)";
+        $condition .= " OR ($alias.book_start_time <= :end_time And $alias.book_end_time >= :end_time)) ";
+        $condition .= " And $alias.book_approve = '1'";
+
+        return self::model()->findAll(array(
+            'condition' => $condition,
+            'params' => array(':start_time' => $start_time, ':end_time' => $end_time)
+        ));
     }
 
 }
