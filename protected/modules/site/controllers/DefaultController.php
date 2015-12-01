@@ -28,11 +28,11 @@ class DefaultController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('index', 'sociallogin', 'signupsocial', 'login', 'register', 'activation', 'chat'),
+                'actions' => array('index', 'sociallogin', 'signupsocial', 'login', 'register', 'activation'),
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('logout', 'test'),
+                'actions' => array('logout', 'test', 'chat'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -184,7 +184,12 @@ class DefaultController extends Controller {
         exit;
     }
 
-    public function actionChat() {
-        $this->render('chat');
+    public function actionChat($guid) {
+        $token = GigTokens::getAuthData($guid);
+        if(empty($token)){
+            Yii::app()->user->setFlash('danger', "Invalid Access !!!");
+            $this->goHome();
+        }
+        $this->render('chat', compact('token'));
     }
 }

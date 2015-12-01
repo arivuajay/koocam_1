@@ -12,7 +12,7 @@ MySQL - 5.6.14 : Database - koocam
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-USE `koocam`;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`koocam` /*!40100 DEFAULT CHARACTER SET latin1 */;
 
 /*Table structure for table `koo_admin` */
 
@@ -20,11 +20,11 @@ DROP TABLE IF EXISTS `koo_admin`;
 
 CREATE TABLE `koo_admin` (
   `admin_id` int(11) NOT NULL AUTO_INCREMENT,
-  `username` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `password_hash` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `password_reset_token` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `status` enum('0','1') COLLATE utf8_unicode_ci NOT NULL DEFAULT '1',
+  `username` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `password_hash` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `password_reset_token` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+  `email` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `status` enum('0','1') CHARACTER SET utf8 NOT NULL DEFAULT '1',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`admin_id`)
@@ -34,19 +34,37 @@ CREATE TABLE `koo_admin` (
 
 insert  into `koo_admin`(`admin_id`,`username`,`password_hash`,`password_reset_token`,`email`,`status`,`created_at`,`updated_at`) values (1,'admin','be2ce3b45176df1d3e41e35d6aa0ea9a44b56b3575e15ebc6da0d3da7793489b9eb718dc2cfe7f5f2bc61151ad4ffc70ba4d234520ed51735fa98ec878ddc27b',NULL,'admin@koocam.com','1','2015-11-13 11:06:21','0000-00-00 00:00:00');
 
+/*Table structure for table `koo_booking_temp` */
+
+DROP TABLE IF EXISTS `koo_booking_temp`;
+
+CREATE TABLE `koo_booking_temp` (
+  `temp_id` int(11) NOT NULL AUTO_INCREMENT,
+  `temp_guid` varchar(50) NOT NULL,
+  `temp_key` text NOT NULL,
+  `temp_value` longtext NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `modified_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (`temp_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+/*Data for the table `koo_booking_temp` */
+
+insert  into `koo_booking_temp`(`temp_id`,`temp_guid`,`temp_key`,`temp_value`,`created_at`,`modified_at`) values (1,'CE763ED5-A998-35EC-F052-F84118C96258','Start Now Booking','a:6:{s:11:\"temp_gig_id\";s:2:\"36\";s:17:\"temp_book_session\";s:1:\"1\";s:18:\"temp_book_is_extra\";s:1:\"N\";s:17:\"temp_book_user_id\";s:1:\"7\";s:19:\"temp_book_gig_price\";d:60;s:21:\"temp_book_total_price\";d:60;}','2015-12-01 13:39:59','0000-00-00 00:00:00');
+
 /*Table structure for table `koo_cms` */
 
 DROP TABLE IF EXISTS `koo_cms`;
 
 CREATE TABLE `koo_cms` (
   `cms_id` int(11) NOT NULL AUTO_INCREMENT,
-  `slug` varchar(255) NOT NULL,
-  `cms_title` varchar(255) NOT NULL,
-  `cms_description` longtext NOT NULL,
-  `cms_meta_keywords` text,
-  `cms_meta_description` text,
-  `cms_tag` varchar(255) DEFAULT NULL,
-  `status` enum('0','1','2') NOT NULL DEFAULT '1',
+  `slug` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `cms_title` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `cms_description` longtext CHARACTER SET utf8 NOT NULL,
+  `cms_meta_keywords` text CHARACTER SET utf8,
+  `cms_meta_description` text CHARACTER SET utf8,
+  `cms_tag` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+  `status` enum('0','1','2') CHARACTER SET utf8 NOT NULL DEFAULT '1',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `modified_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`cms_id`)
@@ -62,10 +80,10 @@ DROP TABLE IF EXISTS `koo_country`;
 
 CREATE TABLE `koo_country` (
   `country_Id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID:',
-  `country_name` varchar(45) NOT NULL COMMENT 'Name:',
-  `country_two_code` varchar(3) DEFAULT NULL COMMENT 'Two Code:',
-  `country_three_code` varchar(5) DEFAULT NULL COMMENT 'Three Code:',
-  `status` enum('0','1','2') NOT NULL DEFAULT '1' COMMENT 'Status',
+  `country_name` varchar(45) CHARACTER SET utf8 NOT NULL COMMENT 'Name:',
+  `country_two_code` varchar(3) CHARACTER SET utf8 DEFAULT NULL COMMENT 'Two Code:',
+  `country_three_code` varchar(5) CHARACTER SET utf8 DEFAULT NULL COMMENT 'Three Code:',
+  `status` enum('0','1','2') CHARACTER SET utf8 NOT NULL DEFAULT '1' COMMENT 'Status',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `modified_at` timestamp NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`country_Id`)
@@ -82,18 +100,18 @@ DROP TABLE IF EXISTS `koo_gig`;
 CREATE TABLE `koo_gig` (
   `gig_id` int(11) NOT NULL AUTO_INCREMENT,
   `tutor_id` int(11) NOT NULL COMMENT 'User Id',
-  `gig_title` varchar(100) CHARACTER SET latin1 NOT NULL,
+  `gig_title` varchar(100) NOT NULL,
   `cat_id` int(11) DEFAULT NULL,
-  `gig_media` varchar(500) CHARACTER SET latin1 DEFAULT NULL,
-  `gig_tag` varchar(255) CHARACTER SET latin1 DEFAULT NULL,
-  `gig_description` text CHARACTER SET latin1,
+  `gig_media` varchar(500) DEFAULT NULL,
+  `gig_tag` varchar(255) DEFAULT NULL,
+  `gig_description` text,
   `gig_duration` time DEFAULT NULL COMMENT 'Duration.',
   `gig_price` decimal(10,2) DEFAULT NULL,
-  `gig_avail_visual` enum('Y','N') CHARACTER SET latin1 DEFAULT 'N',
-  `is_extra` enum('Y','N') CHARACTER SET latin1 DEFAULT 'N',
-  `gig_important` varchar(255) CHARACTER SET latin1 DEFAULT NULL,
-  `status` enum('0','1','2') CHARACTER SET latin1 DEFAULT '0',
-  `slug` varchar(255) CHARACTER SET latin1 DEFAULT NULL,
+  `gig_avail_visual` enum('Y','N') DEFAULT 'N',
+  `is_extra` enum('Y','N') DEFAULT 'N',
+  `gig_important` varchar(255) DEFAULT NULL,
+  `status` enum('0','1','2') DEFAULT '0',
+  `slug` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `modified_at` timestamp NULL DEFAULT '0000-00-00 00:00:00',
   `created_by` int(11) DEFAULT NULL,
@@ -103,11 +121,11 @@ CREATE TABLE `koo_gig` (
   KEY `FK_koo_gig_user` (`tutor_id`),
   CONSTRAINT `FK_koo_gig_category` FOREIGN KEY (`cat_id`) REFERENCES `koo_gig_category` (`cat_id`) ON UPDATE CASCADE,
   CONSTRAINT `FK_koo_gig_user` FOREIGN KEY (`tutor_id`) REFERENCES `koo_user` (`user_id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8;
 
 /*Data for the table `koo_gig` */
 
-insert  into `koo_gig`(`gig_id`,`tutor_id`,`gig_title`,`cat_id`,`gig_media`,`gig_tag`,`gig_description`,`gig_duration`,`gig_price`,`gig_avail_visual`,`is_extra`,`gig_important`,`status`,`slug`,`created_at`,`modified_at`,`created_by`,`modified_by`) values (36,1,'Learn English 22',1,'/gig/937f021de54a0dbaad4d9ad46d7e4176.jpg','learn english 122','English speaking 1122','00:30:00','60.00','Y','Y','Test tes ttess sste','1','learn-english-22','2015-11-23 18:24:57','2015-11-25 16:43:17',NULL,NULL),(37,2,'Learn Violin',2,'/gig/17fe01287dfbe0048a85e96a009511f4.jpg','test tag','adasd','00:05:00','10.00','Y','Y','Test tes ttess sste','1','learn-english-222','2015-11-25 12:36:07','2015-11-25 19:26:20',NULL,NULL),(38,1,'Learn Guitar',2,'/gig/937f021de54a0dbaad4d9ad46d7e4176.jpg','learn english 122','English speaking 1122','00:30:00','60.00','Y','Y','Test tes ttess sste','1','learn-english-22','2015-11-23 18:24:57','2015-11-25 16:43:17',NULL,NULL),(39,7,'Abc',3,'/gig/17fe01287dfbe0048a85e96a009511f4.jpg','test tag','adasd','00:45:00','10.00','Y','N','Test tes ttess sste','1','abc-4sfla','2015-11-27 16:55:44','2015-11-27 16:55:44',NULL,NULL),(40,3,'Dca',1,'/gig/937f021de54a0dbaad4d9ad46d7e4176.jpg','learn english 122','English speaking 1122','00:30:00','60.00','Y','Y','Test tes ttess sste','1','learn-english-22ds','2015-11-23 18:24:57','2015-11-25 16:43:17',NULL,NULL),(41,3,'Welcome a',4,'/gig/17fe01287dfbe0048a85e96a009511f4.jpg','test tag','adasd','00:45:20','10.00','Y','Y','Test tes ttess sste','1','learn-englishgfgf','2015-11-25 12:36:07','2015-11-25 19:26:20',NULL,NULL),(42,7,'New Class',5,'/gig/937f021de54a0dbaad4d9ad46d7e4176.jpg','learn english 122','English speaking 1122','00:30:00','60.00','Y','Y','Test tes ttess sste','1','learn-english-22jhgjh','2015-11-23 18:24:57','2015-11-25 16:43:17',NULL,NULL),(43,8,'Orange',6,'/gig/17fe01287dfbe0048a85e96a009511f4.jpg','test tag','adasd','00:45:20','10.00','Y','Y','Test tes ttess sste','1','learn-englishiugh','2015-11-25 12:36:07','2015-11-25 19:26:20',NULL,NULL),(44,7,'My New Gigg',1,'/gig/4f2ac3ab641706a455cc045ef253487c.jpg','new gig','My New Gigi','00:35:00','10.00','Y','Y',NULL,'0','my-new-gigg','2015-11-27 19:31:50','2015-11-28 12:52:00',NULL,NULL);
+insert  into `koo_gig`(`gig_id`,`tutor_id`,`gig_title`,`cat_id`,`gig_media`,`gig_tag`,`gig_description`,`gig_duration`,`gig_price`,`gig_avail_visual`,`is_extra`,`gig_important`,`status`,`slug`,`created_at`,`modified_at`,`created_by`,`modified_by`) values (36,1,'Learn English 22',1,'/gig/937f021de54a0dbaad4d9ad46d7e4176.jpg','learn english 122','English speaking 1122','00:30:00','60.00','Y','Y','Test tes ttess sste','1','learn-english-22','2015-11-23 18:24:57','2015-11-25 16:43:17',NULL,NULL),(37,2,'Learn Violin',2,'/gig/17fe01287dfbe0048a85e96a009511f4.jpg','test tag','adasd','00:05:00','10.00','Y','Y','Test tes ttess sste','1','learn-english-222','2015-11-25 12:36:07','2015-11-25 19:26:20',NULL,NULL),(38,1,'Learn Guitar',2,'/gig/937f021de54a0dbaad4d9ad46d7e4176.jpg','learn english 122','English speaking 1122','00:30:00','60.00','Y','Y','Test tes ttess sste','1','learn-english-22','2015-11-23 18:24:57','2015-11-25 16:43:17',NULL,NULL),(39,7,'Abc',3,'/gig/17fe01287dfbe0048a85e96a009511f4.jpg','test tag','adasd','00:45:00','10.00','Y','N','Test tes ttess sste','1','abc-4sfla','2015-11-27 16:55:44','2015-11-27 16:55:44',NULL,NULL),(40,3,'Dca',1,'/gig/937f021de54a0dbaad4d9ad46d7e4176.jpg','learn english 122','English speaking 1122','00:30:00','60.00','Y','Y','Test tes ttess sste','1','learn-english-22ds','2015-11-23 18:24:57','2015-11-25 16:43:17',NULL,NULL),(41,3,'Welcome a',4,'/gig/17fe01287dfbe0048a85e96a009511f4.jpg','test tag','adasd','00:45:20','10.00','Y','Y','Test tes ttess sste','1','learn-englishgfgf','2015-11-25 12:36:07','2015-11-25 19:26:20',NULL,NULL),(42,7,'New Class',5,'/gig/937f021de54a0dbaad4d9ad46d7e4176.jpg','learn english 122','English speaking 1122','00:30:00','60.00','Y','Y','Test tes ttess sste','1','learn-english-22jhgjh','2015-11-23 18:24:57','2015-11-25 16:43:17',NULL,NULL),(43,8,'Orange',6,'/gig/17fe01287dfbe0048a85e96a009511f4.jpg','test tag','adasd','00:45:20','10.00','Y','Y','Test tes ttess sste','1','learn-englishiugh','2015-11-25 12:36:07','2015-11-25 19:26:20',NULL,NULL),(44,7,'My New Gigg',1,'/gig/4f2ac3ab641706a455cc045ef253487c.jpg','new gig','My New Gigi','00:35:00','10.00','Y','Y',NULL,'0','my-new-gigg','2015-11-27 19:31:50','2015-11-28 12:52:00',NULL,NULL),(45,7,' எங்கெங்கு கட்டுரை ',2,'/gig/650c469e273fcc3f3421119a19b482bf.png',' எங்கெங்கு கட்டுரை ',' எங்கெங்கு கட்டுரை  எங்கெங்கு கட்டுரை  எங்கெங்கு கட்டுரை  எங்கெங்கு கட்டுரை  எங்கெங்கு கட்டுரை ','00:05:00','5.00','N','N','','0','எங்கெங்கு-கட்டுரை','2015-12-01 08:38:07','0000-00-00 00:00:00',NULL,NULL);
 
 /*Table structure for table `koo_gig_booking` */
 
@@ -115,22 +133,23 @@ DROP TABLE IF EXISTS `koo_gig_booking`;
 
 CREATE TABLE `koo_gig_booking` (
   `book_id` int(11) NOT NULL AUTO_INCREMENT,
-  `book_guid` varchar(50) NOT NULL,
+  `book_guid` varchar(50) CHARACTER SET utf8 NOT NULL,
   `gig_id` int(11) NOT NULL,
   `book_user_id` int(11) NOT NULL COMMENT 'User Id',
   `book_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `book_start_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `book_end_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `book_is_extra` enum('Y','N') DEFAULT 'N',
+  `book_is_extra` enum('Y','N') CHARACTER SET utf8 DEFAULT 'N',
   `book_gig_price` decimal(10,2) DEFAULT '0.00',
   `book_extra_price` decimal(10,2) DEFAULT '0.00',
   `book_total_price` decimal(10,2) DEFAULT '0.00',
   `book_session` tinyint(4) NOT NULL DEFAULT '1',
-  `book_message` text NOT NULL,
-  `book_approve` enum('0','1') DEFAULT '0',
+  `book_message` text CHARACTER SET utf8 NOT NULL,
+  `book_approve` enum('0','1') CHARACTER SET utf8 DEFAULT '1',
   `book_approved_time` timestamp NULL DEFAULT NULL,
-  `book_payment_status` char(1) DEFAULT 'P',
-  `book_payment_info` text,
+  `book_declined_time` timestamp NULL DEFAULT NULL,
+  `book_payment_status` char(1) CHARACTER SET utf8 DEFAULT 'P',
+  `book_payment_info` text CHARACTER SET utf8,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modified_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`book_id`),
@@ -142,7 +161,7 @@ CREATE TABLE `koo_gig_booking` (
 
 /*Data for the table `koo_gig_booking` */
 
-insert  into `koo_gig_booking`(`book_id`,`book_guid`,`gig_id`,`book_user_id`,`book_date`,`book_start_time`,`book_end_time`,`book_is_extra`,`book_gig_price`,`book_extra_price`,`book_total_price`,`book_session`,`book_message`,`book_approve`,`book_approved_time`,`book_payment_status`,`book_payment_info`,`created_at`,`modified_at`) values (1,'86E5D8DB-2361-E2D3-8D9F-F7FFFABF4931',43,7,'2015-12-01 05:30:00','2015-12-01 17:30:00','2015-12-01 18:15:00','N','10.00','5.00','15.00',1,'','1',NULL,'P',NULL,'2015-11-30 16:03:38','0000-00-00 00:00:00'),(2,'BEB6AE5E-997F-E571-4D77-79807E50516B',43,7,'2015-12-01 05:30:00','2015-12-01 21:30:00','2015-12-01 22:15:00','N','10.00','5.00','15.00',1,'','0',NULL,'P',NULL,'2015-11-30 18:51:29','0000-00-00 00:00:00'),(3,'79EDED7D-E939-CB0A-8C37-33650730C5B2',43,7,'2015-12-02 00:00:00','2015-12-02 15:00:00','2015-12-02 16:30:00','Y','10.00','5.00','15.00',2,'','0',NULL,'P',NULL,'2015-11-30 13:34:02','0000-00-00 00:00:00'),(4,'6C3330B3-A060-EBF8-A726-74ACBCF597EC',43,7,'2015-12-01 00:00:00','2015-12-01 19:00:00','2015-12-01 19:45:00','Y','10.00','5.00','15.00',1,'','1',NULL,'P',NULL,'2015-11-30 13:37:19','0000-00-00 00:00:00'),(5,'F0266017-BDFB-981B-6409-5DEA6BF88131',39,8,'2015-11-30 00:00:00','2015-11-30 10:10:00','2015-11-30 11:40:00','N','10.00',NULL,'10.00',2,'','0',NULL,'P',NULL,'2015-11-30 13:56:50','0000-00-00 00:00:00'),(6,'FFBE0CF9-9DA8-A504-5325-F493477495CC',39,8,'2015-12-01 00:00:00','2015-12-01 15:05:00','2015-12-01 15:50:00','N','10.00',NULL,'10.00',1,'sda asd asd as as','0',NULL,'P',NULL,'2015-11-30 14:00:35','0000-00-00 00:00:00');
+insert  into `koo_gig_booking`(`book_id`,`book_guid`,`gig_id`,`book_user_id`,`book_date`,`book_start_time`,`book_end_time`,`book_is_extra`,`book_gig_price`,`book_extra_price`,`book_total_price`,`book_session`,`book_message`,`book_approve`,`book_approved_time`,`book_declined_time`,`book_payment_status`,`book_payment_info`,`created_at`,`modified_at`) values (1,'86E5D8DB-2361-E2D3-8D9F-F7FFFABF4931',43,7,'2015-12-01 05:30:00','2015-12-01 17:30:00','2015-12-01 18:15:00','N','10.00','5.00','15.00',1,'','1',NULL,NULL,'P',NULL,'2015-11-30 16:03:38','0000-00-00 00:00:00'),(2,'BEB6AE5E-997F-E571-4D77-79807E50516B',43,7,'2015-12-01 05:30:00','2015-12-01 21:30:00','2015-12-01 22:15:00','N','10.00','5.00','15.00',1,'','0',NULL,NULL,'P',NULL,'2015-11-30 18:51:29','0000-00-00 00:00:00'),(3,'79EDED7D-E939-CB0A-8C37-33650730C5B2',43,7,'2015-12-02 00:00:00','2015-12-02 15:00:00','2015-12-02 16:30:00','Y','10.00','5.00','15.00',2,'','0',NULL,NULL,'P',NULL,'2015-11-30 13:34:02','0000-00-00 00:00:00'),(4,'6C3330B3-A060-EBF8-A726-74ACBCF597EC',43,7,'2015-12-01 00:00:00','2015-12-01 19:00:00','2015-12-01 19:45:00','Y','10.00','5.00','15.00',1,'','1',NULL,NULL,'P',NULL,'2015-11-30 13:37:19','0000-00-00 00:00:00'),(5,'F0266017-BDFB-981B-6409-5DEA6BF88131',39,8,'2015-11-30 00:00:00','2015-11-30 10:10:00','2015-11-30 11:40:00','N','10.00',NULL,'10.00',2,'','0',NULL,NULL,'P',NULL,'2015-11-30 13:56:50','0000-00-00 00:00:00'),(6,'FFBE0CF9-9DA8-A504-5325-F493477495CC',39,8,'2015-12-01 00:00:00','2015-12-01 15:05:00','2015-12-01 15:50:00','N','10.00',NULL,'10.00',1,'sda asd asd as as','0',NULL,NULL,'P',NULL,'2015-11-30 14:00:35','0000-00-00 00:00:00');
 
 /*Table structure for table `koo_gig_category` */
 
@@ -150,11 +169,11 @@ DROP TABLE IF EXISTS `koo_gig_category`;
 
 CREATE TABLE `koo_gig_category` (
   `cat_id` int(11) NOT NULL AUTO_INCREMENT,
-  `cat_name` varchar(100) NOT NULL,
-  `cat_description` text,
-  `cat_image` varchar(500) DEFAULT NULL,
-  `status` enum('0','1','2') DEFAULT '1',
-  `slug` varchar(255) DEFAULT NULL,
+  `cat_name` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `cat_description` text CHARACTER SET utf8,
+  `cat_image` varchar(500) CHARACTER SET utf8 DEFAULT NULL,
+  `status` enum('0','1','2') CHARACTER SET utf8 DEFAULT '1',
+  `slug` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modified_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `created_by` int(11) DEFAULT NULL,
@@ -174,9 +193,9 @@ CREATE TABLE `koo_gig_comments` (
   `com_id` int(11) NOT NULL AUTO_INCREMENT,
   `gig_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `com_comment` text NOT NULL,
+  `com_comment` text CHARACTER SET utf8 NOT NULL,
   `com_rating` double DEFAULT '0',
-  `status` enum('1','0','2') DEFAULT '0' COMMENT '0 -> In-Active, 1 -> Approved, 2 -> --',
+  `status` enum('1','0','2') CHARACTER SET utf8 DEFAULT '0' COMMENT '0 -> In-Active, 1 -> Approved, 2 -> --',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modified_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`com_id`),
@@ -196,8 +215,8 @@ CREATE TABLE `koo_gig_extra` (
   `extra_id` int(11) NOT NULL AUTO_INCREMENT,
   `gig_id` int(11) NOT NULL,
   `extra_price` decimal(10,2) NOT NULL,
-  `extra_description` text NOT NULL,
-  `extra_file` varchar(500) DEFAULT NULL,
+  `extra_description` text CHARACTER SET utf8 NOT NULL,
+  `extra_file` varchar(500) CHARACTER SET utf8 DEFAULT NULL,
   `created_by` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `modified_by` timestamp NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`extra_id`),
@@ -216,13 +235,14 @@ DROP TABLE IF EXISTS `koo_gig_tokens`;
 CREATE TABLE `koo_gig_tokens` (
   `token_id` int(11) NOT NULL AUTO_INCREMENT,
   `book_id` int(11) NOT NULL,
-  `learner_id` int(11) NOT NULL COMMENT 'Learner''s User id',
-  `session_key` mediumtext,
-  `token_key` mediumtext,
-  `session_data` text,
+  `session_key` mediumtext CHARACTER SET utf8,
+  `token_key` mediumtext CHARACTER SET utf8,
+  `session_data` text CHARACTER SET utf8,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modified_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (`token_id`)
+  PRIMARY KEY (`token_id`),
+  KEY `FK_koo_gig_tokens_booking` (`book_id`),
+  CONSTRAINT `FK_koo_gig_tokens_booking` FOREIGN KEY (`book_id`) REFERENCES `koo_gig_booking` (`book_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `koo_gig_tokens` */
@@ -233,9 +253,9 @@ DROP TABLE IF EXISTS `koo_language`;
 
 CREATE TABLE `koo_language` (
   `lang_Id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID:',
-  `lang_code` varchar(10) DEFAULT NULL,
-  `lang_name` varchar(45) NOT NULL COMMENT 'Language:',
-  `status` enum('0','1') NOT NULL DEFAULT '1' COMMENT 'Status:',
+  `lang_code` varchar(10) CHARACTER SET utf8 DEFAULT NULL,
+  `lang_name` varchar(45) CHARACTER SET utf8 NOT NULL COMMENT 'Language:',
+  `status` enum('0','1') CHARACTER SET utf8 NOT NULL DEFAULT '1' COMMENT 'Status:',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `modified_at` timestamp NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`lang_Id`)
@@ -251,9 +271,9 @@ DROP TABLE IF EXISTS `koo_locales`;
 
 CREATE TABLE `koo_locales` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `code` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `local_name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `code` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `local_name` varchar(255) CHARACTER SET utf8 NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=583 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -266,20 +286,21 @@ insert  into `koo_locales`(`id`,`code`,`name`,`local_name`) values (1,'en_gb','E
 DROP TABLE IF EXISTS `koo_message`;
 
 CREATE TABLE `koo_message` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `conversation_id` int(11) NOT NULL,
+  `message_id` int(11) NOT NULL AUTO_INCREMENT,
+  `id1` int(11) NOT NULL,
+  `id2` int(11) NOT NULL,
   `user1` int(11) NOT NULL,
   `user2` int(11) NOT NULL,
-  `message` text NOT NULL,
+  `message` text CHARACTER SET utf8 NOT NULL,
   `timestamp` int(11) NOT NULL,
-  `user1read` enum('Y','N') NOT NULL DEFAULT 'N',
-  `user2read` enum('Y','N') NOT NULL DEFAULT 'N',
+  `user1read` enum('Y','N') CHARACTER SET utf8 NOT NULL DEFAULT 'N',
+  `user2read` enum('Y','N') CHARACTER SET utf8 NOT NULL DEFAULT 'N',
   `gig_id` int(11) DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `modified_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (`id`),
-  KEY `FK_koo_message_sender` (`user1`),
+  PRIMARY KEY (`message_id`),
   KEY `FK_koo_message_receiver` (`user2`),
+  KEY `FK_koo_message_sender` (`user1`),
   CONSTRAINT `FK_koo_message_receiver` FOREIGN KEY (`user2`) REFERENCES `koo_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_koo_message_sender` FOREIGN KEY (`user1`) REFERENCES `koo_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -293,15 +314,16 @@ DROP TABLE IF EXISTS `koo_notification`;
 CREATE TABLE `koo_notification` (
   `notifn_id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) DEFAULT NULL,
-  `notifn_message` text NOT NULL,
+  `notifn_message` text CHARACTER SET utf8 NOT NULL,
+  `notifn_type` enum('sys','book','admin') CHARACTER SET utf8 DEFAULT 'sys',
+  `notifn_rel_id` int(11) DEFAULT NULL,
+  `notifn_read` enum('Y','N') CHARACTER SET utf8 NOT NULL DEFAULT 'N',
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `modified_at` timestamp NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`notifn_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
 
 /*Data for the table `koo_notification` */
-
-insert  into `koo_notification`(`notifn_id`,`user_id`,`notifn_message`,`created_at`,`modified_at`) values (1,8,'You have a new booking from Prakash Arul Mani on 02-12-2015','0000-00-00 00:00:00','0000-00-00 00:00:00'),(2,8,'You have a new booking from Prakash Arul Mani on 01-12-2015','0000-00-00 00:00:00','0000-00-00 00:00:00'),(3,8,'You have a new booking from Nadesh','0000-00-00 00:00:00','0000-00-00 00:00:00'),(4,8,'sda asd asd as as','2015-11-30 14:00:39','0000-00-00 00:00:00');
 
 /*Table structure for table `koo_timezone` */
 
@@ -309,7 +331,7 @@ DROP TABLE IF EXISTS `koo_timezone`;
 
 CREATE TABLE `koo_timezone` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8 NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=462 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -323,17 +345,17 @@ DROP TABLE IF EXISTS `koo_user`;
 
 CREATE TABLE `koo_user` (
   `user_id` int(11) NOT NULL AUTO_INCREMENT,
-  `username` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `password_hash` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `password_reset_token` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `user_activation_key` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `user_login_ip` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `username` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `password_hash` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `password_reset_token` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+  `email` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `user_activation_key` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+  `user_login_ip` varchar(50) CHARACTER SET utf8 DEFAULT NULL,
   `user_last_login` timestamp NULL DEFAULT '0000-00-00 00:00:00',
-  `status` enum('0','1','2') COLLATE utf8_unicode_ci NOT NULL DEFAULT '1',
-  `live_status` enum('A','B','O') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'O' COMMENT 'A -> Available, B -> Busy, O -> Offline',
-  `slug` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `is_auto_timezone` enum('Y','N') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'Y',
+  `status` enum('0','1','2') CHARACTER SET utf8 NOT NULL DEFAULT '1',
+  `live_status` enum('A','B','O') CHARACTER SET utf8 NOT NULL DEFAULT 'O' COMMENT 'A -> Available, B -> Busy, O -> Offline',
+  `slug` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+  `is_auto_timezone` enum('Y','N') CHARACTER SET utf8 NOT NULL DEFAULT 'Y',
   `user_locale_id` int(11) NOT NULL,
   `user_timezone_id` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -356,19 +378,19 @@ DROP TABLE IF EXISTS `koo_user_profile`;
 CREATE TABLE `koo_user_profile` (
   `prof_id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
-  `prof_firstname` varchar(50) NOT NULL,
-  `prof_lastname` varchar(50) DEFAULT NULL,
-  `prof_tag` varchar(100) DEFAULT NULL,
-  `prof_address` text,
-  `prof_phone` varchar(30) DEFAULT NULL,
-  `prof_skype` varchar(100) DEFAULT NULL,
-  `prof_website` varchar(100) DEFAULT NULL,
-  `prof_about` text,
-  `prof_languages` varchar(100) DEFAULT NULL,
-  `prof_interests` text,
+  `prof_firstname` varchar(50) CHARACTER SET utf8 NOT NULL,
+  `prof_lastname` varchar(50) CHARACTER SET utf8 DEFAULT NULL,
+  `prof_tag` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
+  `prof_address` text CHARACTER SET utf8,
+  `prof_phone` varchar(30) CHARACTER SET utf8 DEFAULT NULL,
+  `prof_skype` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
+  `prof_website` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
+  `prof_about` text CHARACTER SET utf8,
+  `prof_languages` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
+  `prof_interests` text CHARACTER SET utf8,
   `prof_rating` double DEFAULT '0',
-  `prof_picture` varchar(500) DEFAULT NULL,
-  `prof_cover_photo` varchar(500) DEFAULT NULL,
+  `prof_picture` varchar(500) CHARACTER SET utf8 DEFAULT NULL,
+  `prof_cover_photo` varchar(500) CHARACTER SET utf8 DEFAULT NULL,
   `country_id` int(11) NOT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `modified_at` timestamp NULL DEFAULT '0000-00-00 00:00:00',

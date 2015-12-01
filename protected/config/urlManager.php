@@ -9,6 +9,7 @@ return array(
     '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
     'login' => 'site/users/login',
     'home' => 'site/default/index',
+    'chat/<guid:[-\w]+>' => 'site/default/chat',
     'gig/<slug:[-\w]+>' => array('site/gig/view', 'urlSuffix' => '.html'),
     'category/<slug:[-\w]+>' => array('site/gigcategory/view', 'urlSuffix' => '.html'),
     'page/<slug:[-\w]+>' => array('site/cms/view', 'urlSuffix' => '.html'),

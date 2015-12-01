@@ -1,13 +1,10 @@
 <?php
 /* @var $this GigController */
 /* @var $model Gig */
+/* @var $token GigTokens */
 /* @var $form CActiveForm */
 
 $this->title = 'Chat';
-$this->breadcrumbs = array(
-    'Gig' => array('/site/gig'),
-    'Create',
-);
 $themeUrl = $this->themeUrl;
 ?>
 <div class="body-cont">
@@ -22,13 +19,6 @@ $themeUrl = $this->themeUrl;
     <div class="innerpage-cont">
         <div class="container">
             <?php
-//            $expire = time()+(7 * 24 * 60 * 60);
-//            $role = 'publisher';
-//            echo $sessionId = Yii::app()->tok->createSession()->id;
-//            echo '<br />';
-//            echo Yii::app()->tok->generateToken($sessionId, $role, $expire);
-//            exit;
-
             echo CHtml::tag('div', array('id' => 'errorDiv', 'class' => 'text-danger', 'style' => 'word-wrap: break-word;'), '');
             echo '<br />';
             echo CHtml::tag('div', array('id' => 'subscribersDiv'), '');
@@ -37,8 +27,8 @@ $themeUrl = $this->themeUrl;
         
             $this->widget('ext.yii-opentok.EOpenTokWidget', array(
                 'key' => Yii::app()->tok->key,
-                'sessionId' => '2_MX40NTM5ODE1Mn5-MTQ0ODAwNTIzNDcwMX4wK0t1NSs4emNRR1pYdW5ZOVNLWG5wUXR-UH4',
-                'token' => 'T1==cGFydG5lcl9pZD00NTM5ODE1MiZzaWc9ZjgxYjU4ZWE1OWMzOTVkMDhhMmM3OTA3NDY2MzlmYzk4ZjE2YmQwZDpyb2xlPW1vZGVyYXRvciZzZXNzaW9uX2lkPTJfTVg0ME5UTTVPREUxTW41LU1UUTBPREF3TlRJek5EY3dNWDR3SzB0MU5TczRlbU5SUjFwWWRXNVpPVk5MV0c1d1VYUi1VSDQmY3JlYXRlX3RpbWU9MTQ0ODAwNTUxMSZub25jZT0wLjkyNTg4NTgzMTIxODQ1NDImZXhwaXJlX3RpbWU9MTQ0ODAyNjgyOCZjb25uZWN0aW9uX2RhdGE9',
+                'sessionId' => $token->session_key,
+                'token' => $token->token_key,
             ));
             
             ?>
