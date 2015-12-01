@@ -50,21 +50,35 @@ $this->breadcrumbs = array(
                                     </td>
                                     <td width="16%">
                                         <?php
-                                        if(!empty($notification->gigBooking)){
+                                        if (!empty($notification->gigBooking)) {
                                             $booking = $notification->gigBooking;
                                             echo "User: {$booking->bookUser->fullname} <br/>";
-                                            echo "Date: ".date(PHP_SHORT_DATE_FORMAT, strtotime($booking->book_date))." <br/>";
-                                            echo "Time: ".date("H:i", strtotime($booking->book_start_time)).' - '.date("H:i", strtotime($booking->book_end_time))." <br/>";
+                                            echo "Date: " . date(PHP_SHORT_DATE_FORMAT, strtotime($booking->book_date)) . " <br/>";
+                                            echo "Time: " . date("H:i", strtotime($booking->book_start_time)) . ' - ' . date("H:i", strtotime($booking->book_end_time)) . " <br/>";
                                         }
                                         ?>
                                     </td>
                                     <td width="8%">
                                         <?php
-                                        if(!empty($notification->gigBooking) && $notification->gigBooking->book_approve == 0){
-                                            echo CHtml::link('Approve', array('/site/notification/approve', 'id' => $notification->notifn_id), array('onclick' => 'return confirm("Are you sure to approve ?")'));
-                                        }elseif($notification->gigBooking->book_approve == 1){
-                                            echo 'Approved';
+                                        $content = '';
+                                        if (!empty($notification->gigBooking)) {
+                                            switch ($notification->gigBooking->book_approve) {
+                                                case 0:
+                                                    $content .= '<span class="text-warning">Pending</span>&nbsp;&nbsp;|&nbsp;&nbsp;';
+                                                    $content .= CHtml::link('Approve', array('/site/notification/approve', 'id' => $notification->notifn_id), array('onclick' => 'return confirm("Are you sure to approve ?")'));
+                                                    $content .= '&nbsp;&nbsp;|&nbsp;&nbsp;';
+                                                    $content .= CHtml::link('Reject', array('/site/notification/decline', 'id' => $notification->notifn_id), array('onclick' => 'return confirm("Are you sure to Reject ?")'));
+                                                    break;
+                                                case 1:
+                                                    $content .= '<span class="text-success">Approved</span>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;';
+                                                    $content .= CHtml::link('Reject', array('/site/notification/decline', 'id' => $notification->notifn_id), array('onclick' => 'return confirm("Are you sure to Reject ?")'));
+                                                    break;
+                                                case 2:
+                                                    $content .= '<span class="text-danger">Rejected</span>';
+                                                    break;
+                                            }
                                         }
+                                        echo $content;
                                         ?>
                                     </td>
                                     <td width="18%">

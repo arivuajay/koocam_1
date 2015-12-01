@@ -19,6 +19,7 @@
 class Notification extends RActiveRecord {
 
     const NOTIFICATION_INDEX_LIMIT = 9;
+
     /**
      * @return string the associated database table name
      */
@@ -129,7 +130,21 @@ class Notification extends RActiveRecord {
     }
 
     public function getTopnotifymessage() {
-        return CHtml::link($this->notifn_message, '#') . " <span class='timestamp'>1 min ago</span>";
+        $ago = Myclass::timeAgo(strtotime($this->created_at));
+        if (strlen($this->notifn_message) > 30)
+            $un_read_msg_text = substr($this->notifn_message, 0, 30) . '...';
+        else
+            $un_read_msg_text = $this->notifn_message;
+        return CHtml::link($un_read_msg_text, array('/site/notification')) . " <span class='timestamp'>$ago</span>";
+    }
+
+    public static function insertNotification($user_id, $message, $notifn_type = 'sys', $notifn_rel_id = '') {
+        $notifn_model = new Notification();
+        $notifn_model->user_id = $user_id;
+        $notifn_model->notifn_type = $notifn_type;
+        $notifn_model->notifn_rel_id = $notifn_rel_id;
+        $notifn_model->notifn_message = $message;
+        $notifn_model->save(false);
     }
 
 }

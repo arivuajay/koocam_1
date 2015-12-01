@@ -155,7 +155,7 @@ class Message extends RActiveRecord {
         $uid = Yii::app()->user->id;
         $user_read_no = self::USER_READ_NO;
         $condition_unread = "((user1=" . $uid . " AND user1read='{$user_read_no}') OR (user2=" . $uid . " AND user2read='{$user_read_no}'))";
-        $dispcount = Message::model()->count($condition_unread);
+        $dispcount = self::model()->count($condition_unread);
         return $dispcount;
     }
 
@@ -167,4 +167,25 @@ class Message extends RActiveRecord {
         return $total_items;
     }
 
+    public static function insertMessage($msg, $user1, $user2, $gig_id = NULL) {
+        $message = new Message;
+        // Genreate the conversation id
+        $criteria = new CDbCriteria;
+        $criteria->select = 'max(id1) AS maxColumn';
+        $row = self::model()->find($criteria);
+
+        $npm_count = $row['maxColumn'];
+        $id1 = $npm_count + 1;
+
+        $message->id1 = $id1; // conversation id
+        $message->id2 = self::NEW_CONVERSATION_START; //New conversation start
+        $message->user1 = $user1; // Sender
+        $message->user2 = $user2; // Receiver
+        $message->timestamp = time();
+        $message->user1read = self::USER_READ_YES;
+        $message->user2read = self::USER_READ_NO;
+        $message->gig_id = $gig_id;
+        $message->message = $msg;
+        $message->save(false);
+    }
 }

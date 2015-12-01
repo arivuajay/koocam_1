@@ -30,17 +30,17 @@ $logged_user = !$is_tutor && !Yii::app()->user->isGuest;
                     <div class="online" data-toggle="tooltip" data-placement="bottom" title="online"> </div>
                     <?php echo $model->gigimage; ?></div>
                 <div class="row">
-                    <?php if (!$is_tutor) { ?>
-                        <?php if ($logged_user) { ?>
-                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6"> <a href="#" class="big-btn btn btn-default"> <i class="fa fa-video-camera"></i> Start Now ! </a> </div>
-                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6"> <a href="#" class="big-btn btn btn-default big-btn2" data-toggle="modal" data-target="#booking"> <i class="fa fa-pencil"></i> Booking </a> </div>
-                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6"> <a href="#" class="big-btn btn big-btn3 btn-default "> <i class="fa fa-envelope-o"></i> Message </a> </div>
-                        <?php } else { ?>
-                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6"> <a href="#" data-toggle="modal" data-target=".bs-example-modal-sm1" data-dismiss=".bs-example-modal-sm" class="big-btn btn btn-default"> <i class="fa fa-video-camera"></i> Start Now ! </a> </div>
-                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6"> <a href="#" data-toggle="modal" data-target=".bs-example-modal-sm1" data-dismiss=".bs-example-modal-sm" class="big-btn btn btn-default big-btn2" data-toggle="modal" data-target="#booking"> <i class="fa fa-pencil"></i> Booking </a> </div>
-                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6"> <a href="#" data-toggle="modal" data-target=".bs-example-modal-sm1" data-dismiss=".bs-example-modal-sm" class="big-btn btn big-btn3 btn-default "> <i class="fa fa-envelope-o"></i> Message </a> </div>
-                        <?php } ?>
-                    <?php } ?>
+                    <?php
+                    if(!is_null($model->startnowButton)){
+                        echo "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'> {$model->startnowButton} </div>";
+                    }
+                    if(!is_null($model->bookingButton)){
+                        echo "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'> {$model->bookingButton} </div>";
+                    }
+                    if(!is_null($model->messageButton)){
+                        echo "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'> {$model->messageButton} </div>";
+                    }
+                    ?>
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 sharethis-share">
                         <span class='st_facebook_large custom-share' displayText='Facebook'></span>
                         <span class='st_twitter_large custom-share' displayText='Tweet'></span>

@@ -10,15 +10,14 @@ $count = count($notifications);
     <?php } ?>
 </a>
 <ul role="menu" class="dropdown-menu notifications  bullet pull-right" >
-    <li class="notification-header">
-        <em>You have <?php echo $count; ?> New notifications</em>
-    </li>
     <?php
-    foreach ($notifications as $key => $notification) {
-        echo "<li>{$notification->topnotifymessage}</li>";
+    if (!empty($notifications)) {
+        echo "<li class='notification-header'><em>You have {$count} New notifications</em></li>";
+        foreach ($notifications as $key => $notification) {
+            echo "<li>{$notification->topnotifymessage}</li>";
+        }
+    } else {
+        echo '<li class="notification-header"><em>' . CHtml::link("View All", array('/site/notification')) . '</em></li>';
     }
     ?>
-    <li class="notification-header">
-        <em><?php echo CHtml::link("View All", array('/site/notification')); ?> </em>
-    </li>
 </ul>

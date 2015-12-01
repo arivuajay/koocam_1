@@ -31,6 +31,7 @@ class RActiveRecord extends CActiveRecord {
         if (!empty($dateFields)) {
             foreach ($dateFields as $key => $field) {
                 if (isset($this->$field)) {
+//                    $this->$field = Yii::app()->localtime->toLocalDateTime($this->$field, 'short');
                     $this->$field = Yii::app()->localtime->fromUTC($this->$field);
                 }
             }
@@ -40,6 +41,7 @@ class RActiveRecord extends CActiveRecord {
         if (!empty($dateTimeFields)) {
             foreach ($dateTimeFields as $key => $field) {
                 if (isset($this->$field)) {
+//                    $this->$field = Yii::app()->localtime->toLocalDateTime($this->$field, 'short', 'short');
                     $this->$field = Yii::app()->localtime->fromUTC($this->$field);
                 }
             }

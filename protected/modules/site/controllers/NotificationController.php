@@ -32,7 +32,7 @@ class NotificationController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('view', 'index', 'approve'),
+                'actions' => array('view', 'index', 'approve', 'decline'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -85,12 +85,25 @@ class NotificationController extends Controller {
         $booking_exists = GigBooking::checkBooking($start_time, $end_time);
         
         if(empty($booking_exists)){
-            $booking->book_approve = '1';
-            $booking->save(false);
+            $booking->saveAttributes(array('book_approve' => '1', 'book_approved_time' => Yii::app()->localtime->UTCNow));
             Yii::app()->user->setFlash('success', "Booking Approved successfully");
         }else{
             Yii::app()->user->setFlash('danger', "Someone Already booked at this timing !!!");
         }
+        $this->redirect(array('/site/notification'));
+    }
+
+    public function actionDecline($id) {
+        $model = $this->loadModel($id);
+        
+        if($model->user_id != Yii::app()->user->id || empty($model->gigBooking)){
+            Yii::app()->user->setFlash('danger', "Invalid Access !!!");
+            $this->goHome();
+        }
+        
+        $booking = $model->gigBooking;
+        $booking->saveAttributes(array('book_approve' => '2', 'book_declined_time' => Yii::app()->localtime->UTCNow));
+        Yii::app()->user->setFlash('success', "Booking Rejected successfully");
         $this->redirect(array('/site/notification'));
     }
 

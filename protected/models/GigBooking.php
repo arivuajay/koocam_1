@@ -19,6 +19,7 @@
  * @property string $book_message
  * @property string $book_approve
  * @property string $book_approved_time
+ * @property string $book_declined_time
  * @property string $book_payment_status
  * @property string $book_payment_info
  * @property string $created_at
@@ -85,7 +86,7 @@ class GigBooking extends RActiveRecord {
             array('hours', 'durationValidate'),
             array('book_start_time', 'bookingValidate'),
 //            array('book_start_time', 'date', 'format' => Yii::app()->localtime->getLocalDateTimeFormat('short', 'short')),
-            array('book_approved_time, book_payment_info, modified_at, book_session, is_message, book_message', 'safe'),
+            array('book_approved_time, book_payment_info, modified_at, book_session, is_message, book_message, book_declined_time', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('book_id, book_guid, gig_id, book_user_id, book_date, book_start_time, book_end_time, book_is_extra, book_gig_price, book_extra_price, book_total_price, book_message, book_approve, book_approved_time, book_payment_status, book_payment_info, created_at, modified_at', 'safe', 'on' => 'search'),
@@ -102,16 +103,19 @@ class GigBooking extends RActiveRecord {
     public function bookingValidate($attribute, $params) {
         if (!empty($this->book_start_time)) {
 
+            $start_time = Yii::app()->localtime->toUTC($this->book_start_time);
             if (!empty($this->gig) && !empty($this->book_session) && $this->book_session > 0):
                 $this->setEndtime();
-            
-                $start_time = Yii::app()->localtime->toUTC($this->book_start_time);
                 $end_time = Yii::app()->localtime->toUTC($this->book_end_time);
                 $booking_exists = self::checkBooking($start_time, $end_time);
 
                 if (!empty($booking_exists))
                     $this->addError($attribute, 'Someone Already booked this Time. Try other timings');
             endif;
+            
+            if(strtotime($start_time) <= time()){
+                $this->addError($attribute, 'Time should be greater than Current Time');
+            }
         }
     }
 
@@ -242,10 +246,6 @@ class GigBooking extends RActiveRecord {
 
         if ($this->is_message == 'N')
             $this->book_message = '';
-        
-        echo '<pre>';
-        print_r($this->attributes);
-        exit;
 
         return parent::beforeSave();
     }
@@ -272,7 +272,11 @@ class GigBooking extends RActiveRecord {
     protected function afterSave() {
         if ($this->isNewRecord) {
             $this->sendMailtoTutor();
-            $this->insertNotification();
+            if ($this->is_message == 'Y' && !empty($this->book_message)) {
+                Message::insertMessage($this->book_message, $this->bookUser->user_id, $this->gig->tutor->user_id, $this->gig_id);
+            }
+            $message = "You have a new booking from {$this->bookUser->fullname}";
+            Notification::insertNotification($this->gig->tutor->user_id, $message, 'book', $this->book_id);
         }
         return parent::afterSave();
     }
@@ -291,14 +295,30 @@ class GigBooking extends RActiveRecord {
         $notifn_model->user_id = $this->gig->tutor->user_id;
         $notifn_model->notifn_type = 'book';
         $notifn_model->notifn_rel_id = $this->book_id;
-
-        if ($this->book_message == '') {
-            $message = "You have a new booking from {$this->bookUser->fullname}";
-        } else {
-            $message = $this->book_message;
-        }
+        $message = "You have a new booking from {$this->bookUser->fullname}";
         $notifn_model->notifn_message = $message;
         $notifn_model->save(false);
+    }
+
+    public function insertMessage($msg, $user1, $user2) {
+        $message = new Message;
+        // Genreate the conversation id
+        $criteria = new CDbCriteria;
+        $criteria->select = 'max(id1) AS maxColumn';
+        $row = Message::model()->find($criteria);
+
+        $npm_count = $row['maxColumn'];
+        $id1 = $npm_count + 1;
+
+        $message->id1 = $id1; // conversation id
+        $message->id2 = Message::NEW_CONVERSATION_START; //New conversation start
+        $message->user1 = $user1; // Sender
+        $message->user2 = $user2; // Receiver
+        $message->timestamp = time();
+        $message->user1read = Message::USER_READ_YES;
+        $message->user2read = Message::USER_READ_NO;
+        $message->message = $msg;
+        $message->save(false);
     }
 
     public function sendMailtoTutor() {
@@ -329,8 +349,8 @@ class GigBooking extends RActiveRecord {
         $condition .= " And $alias.book_approve = '1'";
 
         return self::model()->findAll(array(
-            'condition' => $condition,
-            'params' => array(':start_time' => $start_time, ':end_time' => $end_time)
+                    'condition' => $condition,
+                    'params' => array(':start_time' => $start_time, ':end_time' => $end_time)
         ));
     }
 

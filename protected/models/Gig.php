@@ -53,6 +53,9 @@ class Gig extends RActiveRecord {
     const THUMB_HEIGHT = 440;
     const GIG_SEARCH_LIMIT = 9;
 
+    protected $_is_tutor;
+    protected $_logged_user;
+
     /**
      * @return string the associated database table name
      */
@@ -66,6 +69,9 @@ class Gig extends RActiveRecord {
             $this->gig_price = Gig::GIG_MIN_AMT;
             $this->extra_price = Gig::EXTRA_MIN_AMT;
         }
+        $this->_is_tutor = !Yii::app()->user->isGuest && Yii::app()->user->id == $this->tutor_id;
+        $this->_logged_user = !$this->_is_tutor && !Yii::app()->user->isGuest;
+
         parent::init();
     }
 
@@ -133,8 +139,8 @@ class Gig extends RActiveRecord {
             array('gig_id, tutor_id, gig_title, cat_id, gig_media, gig_tag, gig_description, gig_duration, gig_price, gig_avail_visual, status, created_at, modified_at, created_by, modified_by', 'safe', 'on' => 'search'),
         );
     }
-    
-    public static function ajaxValidationFields(){
+
+    public static function ajaxValidationFields() {
         // validate all except "file_field"
         return array('gig_title', 'cat_id', 'gig_tag', 'gig_description', 'gig_duration', 'gig_price', 'is_extra', 'extra_price', 'extra_description');
     }
@@ -386,18 +392,54 @@ class Gig extends RActiveRecord {
     }
 
     public function getGigimage() {
-        if(!empty($this->gig_media))
+        if (!empty($this->gig_media))
             $path = UPLOAD_DIR . '/users/' . $this->tutor_id . $this->gig_media;
         if (!isset($path) || !is_file($path))
-            $path = 'themes/'.Yii::app()->theme->name . '/images/course-img.jpg';
+            $path = 'themes/' . Yii::app()->theme->name . '/images/course-img.jpg';
         return CHtml::image(Yii::app()->createAbsoluteUrl($path), '', array('class' => ''));
     }
 
     public function getGigthumb() {
-        if(!empty($this->gig_media))
+        if (!empty($this->gig_media))
             $path = UPLOAD_DIR . '/users/' . $this->tutor_id . '/thumb' . $this->gig_media;
         if (!isset($path) || !is_file($path))
-            $path = 'themes/'.Yii::app()->theme->name . '/images/course1.jpg';
+            $path = 'themes/' . Yii::app()->theme->name . '/images/course1.jpg';
         return CHtml::image(Yii::app()->createAbsoluteUrl($path), '', array('class' => ''));
     }
+
+    public function getStartnowButton($text = '<i class="fa fa-video-camera"></i> Start Now !', $class = 'big-btn btn btn-default') {
+        $button = NULL;
+        if (!$this->_is_tutor) :
+            if ($this->_logged_user) {
+                $button = CHtml::link($text, '#', array('class' => $class));
+            } else {
+                $button = CHtml::link($text, '#', array('class' => $class, 'data-toggle' => "modal", 'data-target' => ".bs-example-modal-sm1", 'data-dismiss' => ".bs-example-modal-sm"));
+            }
+        endif;
+        return $button;
+    }
+
+    public function getBookingButton($text = '<i class="fa fa-pencil"></i> Booking', $class = 'big-btn btn btn-default big-btn2', $data_target = 'booking') {
+        $button = NULL;
+        if (!$this->_is_tutor) :
+            if ($this->_logged_user) {
+                $button = CHtml::link($text, '#', array('class' => $class, 'data-toggle' => "modal", 'data-target' => "#$data_target"));
+            } else {
+                $button = CHtml::link($text, '#', array('class' => $class, 'data-toggle' => "modal", 'data-target' => ".bs-example-modal-sm1", 'data-dismiss' => ".bs-example-modal-sm"));
+            }
+        endif;
+        return $button;
+    }
+    public function getMessageButton($text = '<i class="fa fa-envelope-o"></i> Message', $class = 'big-btn btn big-btn3 btn-default', $data_target = 'booking') {
+        $button = NULL;
+        if (!$this->_is_tutor) :
+            if ($this->_logged_user) {
+                $button = CHtml::link($text, '#', array('class' => $class, 'data-toggle' => "modal", 'data-target' => "#$data_target"));
+            } else {
+                $button = CHtml::link($text, '#', array('class' => $class, 'data-toggle' => "modal", 'data-target' => ".bs-example-modal-sm1", 'data-dismiss' => ".bs-example-modal-sm"));
+            }
+        endif;
+        return $button;
+    }
+
 }
