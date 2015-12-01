@@ -50,14 +50,14 @@ class RActiveRecord extends CActiveRecord {
 
     protected function dateFields() {
         return array(
-//            'book_date',
+            'book_date',
         );
     }
 
     protected function dateTimeFields() {
         return array(
-//            'book_start_time',
-//            'book_end_time',
+            'book_start_time',
+            'book_end_time',
         );
     }
 

@@ -46,6 +46,7 @@ class User extends RActiveRecord {
     }
 
     public $confirm_password;
+    public $i_agree;
 
     /**
      * @return string the associated database table name
@@ -91,7 +92,8 @@ class User extends RActiveRecord {
             array('email, username, slug', 'unique'),
             array('email', 'email'),
             array('password_hash', 'compare', 'compareAttribute' => 'confirm_password', 'on' => 'register'),
-            array('created_at, modified_at, user_activation_key, user_login_ip, user_last_login, is_auto_timezone, user_locale_id, user_timezone_id', 'safe'),
+            array('created_at, modified_at, user_activation_key, user_login_ip, user_last_login, is_auto_timezone, user_locale_id, user_timezone_id, i_agree', 'safe'),
+            array('i_agree', 'compare', 'compareValue' => true, 'message' => 'You must agree to the terms and conditions', 'on' => 'register'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('user_id, username, password_hash, password_reset_token, email, status, live_status, created_at, modified_at', 'safe', 'on' => 'search'),

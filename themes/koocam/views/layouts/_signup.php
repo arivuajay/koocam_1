@@ -34,6 +34,11 @@
                     <?php echo $form->passwordField($model, 'confirm_password', array('placeholder' => User::model()->getAttributeLabel('confirm_password'), 'class' => 'form-control', 'size' => 60, 'maxlength' => 250)); ?>
                     <?php echo $form->error($model, 'confirm_password'); ?>
                 </div>
+                <div class="form-group">                             
+                    <?php echo $form->checkBox($model, 'i_agree'); ?>
+                    <?php echo ' I agree to the terms and conditions'; ?>
+                    <?php echo $form->error($model, 'i_agree'); ?>
+                </div>
                 <div class="form-group"> 
                     <?php echo CHtml::submitButton(' Submit', array('class' => 'btn btn-default  btn-lg explorebtn form-btn', 'name' => 'sign_in')) ?>
                 </div>

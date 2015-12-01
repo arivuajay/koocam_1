@@ -133,6 +133,11 @@ class Gig extends RActiveRecord {
             array('gig_id, tutor_id, gig_title, cat_id, gig_media, gig_tag, gig_description, gig_duration, gig_price, gig_avail_visual, status, created_at, modified_at, created_by, modified_by', 'safe', 'on' => 'search'),
         );
     }
+    
+    public static function ajaxValidationFields(){
+        // validate all except "file_field"
+        return array('gig_title', 'cat_id', 'gig_tag', 'gig_description', 'gig_duration', 'gig_price', 'is_extra', 'extra_price', 'extra_description');
+    }
 
     /**
      * 

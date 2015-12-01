@@ -54,7 +54,7 @@ class GigController extends Controller {
         }
 
         $model = new Gig('create');
-        $this->performAjaxValidation($model);
+        $this->performAjaxValidationWithOutFileField($model);
         if (Yii::app()->request->isPostRequest && Yii::app()->request->getPost('Gig')) {
             $model->attributes = Yii::app()->request->getPost('Gig');
             $model->tutor_id = Yii::app()->user->id;
@@ -177,6 +177,13 @@ class GigController extends Controller {
     protected function performAjaxValidation($model) {
         if (isset($_POST['ajax'])) {
             echo CActiveForm::validate($model);
+            Yii::app()->end();
+        }
+    }
+    
+    protected function performAjaxValidationWithOutFileField($model) {
+        if (isset($_POST['ajax'])) {
+            echo CActiveForm::validate($model, Gig::ajaxValidationFields());
             Yii::app()->end();
         }
     }
