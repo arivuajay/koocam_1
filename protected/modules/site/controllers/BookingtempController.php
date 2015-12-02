@@ -22,7 +22,7 @@ class BookingtempController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('paypalReturn', 'paypalCancel', 'paypalNotify'),
+                'actions' => array('paypalreturn', 'paypalcancel', 'paypalnotify'),
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -65,9 +65,9 @@ class BookingtempController extends Controller {
 
             if ($booking_temp->save(false)) {
                 $paypalManager = new Paypal;
-                $returnUrl = Yii::app()->createAbsoluteUrl('/site/bookingtemp/paypalReturn', array('slug' => $gig->slug));
-                $cancelUrl = Yii::app()->createAbsoluteUrl('/site/bookingtemp/paypalCancel', array('slug' => $gig->slug));
-                $notifyUrl = Yii::app()->createAbsoluteUrl('/site/bookingtemp/paypalNotify');
+                $returnUrl = Yii::app()->createAbsoluteUrl('/site/bookingtemp/paypalreturn', array('temp_guid' => $booking_temp->temp_guid));
+                $cancelUrl = Yii::app()->createAbsoluteUrl('/site/bookingtemp/paypalcancel', array('slug' => $gig->slug));
+                $notifyUrl = Yii::app()->createAbsoluteUrl('/site/bookingtemp/paypalnotify');
 
                 $paypalManager->addField('item_name', BookingTemp::TEMP_BOOKING_KEY);
                 $paypalManager->addField('amount', $data['temp_book_total_price']);
@@ -81,15 +81,25 @@ class BookingtempController extends Controller {
         }
     }
 
-    public function actionPaypalCancel($slug) {
+    public function actionPaypalcancel($slug) {
         Yii::app()->user->setFlash('danger', 'Your booking has been cancelled. Please try again.');
         $this->redirect(array('/site/gig/view', 'slug' => $slug));
     }
 
-    public function actionPaypalReturn($slug) {
+    public function actionPaypalreturn($temp_guid) {
         if (isset($_POST["txn_id"]) && isset($_POST["payment_status"])) {
             if ($_POST["payment_status"] == "Pending" || $_POST["payment_status"] == "Completed") {
-                Yii::app()->user->setFlash('success', 'Thanks for your booking!');
+                $booking_temp = BookingTemp::model()->findByAttributes(array('temp_guid' => $temp_guid));
+                $booking_data = unserialize($booking_temp->temp_value);
+
+                $book_guid = isset($booking_data['book_guid']) ? $booking_data['book_guid'] : '';
+                if ($book_guid) {
+                    $booking_temp->delete();
+                    Yii::app()->user->setFlash('success', 'Thanks for your booking!');
+                    $this->redirect('/site/default/chat', array('guid' => $book_guid));
+                } else {
+                    Yii::app()->user->setFlash('danger', 'Failed to generate token.');
+                }
             }
         } else {
             Yii::app()->user->setFlash('danger', 'Your booking payment is failed. Please try again later or contact admin.');
@@ -97,13 +107,13 @@ class BookingtempController extends Controller {
         $this->redirect(array('/site/gig/view', 'slug' => $slug));
     }
 
-    public function actionPaypalNotify() {
-        $paypalManager = new Paypal;
-        if ($paypalManager->notify()) {
-            if ($_POST["payment_status"] == "Pending" || $_POST["payment_status"] == "Completed") {
-                $this->processBooking($_POST['custom']);
-            }
+    public function actionPaypalnotify() {
+//        $paypalManager = new Paypal;
+//        if ($paypalManager->notify()) {
+        if ($_POST["payment_status"] == "Pending" || $_POST["payment_status"] == "Completed") {
+            $this->processBooking($_POST['custom']);
         }
+//        }
     }
 
     protected function processBooking($temp_guid) {
@@ -116,20 +126,20 @@ class BookingtempController extends Controller {
                 $attr_name = str_replace('temp_', '', $key);
                 $booking_model->setAttribute($attr_name, $value);
             }
-            
+
             $booking_model->book_date = date("Y-m-d H:i:s");
             $booking_model->book_start_time = date("Y-m-d H:i:s");
-            
+
             $booking_model->setEndtime();
             $booking_model->book_approved_time = date("Y-m-d H:i:s");
             $booking_model->book_payment_status = "C";
             $booking_model->book_payment_info = serialize($_POST);
-            
+
             if ($booking_model->save(false)) {
-                $booking_temp->delete();
-                if(GigTokens::generateToken($booking_model->book_guid)){
-                    $this->redirect(array('/site/default/chat', array('guid' => $booking_model->book_guid)));
-                }
+                $booking_data['book_guid'] = $booking_model->book_guid;
+                $booking_temp->temp_value = serialize($booking_data);
+                $booking_temp->save(false);
+                GigTokens::generateToken($booking_model->book_guid);
             }
         }
     }

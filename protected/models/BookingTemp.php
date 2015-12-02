@@ -64,6 +64,7 @@ class BookingTemp extends RActiveRecord {
             'temp_value' => 'Temp Value',
             'created_at' => 'Created At',
             'modified_at' => 'Modified At',
+            'temp_book_session' => 'Book Session',
         );
     }
 
