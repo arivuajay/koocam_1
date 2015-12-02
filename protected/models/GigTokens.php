@@ -151,6 +151,7 @@ class GigTokens extends RActiveRecord {
     }
 
     public static function generateToken($guid) {
+        $ret = false;
         $booking_model = GigBooking::model()->findByAttributes(array('book_guid' => $guid, 'book_approve' => '1'));
         if (!empty($booking_model)) {
             $token_exists = GigTokens::model()->findByAttributes(array('book_id' => $booking_model->book_id));
@@ -173,10 +174,10 @@ class GigTokens extends RActiveRecord {
                     'token_key' => $token_key,
                     'session_data' => $session_data,
                 );
-                $token_model->save();
+                $ret = $token_model->save();
             }
         }
-        return true;
+        return $ret;
     }
 
 }
