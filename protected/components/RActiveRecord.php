@@ -15,25 +15,7 @@ class RActiveRecord extends CActiveRecord {
             $this->created_at = $now;
         }
 
-        $dateFields = $this->dateFields();
-        if (!empty($dateFields)) {
-            foreach ($dateFields as $key => $field) {
-                if (isset($this->$field)) {
-//                    $this->$field = Yii::app()->localtime->toLocalDateTime($this->$field, 'short');
-                    $this->$field = Yii::app()->localtime->toUTC($this->$field);
-                }
-            }
-        }
-
-        $dateTimeFields = $this->dateTimeFields();
-        if (!empty($dateTimeFields)) {
-            foreach ($dateTimeFields as $key => $field) {
-                if (isset($this->$field)) {
-//                    $this->$field = Yii::app()->localtime->toLocalDateTime($this->$field, 'short', 'short');
-                    $this->$field = Yii::app()->localtime->toUTC($this->$field);
-                }
-            }
-        }
+        $this->convertTime('to');
         return parent::beforeSave();
     }
 
@@ -46,26 +28,7 @@ class RActiveRecord extends CActiveRecord {
         
         $this->created_at = Yii::app()->localtime->toLocalDateTime($this->created_at, 'short', 'short');
         
-        $dateFields = $this->dateFields();
-        if (!empty($dateFields)) {
-            foreach ($dateFields as $key => $field) {
-                if (isset($this->$field)) {
-//                    $this->$field = Yii::app()->localtime->toLocalDateTime($this->$field, 'short');
-                    $this->$field = Yii::app()->localtime->fromUTC($this->$field);
-                }
-            }
-        }
-
-        $dateTimeFields = $this->dateTimeFields();
-        if (!empty($dateTimeFields)) {
-            foreach ($dateTimeFields as $key => $field) {
-                if (isset($this->$field)) {
-//                    $this->$field = Yii::app()->localtime->toLocalDateTime($this->$field, 'short', 'short');
-                    $this->$field = Yii::app()->localtime->fromUTC($this->$field);
-                }
-            }
-        }
-        
+        $this->convertTime('from');
         return parent::afterFind();
     }
 
@@ -82,4 +45,31 @@ class RActiveRecord extends CActiveRecord {
         );
     }
 
+    protected function convertTime($flag) {
+        $dateFields = $this->dateFields();
+        if (!empty($dateFields)) {
+            foreach ($dateFields as $key => $field) {
+                if (isset($this->$field)) {
+                    if($flag == 'to'):
+                        $this->$field = Yii::app()->localtime->toUTC($this->$field);
+                    elseif($flag == 'from'):
+                        $this->$field = Yii::app()->localtime->fromUTC($this->$field);
+                    endif;
+                }
+            }
+        }
+
+        $dateTimeFields = $this->dateTimeFields();
+        if (!empty($dateTimeFields)) {
+            foreach ($dateTimeFields as $key => $field) {
+                if (isset($this->$field)) {
+                    if($flag == 'to'):
+                        $this->$field = Yii::app()->localtime->toUTC($this->$field);
+                    elseif($flag == 'from'):
+                        $this->$field = Yii::app()->localtime->fromUTC($this->$field);
+                    endif;
+                }
+            }
+        }
+    }
 }

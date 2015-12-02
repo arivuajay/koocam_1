@@ -62,16 +62,16 @@ class GigbookingController extends Controller {
 
     public function actionCalendarevents($gig) {
         $bookings = GigBooking::model()->active()->findAll(array('order' => 'created_at DESC', 'condition' => "gig_id = {$gig}"));
-        $limit = 10;
+//        $limit = 10;
         $date = array();
         foreach ($bookings as $booking) {
-            if (isset($date[strtotime($booking->book_date)])) {
-                $date[strtotime($booking->book_date)] = $date[strtotime($booking->book_date)] + 1;
-            } else {
-                $date[strtotime($booking->book_date)] = 1;
-            }
+//            if (isset($date[strtotime($booking->book_date)])) {
+//                $date[strtotime($booking->book_date)] = $date[strtotime($booking->book_date)] + 1;
+//            } else {
+//                $date[strtotime($booking->book_date)] = 1;
+//            }
 
-            if ($date[strtotime($booking->book_date)] <= $limit) {
+//            if ($date[strtotime($booking->book_date)] <= $limit) {
                 $title = 'Busy ('.date('H:i', strtotime($booking->book_start_time)) . '-' . date('H:i', strtotime($booking->book_end_time)).')';
                 $items[] = array(
                     'state' => 'TRUE',
@@ -81,7 +81,7 @@ class GigbookingController extends Controller {
                         //                'start' => $booking->book_date,
 //                    'url' => $this->createUrl('/site/journal/listjournal', array('date' => date('Y-m-d', strtotime($booking->book_date))))
                 );
-            }
+//            }
         }
 
         echo CJSON::encode($items);

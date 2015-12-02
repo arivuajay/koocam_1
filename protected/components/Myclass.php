@@ -147,6 +147,7 @@ class Myclass extends CController {
         $new_guid = Myclass::create_guid($opt);
         do {
             $exist_count = GigBooking::model()->countByAttributes(array('book_guid' => $new_guid));
+            $exist_count += BookingTemp::model()->countByAttributes(array('temp_guid' => $new_guid));
             if ($exist_count > 0) {
                 $old_guid = $new_guid;
                 $new_guid = Myclass::create_guid($opt);

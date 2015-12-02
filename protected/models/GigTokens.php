@@ -16,7 +16,7 @@
  * @property GigBooking $book
  */
 class GigTokens extends RActiveRecord {
-    
+
     const TOKEN_ROLE = 'moderator';
 
     /**
@@ -118,10 +118,10 @@ class GigTokens extends RActiveRecord {
             )
         ));
     }
-    
+
     protected function beforeSave() {
-        if(is_array($this->session_data))
-            $this->session_data = CJSON::encode ($this->session_data);
+        if (is_array($this->session_data))
+            $this->session_data = CJSON::encode($this->session_data);
         return parent::beforeSave();
     }
 
@@ -139,14 +139,44 @@ class GigTokens extends RActiveRecord {
         $token = self::getChatToken($guid);
         if (!empty($token)) {
             $is_tutor = $is_learner = false;
-            
+
             $is_tutor = $token->book->gig->tutor->user_id == Yii::app()->user->id;
             $is_learner = $token->book->bookUser->user_id == Yii::app()->user->id;
-            
-            if($is_tutor || $is_learner){
+
+            if ($is_tutor || $is_learner) {
                 $token_data = $token;
             }
         }
         return $token_data;
     }
+
+    public static function generateToken($guid) {
+        $booking_model = GigBooking::model()->findByAttributes(array('book_guid' => $guid, 'book_approve' => '1'));
+        if (!empty($booking_model)) {
+            $token_exists = GigTokens::model()->findByAttributes(array('book_id' => $booking_model->book_id));
+
+            if (empty($token_exists)) {
+                $token_model = new GigTokens;
+                $role = GigTokens::TOKEN_ROLE;
+                $expire = time() + ($booking_model->gig->gig_duration * 60);
+                $session_data = array(
+                    'expire' => $expire,
+                    'role' => $role,
+                );
+
+                $session_key = Yii::app()->tok->createSession()->id;
+                $token_key = Yii::app()->tok->generateToken($session_key, $role, $expire);
+
+                $token_model->attributes = array(
+                    'book_id' => $booking_model->book_id,
+                    'session_key' => $session_key,
+                    'token_key' => $token_key,
+                    'session_data' => $session_data,
+                );
+                $token_model->save();
+            }
+        }
+        return true;
+    }
+
 }
