@@ -65,11 +65,11 @@ class BookingtempController extends Controller {
 
             if ($booking_temp->save(false)) {
                 $paypalManager = new Paypal;
-                $returnUrl = Yii::app()->createAbsoluteUrl('/site/bookingtemp/paypalreturn', array('temp_guid' => $booking_temp->temp_guid));
+                $returnUrl = Yii::app()->createAbsoluteUrl('/site/bookingtemp/paypalreturn', array('slug' => $gig->slug));
                 $cancelUrl = Yii::app()->createAbsoluteUrl('/site/bookingtemp/paypalcancel', array('slug' => $gig->slug));
                 $notifyUrl = Yii::app()->createAbsoluteUrl('/site/bookingtemp/paypalnotify');
 
-                $paypalManager->addField('item_name', $gig->gig_title . BookingTemp::TEMP_BOOKING_KEY);
+                $paypalManager->addField('item_name', $gig->gig_title .'-'. BookingTemp::TEMP_BOOKING_KEY);
                 $paypalManager->addField('amount', $data['temp_book_total_price']);
                 $paypalManager->addField('custom', $booking_temp->temp_guid);
                 $paypalManager->addField('return', $returnUrl);
@@ -86,10 +86,10 @@ class BookingtempController extends Controller {
         $this->redirect(array('/site/gig/view', 'slug' => $slug));
     }
 
-    public function actionPaypalreturn($temp_guid) {
+    public function actionPaypalreturn($slug) {
         if (isset($_POST["txn_id"]) && isset($_POST["payment_status"])) {
             if ($_POST["payment_status"] == "Pending" || $_POST["payment_status"] == "Completed") {
-                $booking_temp = BookingTemp::model()->findByAttributes(array('temp_guid' => $temp_guid));
+                $booking_temp = BookingTemp::model()->findByAttributes(array('temp_guid' => $_POST['custom']));
                 $booking_data = unserialize($booking_temp->temp_value);
 
                 $book_guid = isset($booking_data['book_guid']) ? $booking_data['book_guid'] : '';
@@ -129,7 +129,6 @@ class BookingtempController extends Controller {
 
             $booking_model->book_date = date("Y-m-d H:i:s");
             $booking_model->book_start_time = date("Y-m-d H:i:s");
-
             $booking_model->setEndtime();
             $booking_model->book_approved_time = date("Y-m-d H:i:s");
             $booking_model->book_payment_status = "C";
