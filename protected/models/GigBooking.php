@@ -225,7 +225,7 @@ class GigBooking extends RActiveRecord {
 
     public static function gigSessionPerUser($user_id, $gig_id, $date) {
         $session = self::GIG_BOOKING_SESSION;
-        $bookings = self::model()->findAllByAttributes(array('book_user_id' => $user_id, 'gig_id' => $gig_id, 'book_date' => $date));
+        $bookings = self::model()->findAll("book_user_id = :user_id And gig_id = :gig_id And DATE(book_date) = :date", array(':user_id' => $user_id, ':gig_id' => $gig_id, ':date' => date('Y-m-d', strtotime($date))));
 
         $session_count = 0;
         foreach ($bookings as $booking) {
@@ -266,7 +266,7 @@ class GigBooking extends RActiveRecord {
                 $this->book_extra_price = $this->gig->gigExtras->extra_price;
             $this->book_total_price = $this->gig->gig_price + $this->book_extra_price;
         endif;
-        $this->book_date = $this->book_date . ' 00:00:00';
+        $this->book_date = $this->book_start_time;
 
         return parent::beforeValidate();
     }

@@ -31,6 +31,7 @@ $logged_user = !$is_tutor && !Yii::app()->user->isGuest;
                     <?php echo $model->gigimage; ?></div>
                 <div class="row">
                     <?php
+                    $model->setButtonOptions();
                     if(!is_null($model->startnowButton)){
                         echo "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'> {$model->startnowButton} </div>";
                     }

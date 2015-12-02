@@ -83,7 +83,6 @@ $gig_price = (int) $model->gig_price;
                                     $(jsEvent.target).addClass('fc-state-highlight');
                                     $('.popup-calendaer-cont').slideUp();
                                     $('#booking_date_txt').html(date.format('DD-MM-YYYY'));
-                                    console.log(date.format('$js_date_format'));
                                     
                                     $.ajax({
                                         type: 'POST',

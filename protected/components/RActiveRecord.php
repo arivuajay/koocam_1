@@ -15,6 +15,25 @@ class RActiveRecord extends CActiveRecord {
             $this->created_at = $now;
         }
 
+        $dateFields = $this->dateFields();
+        if (!empty($dateFields)) {
+            foreach ($dateFields as $key => $field) {
+                if (isset($this->$field)) {
+//                    $this->$field = Yii::app()->localtime->toLocalDateTime($this->$field, 'short');
+                    $this->$field = Yii::app()->localtime->toUTC($this->$field);
+                }
+            }
+        }
+
+        $dateTimeFields = $this->dateTimeFields();
+        if (!empty($dateTimeFields)) {
+            foreach ($dateTimeFields as $key => $field) {
+                if (isset($this->$field)) {
+//                    $this->$field = Yii::app()->localtime->toLocalDateTime($this->$field, 'short', 'short');
+                    $this->$field = Yii::app()->localtime->toUTC($this->$field);
+                }
+            }
+        }
         return parent::beforeSave();
     }
 

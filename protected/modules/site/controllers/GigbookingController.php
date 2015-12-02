@@ -54,7 +54,7 @@ class GigbookingController extends Controller {
             $booking_model->book_user_id = Yii::app()->user->id;
 
             if ($booking_model->save()) {
-                Yii::app()->user->setFlash('success', "Your Booking sent for approval.");
+                Yii::app()->user->setFlash('success', "Your Booking Confirmed.");
                 $this->redirect(array('/site/gig/view', 'slug' => $booking_model->gig->slug));
             }
         }

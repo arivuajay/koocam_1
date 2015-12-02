@@ -69,8 +69,6 @@ class Gig extends RActiveRecord {
             $this->gig_price = Gig::GIG_MIN_AMT;
             $this->extra_price = Gig::EXTRA_MIN_AMT;
         }
-        $this->_is_tutor = !Yii::app()->user->isGuest && Yii::app()->user->id == $this->tutor_id;
-        $this->_logged_user = !$this->_is_tutor && !Yii::app()->user->isGuest;
 
         parent::init();
     }
@@ -408,6 +406,7 @@ class Gig extends RActiveRecord {
     }
 
     public function getStartnowButton($text = '<i class="fa fa-video-camera"></i> Start Now !', $class = 'big-btn btn btn-default', $data_target = 'startnow') {
+        $this->setButtonOptions();
         $button = NULL;
         if (!$this->_is_tutor) :
             if ($this->_logged_user) {
@@ -442,4 +441,8 @@ class Gig extends RActiveRecord {
         return $button;
     }
 
+    public function setButtonOptions() {
+        $this->_is_tutor = !Yii::app()->user->isGuest && Yii::app()->user->id == $this->tutor_id;
+        $this->_logged_user = !$this->_is_tutor && !Yii::app()->user->isGuest;
+    }
 }

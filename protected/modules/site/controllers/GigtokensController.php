@@ -47,26 +47,32 @@ class GigtokensController extends Controller {
      * 
      */
     public function actionGeneratetoken($guid) {
-        $token_exists = GigTokens::getChatToken($guid);
-        if (is_null($token_exists)) {
-            $token_model = new GigTokens;
-            $role = GigTokens::TOKEN_ROLE;
-            $expire = time() + ($booking_model->gig->gig_duration * 60);
-            $session_data = array(
-                'expire' => $expire,
-                'role' => $role,
-            );
+        $booking_model = GigBooking::model()->findByAttributes(array('book_guid' => $guid, 'book_approve' => '1'));
+        if (!empty($booking_model)) {
+            if (!empty($booking_model)) {
+                $token_exists = GigTokens::model()->findByAttributes(array('book_id' => $booking_model->book_id));
 
-            $session_key = Yii::app()->tok->createSession()->id;
-            $token_key = Yii::app()->tok->generateToken($session_key, $role, $expire);
+                if (empty($token_exists)) {
+                    $token_model = new GigTokens;
+                    $role = GigTokens::TOKEN_ROLE;
+                    $expire = time() + ($booking_model->gig->gig_duration * 60);
+                    $session_data = array(
+                        'expire' => $expire,
+                        'role' => $role,
+                    );
 
-            $token_model->attributes = array(
-                'book_id' => $booking_model->book_id,
-                'session_key' => $session_key,
-                'token_key' => $token_key,
-                'session_data' => $session_data,
-            );
-            $token_model->save();
+                    $session_key = Yii::app()->tok->createSession()->id;
+                    $token_key = Yii::app()->tok->generateToken($session_key, $role, $expire);
+
+                    $token_model->attributes = array(
+                        'book_id' => $booking_model->book_id,
+                        'session_key' => $session_key,
+                        'token_key' => $token_key,
+                        'session_data' => $session_data,
+                    );
+                    $token_model->save();
+                }
+            }
         }
         return true;
     }
