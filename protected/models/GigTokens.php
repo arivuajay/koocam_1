@@ -158,7 +158,7 @@ class GigTokens extends RActiveRecord {
             if (empty($token_exists)) {
                 $token_model = new GigTokens;
                 $role = GigTokens::TOKEN_ROLE;
-                $expire = time() + ($booking_model->gig->gig_duration * 60);
+                $expire = time() + ($booking_model->book_duration * 60);
                 $session_data = array(
                     'expire' => $expire,
                     'role' => $role,

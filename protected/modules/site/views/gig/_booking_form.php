@@ -62,9 +62,10 @@ $gig_price = (int) $model->gig_price;
                                 )
                             ),
                             'header' => array(
-                                'left' => 'prev,next today',
+                                'left' => 'prev,next ',
                                 'center' => 'title',
-                                'right' => 'year,month,agendaWeek,agendaDay'
+//                                'right' => 'year,month,agendaWeek,agendaDay'
+                                'right' => ''
                             ),
                             //uncomment if you want to show events
                             'events' => $event_url,

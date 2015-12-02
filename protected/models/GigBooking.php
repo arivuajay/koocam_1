@@ -24,6 +24,7 @@
  * @property string $book_payment_info
  * @property string $created_at
  * @property string $modified_at
+ * @property integer $book_duration
  *
  * The followings are the available model relations:
  * @property Gig $gig
@@ -87,7 +88,7 @@ class GigBooking extends RActiveRecord {
             array('hours', 'durationValidate'),
             array('book_start_time', 'bookingValidate'),
 //            array('book_start_time', 'date', 'format' => Yii::app()->localtime->getLocalDateTimeFormat('short', 'short')),
-            array('book_approved_time, book_payment_info, modified_at, book_session, is_message, book_message, book_declined_time', 'safe'),
+            array('book_approved_time, book_payment_info, modified_at, book_session, is_message, book_message, book_declined_time, book_duration', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('book_id, book_guid, gig_id, book_user_id, book_date, book_start_time, book_end_time, book_is_extra, book_gig_price, book_extra_price, book_total_price, book_message, book_approve, book_approved_time, book_payment_status, book_payment_info, created_at, modified_at', 'safe', 'on' => 'search'),
@@ -259,15 +260,10 @@ class GigBooking extends RActiveRecord {
 
         $seconds = $this->hours * 3600 + $this->minutes * 60;
         $this->book_start_time = $this->book_date . ' ' . gmdate("H:i:s", $seconds);
-
-        if (!empty($this->gig)):
-            $this->book_gig_price = $this->gig->gig_price;
-            if ($this->book_is_extra)
-                $this->book_extra_price = $this->gig->gigExtras->extra_price;
-            $this->book_total_price = $this->gig->gig_price + $this->book_extra_price;
-        endif;
         $this->book_date = $this->book_start_time;
 
+        $this->setBookingPrice();
+        
         return parent::beforeValidate();
     }
 
@@ -290,6 +286,16 @@ class GigBooking extends RActiveRecord {
             $this->book_end_time = date('Y-m-d H:i:s', strtotime("+{$this->gig->gig_duration} minutes", strtotime($this->book_end_time)));
             $i++;
         } while ($i <= $this->book_session);
+    }
+    
+    public function setBookingPrice() {
+        if (!empty($this->gig)):
+            $this->book_gig_price = $this->gig->gig_price;
+            if ($this->book_is_extra)
+                $this->book_extra_price = $this->gig->gigExtras->extra_price;
+            $this->book_total_price = $this->gig->gig_price + $this->book_extra_price;
+            $this->book_duration = $this->gig->gig_duration;
+        endif;
     }
 
     public function insertNotification() {
@@ -348,9 +354,9 @@ class GigBooking extends RActiveRecord {
         $alias = self::model()->getTableAlias(false, false);
         $condition = "(($alias.book_start_time <= :start_time And $alias.book_end_time >= :start_time)";
         $condition .= " OR ($alias.book_start_time <= :end_time And $alias.book_end_time >= :end_time)) ";
-        $condition .= " And $alias.book_approve = '1'";
+//        $condition .= " And $alias.book_approve = '1'";
 
-        return self::model()->findAll(array(
+        return self::model()->active()->findAll(array(
                     'condition' => $condition,
                     'params' => array(':start_time' => $start_time, ':end_time' => $end_time)
         ));
