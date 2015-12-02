@@ -69,7 +69,7 @@ class BookingtempController extends Controller {
                 $cancelUrl = Yii::app()->createAbsoluteUrl('/site/bookingtemp/paypalcancel', array('slug' => $gig->slug));
                 $notifyUrl = Yii::app()->createAbsoluteUrl('/site/bookingtemp/paypalnotify');
 
-                $paypalManager->addField('item_name', BookingTemp::TEMP_BOOKING_KEY);
+                $paypalManager->addField('item_name', $gig->gig_title . BookingTemp::TEMP_BOOKING_KEY);
                 $paypalManager->addField('amount', $data['temp_book_total_price']);
                 $paypalManager->addField('custom', $booking_temp->temp_guid);
                 $paypalManager->addField('return', $returnUrl);
@@ -96,7 +96,7 @@ class BookingtempController extends Controller {
                 if ($book_guid) {
                     $booking_temp->delete();
                     Yii::app()->user->setFlash('success', 'Thanks for your booking!');
-                    $this->redirect('/site/default/chat', array('guid' => $book_guid));
+                    $this->redirect(array('/site/default/chat', 'guid' => $book_guid));
                 } else {
                     Yii::app()->user->setFlash('danger', 'Failed to generate token.');
                 }

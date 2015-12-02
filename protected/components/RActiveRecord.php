@@ -11,11 +11,11 @@ class RActiveRecord extends CActiveRecord {
 
         if (!$this->isNewRecord) {
             $this->modified_at = $now;
+            $this->convertTime('to');
         } else {
             $this->created_at = $now;
         }
-
-        $this->convertTime('to');
+        
         return parent::beforeSave();
     }
 
