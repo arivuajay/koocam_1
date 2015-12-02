@@ -22,11 +22,11 @@ class BookingtempController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array(''),
+                'actions' => array('paypalReturn', 'paypalCancel', 'paypalNotify'),
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('booking', 'calendarevents', 'getsessionoptions'),
+                'actions' => array('booking'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -54,6 +54,7 @@ class BookingtempController extends Controller {
             $data['temp_book_user_id'] = Yii::app()->user->id;
             $data['temp_book_gig_price'] = $gig->gig_price;
             $data['temp_book_total_price'] = $gig->gig_price;
+            $data['temp_book_duration'] = $gig->gig_duration;
 
             if ($post_data['temp_book_is_extra'] == "Y") {
                 $data['temp_book_extra_price'] = $gig->gigExtras->extra_price;
@@ -63,27 +64,73 @@ class BookingtempController extends Controller {
             $booking_temp->temp_value = serialize($data);
 
             if ($booking_temp->save(false)) {
-//                $paypalManager = new Paypal;
-//                $returnUrl = Yii::app()->createAbsoluteUrl(Yii::app()->createUrl('/optirep/repSingleSubscriptions/paypalRenewalReturn'));
-//                $cancelUrl = Yii::app()->createAbsoluteUrl(Yii::app()->createUrl('/optirep/repSingleSubscriptions/paypalRenewalCancel'));
-//                $notifyUrl = Yii::app()->createAbsoluteUrl(Yii::app()->createUrl('/optirep/repSingleSubscriptions/paypalRenewalNotify'));
-//
-//                $paypalManager->addField('item_name', RepTemp::REP_SINGLE_RENEWAL_REP_ACCOUNT);
-//                $paypalManager->addField('amount', $data['price_list']['total_price']);
-////                $paypalManager->addField('quantity', $no_of_accounts_purchase);
-//                $paypalManager->addField('tax', $data['price_list']['tax']);
-//                $paypalManager->addField('custom', $repTemp->rep_temp_random_id);
-//                $paypalManager->addField('return', $returnUrl);
-//                $paypalManager->addField('cancel_return', $cancelUrl);
-//                $paypalManager->addField('notify_url', $notifyUrl);
-//
-//                $paypalManager->submitPaypalPost();
-            }
+                $paypalManager = new Paypal;
+                $returnUrl = Yii::app()->createAbsoluteUrl('/site/bookingtemp/paypalReturn', array('slug' => $gig->slug));
+                $cancelUrl = Yii::app()->createAbsoluteUrl('/site/bookingtemp/paypalCancel', array('slug' => $gig->slug));
+                $notifyUrl = Yii::app()->createAbsoluteUrl('/site/bookingtemp/paypalNotify');
 
-//            if ($booking_model->save()) {
-//                Yii::app()->user->setFlash('success', "Your Booking sent for approval.");
-//                $this->redirect(array('/site/gig/view', 'slug' => $booking_model->gig->slug));
-//            }
+                $paypalManager->addField('item_name', BookingTemp::TEMP_BOOKING_KEY);
+                $paypalManager->addField('amount', $data['temp_book_total_price']);
+                $paypalManager->addField('custom', $booking_temp->temp_guid);
+                $paypalManager->addField('return', $returnUrl);
+                $paypalManager->addField('cancel_return', $cancelUrl);
+                $paypalManager->addField('notify_url', $notifyUrl);
+
+                $paypalManager->submitPaypalPost();
+            }
+        }
+    }
+
+    public function actionPaypalCancel($slug) {
+        Yii::app()->user->setFlash('danger', 'Your booking has been cancelled. Please try again.');
+        $this->redirect(array('/site/gig/view', 'slug' => $slug));
+    }
+
+    public function actionPaypalReturn($slug) {
+        if (isset($_POST["txn_id"]) && isset($_POST["payment_status"])) {
+            if ($_POST["payment_status"] == "Pending" || $_POST["payment_status"] == "Completed") {
+                Yii::app()->user->setFlash('success', 'Thanks for your booking!');
+            }
+        } else {
+            Yii::app()->user->setFlash('danger', 'Your booking payment is failed. Please try again later or contact admin.');
+        }
+        $this->redirect(array('/site/gig/view', 'slug' => $slug));
+    }
+
+    public function actionPaypalNotify() {
+        $paypalManager = new Paypal;
+        if ($paypalManager->notify()) {
+            if ($_POST["payment_status"] == "Pending" || $_POST["payment_status"] == "Completed") {
+                $this->processBooking($_POST['custom']);
+            }
+        }
+    }
+
+    protected function processBooking($temp_guid) {
+        $booking_temp = BookingTemp::model()->findByAttributes(array('temp_guid' => $temp_guid));
+        if (!empty($booking_temp)) {
+            $booking_data = unserialize($booking_temp->temp_value);
+            $booking_model = new GigBooking();
+
+            foreach ($booking_data as $key => $value) {
+                $attr_name = str_replace('temp_', '', $key);
+                $booking_model->setAttribute($attr_name, $value);
+            }
+            
+            $booking_model->book_date = date("Y-m-d H:i:s");
+            $booking_model->book_start_time = date("Y-m-d H:i:s");
+            
+            $booking_model->setEndtime();
+            $booking_model->book_approved_time = date("Y-m-d H:i:s");
+            $booking_model->book_payment_status = "C";
+            $booking_model->book_payment_info = serialize($_POST);
+            
+            if ($booking_model->save(false)) {
+                $booking_temp->delete();
+                if(GigTokens::generateToken($booking_model->book_guid)){
+                    $this->redirect(array('/site/default/chat', array('guid' => $booking_model->book_guid)));
+                }
+            }
         }
     }
 

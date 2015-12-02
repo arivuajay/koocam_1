@@ -48,4 +48,9 @@ return array(
     'FB_SECRET_ID' => $fb_sec_id,
     'GOOGLE_APP_ID' => $google_app_id,
     'GOOGLE_SECRET_ID' => $google_sec_id,
+    
+    //Paypal values
+    'SANDBOXVALUE'  => TRUE,
+    'CURRENCY'      => 'USD',
+    'BUSINESSEMAIL' => 'vasanth@arkinfotec.com', 
 );

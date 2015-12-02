@@ -1,7 +1,7 @@
 <?php
 /* @var $this DefaultController */
 /* @var $model Gig */
-/* @var $booking_model GigBooking */
+/* @var $booking_temp BookingTemp */
 /* @var $form CActiveForm */
 /* @var $tutor User */
 
@@ -19,6 +19,7 @@ $form = $this->beginWidget('CActiveForm', array(
         'hideErrorMessage' => true,
     ),
         ));
+
 echo $form->hiddenField($booking_temp, 'temp_gig_id', array('value' => $model->gig_id));
 
 $session = GigBooking::gigSessionList(Yii::app()->user->id, $model->gig_id, date('Y-m-d'));
@@ -42,7 +43,7 @@ $gig_price = (int) $model->gig_price;
                         
                         <div class="form-group">
                             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
-                                <?php echo $form->label($booking_temp, 'temp_book_session'); ?>
+                                <?php echo $form->labelEx($booking_temp, 'temp_book_session'); ?>
                                 <?php echo $form->dropDownList($booking_temp, 'temp_book_session', $session, array('class' => 'selectpicker', "data-style" => "btn-white", "data-size" => "5", 'prompt' => 'Select Session')); ?>
                                 <?php echo $form->error($booking_temp, 'temp_book_session'); ?>
                             </div>
@@ -82,7 +83,7 @@ $gig_price = (int) $model->gig_price;
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn  btn-cancel" data-dismiss="modal">Cancel</button>
-                <?php echo CHtml::submitButton(' Pay Now !', array('class' => 'btn btn-red')); ?>
+                <?php echo CHtml::submitButton('Pay Now !', array('class' => 'btn btn-red')); ?>
             </div>
         </div>
     </div>

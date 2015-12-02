@@ -101,10 +101,10 @@ class Paypal extends CComponent {
         // is redirected to paypal.
 
         echo "<html>\n";
-        echo "<head><title>" . Myclass::t('OGO135', '', 'og') . "</title></head>\n";
+        echo "<head><title> Processing Payment... </title></head>\n";
         // echo "<body>";
         echo "<body onLoad=\"document.form.submit();\">\n";
-        echo "<center><h3>" . Myclass::t('OGO136', '', 'og') . "</h3></center>\n";
+        echo "<center><h3> Processing Payment... </h3></center>\n";
         echo "<form method=\"post\" name=\"form\" action=\"" . $this->paypalUrl . "\">\n";
 
         foreach ($this->fields as $name => $value) {

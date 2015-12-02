@@ -12,13 +12,13 @@
  * @property string $modified_at
  */
 class BookingTemp extends RActiveRecord {
-    
+
     public $temp_gig_id;
     public $temp_book_session;
     public $temp_book_is_extra;
     public $temp_book_user_id;
-    
-    const TEMP_BOOKING_KEY = "Start Now Booking";
+
+    const TEMP_BOOKING_KEY = "Booking";
 
     /**
      * @return string the associated database table name
@@ -36,7 +36,7 @@ class BookingTemp extends RActiveRecord {
         return array(
             array('temp_book_session', 'required'),
             array('temp_guid', 'length', 'max' => 50),
-            array('created_at, modified_at, temp_gig_id, temp_book_session, temp_book_is_extra', 'safe'),
+            array('created_at, modified_at, temp_gig_id, temp_book_session, temp_book_is_extra, temp_book_user_id', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('temp_id, temp_guid, temp_key, temp_value, created_at, modified_at', 'safe', 'on' => 'search'),
@@ -116,13 +116,13 @@ class BookingTemp extends RActiveRecord {
             )
         ));
     }
-    
+
     protected function beforeSave() {
-        if ($this->isNewRecord){
+        if ($this->isNewRecord) {
             $this->temp_guid = Myclass::guid(false);
             $this->temp_key = self::TEMP_BOOKING_KEY;
         }
-        
+
         return parent::beforeSave();
     }
 

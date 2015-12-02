@@ -35,10 +35,10 @@ $logged_user = !$is_tutor && !Yii::app()->user->isGuest;
                     if(!is_null($model->startnowButton)){
                         echo "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'> {$model->startnowButton} </div>";
                     }
-                    if(!is_null($model->bookingButton)){
+                    if (!is_null($model->bookingButton)) {
                         echo "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'> {$model->bookingButton} </div>";
                     }
-                    if(!is_null($model->messageButton)){
+                    if (!is_null($model->messageButton)) {
                         echo "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'> {$model->messageButton} </div>";
                     }
                     ?>
@@ -140,11 +140,10 @@ $logged_user = !$is_tutor && !Yii::app()->user->isGuest;
 </div>
 
 <?php
-if ($logged_user){
+if ($logged_user) {
     echo $this->renderPartial('_booking_form', compact('model', 'booking_model'));
-    echo $this->renderPartial('_startnow_form', compact('model', 'booking_model', 'booking_temp'));
+    echo $this->renderPartial('_startnow_form', compact('model', 'booking_temp'));
 }
-    
 ?>
 
 <script type="text/javascript">var switchTo5x = true;</script>
