@@ -24,13 +24,14 @@ $themeUrl = $this->themeUrl;
             echo CHtml::tag('div', array('id' => 'subscribersDiv'), '');
             echo '<br />';
             echo CHtml::tag('div', array('id' => 'myPublisherDiv'), '');
-        
+
+            $show_video = $token->book->gig->gig_avail_visual == 'Y' ? 'true' : 'false';
             $this->widget('ext.yii-opentok.EOpenTokWidget', array(
                 'key' => Yii::app()->tok->key,
                 'sessionId' => $token->session_key,
                 'token' => $token->token_key,
+                'show_video' => $show_video
             ));
-            
             ?>
             <br />
             <div id="msgHistory"></div>
@@ -43,6 +44,9 @@ $themeUrl = $this->themeUrl;
             <a href="javascript:void(0)" id="connect" class="hide">Connect Again</a>
             <br />
             <a href="javascript:void(0)" id="disconnect">DisConnect</a>
+
+            <div id="clock"></div>
+            <div id="time-alert" class="text-danger hide"><span class="blink">Time going to End !!!</span></div>
         </div>
     </div>
 </div>
@@ -51,4 +55,30 @@ $themeUrl = $this->themeUrl;
 $cs = Yii::app()->getClientScript();
 $cs_pos_end = CClientScript::POS_END;
 $cs->registerScriptFile("https://static.opentok.com/v2/js/opentok.min.js");
+$cs->registerScriptFile($themeUrl . '/js/jquery.countdown.min.js', $cs_pos_end);
+$cs->registerScriptFile($themeUrl . '/js/jquery-blink.js', $cs_pos_end);
+
+$end_time = date('Y/m/d H:i:s', strtotime($token->book->book_end_time));
+$alert_minute = 2;
+        
+$js = <<< EOD
+    jQuery(document).ready(function ($) {
+        var alert_min = '$alert_minute';
+        $('#clock').countdown('{$end_time}', function (event) {
+            $(this).html(event.strftime('%H:%M:%S'));
+        }).on('update.countdown', function(event) {
+            if (event.elapsed) {
+                $('#clock').countdown('stop');
+            }else{
+                if(alert_min >= event.offset.minutes){
+                    $('#time-alert').removeClass('hide');
+                }
+            }
+        });
+        $('.blink').blink({delay:300});
+    });
+
+
+EOD;
+Yii::app()->clientScript->registerScript('chat', $js);
 ?>
