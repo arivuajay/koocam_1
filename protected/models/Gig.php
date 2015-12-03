@@ -52,7 +52,10 @@ class Gig extends RActiveRecord {
     const IMG_HEIGHT = 528;
     const THUMB_WIDTH = 500;
     const THUMB_HEIGHT = 440;
+    
+    //PAGE LIMITS
     const GIG_SEARCH_LIMIT = 9;
+    const MY_GIG_LIMIT = 9;
 
     protected $_is_tutor;
     protected $_logged_user;

@@ -1,31 +1,25 @@
 <?php
 
 /**
- * This is the model class for table "{{admin}}".
+ * This is the model class for table "{{report_abuse}}".
  *
- * The followings are the available columns in table '{{admin}}':
- * @property integer $admin_id
- * @property string $username
- * @property string $password_hash
- * @property string $password_reset_token
- * @property string $email
- * @property string $status
+ * The followings are the available columns in table '{{report_abuse}}':
+ * @property integer $abuse_id
+ * @property integer $book_id
+ * @property string $abuse_message
  * @property string $created_at
- * @property string $updated_at
+ * @property string $modified_at
+ *
+ * The followings are the available model relations:
+ * @property GigBooking $book
  */
-class Admin extends CActiveRecord {
-
-    public $old_password;
-    public $new_password;
-    public $repeat_password;
-
-    const ADMIN_EMAIL = 'prakash.paramanandam@arkinfotec.com';
+class ReportAbuse extends RActiveRecord {
 
     /**
      * @return string the associated database table name
      */
     public function tableName() {
-        return '{{admin}}';
+        return '{{report_abuse}}';
     }
 
     /**
@@ -35,25 +29,13 @@ class Admin extends CActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('username, password_hash, email, created_at', 'required'),
-            array('username, password_hash, password_reset_token, email', 'length', 'max' => 255),
-            array('status', 'length', 'max' => 1),
-            array('updated_at', 'safe'),
-            array('email', 'email'),
-            array('old_password, new_password, repeat_password', 'required', 'on' => 'changePwd'),
-            array('old_password', 'findPasswords', 'on' => 'changePwd'),
-            array('repeat_password', 'compare', 'compareAttribute' => 'new_password', 'on' => 'changePwd'),
+            array('book_id, abuse_message', 'required'),
+            array('book_id', 'numerical', 'integerOnly' => true),
+            array('abuse_message, modified_at', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('admin_id, username, password_hash, password_reset_token, email, status, created_at, updated_at', 'safe', 'on' => 'search'),
+            array('abuse_id, book_id, abuse_message, created_at, modified_at', 'safe', 'on' => 'search'),
         );
-    }
-
-    //matching the old password with your existing password.
-    public function findPasswords($attribute, $params) {
-        $user = Admin::model()->findByPk(Yii::app()->user->id);
-        if ($user->password_hash != Myclass::encrypt($this->old_password))
-            $this->addError($attribute, 'Old password is incorrect.');
     }
 
     /**
@@ -63,6 +45,7 @@ class Admin extends CActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
+            'book' => array(self::BELONGS_TO, 'GigBooking', 'book_id'),
         );
     }
 
@@ -71,14 +54,11 @@ class Admin extends CActiveRecord {
      */
     public function attributeLabels() {
         return array(
-            'admin_id' => 'Admin',
-            'username' => 'Username',
-            'password_hash' => 'Password Hash',
-            'password_reset_token' => 'Password Reset Token',
-            'email' => 'Email',
-            'status' => 'Status',
+            'abuse_id' => 'Abuse',
+            'book_id' => 'Book',
+            'abuse_message' => 'Abuse Message',
             'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
+            'modified_at' => 'Modified At',
         );
     }
 
@@ -99,14 +79,11 @@ class Admin extends CActiveRecord {
 
         $criteria = new CDbCriteria;
 
-        $criteria->compare('admin_id', $this->admin_id);
-        $criteria->compare('username', $this->username, true);
-        $criteria->compare('password_hash', $this->password_hash, true);
-        $criteria->compare('password_reset_token', $this->password_reset_token, true);
-        $criteria->compare('email', $this->email, true);
-        $criteria->compare('status', $this->status, true);
+        $criteria->compare('abuse_id', $this->abuse_id);
+        $criteria->compare('book_id', $this->book_id);
+        $criteria->compare('abuse_message', $this->abuse_message, true);
         $criteria->compare('created_at', $this->created_at, true);
-        $criteria->compare('updated_at', $this->updated_at, true);
+        $criteria->compare('modified_at', $this->modified_at, true);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -120,7 +97,7 @@ class Admin extends CActiveRecord {
      * Returns the static model of the specified AR class.
      * Please note that you should have this exact method in all your CActiveRecord descendants!
      * @param string $className active record class name.
-     * @return Admin the static model class
+     * @return ReportAbuse the static model class
      */
     public static function model($className = __CLASS__) {
         return parent::model($className);
@@ -132,6 +109,29 @@ class Admin extends CActiveRecord {
                 'pageSize' => PAGE_SIZE,
             )
         ));
+    }
+
+    protected function afterSave() {
+        if ($this->isNewRecord) {
+            $learner = $this->book->bookUser;
+            $tutor = $this->book->gig->tutor;
+            $gig = $this->book->gig;
+            
+            $mail = new Sendmail;
+            $trans_array = array(
+                "{SITENAME}" => SITENAME,
+                "{LEARNER}" => $learner->fullname,
+                "{EMAIL_ID}" => $learner->email,
+                "{TUTOR}" => $tutor->fullname,
+                "{TUTOR_EMAIL}" => $tutor->email,
+                "{GIG}" => $gig->gig_title,
+                "{ABUSE_MESSAGE}" => $this->abuse_message,
+            );
+            $message = $mail->getMessage('report_abuse', $trans_array);
+            $Subject = $mail->translate("Report Abuse For GIG ({$gig->gig_title})");
+            $mail->send(Admin::ADMIN_EMAIL, $Subject, $message);
+        }
+        return parent::afterSave();
     }
 
 }

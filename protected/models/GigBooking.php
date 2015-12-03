@@ -30,6 +30,7 @@
  * @property Gig $gig
  * @property User $bookUser
  * @property GigTokens[] $gigTokens
+ * @property ReportAbuse $reportAbuses
  */
 class GigBooking extends RActiveRecord {
 
@@ -132,6 +133,7 @@ class GigBooking extends RActiveRecord {
             'gig' => array(self::BELONGS_TO, 'Gig', 'gig_id'),
             'bookUser' => array(self::BELONGS_TO, 'User', 'book_user_id'),
             'gigTokens' => array(self::HAS_MANY, 'GigTokens', 'book_id'),
+            'reportAbuses' => array(self::HAS_ONE, 'ReportAbuse', 'book_id'),
         );
     }
 

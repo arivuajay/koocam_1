@@ -25,13 +25,14 @@ endif
     </div>
 </div>
 
+<?php $user = User::model()->findByPk(Yii::app()->user->id); ?>
 <div class="innerpage-cont">
     <div class="container">
         <div class="row">
             <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">
                 <div class="profiles-left">
                     <div class="profile-img2"> 
-                        <?php echo CHtml::image('images/profile-img2.jpg')?>
+                        <?php echo $user->profileimage ?>
                     </div>
                 </div>
                 <div class="profile-img2">
@@ -41,17 +42,26 @@ endif
                         <p> <img src="images/ratings.png"  alt=""></p>
                     </div>
                     <div class="profiles-list">
-                        <ul>
-                            <li> <a href="#"> <i class="fa fa-user"></i> My Profile</a> </li>
-                            <li> <a href="#"> <i class="fa fa-graduation-cap"></i> My Gigs</a> <span class="badge">4</span></li>
-                            <li> <a href="#"> <i class="fa fa-cart-plus"></i> My Purchase</a> <span class="badge">4</span></li>
-                            <li> <a href="#"> <i class="fa fa-money"></i> My Payments</a> <span class="badge"> $1234</span></li>
-                            <li class="myprofile-active"> <a href="#"> <i class="fa fa-envelope"></i> Messages</a> <span class="badge">20</span></li>
-                            <li> <a href="#"> <i class="fa fa-bell"></i> Notifications</a> <span class="badge">20</span></li>
-                            <li> <a href="#"> <i class="fa fa-calendar-check-o"></i> Jobs</a> <span class="badge">20</span></li>
-                            <li> <a href="#"><i class="fa fa-gear"></i> Account Setting</a> <span class="badge">20</span></li>
-                            <li> <a href="#"> <i class="fa fa-power-off"></i> Logout</a> <span class="badge">20</span></li>
-                        </ul>
+                        <?php
+                        $this->widget('zii.widgets.CMenu', array(
+                            'activateParents' => true,
+                            'encodeLabel' => false,
+                            'activateItems' => true,
+                            'activeCssClass' => 'myprofile-active',
+                            'items' => array(
+                                array('label' => '<i class="fa fa-user"></i> My Profile', 'url' => '#'),
+                                array('label' => '<i class="fa fa-graduation-cap"></i> My Gigs <span class="badge">'.$user->gigcount.'</span>', 'url' => array('/site/gig/mygigs')),
+                                array('label' => '<i class="fa fa-cart-plus"></i> My Purchase <span class="badge">4</span>', 'url' => '#'),
+                                array('label' => '<i class="fa fa-money"></i> My Payments <span class="badge"> $1234</span>', 'url' => '#'),
+                                array('label' => '<i class="fa fa-envelope"></i> Messages <span class="badge">20</span>', 'url' => '#'),
+                                array('label' => '<i class="fa fa-bell"></i> Notifications <span class="badge">20</span>', 'url' => '#'),
+                                array('label' => '<i class="fa fa-calendar-check-o"></i> Jobs <span class="badge">20</span>', 'url' => '#'),
+                                array('label' => '<i class="fa fa-gear"></i> Account Setting <span class="badge">20</span>', 'url' => '#'),
+                                array('label' => '<i class="fa fa-power-off"></i> Logout', 'url' =>  array('/site/default/logout')),
+                            ),
+                            'htmlOptions' => array('class' => 'sidebar-menu')
+                        ));
+                        ?>
                     </div>
                 </div>
             </div>

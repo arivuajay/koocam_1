@@ -111,8 +111,8 @@ $logged_user = !$is_tutor && !Yii::app()->user->isGuest;
 
 <?php
 if ($logged_user) {
-    echo $this->renderPartial('_booking_form', compact('model', 'booking_model'));
-    echo $this->renderPartial('_startnow_form', compact('model', 'booking_temp'));
+    $this->renderPartial('_booking_form', compact('model', 'booking_model'));
+    $this->renderPartial('_startnow_form', compact('model', 'booking_temp'));
     echo $this->renderPartial('_comments_form', compact('model', 'gig_comments'));
 }
 ?>

@@ -4,7 +4,6 @@
 /* @var $booking_model GigBooking */
 /* @var $form CActiveForm */
 /* @var $tutor User */
-$this->title = "View - {$model->gig_title}";
 $themeUrl = $this->themeUrl;
 $tutor = $model->tutor;
 

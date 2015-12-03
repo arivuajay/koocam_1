@@ -38,7 +38,44 @@ $themeUrl = $this->themeUrl;
             <br />
             <form id="chat-form">
                 <input type="text" placeholder="chat" id="msgTxt" class="form-control" /><br />
-                <input type="submit" class="btn btn-small explorebtn" value="Send" />
+                <input type="submit" class="btn btn-small explorebtn" value="Send" /><br /><br />
+                <?php
+                $encpt_url = Yii::app()->createAbsoluteUrl('/site/default/filecrypt');
+                $guid = $token->book->book_guid;
+                
+                $this->widget('ext.EAjaxUpload.EAjaxUpload', array(
+                    'id' => 'uploadFile',
+                    'config' => array(
+                        'action' => Yii::app()->createUrl('/site/default/upload'),
+//                        'allowedExtensions' => array("jpg","jpeg","gif","exe","mov"),
+                        'sizeLimit' => 5 * 1024 * 1024, 
+//                        'minSizeLimit' => 10 * 1024 * 1024,
+                        'onComplete'=>"js:function(id, fileName, responseJSON){
+                            $.ajax({
+                                type: 'POST',
+                                url: '$encpt_url',
+                                data: {file: responseJSON.filename, guid: '{$guid}'},
+                                success:function(url){
+                                    $('#msgTxt').val(url);
+                                    $('#chat-form').submit();
+                                    $('#msgTxt').val('');
+                                },
+                                error: function(data) {
+                                },
+                            });
+                            
+                        }",
+                    'messages'=>array(
+                        'typeError'=>"{file} has invalid extension. Only {extensions} are allowed.",
+                        'sizeError'=>"{file} is too large, maximum file size is {sizeLimit}.",
+                        'minSizeError'=>"{file} is too small, minimum file size is {minSizeLimit}.",
+                        'emptyError'=>"{file} is empty, please select files again without it.",
+                        'onLeave'=>"The files are being uploaded, if you leave now the upload will be cancelled."
+                    ),
+                    //'showMessage'=>"js:function(message){ alert(message); }"
+                    )
+                ));
+                ?>
             </form>
             <hr/>
             <a href="javascript:void(0)" id="connect" class="hide">Connect Again</a>
@@ -47,21 +84,26 @@ $themeUrl = $this->themeUrl;
 
             <div id="clock"></div>
             <div id="time-alert" class="text-danger hide"><span class="blink">Time going to End !!!</span></div>
+            <?php
+            echo CHtml::link('Report Abuse', '#', array('class' => '', 'data-toggle' => "modal", 'data-target' => "#abuse-modal"));
+            $this->renderPartial('_report_abuse', compact('token', 'abuse_model'));
+            ?>
         </div>
     </div>
 </div>
-<div id="countdowntimer"><span id="given_date"><span></div>
-            
+<!--<div id="countdowntimer"><span id="given_date"><span></div>-->
+
+
 <?php
 $cs = Yii::app()->getClientScript();
 $cs_pos_end = CClientScript::POS_END;
 $cs->registerScriptFile("https://static.opentok.com/v2/js/opentok.min.js");
 $cs->registerScriptFile($themeUrl . '/js/moment.js', $cs_pos_end);
 $cs->registerScriptFile($themeUrl . '/js/moment-timezone.js', $cs_pos_end);
-//$cs->registerScriptFile($themeUrl . '/js/jquery.countdownTimer.min.js', $cs_pos_end);
 $cs->registerScriptFile($themeUrl . '/js/jquery.countdown.min.js', $cs_pos_end);
 $cs->registerScriptFile($themeUrl . '/js/jquery-blink.js', $cs_pos_end);
 
+//$cs->registerScriptFile($themeUrl . '/js/jquery.countdownTimer.min.js', $cs_pos_end);
 //$start_time = date('Y/m/d H:i:s', strtotime(Yii::app()->localtime->fromUTC(date('Y/m/d H:i:s'))));
 //$start_date = new DateTime($start_time);
 //$since_start = $start_date->diff(new DateTime(date('Y/m/d H:i:s', strtotime($token->book->book_end_time))));
@@ -69,7 +111,7 @@ $cs->registerScriptFile($themeUrl . '/js/jquery-blink.js', $cs_pos_end);
 $end_time = date('Y/m/d H:i:s', strtotime(Yii::app()->localtime->toUTC($token->book->book_end_time)));
 $time_zone = Yii::app()->localtime->getTimeZone();
 $alert_minute = 2;
-        
+
 $js = <<< EOD
     jQuery(document).ready(function ($) {
         var alert_min = '$alert_minute';

@@ -16,6 +16,7 @@ class Download extends CAction {
     public function run() {
         if (isset($_REQUEST["df"])) {
             $file_path = Myclass::refdecryption($_REQUEST["df"]);
+            $file_path = Yii::app()->createAbsoluteUrl($file_path);
 
 //            $ch = curl_init();
 //            curl_setopt($ch, CURLOPT_URL, $file_path);

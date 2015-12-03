@@ -23,6 +23,6 @@ $themeUrl = $this->themeUrl;
 </div>
 <div class="innerpage-cont">
     <div class="container">
-        <?php echo $this->renderPartial('_form', compact('model', 'themeUrl')); ?>
+        <?php $this->renderPartial('_form', compact('model', 'themeUrl')); ?>
     </div>
 </div>

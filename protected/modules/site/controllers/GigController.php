@@ -32,7 +32,7 @@ class GigController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'upload', 'update', 'changepricepertime'),
+                'actions' => array('create', 'upload', 'update', 'changepricepertime', 'mygigs'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -154,22 +154,6 @@ class GigController extends Controller {
         return $model;
     }
 
-    public function actionUpload() {
-        Yii::import("ext.EAjaxUpload.qqFileUploader");
-
-        $folder = 'upload/temp/'; // folder for uploaded files
-        $allowedExtensions = array("jpg"); //array("jpg","jpeg","gif","exe","mov" and etc...
-        $sizeLimit = 10 * 1024 * 1024; // maximum file size in bytes
-        $uploader = new qqFileUploader($allowedExtensions, $sizeLimit);
-        $result = $uploader->handleUpload($folder);
-        $return = htmlspecialchars(json_encode($result), ENT_NOQUOTES);
-
-        $fileSize = filesize($folder . $result['filename']); //GETTING FILE SIZE
-        $fileName = $result['filename']; //GETTING FILE NAME
-
-        echo $return; // it's array
-    }
-
     /**
      * 
      * @param type $model
@@ -278,4 +262,20 @@ class GigController extends Controller {
         }
     }
 
+    public function actionMygigs() {
+        $this->layout = '//layouts/user_dashboard';
+        
+        $model = new Gig();
+        $criteria = new CDbCriteria;
+        $alias = $model->getTableAlias(false, false);
+        $criteria->compare($alias . '.tutor_id', Yii::app()->user->id);
+        $criteria->order = 'created_at DESC';
+
+        $pages = new CPagination(Gig::model()->count($criteria));
+        $pages->pageSize = Gig::MY_GIG_LIMIT;
+        $pages->applyLimit($criteria);
+        $results = Gig::model()->findAll($criteria);
+        
+        $this->render('mygigs', compact('results'));
+    }
 }

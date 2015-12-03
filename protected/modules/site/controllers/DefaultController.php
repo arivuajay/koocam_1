@@ -28,11 +28,11 @@ class DefaultController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('index', 'sociallogin', 'signupsocial', 'login', 'register', 'activation'),
+                'actions' => array('index', 'sociallogin', 'signupsocial', 'login', 'register', 'activation', 'filecrypt', 'download'),
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('logout', 'test', 'chat'),
+                'actions' => array('logout', 'test', 'chat', 'reportabuse', 'upload', 'testtoken', 'filedownload'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -186,10 +186,82 @@ class DefaultController extends Controller {
 
     public function actionChat($guid) {
         $token = GigTokens::getAuthData($guid);
-        if(empty($token)){
+        $abuse_model = new ReportAbuse();
+
+        if (empty($token)) {
             Yii::app()->user->setFlash('danger', "Invalid Access !!!");
             $this->goHome();
         }
-        $this->render('chat', compact('token'));
+        $this->render('chat', compact('token', 'abuse_model'));
     }
+
+    public function actionReportabuse() {
+        $model = new ReportAbuse();
+        $this->performAjaxValidation($model);
+        if (Yii::app()->request->isPostRequest && Yii::app()->request->getPost('ReportAbuse')) {
+            $model->attributes = Yii::app()->request->getPost('ReportAbuse');
+            if ($model->save()) {
+                Yii::app()->user->setFlash('success', "Your Report sent to admin successfully !!!");
+                $this->redirect(array('/site/default/chat', 'guid' => $model->book->book_guid));
+            }
+        }
+    }
+
+    public function actionUpload() {
+        Yii::import("ext.EAjaxUpload.qqFileUploader");
+
+        $dir = UPLOAD_DIR . '/temp';
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755, true);
+        }
+        $folder = 'uploads/temp/'; // folder for uploaded files
+//        $allowedExtensions = array("jpg"); //array("jpg","jpeg","gif","exe","mov" and etc...
+//        $sizeLimit = 10 * 1024 * 1024; // maximum file size in bytes
+//        $uploader = new qqFileUploader($allowedExtensions, $sizeLimit);
+        $uploader = new qqFileUploader();
+        $result = $uploader->handleUpload($folder);
+        $return = htmlspecialchars(json_encode($result), ENT_NOQUOTES);
+
+        $fileSize = filesize($folder . $result['filename']); //GETTING FILE SIZE
+        $fileName = $result['filename']; //GETTING FILE NAME
+
+        echo $return; // it's array
+    }
+
+    public function actionFilecrypt() {
+        if (isset($_POST['file']) && isset($_POST['guid'])) {
+            $file_path = '/uploads/temp/' . $_POST['file'];
+            $add_string = Myclass::getRandomString(7);
+            $df = Myclass::refencryption($file_path).$add_string;
+            $text = $_POST['file'];
+            echo CHtml::link($text, array('/site/default/filedownload', 'df' => $df, 'guid' => $_POST['guid']), array('target' => '_blank'));
+        }
+        Yii::app()->end();
+    }
+
+    public function actionTesttoken() {
+        $role = GigTokens::TOKEN_ROLE;
+        $expire = time() + (60 * 60);
+        echo $session_key = Yii::app()->tok->createSession()->id;
+        echo '<br />';
+        echo $token_key = Yii::app()->tok->generateToken($session_key, $role, $expire);
+        exit;
+    }
+    
+    public function actionFiledownload($df, $guid) {
+        $token = GigTokens::getAuthData($guid);
+        if (empty($token)) {
+            Yii::app()->user->setFlash('danger', "Invalid Access !!!");
+            $this->goHome();
+        }
+        $df = substr($df,0,-7);
+        $file_path = Yii::app()->createAbsoluteUrl(Myclass::refdecryption($df));
+
+        $content = @file_get_contents($file_path);
+        if (!$content)
+            throw new CHttpException(404, 'The requested page does not exist.');
+        $filename = isset($_REQUEST["fn"]) ? $_REQUEST["fn"] : basename($file_path);
+        Yii::app()->request->sendFile($filename, $content);
+    }
+
 }

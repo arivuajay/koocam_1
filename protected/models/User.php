@@ -32,6 +32,7 @@
  * @property UserProfile $userProf
  * @property Message[] $user1Messages
  * @property Message[] $user2Messages
+ * @property Gig[] $gigs
  */
 class User extends RActiveRecord {
 
@@ -253,7 +254,7 @@ class User extends RActiveRecord {
         if(!empty($this->userProf->prof_picture))
             $path = UPLOAD_DIR . '/users/' . $this->user_id . $this->userProf->prof_picture;
         if (!isset($path) || !is_file($path))
-            $path = 'themes/'. Yii::app()->theme->name . '/images/profile-img.jpg';
+            $path = 'themes/'. Yii::app()->theme->name . '/images/profile-img.jpeg';
         return CHtml::image(Yii::app()->createAbsoluteUrl($path), '', array('class' => ''));
     }
 
@@ -261,7 +262,11 @@ class User extends RActiveRecord {
         if(!empty($this->userProf->prof_picture))
             $path = UPLOAD_DIR . '/users/' . $this->user_id . '/thumb' . $this->userProf->prof_picture;
         if (!isset($path) || !is_file($path))
-            $path = 'themes/'.Yii::app()->theme->name . '/images/profile-pic.png';
+            $path = 'themes/'.Yii::app()->theme->name . '/images/profile-pic.jpeg';
         return CHtml::image(Yii::app()->createAbsoluteUrl($path), '', array('class' => 'img-circle'));
+    }
+    
+    public function getGigcount() {
+        return count($this->gigs);
     }
 }
