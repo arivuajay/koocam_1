@@ -2,6 +2,8 @@
 /* @var $this DefaultController */
 /* @var $model Gig */
 /* @var $tutor User */
+/* @var $gig_comments GigComments */
+
 $this->title = "View - {$model->gig_title}";
 $themeUrl = $this->themeUrl;
 $tutor = $model->tutor;
@@ -32,7 +34,7 @@ $logged_user = !$is_tutor && !Yii::app()->user->isGuest;
                 <div class="row">
                     <?php
                     $model->setButtonOptions();
-                    if(!is_null($model->startnowButton)){
+                    if (!is_null($model->startnowButton)) {
                         echo "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'> {$model->startnowButton} </div>";
                     }
                     if (!is_null($model->bookingButton)) {
@@ -42,12 +44,16 @@ $logged_user = !$is_tutor && !Yii::app()->user->isGuest;
                         echo "<div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'> {$model->messageButton} </div>";
                     }
                     ?>
+
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 sharethis-share">
                         <span class='st_facebook_large custom-share' displayText='Facebook'></span>
                         <span class='st_twitter_large custom-share' displayText='Tweet'></span>
                         <span class='st_googleplus_large custom-share' displayText='Google +'></span>
                         <span class='st_sharethis_large custom-share' displayText='ShareThis'></span>
                     </div>
+                    <?php if ($logged_user) { ?>
+                        <a href="#" data-target="#comments" data-toggle="modal">Comments</a>
+                    <?php } ?>
                 </div>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 course-details">
@@ -87,43 +93,7 @@ $logged_user = !$is_tutor && !Yii::app()->user->isGuest;
             <?php } ?>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 comentslist-cont">
-            <h2> Comments </h2>
-            <div class="comments-cont">
-                <div class="row">
-                    <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
-                        <?php echo CHtml::image($themeUrl . '/images/profile-pic.png', '', array('class' => "img-circle")); ?>
-                    </div>
-                    <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10">
-                        <p> <b> Nigs Oman </b></p>
-                        <p> <?php echo CHtml::image($themeUrl . '/images/rating2.jpg', '', array()); ?></p>
-                        <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris consectetur orci sit amet lacinia gravida. Suspendisse sollicitudin porta odio, nec condimentum diam viverra eu. Integer pellentesque.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="comments-cont">
-                <div class="row">
-                    <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
-                        <?php echo CHtml::image($themeUrl . '/images/profile-pic.png', '', array('class' => "img-circle")); ?>
-                    </div>
-                    <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10">
-                        <p> <b> Nigs Oman </b></p>
-                        <p> <?php echo CHtml::image($themeUrl . '/images/rating2.jpg', '', array()); ?></p>
-                        <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris consectetur orci sit amet lacinia gravida. Suspendisse sollicitudin porta odio, nec condimentum diam viverra eu. Integer pellentesque.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="comments-cont">
-                <div class="row">
-                    <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2">
-                        <?php echo CHtml::image($themeUrl . '/images/profile-pic.png', '', array('class' => "img-circle")); ?>
-                    </div>
-                    <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10">
-                        <p> <b> Nigs Oman </b></p>
-                        <p> <?php echo CHtml::image($themeUrl . '/images/rating2.jpg', '', array()); ?></p>
-                        <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris consectetur orci sit amet lacinia gravida. Suspendisse sollicitudin porta odio, nec condimentum diam viverra eu. Integer pellentesque.</p>
-                    </div>
-                </div>
-            </div>
+            <?php $this->renderPartial('_comments', compact('model')); ?>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 comentslist-cont relateditems">
             <h2> Related Items</h2>
@@ -143,6 +113,7 @@ $logged_user = !$is_tutor && !Yii::app()->user->isGuest;
 if ($logged_user) {
     echo $this->renderPartial('_booking_form', compact('model', 'booking_model'));
     echo $this->renderPartial('_startnow_form', compact('model', 'booking_temp'));
+    echo $this->renderPartial('_comments_form', compact('model', 'gig_comments'));
 }
 ?>
 

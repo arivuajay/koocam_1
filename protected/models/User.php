@@ -21,6 +21,7 @@
  * @property string $is_auto_timezone
  * @property integer $user_locale_id
  * @property integer $user_timezone_id
+ * @property integer $user_rating
  * 
  * The followings are the available model relations:
  * @property UserProfile $userProfGig[] $gigs
@@ -92,7 +93,7 @@ class User extends RActiveRecord {
             array('email, username, slug', 'unique'),
             array('email', 'email'),
             array('password_hash', 'compare', 'compareAttribute' => 'confirm_password', 'on' => 'register'),
-            array('created_at, modified_at, user_activation_key, user_login_ip, user_last_login, is_auto_timezone, user_locale_id, user_timezone_id, i_agree', 'safe'),
+            array('created_at, modified_at, user_activation_key, user_login_ip, user_last_login, is_auto_timezone, user_locale_id, user_timezone_id, i_agree, user_rating', 'safe'),
             array('i_agree', 'compare', 'compareValue' => true, 'message' => 'You must agree to the terms and conditions', 'on' => 'register'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.

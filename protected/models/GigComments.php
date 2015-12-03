@@ -7,6 +7,7 @@
  * @property integer $com_id
  * @property integer $gig_id
  * @property integer $user_id
+ * @property integer $gig_booking_id
  * @property string $com_comment
  * @property double $com_rating
  * @property string $status
@@ -18,6 +19,10 @@
  * @property User $user
  */
 class GigComments extends RActiveRecord {
+
+    const COMMENT_APPROVED = 1;
+    const COMMENT_IN_ACTIVE = 0;
+    const COMMENT_SAFE_DELETE = 2;
 
     /**
      * @return string the associated database table name
@@ -33,14 +38,24 @@ class GigComments extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('gig_id, user_id, com_comment, created_at', 'required'),
-            array('gig_id, user_id', 'numerical', 'integerOnly' => true),
+            array('com_comment', 'required'),
+            array('gig_id, user_id, gig_booking_id', 'numerical', 'integerOnly' => true),
             array('com_rating', 'numerical'),
             array('status', 'length', 'max' => 1),
-            array('modified_at', 'safe'),
+            array('created_at, modified_at', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('com_id, gig_id, user_id, com_comment, com_rating, status, created_at, modified_at', 'safe', 'on' => 'search'),
+            array('com_id, gig_id, user_id, gig_booking_id, com_comment, com_rating, status, created_at, modified_at', 'safe', 'on' => 'search'),
+        );
+    }
+
+    public function scopes() {
+        $alias = $this->getTableAlias(false, false);
+        return array(
+            'active' => array('condition' => "$alias.status = '1'"),
+            'inactive' => array('condition' => "$alias.status = '0'"),
+            'deleted' => array('condition' => "$alias.status = '2'"),
+            'all' => array('condition' => "$alias.status is not null"),
         );
     }
 
@@ -64,9 +79,10 @@ class GigComments extends RActiveRecord {
             'com_id' => 'Com',
             'gig_id' => 'Gig',
             'user_id' => 'User',
-            'com_comment' => 'Com Comment',
-            'com_rating' => 'Com Rating',
-            'status' => '0 -> In-Active, 1 -> Approved, 2 -> --',
+            'gig_booking_id' => 'Gig Booking',
+            'com_comment' => 'Comment',
+            'com_rating' => 'Rating',
+            'status' => 'Status',
             'created_at' => 'Created At',
             'modified_at' => 'Modified At',
         );
@@ -88,16 +104,16 @@ class GigComments extends RActiveRecord {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
-        $alias = $this->getTableAlias(false, false);
 
-        $criteria->compare($alias.'.com_id', $this->com_id);
-        $criteria->compare($alias.'.gig_id', $this->gig_id);
-        $criteria->compare($alias.'.user_id', $this->user_id);
-        $criteria->compare($alias.'.com_comment', $this->com_comment, true);
-        $criteria->compare($alias.'.com_rating', $this->com_rating);
-        $criteria->compare($alias.'.status', $this->status, true);
-        $criteria->compare($alias.'.created_at', $this->created_at, true);
-        $criteria->compare($alias.'.modified_at', $this->modified_at, true);
+        $criteria->compare('com_id', $this->com_id);
+        $criteria->compare('gig_id', $this->gig_id);
+        $criteria->compare('user_id', $this->user_id);
+        $criteria->compare('gig_booking_id', $this->gig_booking_id);
+        $criteria->compare('com_comment', $this->com_comment, true);
+        $criteria->compare('com_rating', $this->com_rating);
+        $criteria->compare('status', $this->status, true);
+        $criteria->compare('created_at', $this->created_at, true);
+        $criteria->compare('modified_at', $this->modified_at, true);
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -124,4 +140,26 @@ class GigComments extends RActiveRecord {
             )
         ));
     }
+
+    protected function afterSave() {
+        self::updateRatings($this->gig_id, $this->gig->tutor_id);
+        return parent::afterSave();
+    }
+
+    public static function updateRatings($gig_id, $tutor_id) {
+        $tot = Yii::app()->db->createCommand()
+                ->select('AVG(`com_rating`) as average')
+                ->from('{{gig_comments}}')
+                ->andWhere('gig_id = ' . $gig_id . ' AND status = "1"')
+                ->queryRow();
+        Gig::model()->updateByPk($gig_id, array('gig_rating' => $tot['average']));
+
+        $gig_rating = Yii::app()->db->createCommand()
+                ->select('AVG(`gig_rating`) as average')
+                ->from('{{gig}}')
+                ->andWhere('tutor_id = ' . $tutor_id . ' AND status = "1"')
+                ->queryRow();
+        User::model()->updateByPk($tutor_id, array('user_rating' => $gig_rating['average']));
+    }
+
 }

@@ -22,6 +22,7 @@
  * @property integer $created_by
  * @property integer $modified_by
  * @property integer $gig_important
+ * @property integer $gig_rating
  *
  * The followings are the available model relations:
  * @property GigCategory $cat
@@ -131,7 +132,7 @@ class Gig extends RActiveRecord {
             array('extra_file', 'file', 'types' => self::EXTRA_ALLOW_FILE_TYPES, 'maxSize' => 1024 * 1024 * self::EXTRA_ALLOW_FILE_SIZE, 'tooLarge' => 'File has to be smaller than ' . self::GIG_ALLOW_FILE_SIZE . 'MB', 'allowEmpty' => true),
             array('gig_price', 'priceValidate'),
 //            array('modified_at', 'date', 'format' => Yii::app()->localtime->getLocalDateTimeFormat('short', 'short')),
-            array('gig_description, gig_duration, created_at, modified_at, is_extra, extra_price, extra_description, tutorUserName, gigCategory, extra_file, gig_important', 'safe'),
+            array('gig_description, gig_duration, created_at, modified_at, is_extra, extra_price, extra_description, tutorUserName, gigCategory, extra_file, gig_important, gig_rating', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('gig_id, tutor_id, gig_title, cat_id, gig_media, gig_tag, gig_description, gig_duration, gig_price, gig_avail_visual, status, created_at, modified_at, created_by, modified_by', 'safe', 'on' => 'search'),

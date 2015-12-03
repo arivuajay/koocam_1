@@ -132,13 +132,12 @@ class GigController extends Controller {
      * 
      */
     public function actionView($slug) {
-//        echo Yii::app()->localtime->TimeZone;
-//        echo Yii::app()->localtime->localNow;
         $model = $this->loadModelSlug($slug);
         $booking_model = new GigBooking();
         $booking_temp = new BookingTemp();
+        $gig_comments = new GigComments();
         $this->performAjaxValidation($booking_model);
-        $this->render('view', compact('model', 'booking_model', 'booking_temp'));
+        $this->render('view', compact('model', 'booking_model', 'booking_temp', 'gig_comments'));
     }
 
     /**
