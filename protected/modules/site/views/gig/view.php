@@ -18,7 +18,21 @@ $logged_user = !$is_tutor && !Yii::app()->user->isGuest;
                 <p><?php echo $tutor->profilethumb; ?></p>
                 <h2><?php echo CHtml::link($tutor->fullname, array('/site/default/profile', 'slug' => $tutor->slug), array()); ?></h2>
                 <?php echo CHtml::link($tutor->userProf->prof_tag, '#', array()); ?><br/>
-                <?php echo CHtml::image($themeUrl . '/images/ratings.png', '', array()); ?> </div>
+                <?php
+                $this->widget('ext.DzRaty.DzRaty', array(
+                    'name' => 'gig_rating',
+                    'value' => $model->gig_rating,
+                    'options' => array(
+                        'readOnly' => TRUE,
+                        'half' => TRUE,
+                    ),
+                    'htmlOptions' => array(
+                        'class' => 'new-half-class'
+                    ),
+                ));
+                ?>
+                <?php // echo CHtml::image($themeUrl . '/images/ratings.png', '', array()); ?> 
+            </div>
         </div>
     </div>
 </div>
