@@ -397,7 +397,7 @@ class Gig extends RActiveRecord {
         if (!empty($this->gig_media))
             $path = UPLOAD_DIR . '/users/' . $this->tutor_id . $this->gig_media;
         if (!isset($path) || !is_file($path))
-            $path = 'themes/' . Yii::app()->theme->name . '/images/course-img.jpg';
+            $path = 'themes/' . Yii::app()->theme->name . '/images/profile-img.jpeg';
         return CHtml::image(Yii::app()->createAbsoluteUrl($path), '', array('class' => ''));
     }
 
@@ -405,7 +405,7 @@ class Gig extends RActiveRecord {
         if (!empty($this->gig_media))
             $path = UPLOAD_DIR . '/users/' . $this->tutor_id . '/thumb' . $this->gig_media;
         if (!isset($path) || !is_file($path))
-            $path = 'themes/' . Yii::app()->theme->name . '/images/course1.jpg';
+            $path = 'themes/' . Yii::app()->theme->name . '/images/profile-img.jpeg';
         return CHtml::image(Yii::app()->createAbsoluteUrl($path), '', array('class' => ''));
     }
 
