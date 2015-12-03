@@ -12,8 +12,6 @@ MySQL - 5.6.14 : Database - koocam
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-CREATE DATABASE /*!32312 IF NOT EXISTS*/`koocam` /*!40100 DEFAULT CHARACTER SET latin1 */;
-
 /*Table structure for table `koo_admin` */
 
 DROP TABLE IF EXISTS `koo_admin`;
@@ -46,11 +44,9 @@ CREATE TABLE `koo_booking_temp` (
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `modified_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`temp_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `koo_booking_temp` */
-
-insert  into `koo_booking_temp`(`temp_id`,`temp_guid`,`temp_key`,`temp_value`,`created_at`,`modified_at`) values (1,'CE763ED5-A998-35EC-F052-F84118C96258','Start Now Booking','a:6:{s:11:\"temp_gig_id\";s:2:\"36\";s:17:\"temp_book_session\";s:1:\"1\";s:18:\"temp_book_is_extra\";s:1:\"N\";s:17:\"temp_book_user_id\";s:1:\"7\";s:19:\"temp_book_gig_price\";d:60;s:21:\"temp_book_total_price\";d:60;}','2015-12-01 13:39:59','0000-00-00 00:00:00'),(2,'C888337D-25F9-EA7D-034F-290528C74D28','Booking','a:8:{s:11:\"temp_gig_id\";s:2:\"43\";s:17:\"temp_book_session\";s:1:\"1\";s:18:\"temp_book_is_extra\";s:1:\"Y\";s:17:\"temp_book_user_id\";s:1:\"7\";s:19:\"temp_book_gig_price\";d:10;s:21:\"temp_book_total_price\";d:15;s:18:\"temp_book_duration\";i:45;s:21:\"temp_book_extra_price\";d:5;}','2015-12-03 09:48:35','0000-00-00 00:00:00');
 
 /*Table structure for table `koo_cms` */
 
@@ -112,7 +108,8 @@ CREATE TABLE `koo_gig` (
   `gig_important` varchar(255) DEFAULT NULL,
   `status` enum('0','1','2') DEFAULT '0',
   `slug` varchar(255) DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `gig_rating` decimal(10,1) NOT NULL DEFAULT '0.0',
+  `created_at` timestamp NULL DEFAULT '0000-00-00 00:00:00',
   `modified_at` timestamp NULL DEFAULT '0000-00-00 00:00:00',
   `created_by` int(11) DEFAULT NULL,
   `modified_by` int(11) DEFAULT NULL,
@@ -121,11 +118,11 @@ CREATE TABLE `koo_gig` (
   KEY `FK_koo_gig_user` (`tutor_id`),
   CONSTRAINT `FK_koo_gig_category` FOREIGN KEY (`cat_id`) REFERENCES `koo_gig_category` (`cat_id`) ON UPDATE CASCADE,
   CONSTRAINT `FK_koo_gig_user` FOREIGN KEY (`tutor_id`) REFERENCES `koo_user` (`user_id`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=46 DEFAULT CHARSET=utf8;
 
 /*Data for the table `koo_gig` */
 
-insert  into `koo_gig`(`gig_id`,`tutor_id`,`gig_title`,`cat_id`,`gig_media`,`gig_tag`,`gig_description`,`gig_duration`,`gig_price`,`gig_avail_visual`,`is_extra`,`gig_important`,`status`,`slug`,`created_at`,`modified_at`,`created_by`,`modified_by`) values (36,1,'Learn English 22',1,'/gig/937f021de54a0dbaad4d9ad46d7e4176.jpg','learn english 122','English speaking 1122','00:30:00','60.00','Y','Y','Test tes ttess sste','1','learn-english-22','2015-11-23 18:24:57','2015-11-25 16:43:17',NULL,NULL),(37,2,'Learn Violin',2,'/gig/17fe01287dfbe0048a85e96a009511f4.jpg','test tag','adasd','00:05:00','10.00','Y','Y','Test tes ttess sste','1','learn-english-222','2015-11-25 12:36:07','2015-11-25 19:26:20',NULL,NULL),(38,1,'Learn Guitar',2,'/gig/937f021de54a0dbaad4d9ad46d7e4176.jpg','learn english 122','English speaking 1122','00:30:00','60.00','Y','Y','Test tes ttess sste','1','learn-english-22','2015-11-23 18:24:57','2015-11-25 16:43:17',NULL,NULL),(39,7,'Abc',3,'/gig/17fe01287dfbe0048a85e96a009511f4.jpg','test tag','adasd','00:45:00','10.00','Y','N','Test tes ttess sste','1','abc-4sfla','2015-11-27 16:55:44','2015-11-27 16:55:44',NULL,NULL),(40,3,'Dca',1,'/gig/937f021de54a0dbaad4d9ad46d7e4176.jpg','learn english 122','English speaking 1122','00:30:00','60.00','Y','Y','Test tes ttess sste','1','learn-english-22ds','2015-11-23 18:24:57','2015-11-25 16:43:17',NULL,NULL),(41,3,'Welcome a',4,'/gig/17fe01287dfbe0048a85e96a009511f4.jpg','test tag','adasd','00:45:20','10.00','N','N','Test tes ttess sste','1','learn-englishgfgf','2015-11-25 12:36:07','2015-11-25 19:26:20',NULL,NULL),(42,7,'New Class',5,'/gig/937f021de54a0dbaad4d9ad46d7e4176.jpg','learn english 122','English speaking 1122','00:30:00','60.00','Y','Y','Test tes ttess sste','1','learn-english-22jhgjh','2015-11-23 18:24:57','2015-11-25 16:43:17',NULL,NULL),(43,8,'Orange',6,'/gig/17fe01287dfbe0048a85e96a009511f4.jpg','test tag','adasd','00:45:20','10.00','Y','Y','Test tes ttess sste','1','learn-englishiugh','2015-11-25 12:36:07','2015-11-25 19:26:20',NULL,NULL),(44,7,'My New Gigg',1,'/gig/4f2ac3ab641706a455cc045ef253487c.jpg','new gig','My New Gigi','00:35:00','10.00','Y','Y',NULL,'0','my-new-gigg','2015-11-27 19:31:50','2015-11-28 12:52:00',NULL,NULL),(45,7,' எங்கெங்கு கட்டுரை ',2,'/gig/650c469e273fcc3f3421119a19b482bf.png',' எங்கெங்கு கட்டுரை ',' எங்கெங்கு கட்டுரை  எங்கெங்கு கட்டுரை  எங்கெங்கு கட்டுரை  எங்கெங்கு கட்டுரை  எங்கெங்கு கட்டுரை ','00:05:00','5.00','N','N','','0','எங்கெங்கு-கட்டுரை','2015-12-01 08:38:07','0000-00-00 00:00:00',NULL,NULL),(46,7,'New gig',2,'/gig/e3608774d66aa52e70b6db8da6046bc6.jpg','gig','Testing ','00:05:00','5.00','Y','Y','asdasd','1','new-gig','2015-12-03 12:54:00','0000-00-00 00:00:00',NULL,NULL);
+insert  into `koo_gig`(`gig_id`,`tutor_id`,`gig_title`,`cat_id`,`gig_media`,`gig_tag`,`gig_description`,`gig_duration`,`gig_price`,`gig_avail_visual`,`is_extra`,`gig_important`,`status`,`slug`,`gig_rating`,`created_at`,`modified_at`,`created_by`,`modified_by`) values (36,2,'Learn English 22',1,'/gig/937f021de54a0dbaad4d9ad46d7e4176.jpg','learn english 122','English speaking 1122','00:30:00','60.00','Y','Y','Test tes ttess sste','1','learn-english-22','2.0','2015-11-23 18:24:57','2015-11-25 16:43:17',NULL,NULL),(37,2,'Learn Violin',2,'/gig/17fe01287dfbe0048a85e96a009511f4.jpg','test tag','adasd','00:05:00','10.00','Y','Y','Test tes ttess sste','1','learn-english-222','3.8','2015-11-25 12:36:07','2015-11-25 19:26:20',NULL,NULL),(38,1,'Learn Guitar',2,'/gig/937f021de54a0dbaad4d9ad46d7e4176.jpg','learn english 122','English speaking 1122','00:30:00','60.00','Y','Y','Test tes ttess sste','1','learn-english-22','0.0','2015-11-23 18:24:57','2015-11-25 16:43:17',NULL,NULL),(39,7,'Abc',3,'/gig/17fe01287dfbe0048a85e96a009511f4.jpg','test tag','adasd','00:45:00','10.00','Y','N','Test tes ttess sste','1','abc-4sfla','0.0','2015-11-27 16:55:44','2015-11-27 16:55:44',NULL,NULL),(40,3,'Dca',1,'/gig/937f021de54a0dbaad4d9ad46d7e4176.jpg','learn english 122','English speaking 1122','00:30:00','60.00','Y','Y','Test tes ttess sste','1','learn-english-22ds','0.0','2015-11-23 18:24:57','2015-11-25 16:43:17',NULL,NULL),(41,3,'Welcome a',4,'/gig/17fe01287dfbe0048a85e96a009511f4.jpg','test tag','adasd','00:45:20','10.00','Y','Y','Test tes ttess sste','1','learn-englishgfgf','0.0','2015-11-25 12:36:07','2015-11-25 19:26:20',NULL,NULL),(42,7,'New Class',5,'/gig/937f021de54a0dbaad4d9ad46d7e4176.jpg','learn english 122','English speaking 1122','00:30:00','60.00','Y','Y','Test tes ttess sste','1','learn-english-22jhgjh','0.0','2015-11-23 18:24:57','2015-11-25 16:43:17',NULL,NULL),(43,8,'Orange',6,'/gig/17fe01287dfbe0048a85e96a009511f4.jpg','test tag','adasd','00:45:20','10.00','Y','Y','Test tes ttess sste','1','learn-englishiugh','0.0','2015-11-25 12:36:07','2015-11-25 19:26:20',NULL,NULL),(44,7,'My New Gigg',1,'/gig/4f2ac3ab641706a455cc045ef253487c.jpg','new gig','My New Gigi','00:35:00','10.00','Y','Y',NULL,'0','my-new-gigg','0.0','2015-11-27 19:31:50','2015-11-28 12:52:00',NULL,NULL),(45,7,' எங்கெங்கு கட்டுரை ',2,'/gig/650c469e273fcc3f3421119a19b482bf.png',' எங்கெங்கு கட்டுரை ',' எங்கெங்கு கட்டுரை  எங்கெங்கு கட்டுரை  எங்கெங்கு கட்டுரை  எங்கெங்கு கட்டுரை  எங்கெங்கு கட்டுரை ','00:05:00','5.00','N','N','','0','எங்கெங்கு-கட்டுரை','0.0','2015-12-01 08:38:07','0000-00-00 00:00:00',NULL,NULL);
 
 /*Table structure for table `koo_gig_booking` */
 
@@ -156,13 +153,13 @@ CREATE TABLE `koo_gig_booking` (
   PRIMARY KEY (`book_id`),
   KEY `FK_koo_gig_booking_gig` (`gig_id`),
   KEY `FK_koo_gig_booking_user` (`book_user_id`),
-  CONSTRAINT `FK_koo_gig_booking_gig` FOREIGN KEY (`gig_id`) REFERENCES `koo_gig` (`gig_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `FK_koo_gig_booking_user` FOREIGN KEY (`book_user_id`) REFERENCES `koo_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+  CONSTRAINT `FK_koo_gig_booking_user` FOREIGN KEY (`book_user_id`) REFERENCES `koo_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_koo_gig_booking_gig` FOREIGN KEY (`gig_id`) REFERENCES `koo_gig` (`gig_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 
 /*Data for the table `koo_gig_booking` */
 
-insert  into `koo_gig_booking`(`book_id`,`book_guid`,`gig_id`,`book_user_id`,`book_date`,`book_start_time`,`book_end_time`,`book_is_extra`,`book_gig_price`,`book_extra_price`,`book_total_price`,`book_session`,`book_message`,`book_approve`,`book_approved_time`,`book_declined_time`,`book_payment_status`,`book_payment_info`,`book_duration`,`created_at`,`modified_at`) values (7,'B5672F3A-6101-2566-B363-934C8D699E16',41,7,'2015-12-03 04:30:00','2015-12-03 04:30:00','2015-12-02 08:10:00','N','10.00',NULL,'10.00',1,'Hi Dude','1',NULL,NULL,'P',NULL,45,'2015-12-02 06:18:19','0000-00-00 00:00:00'),(8,'7A5ED7DE-50AF-BD1A-0B40-79D20ED19723',36,7,'2015-12-17 04:30:00','2015-12-17 04:30:00','2015-12-17 05:30:00','Y','120.00','25.00','85.00',2,' ads asd a asdasd','1',NULL,NULL,'P',NULL,30,'2015-12-02 10:17:49','0000-00-00 00:00:00'),(9,'E666FADB-15DD-07B2-DA63-ECD962BBA0A2',36,7,'2015-12-18 04:30:00','2015-12-18 04:30:00','2015-12-18 05:30:00','Y','120.00','25.00','145.00',2,'','1',NULL,NULL,'P',NULL,30,'2015-12-02 10:19:14','0000-00-00 00:00:00'),(10,'7FDDB65A-CEF6-B3CB-597D-1599F87A4446',43,7,'2015-12-04 10:00:00','2015-12-04 10:00:00','2015-12-04 11:30:00','Y','20.00','5.00','25.00',2,'Hi nadesh','2','2015-12-03 05:00:10','2015-12-03 05:08:54','P',NULL,45,'2015-12-03 05:00:10','0000-00-00 00:00:00');
+insert  into `koo_gig_booking`(`book_id`,`book_guid`,`gig_id`,`book_user_id`,`book_date`,`book_start_time`,`book_end_time`,`book_is_extra`,`book_gig_price`,`book_extra_price`,`book_total_price`,`book_session`,`book_message`,`book_approve`,`book_approved_time`,`book_declined_time`,`book_payment_status`,`book_payment_info`,`book_duration`,`created_at`,`modified_at`) values (1,'86E5D8DB-2361-E2D3-8D9F-F7FFFABF4931',43,7,'2015-12-01 05:30:00','2015-12-01 17:30:00','2015-12-01 18:15:00','N','10.00','5.00','15.00',1,'','1',NULL,NULL,'P',NULL,NULL,'2015-11-30 16:03:38','0000-00-00 00:00:00'),(2,'BEB6AE5E-997F-E571-4D77-79807E50516B',43,7,'2015-12-01 05:30:00','2015-12-01 21:30:00','2015-12-01 22:15:00','N','10.00','5.00','15.00',1,'','0',NULL,NULL,'P',NULL,NULL,'2015-11-30 18:51:29','0000-00-00 00:00:00'),(3,'79EDED7D-E939-CB0A-8C37-33650730C5B2',43,7,'2015-12-02 00:00:00','2015-12-02 15:00:00','2015-12-02 16:30:00','Y','10.00','5.00','15.00',2,'','0',NULL,NULL,'P',NULL,NULL,'2015-11-30 13:34:02','0000-00-00 00:00:00'),(4,'6C3330B3-A060-EBF8-A726-74ACBCF597EC',43,7,'2015-12-01 00:00:00','2015-12-01 19:00:00','2015-12-01 19:45:00','Y','10.00','5.00','15.00',1,'','1',NULL,NULL,'P',NULL,NULL,'2015-11-30 13:37:19','0000-00-00 00:00:00'),(5,'F0266017-BDFB-981B-6409-5DEA6BF88131',39,8,'2015-11-30 00:00:00','2015-11-30 10:10:00','2015-11-30 11:40:00','N','10.00',NULL,'10.00',2,'','0',NULL,NULL,'P',NULL,NULL,'2015-11-30 13:56:50','0000-00-00 00:00:00'),(6,'FFBE0CF9-9DA8-A504-5325-F493477495CC',39,8,'2015-12-01 00:00:00','2015-12-01 15:05:00','2015-12-01 15:50:00','N','10.00',NULL,'10.00',1,'sda asd asd as as','0',NULL,NULL,'P',NULL,NULL,'2015-11-30 14:00:35','0000-00-00 00:00:00'),(7,'31329848-C12A-D7CB-7FAC-67F5FCF7EC6E',36,7,'2015-12-01 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00','Y','60.00','25.00','85.00',1,'','1',NULL,NULL,'P',NULL,NULL,'2015-12-01 17:46:32','0000-00-00 00:00:00'),(8,'1DCA6EBA-992B-8760-5CDD-3F32BFEE17FC',36,7,'2015-12-02 00:00:00','2015-12-02 05:16:04','2015-12-02 05:46:04','Y','60.00','25.00','85.00',1,'','1','2015-12-02 05:16:04',NULL,'C',NULL,NULL,'2015-12-02 05:16:04','0000-00-00 00:00:00');
 
 /*Table structure for table `koo_gig_category` */
 
@@ -194,19 +191,22 @@ CREATE TABLE `koo_gig_comments` (
   `com_id` int(11) NOT NULL AUTO_INCREMENT,
   `gig_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
+  `gig_booking_id` int(11) DEFAULT NULL,
   `com_comment` text CHARACTER SET utf8 NOT NULL,
-  `com_rating` double DEFAULT '0',
-  `status` enum('1','0','2') CHARACTER SET utf8 DEFAULT '0' COMMENT '0 -> In-Active, 1 -> Approved, 2 -> --',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `com_rating` decimal(10,1) NOT NULL DEFAULT '0.0',
+  `status` enum('1','0','2') CHARACTER SET utf8 NOT NULL DEFAULT '1' COMMENT '0 -> In-Active, 1 -> Approved, 2 -> --',
+  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `modified_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`com_id`),
   KEY `FK_koo_gig_comments_users` (`user_id`),
   KEY `FK_koo_gig_comments_gig` (`gig_id`),
   CONSTRAINT `FK_koo_gig_comments_gig` FOREIGN KEY (`gig_id`) REFERENCES `koo_gig` (`gig_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_koo_gig_comments_users` FOREIGN KEY (`user_id`) REFERENCES `koo_user` (`user_id`) ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=latin1;
 
 /*Data for the table `koo_gig_comments` */
+
+insert  into `koo_gig_comments`(`com_id`,`gig_id`,`user_id`,`gig_booking_id`,`com_comment`,`com_rating`,`status`,`created_at`,`modified_at`) values (7,37,8,NULL,'Testing','2.0','1','2015-12-03 10:36:43','0000-00-00 00:00:00'),(8,37,8,NULL,'sdfsfsdf','4.0','1','2015-12-03 10:58:07','0000-00-00 00:00:00'),(9,37,8,NULL,'sfddsfsfdsdf','5.0','1','2015-12-03 11:01:59','0000-00-00 00:00:00'),(21,37,8,NULL,'Testing 1234','4.0','1','2015-12-03 12:19:40','0000-00-00 00:00:00');
 
 /*Table structure for table `koo_gig_extra` */
 
@@ -223,11 +223,11 @@ CREATE TABLE `koo_gig_extra` (
   PRIMARY KEY (`extra_id`),
   KEY `FK_koo_gig_extra_gig` (`gig_id`),
   CONSTRAINT `FK_koo_gig_extra_gig` FOREIGN KEY (`gig_id`) REFERENCES `koo_gig` (`gig_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=latin1;
 
 /*Data for the table `koo_gig_extra` */
 
-insert  into `koo_gig_extra`(`extra_id`,`gig_id`,`extra_price`,`extra_description`,`extra_file`,`created_by`,`modified_by`) values (20,36,'25.00','Extra description','/gigextra/a9f2d0d9386c0f793127deac0115371e.png','2015-11-23 18:24:57','0000-00-00 00:00:00'),(21,36,'10.00','Extra description 1111','/gigextra/3d43fdc2184b8832b640f19f6e643e0b.png','2015-11-25 12:34:32','0000-00-00 00:00:00'),(22,37,'5.00','testtt','/gigextra/f866469adccabcd461025a85a5c94730.png','2015-11-25 12:36:08','0000-00-00 00:00:00'),(23,36,'25.00','Extra description','','2015-11-25 16:43:18','0000-00-00 00:00:00'),(24,37,'5.00','testtt','','2015-11-25 16:47:41','0000-00-00 00:00:00'),(25,37,'5.00','testtt','','2015-11-25 16:59:12','0000-00-00 00:00:00'),(26,37,'5.00','testtt','','2015-11-25 16:59:54','0000-00-00 00:00:00'),(27,37,'5.00','testtt','','2015-11-25 17:00:02','0000-00-00 00:00:00'),(28,37,'5.00','testtt','','2015-11-25 19:26:20','0000-00-00 00:00:00'),(29,43,'5.00','Extra File','','2015-11-27 19:31:51','0000-00-00 00:00:00'),(30,46,'5.00','asdasdasd','','2015-12-03 18:24:01','0000-00-00 00:00:00');
+insert  into `koo_gig_extra`(`extra_id`,`gig_id`,`extra_price`,`extra_description`,`extra_file`,`created_by`,`modified_by`) values (20,36,'25.00','Extra description','/gigextra/a9f2d0d9386c0f793127deac0115371e.png','2015-11-23 18:24:57','0000-00-00 00:00:00'),(21,36,'10.00','Extra description 1111','/gigextra/3d43fdc2184b8832b640f19f6e643e0b.png','2015-11-25 12:34:32','0000-00-00 00:00:00'),(22,37,'5.00','testtt','/gigextra/f866469adccabcd461025a85a5c94730.png','2015-11-25 12:36:08','0000-00-00 00:00:00'),(23,36,'25.00','Extra description','','2015-11-25 16:43:18','0000-00-00 00:00:00'),(24,37,'5.00','testtt','','2015-11-25 16:47:41','0000-00-00 00:00:00'),(25,37,'5.00','testtt','','2015-11-25 16:59:12','0000-00-00 00:00:00'),(26,37,'5.00','testtt','','2015-11-25 16:59:54','0000-00-00 00:00:00'),(27,37,'5.00','testtt','','2015-11-25 17:00:02','0000-00-00 00:00:00'),(28,37,'5.00','testtt','','2015-11-25 19:26:20','0000-00-00 00:00:00'),(29,43,'5.00','Extra File','','2015-11-27 19:31:51','0000-00-00 00:00:00');
 
 /*Table structure for table `koo_gig_tokens` */
 
@@ -244,11 +244,9 @@ CREATE TABLE `koo_gig_tokens` (
   PRIMARY KEY (`token_id`),
   KEY `FK_koo_gig_tokens_booking` (`book_id`),
   CONSTRAINT `FK_koo_gig_tokens_booking` FOREIGN KEY (`book_id`) REFERENCES `koo_gig_booking` (`book_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `koo_gig_tokens` */
-
-insert  into `koo_gig_tokens`(`token_id`,`book_id`,`session_key`,`token_key`,`session_data`,`created_at`,`modified_at`) values (2,7,'2_MX40NTM5ODE1Mn5-MTQ0OTA0MDY4NjEwNH5FOG8rRmZCT0hVK2d6T1BQRzBKcXZ6U0V-fg','T1==cGFydG5lcl9pZD00NTM5ODE1MiZzaWc9MDNkNWE0MDQxZmFhNDBhYTQ3MjQ4YmYwMTg4NjkzNzc5MjNhZDJhNjpzZXNzaW9uX2lkPTJfTVg0ME5UTTVPREUxTW41LU1UUTBPVEEwTURZNE5qRXdOSDVGT0c4clJtWkNUMGhWSzJkNlQxQlFSekJLY1haNlUwVi1mZyZjcmVhdGVfdGltZT0xNDQ5MDQwNjg2JnJvbGU9bW9kZXJhdG9yJm5vbmNlPTE0NDkwNDA2ODYuNDQxMjIxMDAzMDMzMTMmZXhwaXJlX3RpbWU9MTQ0OTA0MzM4NSZjb25uZWN0aW9uX2RhdGElNUJzZXNzaW9uX2lkJTVEPTJfTVg0ME5UTTVPREUxTW41LU1UUTBPVEEwTURZNE5qRXdOSDVGT0c4clJtWkNUMGhWSzJkNlQxQlFSekJLY1haNlUwVi1mZyZjb25uZWN0aW9uX2RhdGElNUJjcmVhdGVfdGltZSU1RD0xNDQ5MDQwNjg2JmNvbm5lY3Rpb25fZGF0YSU1QnJvbGUlNUQ9bW9kZXJhdG9yJmNvbm5lY3Rpb25fZGF0YSU1Qm5vbmNlJTVEPTE0NDkwNDA2ODYuNDQxMjIxMDAzMDMzMTMmY29ubmVjdGlvbl9kYXRhJTVCZXhwaXJlX3RpbWUlNUQ9MTQ0OTA0MzM4NQ==','{\"expire\":1449043385,\"role\":\"moderator\"}','2015-12-02 07:18:06','0000-00-00 00:00:00');
 
 /*Table structure for table `koo_language` */
 
@@ -304,13 +302,13 @@ CREATE TABLE `koo_message` (
   PRIMARY KEY (`message_id`),
   KEY `FK_koo_message_receiver` (`user2`),
   KEY `FK_koo_message_sender` (`user1`),
-  CONSTRAINT `FK_koo_message_sender` FOREIGN KEY (`user1`) REFERENCES `koo_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `FK_koo_message_receiver` FOREIGN KEY (`user2`) REFERENCES `koo_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+  CONSTRAINT `FK_koo_message_receiver` FOREIGN KEY (`user2`) REFERENCES `koo_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_koo_message_sender` FOREIGN KEY (`user1`) REFERENCES `koo_user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
 /*Data for the table `koo_message` */
 
-insert  into `koo_message`(`message_id`,`id1`,`id2`,`user1`,`user2`,`message`,`timestamp`,`user1read`,`user2read`,`gig_id`,`created_at`,`modified_at`) values (1,1,1,4,3,'Test Msg',1448895237,'Y','Y',NULL,'2015-11-30 14:53:57','0000-00-00 00:00:00'),(2,1,2,3,4,'Thank u',1448895482,'Y','Y',NULL,'2015-11-30 14:58:02','0000-00-00 00:00:00'),(3,1,3,4,3,'my test',1448900944,'Y','Y',NULL,'2015-11-30 16:29:04','0000-00-00 00:00:00'),(4,2,1,4,3,'Good morning...I am from jerusalem',1448948361,'Y','N',NULL,'2015-12-01 05:39:21','0000-00-00 00:00:00'),(5,3,1,3,4,'Hi Naddy',1448979760,'Y','Y',51,'2015-12-01 14:22:40','0000-00-00 00:00:00'),(6,4,1,3,1,'Hi asdsad',1449033259,'Y','N',42,'2015-12-02 05:14:19','0000-00-00 00:00:00'),(7,5,1,3,1,'Hiii',1449033298,'Y','N',42,'2015-12-02 05:14:58','0000-00-00 00:00:00'),(8,6,1,3,1,'Hi Dude !!!',1449035090,'Y','Y',42,'2015-12-02 05:44:50','0000-00-00 00:00:00'),(9,7,1,11,4,'hhh',1449116691,'Y','Y',51,'2015-12-03 04:24:51','0000-00-00 00:00:00'),(10,8,1,7,8,'Hi nadesh',1449118815,'Y','N',43,'2015-12-03 05:00:15','0000-00-00 00:00:00');
+insert  into `koo_message`(`message_id`,`id1`,`id2`,`user1`,`user2`,`message`,`timestamp`,`user1read`,`user2read`,`gig_id`,`created_at`,`modified_at`) values (2,1,1,8,7,'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',1449077145,'Y','Y',NULL,'2015-12-02 17:25:45','0000-00-00 00:00:00'),(3,2,1,8,7,'In sit amet justo placerat, elementum orci ut, feugiat.',1449077538,'Y','N',NULL,'2015-12-02 17:32:18','0000-00-00 00:00:00'),(4,1,2,8,7,'Lorem ipsum dolor sit amet',1449078545,'Y','Y',NULL,'2015-12-02 17:49:05','0000-00-00 00:00:00'),(5,1,3,7,8,'Thank you',1449079206,'Y','Y',NULL,'2015-12-02 18:00:06','0000-00-00 00:00:00'),(6,1,4,8,7,'Test Msg',1449118511,'Y','N',NULL,'2015-12-03 04:55:11','0000-00-00 00:00:00');
 
 /*Table structure for table `koo_notification` */
 
@@ -326,11 +324,11 @@ CREATE TABLE `koo_notification` (
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `modified_at` timestamp NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`notifn_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 /*Data for the table `koo_notification` */
 
-insert  into `koo_notification`(`notifn_id`,`user_id`,`notifn_message`,`notifn_type`,`notifn_rel_id`,`notifn_read`,`created_at`,`modified_at`) values (1,3,'You have a new booking from Prakash Arul Mani','book',7,'N','2015-12-02 06:18:26','0000-00-00 00:00:00'),(2,1,'You have a new booking from Prakash Arul Mani','book',8,'N','2015-12-02 10:17:56','0000-00-00 00:00:00'),(3,1,'You have a new booking from Prakash Arul Mani','book',9,'N','2015-12-02 10:19:25','0000-00-00 00:00:00'),(4,8,'You have a new booking from Prakash Arul Mani','book',10,'Y','2015-12-03 05:00:15','0000-00-00 00:00:00');
+insert  into `koo_notification`(`notifn_id`,`user_id`,`notifn_message`,`notifn_type`,`notifn_rel_id`,`notifn_read`,`created_at`,`modified_at`) values (1,1,'You have a new booking from Prakash Arul Mani','book',7,'N','2015-12-01 17:46:32','0000-00-00 00:00:00'),(2,1,'You have a new booking from Prakash Arul Mani','book',8,'N','2015-12-02 05:16:17','0000-00-00 00:00:00');
 
 /*Table structure for table `koo_report_abuse` */
 
@@ -345,11 +343,9 @@ CREATE TABLE `koo_report_abuse` (
   PRIMARY KEY (`abuse_id`),
   KEY `FK_koo_report_abuse_book` (`book_id`),
   CONSTRAINT `FK_koo_report_abuse_book` FOREIGN KEY (`book_id`) REFERENCES `koo_gig_booking` (`book_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `koo_report_abuse` */
-
-insert  into `koo_report_abuse`(`abuse_id`,`book_id`,`abuse_message`,`created_at`,`modified_at`) values (2,7,'asd asd asdads asdas','2015-12-03 07:40:58','0000-00-00 00:00:00'),(3,7,'asdasdas asd','2015-12-03 07:43:36','0000-00-00 00:00:00'),(4,7,'Fraud person','2015-12-03 07:44:23','0000-00-00 00:00:00');
 
 /*Table structure for table `koo_timezone` */
 
@@ -384,6 +380,7 @@ CREATE TABLE `koo_user` (
   `is_auto_timezone` enum('Y','N') CHARACTER SET utf8 NOT NULL DEFAULT 'Y',
   `user_locale_id` int(11) NOT NULL,
   `user_timezone_id` int(11) NOT NULL,
+  `user_rating` decimal(10,1) NOT NULL DEFAULT '0.0',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `modified_at` timestamp NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`user_id`),
@@ -395,7 +392,7 @@ CREATE TABLE `koo_user` (
 
 /*Data for the table `koo_user` */
 
-insert  into `koo_user`(`user_id`,`username`,`password_hash`,`password_reset_token`,`email`,`user_activation_key`,`user_login_ip`,`user_last_login`,`status`,`live_status`,`slug`,`is_auto_timezone`,`user_locale_id`,`user_timezone_id`,`created_at`,`modified_at`) values (1,'user_1','263fec58861449aacc1c328a4aff64aff4c62df4a2d50b3f207fa89b6e242c9aa778e7a8baeffef85b6ca6d2e7dc16ff0a760d59c13c238f6bcdc32f8ce9cc62',NULL,'user_1@gmail.com',NULL,NULL,'0000-00-00 00:00:00','1','O','user_1','Y',124,270,'0000-00-00 00:00:00','2015-11-28 11:02:54'),(2,'user_2','be2ce3b45176df1d3e41e35d6aa0ea9a44b56b3575e15ebc6da0d3da7793489b9eb718dc2cfe7f5f2bc61151ad4ffc70ba4d234520ed51735fa98ec878ddc27b',NULL,'user_2@gmail.com',NULL,NULL,'0000-00-00 00:00:00','1','O','','Y',110,243,'2015-11-13 12:37:41','0000-00-00 00:00:00'),(3,'user_3','be2ce3b45176df1d3e41e35d6aa0ea9a44b56b3575e15ebc6da0d3da7793489b9eb718dc2cfe7f5f2bc61151ad4ffc70ba4d234520ed51735fa98ec878ddc27b',NULL,'user_3@gmail.com',NULL,NULL,'0000-00-00 00:00:00','1','O','','Y',110,243,'2015-11-13 12:37:55','0000-00-00 00:00:00'),(7,'prakash','263fec58861449aacc1c328a4aff64aff4c62df4a2d50b3f207fa89b6e242c9aa778e7a8baeffef85b6ca6d2e7dc16ff0a760d59c13c238f6bcdc32f8ce9cc62',NULL,'prakash.paramanandam@arkinfotec.com','Q6fF2AykT','127.0.0.1','2015-11-17 14:10:26','1','O','prakash','N',124,243,'2015-11-17 12:52:20','2015-11-27 19:16:19'),(8,'Nadesh','263fec58861449aacc1c328a4aff64aff4c62df4a2d50b3f207fa89b6e242c9aa778e7a8baeffef85b6ca6d2e7dc16ff0a760d59c13c238f6bcdc32f8ce9cc62',NULL,'prakash.paramanandam@arkinfotec.com','rXOkCUMUk','127.0.0.1','0000-00-00 00:00:00','1','O','','Y',110,243,'2015-11-17 14:01:54','2015-11-17 14:02:35'),(9,'user_4','263fec58861449aacc1c328a4aff64aff4c62df4a2d50b3f207fa89b6e242c9aa778e7a8baeffef85b6ca6d2e7dc16ff0a760d59c13c238f6bcdc32f8ce9cc62',NULL,'user4@gmail.com','1pQXQ4ZrP','127.0.0.1','0000-00-00 00:00:00','1','O','','Y',110,243,'2015-11-23 17:52:04','2015-11-23 17:52:19');
+insert  into `koo_user`(`user_id`,`username`,`password_hash`,`password_reset_token`,`email`,`user_activation_key`,`user_login_ip`,`user_last_login`,`status`,`live_status`,`slug`,`is_auto_timezone`,`user_locale_id`,`user_timezone_id`,`user_rating`,`created_at`,`modified_at`) values (1,'user_1','263fec58861449aacc1c328a4aff64aff4c62df4a2d50b3f207fa89b6e242c9aa778e7a8baeffef85b6ca6d2e7dc16ff0a760d59c13c238f6bcdc32f8ce9cc62',NULL,'user_1@gmail.com',NULL,NULL,'0000-00-00 00:00:00','1','O','user_1','Y',124,270,'0.0','0000-00-00 00:00:00','2015-11-28 11:02:54'),(2,'user_2','be2ce3b45176df1d3e41e35d6aa0ea9a44b56b3575e15ebc6da0d3da7793489b9eb718dc2cfe7f5f2bc61151ad4ffc70ba4d234520ed51735fa98ec878ddc27b',NULL,'user_2@gmail.com',NULL,NULL,'0000-00-00 00:00:00','1','O','','Y',110,243,'2.9','2015-11-13 12:37:41','0000-00-00 00:00:00'),(3,'user_3','be2ce3b45176df1d3e41e35d6aa0ea9a44b56b3575e15ebc6da0d3da7793489b9eb718dc2cfe7f5f2bc61151ad4ffc70ba4d234520ed51735fa98ec878ddc27b',NULL,'user_3@gmail.com',NULL,NULL,'0000-00-00 00:00:00','1','O','','Y',110,243,'0.0','2015-11-13 12:37:55','0000-00-00 00:00:00'),(7,'prakash','263fec58861449aacc1c328a4aff64aff4c62df4a2d50b3f207fa89b6e242c9aa778e7a8baeffef85b6ca6d2e7dc16ff0a760d59c13c238f6bcdc32f8ce9cc62',NULL,'prakash.paramanandam@arkinfotec.com','Q6fF2AykT','127.0.0.1','2015-11-17 14:10:26','1','O','prakash','N',124,243,'0.0','2015-11-17 12:52:20','2015-11-27 19:16:19'),(8,'Nadesh','263fec58861449aacc1c328a4aff64aff4c62df4a2d50b3f207fa89b6e242c9aa778e7a8baeffef85b6ca6d2e7dc16ff0a760d59c13c238f6bcdc32f8ce9cc62',NULL,'prakash.paramanandam@arkinfotec.com','rXOkCUMUk','127.0.0.1','0000-00-00 00:00:00','1','O','nadesh','Y',110,243,'0.0','2015-11-17 14:01:54','2015-11-17 14:02:35'),(9,'user_4','263fec58861449aacc1c328a4aff64aff4c62df4a2d50b3f207fa89b6e242c9aa778e7a8baeffef85b6ca6d2e7dc16ff0a760d59c13c238f6bcdc32f8ce9cc62',NULL,'user4@gmail.com','1pQXQ4ZrP','127.0.0.1','0000-00-00 00:00:00','1','O','','Y',110,243,'0.0','2015-11-23 17:52:04','2015-11-23 17:52:19');
 
 /*Table structure for table `koo_user_profile` */
 
@@ -431,7 +428,7 @@ CREATE TABLE `koo_user_profile` (
 
 /*Data for the table `koo_user_profile` */
 
-insert  into `koo_user_profile`(`prof_id`,`user_id`,`prof_firstname`,`prof_lastname`,`prof_tag`,`prof_address`,`prof_phone`,`prof_skype`,`prof_website`,`prof_about`,`prof_languages`,`prof_interests`,`prof_rating`,`prof_picture`,`prof_cover_photo`,`country_id`,`created_at`,`modified_at`,`created_by`,`modified_by`) values (1,7,'Prakash','Arul Mani','asdasd','sdadasdsda	','5112151201','ark.prakash','','Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aliquet dictum turpis, eu dictum enim fermentum lacinia. Nullam pulvinar vel eros nec finibus. Mauris eget magna eget justo vestibulum condimentum ut in felis. Praesent tincidunt fringilla quam, et euismod tortor ornare at. Etiam blandit sed nisi sit amet condimentum. Vivamus vestibulum eros ut orci molestie congue. Ut sodales lobortis maximus. In sit amet justo placerat, elementum orci ut, feugiat ','[\"5\",\"9\",\"11\"]','Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aliquet dictum turpis, eu dictum enim fermentum lacinia. Nullam pulvinar vel eros nec finibus. Mauris eget magna eget justo vestibulum condimentum ut in felis. Praesent tincidunt fringilla quam, et euismod tortor ornare at. Etiam blandit sed nisi sit amet condimentum. Vivamus vestibulum eros ut orci molestie congue. Ut sodales lobortis maximus. In sit amet justo placerat, elementum orci ut, feugiat ',0,'/userprofile/57421195cfdbd385d44cdac36f27c1ee.pngg','',2,'0000-00-00 00:00:00','2015-11-30 12:32:01',NULL,NULL),(2,9,'John','Tac',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,2,'2015-11-23 17:52:04','2015-11-23 17:52:19',NULL,NULL);
+insert  into `koo_user_profile`(`prof_id`,`user_id`,`prof_firstname`,`prof_lastname`,`prof_tag`,`prof_address`,`prof_phone`,`prof_skype`,`prof_website`,`prof_about`,`prof_languages`,`prof_interests`,`prof_rating`,`prof_picture`,`prof_cover_photo`,`country_id`,`created_at`,`modified_at`,`created_by`,`modified_by`) values (1,7,'Prakash','Arul Mani','asdasd','sdadasdsda	','5112151201','ark.prakash','','Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aliquet dictum turpis, eu dictum enim fermentum lacinia. Nullam pulvinar vel eros nec finibus. Mauris eget magna eget justo vestibulum condimentum ut in felis. Praesent tincidunt fringilla quam, et euismod tortor ornare at. Etiam blandit sed nisi sit amet condimentum. Vivamus vestibulum eros ut orci molestie congue. Ut sodales lobortis maximus. In sit amet justo placerat, elementum orci ut, feugiat ','[\"5\",\"9\",\"11\"]','Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aliquet dictum turpis, eu dictum enim fermentum lacinia. Nullam pulvinar vel eros nec finibus. Mauris eget magna eget justo vestibulum condimentum ut in felis. Praesent tincidunt fringilla quam, et euismod tortor ornare at. Etiam blandit sed nisi sit amet condimentum. Vivamus vestibulum eros ut orci molestie congue. Ut sodales lobortis maximus. In sit amet justo placerat, elementum orci ut, feugiat ',0,'/userprofile/57421195cfdbd385d44cdac36f27c1ee.png','',2,'0000-00-00 00:00:00','2015-11-30 12:32:01',NULL,NULL),(2,9,'John','Tac',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,2,'2015-11-23 17:52:04','2015-11-23 17:52:19',NULL,NULL);
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
