@@ -1,13 +1,14 @@
 <?php
-$criteria = new CDbCriteria();
-$criteria->addCondition("gig_id='$model->gig_id'");
-$count = GigComments::model()->count($criteria);
-$pages = new CPagination($count);
-
-// results per page
-$pages->pageSize = 10;
-$pages->applyLimit($criteria);
-$models = Article::model()->findAll($criteria);
+//$criteria = new CDbCriteria();
+//$criteria->addCondition("gig_id='$model->gig_id'");
+//$criteria->addCondition("status='1'");
+//$count = GigComments::model()->count($criteria);
+//$pages = new CPagination($count);
+//
+//// results per page
+//$pages->pageSize = 10;
+//$pages->applyLimit($criteria);
+//$models = Article::model()->findAll($criteria);
 ?>
 <h2> Comments </h2>
 <div class="comments-cont">
