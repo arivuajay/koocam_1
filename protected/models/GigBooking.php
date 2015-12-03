@@ -61,6 +61,7 @@ class GigBooking extends RActiveRecord {
             'inactive' => array('condition' => "$alias.book_approve = '0'"),
             'deleted' => array('condition' => "$alias.book_approve = '2'"),
             'all' => array('condition' => "$alias.book_approve is not null"),
+            'notdeleted' => array('condition' => "$alias.book_approve != '2'"),
         );
     }
 
@@ -226,7 +227,7 @@ class GigBooking extends RActiveRecord {
 
     public static function gigSessionPerUser($user_id, $gig_id, $date) {
         $session = self::GIG_BOOKING_SESSION;
-        $bookings = self::model()->findAll("book_user_id = :user_id And gig_id = :gig_id And DATE(book_date) = :date", array(':user_id' => $user_id, ':gig_id' => $gig_id, ':date' => $date));
+        $bookings = self::model()->notdeleted()->findAll("book_user_id = :user_id And gig_id = :gig_id And DATE(book_date) = :date", array(':user_id' => $user_id, ':gig_id' => $gig_id, ':date' => $date));
 
         $session_count = 0;
         foreach ($bookings as $booking) {
