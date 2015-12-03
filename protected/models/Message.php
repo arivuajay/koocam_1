@@ -145,9 +145,9 @@ class Message extends RActiveRecord {
 
     public static function getMyMsgListQuery() {
         $session_userid = Yii::app()->user->id;
-        $new_conversation_start = self::NEW_CONVERSATION_START;
+        $new_conversation_end = "(SELECT MAX(m3.id2) FROM {{message}} `m3` WHERE m3.id1 = m1.id1)";
 
-        $sql = "SELECT m1.*, count(m2.id1) as reps, user.user_id, user.username FROM {{message}} `m1`, {{message}} `m2`, {{user}} `user` WHERE ((m1.user1 = '{$session_userid}' and user.user_id = m1.user2) or (m1.user2 = '{$session_userid}' and user.user_id = m1.user1)) and m1.id2='{$new_conversation_start}' and m2.id1 = m1.id1 GROUP BY `m1`.`id1` ORDER BY `m1`.`id1` DESC";
+        $sql = "SELECT m1.*, count(m2.id1) as reps, user.user_id, user.username FROM {{message}} `m1`, {{message}} `m2`, {{user}} `user` WHERE ((m1.user1 = '{$session_userid}' and user.user_id = m1.user2) or (m1.user2 = '{$session_userid}' and user.user_id = m1.user1)) and m1.id2 = {$new_conversation_end} and m2.id1 = m1.id1 GROUP BY `m1`.`id1` ORDER BY `m1`.`id1` DESC, `m1`.`id2` DESC";
         return $sql;
     }
 

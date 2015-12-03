@@ -4,7 +4,7 @@
  * Message controller
  */
 class MessageController extends Controller {
-
+    
     /**
      * @array action filters
      */
@@ -38,6 +38,8 @@ class MessageController extends Controller {
     }
 
     public function actionIndex() {
+        $this->layout = '//layouts/user_dashboard';
+        
         $sql = Message::getMyMsgListQuery();
         $total_items = Yii::app()->db->createCommand($sql)->queryAll();
         $item_count = count($total_items);
@@ -55,6 +57,7 @@ class MessageController extends Controller {
     }
 
     public function actionReadmessage($conversation_id) {
+        $this->layout = '//layouts/user_dashboard';
         $model = new Message;
         $session_userid = Yii::app()->user->id;
         $mymessages = array();
@@ -70,8 +73,8 @@ class MessageController extends Controller {
                 $model->user1read = Message::USER_READ_YES;
                 $model->user2read = Message::USER_READ_NO;
                 $model->save(false);
-                Yii::app()->user->setFlash('success', "Message send successfully!!!");
-                $this->redirect(array('index'));
+                Yii::app()->user->setFlash('success', "Message sent successfully!!!");
+                $this->refresh();
             }
         }
 
@@ -94,7 +97,7 @@ class MessageController extends Controller {
                             ->select('message.created_at, message.message, user.user_id, user.username')
                             ->from(array('{{message}} message', '{{user}} user'))
                             ->where("message.id1 = '$id1' and user.user_id = message.user1")
-                            ->order('message.id2')
+                            ->order('message.id2 DESC')
                             ->queryAll();
                 } else {
                     Yii::app()->user->setFlash('danger', 'You dont have the rights to access this page.!');

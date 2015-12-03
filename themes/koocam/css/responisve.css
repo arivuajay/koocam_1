@@ -198,6 +198,27 @@
   margin-bottom: 10px;
 }
 
+.myprofile-inner
+{
+	margin-top:25px;
+}
+
+.message-gig, .mesage-details-right {
+  text-align: left;
+}
+
+.mesage-details-row1, .mesage-details-2
+{
+	width:auto;
+	float:left;
+}
+
+.mesage-details-2 
+{
+	margin-left:10px;
+	margin-top:2px;
+}
+
 }
 @media (min-width:768px) and (max-width:991px) {
  .nav > li > a {
@@ -260,6 +281,15 @@
 .navbar-default .navbar-nav > li > a {
   font-size: 13px;
 }
+
+
+
+.message-from
+{
+	padding-bottom:0px;
+}
+
+
 
 
 

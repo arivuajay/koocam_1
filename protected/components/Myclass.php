@@ -182,7 +182,7 @@ class Myclass extends CController {
         }
     }
 
-    function timeAgo($time) {
+    public static function timeAgo($time) {
         $cur_time = strtotime(Yii::app()->localtime->toLocalDateTime(date("Y-m-d H:i:s"), 'short', 'short'));
 
         $time = $cur_time - $time; // to get the time since that moment
@@ -204,5 +204,7 @@ class Myclass extends CController {
             return $numberOfUnits . ' ' . $text . (($numberOfUnits > 1) ? 's' : '').' ago';
         }
     }
+    
+    
 
 }

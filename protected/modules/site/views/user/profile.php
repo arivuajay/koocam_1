@@ -53,7 +53,7 @@ $is_not_my_profile = !Yii::app()->user->isGuest && Yii::app()->user->id != $mode
             </div>
             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 course-details">
                 <h2> About <?php echo $model->fullname; ?> </h2>
-                <p class="date"> Date of Join : <?php echo date(PHP_SHORT_DATE_FORMAT, strtotime($model->created_at)); ?></p>
+                <p class="date"> Date of Join : <?php echo $model->created_at; ?></p>
                 <p><?php echo $user_profile->prof_about; ?></p>
                 <h4> Country </h4>
                 <p> <?php echo $model->country; ?> </p>

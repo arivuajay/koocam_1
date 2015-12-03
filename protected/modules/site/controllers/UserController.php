@@ -87,23 +87,8 @@ class UserController extends Controller {
         if (Yii::app()->request->isPostRequest && Yii::app()->request->getPost('Message')) {
             $message->attributes = Yii::app()->request->getPost('Message');
             $model = $this->loadModelSlug($message->userSlug);
-
-            // Genreate the conversation id
-            $criteria = new CDbCriteria;
-            $criteria->select = 'max(id1) AS maxColumn';
-            $row = Message::model()->find($criteria);
-
-            $npm_count = $row['maxColumn'];
-            $id1 = $npm_count + 1;
-
-            $message->id1 = $id1; // conversation id
-            $message->id2 = Message::NEW_CONVERSATION_START; //New conversation start
-            $message->user1 = Yii::app()->user->id; // Sender
-            $message->user2 = $model->user_id; // Receiver
-            $message->timestamp = time();
-            $message->user1read = Message::USER_READ_YES;
-            $message->user2read = Message::USER_READ_NO;
-            $message->save(false);
+            
+            Message::insertMessage($message->message, Yii::app()->user->id, $model->user_id);
             
             Yii::app()->user->setFlash('success', "Message sent successfully!!!");
             $this->redirect(array('/site/user/profile', 'slug' => $model->slug));
