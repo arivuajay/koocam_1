@@ -11,7 +11,7 @@ class RActiveRecord extends CActiveRecord {
 
         if (!$this->isNewRecord) {
             $this->modified_at = $now;
-            $this->convertTime('to');
+//            $this->convertTime('to');
         } else {
             $this->created_at = $now;
         }

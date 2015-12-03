@@ -247,8 +247,9 @@ class GigBooking extends RActiveRecord {
     }
 
     protected function beforeSave() {
-        if ($this->isNewRecord)
+        if ($this->isNewRecord){
             $this->book_guid = Myclass::guid(false);
+        }
 
         if ($this->is_message == 'N')
             $this->book_message = '';

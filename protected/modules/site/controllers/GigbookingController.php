@@ -53,8 +53,16 @@ class GigbookingController extends Controller {
             $booking_model->attributes = Yii::app()->request->getPost('GigBooking');
             $booking_model->book_user_id = Yii::app()->user->id;
 
-            if ($booking_model->save()) {
-                Yii::app()->user->setFlash('success', "Your Booking Confirmed.");
+            $valid = $booking_model->validate();
+            if ($valid) {
+                $booking_model->book_start_time = Yii::app()->localtime->toUTC($booking_model->book_start_time);
+                $booking_model->book_end_time = Yii::app()->localtime->toUTC($booking_model->book_end_time);
+                
+                $valid = $valid && $booking_model->save(false);
+                if($valid)
+                    Yii::app()->user->setFlash('success', "Your Booking Confirmed.");
+                else
+                    Yii::app()->user->setFlash('danger', "Some error occurs. Try again");
                 $this->redirect(array('/site/gig/view', 'slug' => $booking_model->gig->slug));
             }
         }
