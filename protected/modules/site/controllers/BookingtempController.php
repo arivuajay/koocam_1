@@ -130,7 +130,6 @@ class BookingtempController extends Controller {
             $booking_model->book_date = date("Y-m-d H:i:s");
             $booking_model->book_start_time = date("Y-m-d H:i:s");
             $booking_model->setEndtime();
-            $booking_model->book_approved_time = date("Y-m-d H:i:s");
             $booking_model->book_payment_status = "C";
             $booking_model->book_payment_info = serialize($_POST);
 

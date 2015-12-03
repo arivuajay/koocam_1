@@ -205,10 +205,19 @@ $gig_price = (int) $model->gig_price;
 <?php
 $cs = Yii::app()->getClientScript();
 $cs_pos_end = CClientScript::POS_END;
+
 $messageId = CHTML::activeId($booking_model, 'is_message');
+$sessionId = CHTML::activeId($booking_model, 'book_session');
+
+$gig_price = $model->gig_price;
+$extra_price = isset($model->gigExtras->extra_price) ? $model->gigExtras->extra_price : 0;
 
 $js = <<< EOD
     jQuery(document).ready(function ($) {
+        var gig_price = $gig_price;
+        var extra_price = $extra_price;
+        
+        // Extra Price functions //
         $('#book_extra_inner').on('ifChecked', function(event){
             var newPrice = parseFloat(extra_div.data('gig_price')) + parseFloat(extra_div.data('extra_price'));
             $('.total-price').html('Price : $ '+newPrice);
@@ -219,6 +228,7 @@ $js = <<< EOD
             $('.total-price').html('Price : $ '+newPrice);
         });
 
+        // Hours & minutes //
         $(".input-group-addon").on("click", function () {
             var button = $(this);
             var input_group = button.closest('.input-group');
@@ -254,11 +264,31 @@ $js = <<< EOD
                return false;
         });
 
+        // Want to send message Functions //
         $('#{$messageId}').on('ifChecked', function(event){
             $('#message_div').removeClass('hide');
         });
         $('#{$messageId}').on('ifUnchecked', function(event){
             $('#message_div').addClass('hide');
+        });
+        
+        // Session change Functions //
+        $('#{$sessionId}').on('change', function(){
+            session = $(this).val();
+            price = 0;
+            extra = $('#book_extra_inner').parent('div').hasClass('checked') ? extra_price : 0;
+        
+            if(session != ''){
+                for (i = 0; i < session; i++) {
+                    price = parseFloat(price) + parseFloat(gig_price);
+                }
+            }else{
+                price = gig_price;
+            }
+        
+            tot_price = parseFloat(price) + parseFloat(extra);
+            $('.total-price').html('Price : $ '+ tot_price);
+            extra_div.data('gig_price', price);
         });
         
     });

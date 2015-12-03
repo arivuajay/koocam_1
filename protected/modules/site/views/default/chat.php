@@ -50,21 +50,40 @@ $themeUrl = $this->themeUrl;
         </div>
     </div>
 </div>
-
+<div id="countdowntimer"><span id="given_date"><span></div>
+            
 <?php
 $cs = Yii::app()->getClientScript();
 $cs_pos_end = CClientScript::POS_END;
 $cs->registerScriptFile("https://static.opentok.com/v2/js/opentok.min.js");
+$cs->registerScriptFile($themeUrl . '/js/moment.js', $cs_pos_end);
+$cs->registerScriptFile($themeUrl . '/js/moment-timezone.js', $cs_pos_end);
+$cs->registerScriptFile($themeUrl . '/js/jquery.countdownTimer.min.js', $cs_pos_end);
 $cs->registerScriptFile($themeUrl . '/js/jquery.countdown.min.js', $cs_pos_end);
 $cs->registerScriptFile($themeUrl . '/js/jquery-blink.js', $cs_pos_end);
 
-$end_time = date('Y/m/d H:i:s', strtotime($token->book->book_end_time));
+$start_time = date('Y/m/d H:i:s', strtotime(Yii::app()->localtime->fromUTC(date('Y/m/d H:i:s'))));
+$start_date = new DateTime($start_time);
+$since_start = $start_date->diff(new DateTime(date('Y/m/d H:i:s', strtotime($token->book->book_end_time))));
+
+echo $end_time = date('Y/m/d H:i:s', strtotime(Yii::app()->localtime->toUTC($token->book->book_end_time)));
+echo Yii::app()->localtime->getTimeZone();
 $alert_minute = 2;
         
 $js = <<< EOD
     jQuery(document).ready(function ($) {
         var alert_min = '$alert_minute';
-        $('#clock').countdown('{$end_time}', function (event) {
+        
+        $("#given_date").countdowntimer({
+            hours : {$since_start->h},
+            minutes : {$since_start->i},
+            seconds : {$since_start->s},
+            size : "lg"
+	});
+        
+        var end_time = moment.tz("{$end_time}", "Asia/Jerusalem");
+        
+        $('#clock').countdown(end_time.toDate(), function (event) {
             $(this).html(event.strftime('%H:%M:%S'));
         }).on('update.countdown', function(event) {
             if (event.elapsed) {
@@ -76,6 +95,10 @@ $js = <<< EOD
             }
         });
         $('.blink').blink({delay:300});
+            
+        $( ".given_date" ).change(function() {
+            console.log('asdsad');
+        });
     });
 
 

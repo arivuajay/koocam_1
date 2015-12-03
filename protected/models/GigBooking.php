@@ -226,11 +226,13 @@ class GigBooking extends RActiveRecord {
 
     public static function gigSessionPerUser($user_id, $gig_id, $date) {
         $session = self::GIG_BOOKING_SESSION;
-        $bookings = self::model()->findAll("book_user_id = :user_id And gig_id = :gig_id And DATE(book_date) = :date", array(':user_id' => $user_id, ':gig_id' => $gig_id, ':date' => date('Y-m-d', strtotime($date))));
+        $bookings = self::model()->findAll("book_user_id = :user_id And gig_id = :gig_id And DATE(book_date) = :date", array(':user_id' => $user_id, ':gig_id' => $gig_id, ':date' => $date));
 
         $session_count = 0;
         foreach ($bookings as $booking) {
             $session_count += $booking->book_session;
+            if($session_count == $session)
+                break;
         }
         return ($session - $session_count);
     }
@@ -250,6 +252,9 @@ class GigBooking extends RActiveRecord {
         if ($this->is_message == 'N')
             $this->book_message = '';
 
+        if($this->book_approve == '1')
+            $this->book_approved_time = date('Y-m-d H:i:s');
+        
         return parent::beforeSave();
     }
 
@@ -289,11 +294,16 @@ class GigBooking extends RActiveRecord {
     }
     
     public function setBookingPrice() {
-        if (!empty($this->gig)):
-            $this->book_gig_price = $this->gig->gig_price;
+        if (!empty($this->gig) && !empty($this->book_session)):
+            $gig_price = $this->gig->gig_price;
+            $price = 0;
+            for ($i = 0; $i < $this->book_session; $i++) {
+                $price = $gig_price + $price;
+            }
+            $this->book_gig_price = $price;
             if ($this->book_is_extra)
                 $this->book_extra_price = $this->gig->gigExtras->extra_price;
-            $this->book_total_price = $this->gig->gig_price + $this->book_extra_price;
+            $this->book_total_price = $this->book_gig_price + $this->book_extra_price;
             $this->book_duration = $this->gig->gig_duration;
         endif;
     }
