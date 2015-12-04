@@ -1573,11 +1573,13 @@ label {
 }
 .message-title {
 	font-size:14px;
-	line-height:16px;
+	line-height:10px;
 	margin-bottom:5px;
+	color:#0672b1;
+	font-weight:700;
 }
 .message-title a {
-	color:#2e2e2e;
+	color:#0672b1;
 }
 .message-from {
 	font-size:13px;
@@ -1587,7 +1589,7 @@ label {
 	color:#b41b20
 }
 .message-gig {
-	text-align:right;
+	text-align:left;
 }
 .mesage-details-right {
 	text-align:right;
@@ -1657,4 +1659,207 @@ label {
 		text-align:right;
 	color:#b1b2b9;
 	font-size:13px;
+}
+
+.chat-banner{
+	height: 150px;
+}
+
+.chat-right
+{
+	width:100%;
+	float:left;
+	padding:10px;
+	background:#b41b20;
+		-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	color:#ffffff;
+}
+
+.my-chat
+{
+	width:100%;
+	float:left;
+}
+
+.chat-count
+{
+	width:100%;
+	float:left;
+	background:#77070b;
+	padding:0px;
+		-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	margin-top:10px;
+	text-transform:uppercase;
+}
+
+.hour span
+{
+	text-transform:uppercase;
+		font-size:25px;
+		
+}
+
+.hour
+{
+	width:30%;
+	float:left;
+	text-align:center;
+	line-height:25px;
+	background:#980c11;
+	margin:4px 4px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	font-size:15px;
+}
+
+.chat-btns-cont
+{
+	width:100%;
+	float:left;
+	margin-top:10px;
+	font-size:20px;
+}
+
+.btn-report-abuse 
+{
+	font-size:15px;
+	padding:5px;
+	width:100%;
+	line-height:17px;
+	font-weight:700;
+	text-transform:uppercase;
+}
+
+.btn-report-abuse img
+{
+	float:left;
+	width:25px;
+}
+
+.chat-right2
+{
+	width:100%;
+	float:left;
+}
+
+.text-cht
+{
+	width:100%;
+	float:right;
+	margin-top:20px;
+}
+
+
+.input-sm
+{
+	font-size:12px;
+}
+
+.btn-group-sm > .btn, .btn-sm {
+  border-radius: 3px;
+  font-size: 12px;
+  line-height: 1.5;
+  padding: 10px;
+}
+
+.panel-primary > .panel-heading {
+  background-color: #1e1e1e;
+  border-color: #1e1e1e;
+  color: #fff;
+}
+
+.panel-primary {
+  border-color: #1e1e1e;
+}
+
+.chat
+{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.chat li
+{
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px dotted #B3A9A9;
+}
+
+.chat li.left .chat-body
+{
+    margin-left: 60px;
+}
+
+.chat li.right .chat-body
+{
+    margin-right: 60px;
+}
+
+
+.chat li .chat-body p
+{
+    margin: 0;
+    color: #777777;
+}
+
+.panel .slidedown .glyphicon, .chat .glyphicon
+{
+    margin-right: 5px;
+}
+
+.course-details .panel-body
+{
+height:auto;
+}
+
+.panel-body
+{
+    overflow-y: scroll;
+    height: 200px;
+}
+
+::-webkit-scrollbar-track
+{
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar
+{
+    width: 12px;
+    background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar-thumb
+{
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+    background-color: #555;
+}
+
+.chat-body
+{
+	font-size:14px;
+	line-height:18px;
+}
+
+
+.panel-body
+{
+	padding:10px;
+}
+
+
+.mesage-details-right .btn
+{
+	padding-top:0px;
+	padding-bottom:0px;
+	background:#b41b20;
+	border:none;
+	color:#ffffff;
 }

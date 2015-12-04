@@ -209,15 +209,19 @@
 
 .mesage-details-row1, .mesage-details-2
 {
-	width:auto;
+	width:100%;
 	float:left;
+	text-align:right;
 }
 
 .mesage-details-2 
 {
-	margin-left:10px;
+	margin-left:0px;
 	margin-top:2px;
 }
+
+
+
 
 }
 @media (min-width:768px) and (max-width:991px) {
@@ -289,10 +293,15 @@
 	padding-bottom:0px;
 }
 
+.hour {
+  margin: 3px 3px;
+}
 
 
-
-
+.btn-report-abuse 
+{
+	font-size:12px;
+}
 }
 @media (min-width:992px) and (max-width:1199px) {
 .nav > li > a {

@@ -241,7 +241,7 @@ class DefaultController extends Controller {
 
     public function actionTesttoken() {
         $role = GigTokens::TOKEN_ROLE;
-        $expire = time() + (60 * 60);
+        $expire = time() + (7 * 24 * 60 * 60);
         echo $session_key = Yii::app()->tok->createSession()->id;
         echo '<br />';
         echo $token_key = Yii::app()->tok->generateToken($session_key, $role, $expire);
