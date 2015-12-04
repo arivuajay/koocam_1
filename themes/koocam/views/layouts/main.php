@@ -43,6 +43,7 @@
         $cs->registerScriptFile($themeUrl . '/js/bootstrap-select.js', $cs_pos_end);
         $cs->registerScriptFile($themeUrl . '/js/notification/smoke.min.js', $cs_pos_end);
         $cs->registerScriptFile($themeUrl . '/js/icheck.js', $cs_pos_end);
+        $cs->registerScriptFile($themeUrl . '/js/jquery.lionbars.0.3.js', $cs_pos_end);
 
         $login = Yii::app()->createAbsoluteUrl('/site/default/signupsocial');
         $js = <<< EOD

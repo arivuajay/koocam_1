@@ -25,44 +25,46 @@ if ($u2 != $session_userid) {
                 <h4> Reply Message </h4>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <?php $this->renderPartial('_reply_message', compact('model', 'userto_id', 'mymessages')); ?>
-            </div>
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 replies-cont">
-                <?php foreach ($mymessages as $minfos) { ?>
-                    <div class="single-message">
-                        <div class="row">
-                            <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2"> 
-                                <b> <a href="#"><?php echo $minfos['username']; ?></a></b> 
-                            </div>
-                            <div class="col-xs-12 col-sm-7 col-md-8 col-lg-8">
-                                <?php echo $minfos['message']; ?>
-                            </div>
-                            <div class="col-xs-12 col-sm-3 col-md-2 col-lg-2">
-                                <div class="replymsg-details">
-                                    <?php $message_date = Yii::app()->localtime->fromUTC($minfos['created_at']); ?>
-                                    <p> 
-                                        <i class="fa fa-clock-o"></i> <?php echo date("H:i", strtotime($message_date)); ?>
-                                         <br/> &nbsp;<span> <?php echo date("d M, Y", strtotime($message_date)); ?> </span> 
-                                    </p>
+                <div class="box" id="box1">
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 replies-cont">
+                        <?php foreach ($mymessages as $minfos) { ?>
+                            <div class="single-message">
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-2 col-md-1 col-lg-1"> 
+                                        <?php $user = User::model()->findByPk($minfos['user_id']); ?>
+                                        <b> <a href="#"><?php echo $user->profileimage ?></a></b> 
+                                    </div>
+                                    <div class="col-xs-12 col-sm-7 col-md-9 col-lg-9">
+                                        <?php echo $minfos['message']; ?>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-3 col-md-2 col-lg-2">
+                                        <div class="replymsg-details">
+                                            <?php $message_date = Yii::app()->localtime->fromUTC($minfos['created_at']); ?>
+                                            <p> 
+                                                <i class="fa fa-clock-o"></i> <?php echo date("H:i", strtotime($message_date)); ?>
+                                                <br/> &nbsp;<span> <?php echo date("d M, Y", strtotime($message_date)); ?> </span> 
+                                            </p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        <?php } ?>
                     </div>
-                <?php } ?>
+                </div>
+                <?php $this->renderPartial('_reply_message', compact('model', 'userto_id', 'mymessages')); ?>
             </div>
         </div>
-        <!--        <div class="pagination-cont">
-                    <nav>
-                        <ul class="pagination">
-                            <li class="disabled"><a aria-label="Previous" href="#"><span aria-hidden="true">«</span></a></li>
-                            <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
-                            <li><a href="#">2</a></li>
-                            <li><a href="#">3</a></li>
-                            <li><a href="#">4</a></li>
-                            <li><a href="#">5</a></li>
-                            <li><a aria-label="Next" href="#"><span aria-hidden="true">»</span></a></li>
-                        </ul>
-                    </nav>
-                </div>-->
     </div>
 </div>
+
+<?php
+$cs = Yii::app()->getClientScript();
+$cs_pos_end = CClientScript::POS_END;
+
+$js = <<< EOD
+    jQuery(document).ready(function ($) {
+        $('.box').lionbars();
+    });
+EOD;
+Yii::app()->clientScript->registerScript('readmessage', $js);
+?>

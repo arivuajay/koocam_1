@@ -4,7 +4,7 @@
  * Message controller
  */
 class MessageController extends Controller {
-    
+
     /**
      * @array action filters
      */
@@ -26,7 +26,7 @@ class MessageController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'readmessage'),
+                'actions' => array('index', 'readmessage', 'delete'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -39,7 +39,7 @@ class MessageController extends Controller {
 
     public function actionIndex() {
         $this->layout = '//layouts/user_dashboard';
-        
+
         $sql = Message::getMyMsgListQuery();
         $total_items = Yii::app()->db->createCommand($sql)->queryAll();
         $item_count = count($total_items);
@@ -115,6 +115,28 @@ class MessageController extends Controller {
         $this->render('readmessage', compact('model', 'mymessages', 'u1', 'u2'));
     }
 
+    public function actionDelete($conversation_id) {
+        $session_userid = Yii::app()->user->id;
+        $id1 = intval($conversation_id);
+        $msginfo = Message::model()->findByAttributes(array('id1' => $id1, 'id2' => Message::NEW_CONVERSATION_START));
+        $msgcount = count($msginfo);
+        //We check if the discussion exists
+        if ($msgcount == 1) {
+            $u1 = $msginfo['user1'];
+            $u2 = $msginfo['user2'];
+
+            if ($u1 == $session_userid || $u2 == $session_userid) {
+                Message::model()->deleteAllByAttributes(array('id1' => $conversation_id));
+                Yii::app()->user->setFlash('success', 'Message Deleted Successfully!!!');
+            } else {
+                Yii::app()->user->setFlash('danger', 'You dont have the rights to access this page.!');
+            }
+        } else {
+            Yii::app()->user->setFlash('danger', 'This discussion does not exists!');
+        }
+        $this->redirect(array('index'));
+    }
+
     /**
      * Returns the data model based on the primary key given in the GET variable.
      * If the data model is not found, an HTTP exception will be raised.
@@ -123,7 +145,7 @@ class MessageController extends Controller {
      * @throws CHttpException
      */
     public function loadModel($id) {
-        $model = User::model()->findByPk($id);
+        $model = Message::model()->findByPk($id);
         if ($model === null)
             throw new CHttpException(404, 'The requested page does not exist.');
         return $model;
