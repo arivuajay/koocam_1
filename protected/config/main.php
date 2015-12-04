@@ -69,8 +69,8 @@ return array(
         ),
         'tok' => array(
             'class' => 'ext.yii-opentok.EOpenTok',
-            'key' => '45426862', //provided by your opentok account
-            'secret' => '11105538d780c05daa67375ea7d2e337c2df96d2', //provided by your opentok account
+            'key' => '45398152', //provided by your opentok account
+            'secret' => '6e1608f14363fee4e31e5dcb9dc08bd5c77700b3', //provided by your opentok account
         ),
         'format' => array(
             'class' => 'YFormatter',

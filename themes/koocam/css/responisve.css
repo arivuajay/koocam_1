@@ -310,6 +310,9 @@
 {
 	display:none;
 }
+
+
+
 }
 @media (min-width:992px) and (max-width:1199px) {
 .nav > li > a {
@@ -340,6 +343,10 @@
   margin: 0 4px 0 0;
 }
 
+.total-expense
+{
+	font-size:28px;
+}
 }
 @media (min-width:1200px) {
 .hidden-lg {

@@ -70,7 +70,7 @@ $this->renderPartial('_report_abuse', compact('token', 'abuse_model'));
         ?>
         <div class="row">
             <div class="col-xs-12 col-sm-8 col-md-8 col-lg-9 ">
-                <div id="subscribersDiv"></div>
+                <div id="subscribersDiv" class="subscriber-div"></div>
             </div>
             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-3 ">
                 <div class="chat-right2"> 

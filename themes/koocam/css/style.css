@@ -1975,3 +1975,75 @@ height:auto;
 {
 	margin-bottom:2px;
 }
+
+.total-expense
+{
+	font-size:35px;
+}
+
+.total-expense p
+{
+	margin-bottom:50px;
+}
+
+.total-expense span
+{
+	color:#b41b20;
+	font-weight:700;
+}
+
+.total-expense b
+{
+	font-weight:700;
+	color:#04a61b;
+}
+
+button
+{
+	-o-transition:.5s;
+  -ms-transition:.5s;
+  -moz-transition:.5s;
+  -webkit-transition:.5s;
+  transition:.5s;
+}
+
+input[type=button]
+{
+		-o-transition:.5s;
+  -ms-transition:.5s;
+  -moz-transition:.5s;
+  -webkit-transition:.5s;
+  transition:.5s;
+}
+
+.table {
+  border: 2px solid #f0f0f0;
+}
+
+.table > tbody > tr > td, .table > tbody > tr > th, .table > tfoot > tr > td, .table > tfoot > tr > th, .table > thead > tr > td, .table > thead > tr > th {
+  border-top: 2px solid #f0f0f0;
+  line-height: 1.42857;
+  padding: 10px;
+  vertical-align: top;
+}
+
+.table th
+{
+	font-size:22px;
+	font-weight:normal;
+}
+
+.payment-table
+{
+	margin-top:40px;
+}
+
+.payment-table a
+{
+	color:#2e2e2e;
+}
+
+.paid
+{
+	color:#04a61b;
+}

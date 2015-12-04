@@ -191,15 +191,15 @@ class GigTokens extends RActiveRecord {
             if ($is_tutor) {
                 $info['my_role'] = 'tutor';
                 $info['my_name'] = $token->book->gig->tutor->fullname;
-                $info['my_thumb'] = $token->book->gig->tutor->profilethumb;
+                $info['my_thumb'] = $token->book->gig->tutor->getProfilethumb(array('class' => 'img-circle', 'width' => '50'));
                 $info['their_name'] = $token->book->bookUser->fullname;
-                $info['their_thumb'] = $token->book->bookUser->profilethumb;
+                $info['their_thumb'] = $token->book->bookUser->getProfilethumb(array('class' => 'img-circle', 'width' => '50'));
             }else if($is_learner){
                 $info['my_role'] = 'learner';
                 $info['my_name'] = $token->book->bookUser->fullname;
-                $info['my_thumb'] = $token->book->bookUser->profilethumb;
+                $info['my_thumb'] = $token->book->bookUser->getProfilethumb(array('class' => 'img-circle', 'width' => '50'));
                 $info['their_name'] = $token->book->gig->tutor->fullname;
-                $info['their_thumb'] = $token->book->gig->tutor->profilethumb;
+                $info['their_thumb'] = $token->book->gig->tutor->getProfilethumb(array('class' => 'img-circle', 'width' => '50'));;
             }
             
             $info['token'] = $token;
