@@ -8,7 +8,7 @@
  * @property string $key
  * @property string $value
  */
-class Settings extends RActiveRecord {
+class Settings extends CActiveRecord {
 
     /**
      * @return string the associated database table name
