@@ -15,6 +15,14 @@ defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL', 3);
 require_once($yii);
 $app = Yii::createWebApplication($config);
 
+$settings = Settings::model()->findAll();
+if (!empty($settings)) {
+    foreach ($settings as $setting) {
+        defined($setting->key) ||
+                @define($setting->key, $setting->value);
+    }
+}
+
 defined('SITEURL') ||
         @define('SITEURL', Yii::app()->createAbsoluteUrl("/"));
 defined('SITENAME') ||

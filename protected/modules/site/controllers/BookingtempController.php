@@ -138,6 +138,8 @@ class BookingtempController extends Controller {
                 $booking_temp->temp_value = serialize($booking_data);
                 $booking_temp->save(false);
                 GigTokens::generateToken($booking_model->book_guid);
+                Transaction::bookingTransaction($booking_model->book_id);
+                Transaction::bookingTransaction($booking_model->book_id);
             }
         }
     }

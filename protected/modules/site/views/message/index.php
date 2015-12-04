@@ -13,6 +13,7 @@ $this->breadcrumbs = array(
     <div class="myprofile-inner">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
                 <?php
                 if (!empty($model)) {
                     foreach ($model as $messages) {
@@ -21,44 +22,39 @@ $this->breadcrumbs = array(
                         if ($messages['user2'] == Yii::app()->user->id && $messages['user2read'] == Message::USER_READ_NO) {
                             $unread_class = 'unread';
                         }
-                        ?>  
+                        $user = User::model()->findByPk($messages['user_id']);
+                        ?> 
                         <div class="message-row <?php echo $unread_class; ?>">
                             <div class="row">
-                                <div class="col-xs-12 col-sm-8 col-md-9 col-lg-9">
+                                <div class="col-xs-3 col-sm-2 col-md-1 col-lg-1 ">
+                                    <?php echo $user->profileimage ?>
+                                </div>
+                                <div class="col-xs-9 col-sm-6 col-md-8 col-lg-8">
                                     <div class="message-title"> 
-                                        <?php echo $mdisplay; ?>
+                                        <?php echo CHtml::link($messages['username'], array('/site/user/profile', 'slug' => $user->slug)) ?>
+                                        <span> <?php echo "( " . $messages['reps'] ." Messages)" ?> </span>
                                     </div>
                                     <div class="row">
-                                        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4 message-from"> 
-                                            <?php
-                                            if ($messages['user1'] == Yii::app()->user->id)
-                                                $find_from_to = "To: ";
-                                            elseif ($messages['user2'] == Yii::app()->user->id)
-                                                $find_from_to = "From: ";
-                                            ?>
-                                            <?php echo $find_from_to;?> <a href="#"> <?php echo $messages['username']; ?> </a> 
+                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 message-txt"> 
+                                            <?php echo $mdisplay; ?>
                                         </div>
                                         <?php if ($messages['gig_id']) { ?>
-                                            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 message-from message-gig"> 
-                                                Gig: <a href="#"> Vestibulum bibendum pulvinar orci non lobortis  ? </a> 
+                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 message-from message-gig"> 
+                                                <b> Gig: </b> 
+                                                <a href="#"> Vestibulum bibendum pulvinar orci non lobortis  ? </a> 
                                             </div>
                                         <?php } ?>
                                     </div>
                                 </div>
                                 <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 mesage-details-right">
                                     <div class="mesage-details-row1"> 
-                                        <?php
-                                        echo CHtml::link('View', array('/site/message/readmessage', 'conversation_id' => $messages['id1']));
-                                        ?> | 
-                                        <span  data-toggle="tooltip" data-placement="bottom" title="Delete"> 
-                                            <a href="#"> <i class="fa fa-trash-o"></i> </a> 
-                                        </span> 
-                                    </div>
+                                        <?php echo CHtml::link('View', array('/site/message/readmessage', 'conversation_id' => $messages['id1']), array("class" => "btn btn-default")); ?> | <span  data-toggle="tooltip" data-placement="bottom" title="Delete"> <a href="#"> <i class="fa fa-trash-o"></i> </a> </span> </div>
                                     <div class="mesage-details-2">
                                         <?php $message_date = Yii::app()->localtime->fromUTC($messages['created_at']); ?>
                                         <p> 
-                                            <i class="fa fa-clock-o"></i> <?php echo date("H:i", strtotime($message_date)); ?>
-                                            &nbsp;<span> <?php echo date("d M, Y", strtotime($message_date)); ?> </span> 
+                                            <i class="fa fa-clock-o"></i> 
+                                            <?php echo date("H:i", strtotime($message_date)); ?> 
+                                            &nbsp;<span> <?php echo date("d M, Y", strtotime($message_date)); ?></span> 
                                         </p>
                                     </div>
                                 </div>
