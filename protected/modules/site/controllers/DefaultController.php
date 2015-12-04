@@ -185,14 +185,14 @@ class DefaultController extends Controller {
     }
 
     public function actionChat($guid) {
-        $token = GigTokens::getAuthData($guid);
-        $abuse_model = new ReportAbuse();
-
-        if (empty($token)) {
+        $info = GigTokens::getConnectInfo($guid);
+        if (empty($info)) {
             Yii::app()->user->setFlash('danger', "Invalid Access !!!");
             $this->goHome();
         }
-        $this->render('chat', compact('token', 'abuse_model'));
+        $token = $info['token'];
+        $abuse_model = new ReportAbuse();
+        $this->render('chat', compact('token', 'abuse_model', 'info'));
     }
 
     public function actionReportabuse() {

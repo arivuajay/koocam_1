@@ -180,4 +180,31 @@ class GigTokens extends RActiveRecord {
         return $ret;
     }
 
+    public static function getConnectInfo($guid) {
+        $token = self::getAuthData($guid);
+        $info = array();
+        if (!empty($token)) {
+
+            $is_tutor = $token->book->gig->tutor->user_id == Yii::app()->user->id;
+            $is_learner = $token->book->bookUser->user_id == Yii::app()->user->id;
+
+            if ($is_tutor) {
+                $info['my_role'] = 'tutor';
+                $info['my_name'] = $token->book->gig->tutor->fullname;
+                $info['my_thumb'] = $token->book->gig->tutor->profilethumb;
+                $info['their_name'] = $token->book->bookUser->fullname;
+                $info['their_thumb'] = $token->book->bookUser->profilethumb;
+            }else if($is_learner){
+                $info['my_role'] = 'learner';
+                $info['my_name'] = $token->book->bookUser->fullname;
+                $info['my_thumb'] = $token->book->bookUser->profilethumb;
+                $info['their_name'] = $token->book->gig->tutor->fullname;
+                $info['their_thumb'] = $token->book->gig->tutor->profilethumb;
+            }
+            
+            $info['token'] = $token;
+        }
+        return $info;
+    }
+
 }
