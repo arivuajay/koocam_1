@@ -16,6 +16,9 @@
  */
 class Purchase extends RActiveRecord {
 
+    //PAGE LIMIT
+    const MY_PURCHASE_LIMIT = 9;
+
     /**
      * @return string the associated database table name
      */

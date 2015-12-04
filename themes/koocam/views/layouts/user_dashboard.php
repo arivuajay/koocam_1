@@ -51,7 +51,7 @@ endif
                             'items' => array(
                                 array('label' => '<i class="fa fa-user"></i> My Profile', 'url' => '#'),
                                 array('label' => '<i class="fa fa-graduation-cap"></i> My Gigs <span class="badge">'.$user->gigcount.'</span>', 'url' => array('/site/gig/mygigs')),
-                                array('label' => '<i class="fa fa-cart-plus"></i> My Purchase <span class="badge">4</span>', 'url' => '#'),
+                                array('label' => '<i class="fa fa-cart-plus"></i> My Purchase <span class="badge">'.$user->purchasecount.'</span>', 'url' => array('/site/purchase/mypurchase')),
                                 array('label' => '<i class="fa fa-money"></i> My Payments <span class="badge"> $1234</span>', 'url' => '#'),
                                 array('label' => '<i class="fa fa-envelope"></i> Messages <span class="badge">20</span>', 'url' => '#'),
                                 array('label' => '<i class="fa fa-bell"></i> Notifications <span class="badge">20</span>', 'url' => '#'),

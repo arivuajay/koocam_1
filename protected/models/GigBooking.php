@@ -378,4 +378,7 @@ class GigBooking extends RActiveRecord {
         ));
     }
 
+    public function getUserviewlink($htmlOptions = array()) {
+        echo CHtml::link($this->bookUser->fullname, array('/admin/user/view', 'id' => $this->book_user_id), $htmlOptions);
+    }
 }

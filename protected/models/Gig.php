@@ -29,6 +29,7 @@
  * @property User $tutor
  * @property GigComments[] $gigComments
  * @property GigExtra[] $gigExtras
+ * @property GigBooking[] $gigBookings
  */
 class Gig extends RActiveRecord {
 
@@ -226,6 +227,7 @@ class Gig extends RActiveRecord {
             'gigComments' => array(self::HAS_MANY, 'GigComments', 'gig_id'),
             'gigExtras' => array(self::HAS_ONE, 'GigExtra', 'gig_id'),
             'tutor' => array(self::BELONGS_TO, 'User', 'tutor_id'),
+            'gigBookings' => array(self::HAS_MANY, 'GigBooking', 'book_id'),
         );
     }
 
@@ -393,20 +395,20 @@ class Gig extends RActiveRecord {
         return parent::beforeValidate();
     }
 
-    public function getGigimage() {
+    public function getGigimage($htmlOptions = array()) {
         if (!empty($this->gig_media))
             $path = UPLOAD_DIR . '/users/' . $this->tutor_id . $this->gig_media;
         if (!isset($path) || !is_file($path))
-            $path = 'themes/' . Yii::app()->theme->name . '/images/profile-img.jpeg';
-        return CHtml::image(Yii::app()->createAbsoluteUrl($path), '', array('class' => ''));
+            $path = 'themes/koocam/images/profile-img.jpeg';
+        return CHtml::image(Yii::app()->createAbsoluteUrl($path), '', $htmlOptions);
     }
 
-    public function getGigthumb() {
+    public function getGigthumb($htmlOptions = array()) {
         if (!empty($this->gig_media))
             $path = UPLOAD_DIR . '/users/' . $this->tutor_id . '/thumb' . $this->gig_media;
         if (!isset($path) || !is_file($path))
-            $path = 'themes/' . Yii::app()->theme->name . '/images/profile-img.jpeg';
-        return CHtml::image(Yii::app()->createAbsoluteUrl($path), '', array('class' => ''));
+            $path = 'themes/koocam/images/profile-img.jpeg';
+        return CHtml::image(Yii::app()->createAbsoluteUrl($path), '', $htmlOptions);
     }
 
     public function getStartnowButton($text = '<i class="fa fa-video-camera"></i> Start Now !', $class = 'big-btn btn btn-default', $data_target = 'startnow') {

@@ -33,6 +33,7 @@
  * @property Message[] $user1Messages
  * @property Message[] $user2Messages
  * @property Gig[] $gigs
+ * @property Purchase $gigPurchase
  */
 class User extends RActiveRecord {
 
@@ -117,6 +118,7 @@ class User extends RActiveRecord {
             'gigs' => array(self::HAS_MANY, 'Gig', 'tutor_id'),
             'gigBookings' => array(self::HAS_MANY, 'GigBooking', 'book_user_id'),
             'gigComments' => array(self::HAS_MANY, 'GigComments', 'user_id'),
+            'gigPurchase' => array(self::HAS_MANY, 'Purchase', 'user_id'),
         );
     }
 
@@ -250,23 +252,27 @@ class User extends RActiveRecord {
         return $Country->country_name;
     }
 
-    public function getProfileimage() {
+    public function getProfileimage($htmlOptions = array()) {
         if(!empty($this->userProf->prof_picture))
             $path = UPLOAD_DIR . '/users/' . $this->user_id . $this->userProf->prof_picture;
         if (!isset($path) || !is_file($path))
-            $path = 'themes/'. Yii::app()->theme->name . '/images/profile-img.jpeg';
-        return CHtml::image(Yii::app()->createAbsoluteUrl($path), '', array('class' => ''));
+            $path = 'themes/koocam/images/profile-img.jpeg';
+        return CHtml::image(Yii::app()->createAbsoluteUrl($path), '', $htmlOptions);
     }
 
-    public function getProfilethumb() {
+    public function getProfilethumb($htmlOptions = array('class' => 'img-circle')) {
         if(!empty($this->userProf->prof_picture))
             $path = UPLOAD_DIR . '/users/' . $this->user_id . '/thumb' . $this->userProf->prof_picture;
         if (!isset($path) || !is_file($path))
-            $path = 'themes/'.Yii::app()->theme->name . '/images/profile-pic.jpeg';
-        return CHtml::image(Yii::app()->createAbsoluteUrl($path), '', array('class' => 'img-circle'));
+            $path = 'themes/koocam/images/profile-pic.jpeg';
+        return CHtml::image(Yii::app()->createAbsoluteUrl($path), '', $htmlOptions);
     }
     
     public function getGigcount() {
         return count($this->gigs);
+    }
+    
+    public function getPurchasecount() {
+        return count($this->gigPurchase);
     }
 }

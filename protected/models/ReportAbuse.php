@@ -129,7 +129,7 @@ class ReportAbuse extends RActiveRecord {
             );
             $message = $mail->getMessage('report_abuse', $trans_array);
             $Subject = $mail->translate("Report Abuse For GIG ({$gig->gig_title})");
-            $mail->send(Admin::ADMIN_EMAIL, $Subject, $message);
+            $mail->send(ADMIN_EMAIL, $Subject, $message);
         }
         return parent::afterSave();
     }

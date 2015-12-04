@@ -220,7 +220,10 @@
 	margin-top:2px;
 }
 
-
+.purchase-img
+{
+	display:none;
+}
 
 
 }
@@ -301,6 +304,11 @@
 .btn-report-abuse 
 {
 	font-size:12px;
+}
+
+.purchase-img
+{
+	display:none;
 }
 }
 @media (min-width:992px) and (max-width:1199px) {
