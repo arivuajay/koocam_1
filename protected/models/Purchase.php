@@ -116,4 +116,16 @@ class Purchase extends RActiveRecord {
         ));
     }
 
+    public static function insertPurchase($book_id) {
+        $gig_booking = GigBooking::model()->findByPk($book_id);
+        if (!empty($gig_booking)) {
+            $purchase = Purchase::model()->findByAttributes(array('book_id' => $book_id, 'user_id' => $gig_booking->book_user_id));
+            if (empty($purchase)) {
+                $model = new Purchase;
+                $model->attributes = array('book_id' => $book_id, 'user_id' => $gig_booking->book_user_id);
+                $model->save(false);
+            }
+        }
+    }
+
 }
