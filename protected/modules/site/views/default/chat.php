@@ -69,13 +69,15 @@ $this->renderPartial('_report_abuse', compact('token', 'abuse_model'));
         ));
         ?>
         <div class="row">
-            <div class="col-xs-12 col-sm-8 col-md-8 col-lg-9 " id="subscribersDiv">
+            <div class="col-xs-12 col-sm-8 col-md-8 col-lg-9 ">
+                <div id="subscribersDiv"></div>
             </div>
             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-3 ">
                 <div class="chat-right2"> 
                     <div class="chat-right">
-                        <div class="my-chat" id="myPublisherDiv"></div>
-                        <div ></div>
+                        <div class="my-chat">
+                            <div id="myPublisherDiv"></div>
+                        </div>
                         <div id="time-alert" class="text-danger hide"><span class="blink">Time going to End !!!</span></div>
                         <div class="chat-count" id="clock">
                             <div class="hour">  Hour  <br/>  <span>00</span></div>
