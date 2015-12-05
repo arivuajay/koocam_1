@@ -69,8 +69,8 @@ img {
 	color: #ffffff;
 }
 .navbar-default .navbar-nav > li > a:focus, .navbar-default .navbar-nav > li > a:hover {
-	background-color: transparent;
-	color: #ffffff;
+	background-color: transparent !important;
+	color: #ffffff !important;
 }
 a:focus {
 	outline:none;
@@ -1978,7 +1978,7 @@ height:auto;
 
 .total-expense
 {
-	font-size:35px;
+	font-size:30px;
 }
 
 .total-expense p
@@ -1989,13 +1989,12 @@ height:auto;
 .total-expense span
 {
 	color:#b41b20;
-	font-weight:700;
 }
 
 .total-expense b
 {
-	font-weight:700;
 	color:#04a61b;
+	font-weight:normal;
 }
 
 button
@@ -2046,4 +2045,32 @@ input[type=button]
 .paid
 {
 	color:#04a61b;
+}
+
+
+.online-btn
+{
+	font-size:28px;
+	text-align:center;
+	margin-top:40px;
+}
+
+
+.online-btn a
+{
+	color:#42b31c;
+	text-shadow: 0px 1px 2px rgba(66, 179, 28, 1);
+}
+
+.online-btn span
+{
+	font-size:18px;
+	width:100%;
+	float:left;
+}
+
+.offline-btn a
+{
+	color:#b4191d;
+	text-shadow: 0px 1px 2px rgba(190, 15, 20, 1);
 }
