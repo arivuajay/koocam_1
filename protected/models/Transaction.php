@@ -10,6 +10,9 @@
  * @property integer $book_id
  * @property string $trans_admin_amount
  * @property string $trans_user_amount
+ * @property string $transaction_id
+ * @property string $trans_message
+ * @property string $paypal_address
  * @property string $created_at
  * @property string $modified_at
  *
@@ -36,14 +39,16 @@ class Transaction extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-//            array('user_id, trans_user_amount', 'required'),
+            array('user_id, trans_user_amount', 'required'),
             array('user_id, book_id', 'numerical', 'integerOnly' => true),
             array('trans_type', 'length', 'max' => 1),
             array('trans_admin_amount, trans_user_amount', 'length', 'max' => 10),
-            array('created_at, modified_at', 'safe'),
+            array('transaction_id', 'length', 'max' => 255),
+            array('paypal_address', 'length', 'max' => 100),
+            array('trans_message, created_at, modified_at', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('trans_id, user_id, trans_type, book_id, trans_admin_amount, trans_user_amount, created_at, modified_at', 'safe', 'on' => 'search'),
+            array('trans_id, user_id, trans_type, book_id, trans_admin_amount, trans_user_amount, transaction_id, trans_message, paypal_address, created_at, modified_at', 'safe', 'on' => 'search'),
         );
     }
 
@@ -69,6 +74,9 @@ class Transaction extends RActiveRecord {
             'book_id' => 'Book',
             'trans_admin_amount' => 'Trans Admin Amount',
             'trans_user_amount' => 'Trans User Amount',
+            'transaction_id' => 'Transaction',
+            'trans_message' => 'Trans Message',
+            'paypal_address' => 'Paypal Address',
             'created_at' => 'Created At',
             'modified_at' => 'Modified At',
         );
@@ -97,6 +105,9 @@ class Transaction extends RActiveRecord {
         $criteria->compare('book_id', $this->book_id);
         $criteria->compare('trans_admin_amount', $this->trans_admin_amount, true);
         $criteria->compare('trans_user_amount', $this->trans_user_amount, true);
+        $criteria->compare('transaction_id', $this->transaction_id, true);
+        $criteria->compare('trans_message', $this->trans_message, true);
+        $criteria->compare('paypal_address', $this->paypal_address, true);
         $criteria->compare('created_at', $this->created_at, true);
         $criteria->compare('modified_at', $this->modified_at, true);
 
