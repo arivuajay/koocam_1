@@ -43,6 +43,7 @@ endif
                     </div>
                     <div class="profiles-list">
                         <?php
+                        /**/
                         $msg_count = Message::getMyUnReadMsgCount();
                         $msg_badge = $purchase_badge = $gig_badge = $balance_badge = '';
                         $balance = Transaction::myCurrentBalance();
