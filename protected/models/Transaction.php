@@ -70,6 +70,17 @@ class Transaction extends RActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'user' => array(self::BELONGS_TO, 'User', 'user_id'),
+            'booking' => array(self::BELONGS_TO, 'GigBooking', 'book_id'),
+        );
+    }
+
+    public function scopes() {
+        $alias = $this->getTableAlias(false, false);
+        $user_id = Yii::app()->user->id;
+        $type_expense = self::TYPE_EXPENSE;
+
+        return array(
+            'myPayments' => array('condition' => "$alias.user_id = $user_id AND $alias.trans_type != '$type_expense'"),
         );
     }
 
@@ -186,13 +197,57 @@ class Transaction extends RActiveRecord {
         return $return;
     }
 
+    public static function myTotalExpense() {
+        $user_id = Yii::app()->user->id;
+        $type_expense = self::TYPE_EXPENSE;
+        $total_expense = Yii::app()->db->createCommand()
+                ->select('SUM(`trans_user_amount`) as total_expense')
+                ->from('{{transaction}}')
+                ->andWhere('user_id = ' . $user_id . ' AND trans_type = "' . $type_expense . '"')
+                ->queryRow();
+        return ($total_expense['total_expense']) ? $total_expense['total_expense'] : "0";
+    }
+
+    public static function myTotalRevenue() {
+        $user_id = Yii::app()->user->id;
+        $type_revenue = self::TYPE_REVENUE;
+        $total_revenue = Yii::app()->db->createCommand()
+                ->select('SUM(`trans_user_amount`) as total_revenue')
+                ->from('{{transaction}}')
+                ->andWhere('user_id = ' . $user_id . ' AND trans_type = "' . $type_revenue . '"')
+                ->queryRow();
+        return ($total_revenue['total_revenue']) ? $total_revenue['total_revenue'] : "0.00";
+    }
+
+    public static function myTotalWithdraw() {
+        $user_id = Yii::app()->user->id;
+        $type_withdraw = self::TYPE_WITHDRAW;
+        $total_withdraw = Yii::app()->db->createCommand()
+                ->select('SUM(`trans_user_amount`) as total_withdraw')
+                ->from('{{transaction}}')
+                ->andWhere('user_id = ' . $user_id . ' AND trans_type = "' . $type_withdraw . '"')
+                ->queryRow();
+        return ($total_withdraw['total_withdraw']) ? $total_withdraw['total_withdraw'] : "0.00";
+    }
+
+    public static function myCurrentBalance() {
+        $total_revenue = self::myTotalRevenue();
+        $total_withdraw = self::myTotalWithdraw();
+        if ($total_revenue > 0) {
+            $current_balance = $total_revenue - $total_withdraw;
+            return number_format($current_balance, "2");
+        } else {
+            return "0.00";
+        }
+    }
+
     public function beforeValidate() {
         if ($this->is_message == 'Y') {
             $this->validatorList->add(CValidator::createValidator('required', $this, 'trans_message', array()));
         }
-//        if ($this->status == '2') {
-//            $this->validatorList->add(CValidator::createValidator('required', $this, 'trans_reply', array()));
-//        }
+        if ($this->status == '2') {
+            $this->validatorList->add(CValidator::createValidator('required', $this, 'trans_reply', array()));
+        }
 
         return parent::beforeValidate();
     }
@@ -200,12 +255,12 @@ class Transaction extends RActiveRecord {
     public function cashwithdrawMail() {
         //To admin
         $mail = new Sendmail;
-        
+
         $user_email = $this->user->email;
         $username = $this->user->fullname;
         $amt = $this->trans_user_amount;
         $paypal = $this->paypal_address;
-        
+
         $trans_array = array(
             "{SITENAME}" => SITENAME,
             "{USERNAME}" => $username,
@@ -217,7 +272,7 @@ class Transaction extends RActiveRecord {
         $message = $mail->getMessage('cash_withdraw_notification', $trans_array);
         $Subject = $mail->translate("Cashwithdraw Request From {$username}");
         $mail->send(ADMIN_EMAIL, $Subject, $message);
-        
+
         //To User
         $trans_array = array(
             "{SITENAME}" => SITENAME,
@@ -226,10 +281,10 @@ class Transaction extends RActiveRecord {
             "{PAYPAL}" => $paypal,
         );
         $message = $mail->getMessage('cash_withdraw_request', $trans_array);
-        $Subject = $mail->translate(SITENAME.": Cashwithdraw Request Sent");
+        $Subject = $mail->translate(SITENAME . ": Cashwithdraw Request Sent");
         $mail->send($user_email, $Subject, $message);
     }
-    
+
     public function cashApprove() {
         $mail = new Sendmail;
         $trans_array = array(
@@ -241,13 +296,13 @@ class Transaction extends RActiveRecord {
             "{REPLY_MESSAGE}" => $this->trans_reply,
         );
         $message = $mail->getMessage('cash_withdraw_approve', $trans_array);
-        $Subject = $mail->translate(SITENAME.": Cashwithdraw Amount Sent");
+        $Subject = $mail->translate(SITENAME . ": Cashwithdraw Amount Sent");
         $mail->send($this->user->email, $Subject, $message);
-        
+
         $notifn_message = "Your Cash withdraw request for {$this->trans_user_amount}$ sent successfully to your account {$this->paypal_address}";
         Notification::insertNotification($this->user->user_id, $notifn_message);
     }
-    
+
     public function cashReject() {
         $mail = new Sendmail;
         $trans_array = array(
@@ -257,9 +312,9 @@ class Transaction extends RActiveRecord {
             "{REPLY_MESSAGE}" => $this->trans_reply,
         );
         $message = $mail->getMessage('cash_withdraw_reject', $trans_array);
-        $Subject = $mail->translate(SITENAME.": Cashwithdraw Request Canceled");
+        $Subject = $mail->translate(SITENAME . ": Cashwithdraw Request Canceled");
         $mail->send($this->user->email, $Subject, $message);
-        
+
         Notification::insertNotification($this->user->user_id, "Your Cash withdraw request for {$this->trans_user_amount}$ canceled");
     }
 

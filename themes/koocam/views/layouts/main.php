@@ -17,6 +17,7 @@
         $cs->registerCssFile($themeUrl . '/css/bootstrap-select.css');
         $cs->registerCssFile($themeUrl . '/css/custom.css');
         $cs->registerCssFile($themeUrl . '/css/notification/smoke.min.css');
+        $cs->registerCssFile($themeUrl . '/css/dropdowns-enhancement.css');
         ?>
     </head>
     <body>
@@ -36,7 +37,8 @@
         $cs_pos_end = CClientScript::POS_END;
         $cs->registerCoreScript('jquery');
 //        $cs->registerScriptFile($themeUrl . '/js/jquery.1.11.3.min.js', $cs_pos_end);
-        $cs->registerScriptFile($themeUrl . '/js/bootstrap.min.js');
+//        Because of Yiibooster extension called in SiteModule.php, Hide the below bootstrap.min.js
+//        $cs->registerScriptFile($themeUrl . '/js/bootstrap.min.js');
         $cs->registerScriptFile($themeUrl . '/js/waypoints.min.js', $cs_pos_end);
         $cs->registerScriptFile($themeUrl . '/js/jquery.counterup.min.js', $cs_pos_end);
         $cs->registerScriptFile($themeUrl . '/js/owl.carousel.min.js', $cs_pos_end);

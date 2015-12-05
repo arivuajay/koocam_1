@@ -44,10 +44,22 @@ endif
                     <div class="profiles-list">
                         <?php
                         $msg_count = Message::getMyUnReadMsgCount();
-                        $msg_badge = '';
-                        if($msg_count > 0){
+                        $msg_badge = $purchase_badge = $gig_badge = $balance_badge = '';
+                        $balance = Transaction::myCurrentBalance();
+                        
+                        if($msg_count > 0)
                             $msg_badge = '<span class="badge">'.$msg_count.'</span>';
-                        }
+                        
+                        if($user->purchasecount > 0)
+                            $purchase_badge = '<span class="badge">'.$user->purchasecount.'</span>';
+                        
+                        if($user->gigcount > 0)
+                            $gig_badge = '<span class="badge">'.$user->gigcount.'</span>';
+                        
+                        if($balance > 0)
+                            $balance_badge = '<span class="badge"> $ '. (int) $balance.'</span>';
+                        
+                        
                         $this->widget('zii.widgets.CMenu', array(
                             'activateParents' => true,
                             'encodeLabel' => false,
@@ -55,9 +67,9 @@ endif
                             'activeCssClass' => 'myprofile-active',
                             'items' => array(
                                 array('label' => '<i class="fa fa-user"></i> My Profile', 'url' => '#'),
-                                array('label' => '<i class="fa fa-graduation-cap"></i> My Gigs <span class="badge">'.$user->gigcount.'</span>', 'url' => array('/site/gig/mygigs')),
-                                array('label' => '<i class="fa fa-cart-plus"></i> My Purchase <span class="badge">'.$user->purchasecount.'</span>', 'url' => array('/site/purchase/mypurchase')),
-                                array('label' => '<i class="fa fa-money"></i> My Payments <span class="badge"> $1234</span>', 'url' => '#'),
+                                array('label' => '<i class="fa fa-graduation-cap"></i> My Gigs '.$gig_badge, 'url' => array('/site/gig/mygigs')),
+                                array('label' => '<i class="fa fa-cart-plus"></i> My Purchase '.$purchase_badge, 'url' => array('/site/purchase/mypurchase')),
+                                array('label' => '<i class="fa fa-money"></i> My Payments ' . $balance_badge, 'url' => array('/site/transaction/mypayments')),
                                 array('label' => '<i class="fa fa-envelope"></i> Messages ' . $msg_badge, 'url' => array('/site/message/index')),
                                 array('label' => '<i class="fa fa-bell"></i> Notifications <span class="badge">20</span>', 'url' => '#'),
                                 array('label' => '<i class="fa fa-calendar-check-o"></i> Jobs <span class="badge">20</span>', 'url' => '#'),

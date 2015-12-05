@@ -23,6 +23,8 @@ class SiteModule extends CWebModule {
                 'allowAutoLogin' => true,
             )
         ));
+        
+        Yii::app()->getComponent("booster");
 
         Yii::app()->user->setStateKeyPrefix('_site');
         Yii::app()->user->loginUrl = Yii::app()->createUrl("/{$this->id}/default/index");

@@ -39,10 +39,10 @@ class TransactionController extends Controller {
 
     public function actionMypayments() {
         $this->layout = '//layouts/user_dashboard';
-
         $model = new Transaction('withdraw');
-
-        $this->render('mypayments', compact('model'));
+        
+        $my_payments = Transaction::model()->myPayments()->findAll();
+        $this->render('mypayments', compact('model', 'my_payments'));
     }
 
     public function actionWithdraw() {
