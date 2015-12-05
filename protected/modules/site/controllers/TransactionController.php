@@ -53,6 +53,7 @@ class TransactionController extends Controller {
             $model->attributes = Yii::app()->request->getPost('Transaction');
             $model->user_id = Yii::app()->user->id;
             $model->trans_type = 'W';
+            $model->status = '1';
             if ($model->validate()) {
                 if ($model->save(false)) {
                     $model->cashwithdrawMail();

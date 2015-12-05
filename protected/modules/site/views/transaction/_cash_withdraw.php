@@ -17,6 +17,8 @@ $form = $this->beginWidget('CActiveForm', array(
         ));
 
 $paypal_address = UserPaypal::getUserpaypal();
+$paypal_address['others@others.other'] = 'Add New Paypal';
+
 ?>
 <div class="modal fade" id="withdraw-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
@@ -40,6 +42,13 @@ $paypal_address = UserPaypal::getUserpaypal();
                                 <?php echo $form->labelEx($model, 'trans_user_amount'); ?>
                                 <?php echo $form->textField($model, 'trans_user_amount', array('class' => 'form-control numberonly', 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "Withdraw Amount. Minimum ".Transaction::MIN_WITHDRAW_AMT." $")); ?>
                                 <?php echo $form->error($model, 'trans_user_amount'); ?>
+                            </div>
+                        </div>
+                        <div class="form-group hide" id="new_paypal_div">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                <?php echo $form->labelEx($model, 'new_paypal'); ?>
+                                <?php echo $form->textField($model, 'new_paypal', array('class' => 'form-control', 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "New Paypal Address")); ?>
+                                <?php echo $form->error($model, 'new_paypal'); ?>
                             </div>
                         </div>
                         <div class="form-group">
@@ -72,6 +81,8 @@ $paypal_address = UserPaypal::getUserpaypal();
 $cs = Yii::app()->getClientScript();
 $cs_pos_end = CClientScript::POS_END;
 $messageId = CHTML::activeId($model, 'is_message');
+$paypalId = CHTML::activeId($model, 'paypal_address');
+$newpaypalId = CHTML::activeId($model, 'new_paypal');
 
 $js = <<< EOD
     jQuery(document).ready(function ($) {
@@ -86,6 +97,15 @@ $js = <<< EOD
         });
         $('#{$messageId}').on('ifUnchecked', function(event){
             $('#message_div').addClass('hide');
+        });
+        
+        $('#{$paypalId}').on('change', function(){
+            $('#{$newpaypalId}').val('');
+            if($(this).val() == 'others@others.other'){
+                $('#new_paypal_div').removeClass('hide');
+            }else{
+                $('#new_paypal_div').addClass('hide');
+            }
         });
     });
 

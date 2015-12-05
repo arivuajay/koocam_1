@@ -24,6 +24,7 @@
 class Transaction extends RActiveRecord {
 
     public $is_message;
+    public $new_paypal;
 
     const TYPE_REVENUE = "R";
     const TYPE_EXPENSE = "E";
@@ -45,7 +46,7 @@ class Transaction extends RActiveRecord {
         // will receive user inputs.
         return array(
             array('user_id, trans_user_amount', 'required'),
-            array('paypal_address', 'email'),
+            array('paypal_address, new_paypal', 'email'),
             array('paypal_address', 'required', 'on' => 'withdraw'),
             array('transaction_id', 'required', 'on' => 'approve'),
             array('trans_reply', 'required', 'on' => 'reject'),
@@ -55,7 +56,7 @@ class Transaction extends RActiveRecord {
             array('trans_admin_amount, trans_user_amount', 'length', 'max' => 10),
             array('transaction_id', 'length', 'max' => 255),
             array('paypal_address', 'length', 'max' => 100),
-            array('trans_message, created_at, modified_at, is_message, trans_reply, status', 'safe'),
+            array('trans_message, created_at, modified_at, is_message, trans_reply, status, new_paypal', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('trans_id, user_id, trans_type, book_id, trans_admin_amount, trans_user_amount, transaction_id, trans_message, paypal_address, created_at, modified_at', 'safe', 'on' => 'search'),
@@ -245,11 +246,36 @@ class Transaction extends RActiveRecord {
         if ($this->is_message == 'Y') {
             $this->validatorList->add(CValidator::createValidator('required', $this, 'trans_message', array()));
         }
+        if ($this->paypal_address == 'others@others.other') {
+            $this->validatorList->add(CValidator::createValidator('required', $this, 'new_paypal', array()));
+        }
         if ($this->status == '2') {
             $this->validatorList->add(CValidator::createValidator('required', $this, 'trans_reply', array()));
         }
 
         return parent::beforeValidate();
+    }
+
+    protected function beforeSave() {
+        if ($this->paypal_address == 'others@others.other' && $this->new_paypal != '')
+            $this->paypal_address = $this->new_paypal;
+
+        return parent::beforeSave();
+    }
+
+    protected function afterSave() {
+        if ($this->new_paypal != '') {
+            $exists = UserPaypal::model()->mine()->findAll('paypal_address = :paypal', array(':paypal' => $this->paypal_address));
+            if (empty($exists)) {
+                $user_paypal = new UserPaypal;
+                $user_paypal->attributes = array(
+                    'user_id' => $this->user_id,
+                    'paypal_address' => $this->paypal_address
+                );
+                $user_paypal->save(false);
+            }
+        }
+        return parent::afterSave();
     }
 
     public function cashwithdrawMail() {
