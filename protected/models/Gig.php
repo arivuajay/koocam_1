@@ -73,6 +73,8 @@ class Gig extends RActiveRecord {
             $this->gig_duration = Gig::GIG_MIN_DURATION;
             $this->gig_price = Gig::GIG_MIN_AMT;
             $this->extra_price = Gig::EXTRA_MIN_AMT;
+            
+            $this->gig_avail_visual = 'Y';
         }
 
         parent::init();
