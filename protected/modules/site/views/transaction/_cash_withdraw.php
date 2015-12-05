@@ -15,6 +15,8 @@ $form = $this->beginWidget('CActiveForm', array(
         'hideErrorMessage' => true,
     ),
         ));
+
+$paypal_address = UserPaypal::getUserpaypal();
 ?>
 <div class="modal fade" id="withdraw-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
@@ -31,7 +33,7 @@ $form = $this->beginWidget('CActiveForm', array(
                         <div class="form-group">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                                 <?php echo $form->labelEx($model, 'paypal_address'); ?>
-                                <?php echo $form->dropDownList($model, 'paypal_address', array('class' => 'form-control')); ?>
+                                <?php echo $form->dropDownList($model, 'paypal_address', $paypal_address, array('class' => 'selectpicker', 'prompt' => 'Select Paypal Address')); ?>
                                 <?php echo $form->error($model, 'paypal_address'); ?>
                             </div>
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">

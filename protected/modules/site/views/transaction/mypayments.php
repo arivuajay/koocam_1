@@ -7,6 +7,7 @@ $this->title = 'My Payments';
 $this->breadcrumbs = array(
     'My Payments',
 );
+$this->renderPartial('_cash_withdraw', compact('model'));
 ?>
 <div class="col-xs-12 col-sm-8 col-md-9 col-lg-9">
     <div class="myprofile-inner">
@@ -19,7 +20,6 @@ $this->breadcrumbs = array(
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
                         <?php
                         echo CHtml::link('$ CASH OUT', 'javascript:void(0)', array('class' => 'btn btn-default  btn-lg explorebtn form-btn', 'data-toggle' => "modal", 'data-target' => "#withdraw-modal"));
-$this->renderPartial('_cash_withdraw', compact('model'));
                         ?>
                     </div>
                 </div>

@@ -51,6 +51,15 @@ class UserPaypal extends RActiveRecord {
         );
     }
 
+    public function scopes() {
+        $alias = $this->getTableAlias(false, false);
+        $user_id = Yii::app()->user->id;
+        
+        return array(
+            'mine' => array('condition' => "$alias.user_id = {$user_id}"),
+        );
+    }
+    
     /**
      * @return array customized attribute labels (name=>label)
      */
@@ -113,4 +122,7 @@ class UserPaypal extends RActiveRecord {
         ));
     }
 
+    public static function getUserpaypal() {
+        return CHtml::listData(self::model()->mine()->findAll(), 'paypal_address', 'paypal_address');
+    }
 }
