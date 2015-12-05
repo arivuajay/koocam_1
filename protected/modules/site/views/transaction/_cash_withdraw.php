@@ -31,7 +31,7 @@ $form = $this->beginWidget('CActiveForm', array(
                         <div class="form-group">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                                 <?php echo $form->labelEx($model, 'paypal_address'); ?>
-                                <?php echo $form->textField($model, 'paypal_address', array('class' => 'form-control', 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "Paypal address")); ?>
+                                <?php echo $form->dropDownList($model, 'paypal_address', array('class' => 'form-control')); ?>
                                 <?php echo $form->error($model, 'paypal_address'); ?>
                             </div>
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
