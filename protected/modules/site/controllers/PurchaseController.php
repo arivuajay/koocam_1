@@ -43,13 +43,12 @@ class PurchaseController extends Controller {
         $model = new Purchase();
         $criteria = new CDbCriteria;
         $alias = $model->getTableAlias(false, false);
-        $criteria->compare($alias . '.user_id', Yii::app()->user->id);
         $criteria->order = 'created_at DESC';
 
-        $pages = new CPagination(Purchase::model()->count($criteria));
+        $pages = new CPagination(Purchase::model()->mine()->count($criteria));
         $pages->pageSize = Purchase::MY_PURCHASE_LIMIT;
         $pages->applyLimit($criteria);
-        $results = Purchase::model()->findAll($criteria);
+        $results = Purchase::model()->mine()->findAll($criteria);
         
         $this->render('mypurchase', compact('results'));
     }

@@ -269,7 +269,7 @@ class User extends RActiveRecord {
     }
     
     public function getGigcount() {
-        return count($this->gigs);
+        return Gig::model()->mine()->exceptDelete()->count();
     }
     
     public function getPurchasecount() {

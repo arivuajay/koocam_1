@@ -103,11 +103,15 @@ class Gig extends RActiveRecord {
 
     public function scopes() {
         $alias = $this->getTableAlias(false, false);
+        $user_id = Yii::app()->user->id;
+        
         return array(
             'active' => array('condition' => "$alias.status = '1'"),
             'inactive' => array('condition' => "$alias.status = '0'"),
             'deleted' => array('condition' => "$alias.status = '2'"),
             'all' => array('condition' => "$alias.status is not null"),
+            'exceptDelete' => array('condition' => "$alias.status IN ('1','0')"),
+            'mine' => array('condition' => "$alias.tutor_id = $user_id"),
         );
     }
 

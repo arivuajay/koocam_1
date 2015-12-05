@@ -32,7 +32,7 @@ class GigController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'upload', 'update', 'changepricepertime', 'mygigs'),
+                'actions' => array('create', 'upload', 'update', 'changepricepertime', 'mygigs', 'userdelete'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -113,7 +113,7 @@ class GigController extends Controller {
                             'extra_description' => $model->extra_description,
                             'gig_id' => $model->gig_id,
                         );
-                        if(isset($_FILES['Gig']['name']['extra_file']) && !empty($_FILES['Gig']['name']['extra_file'])){
+                        if (isset($_FILES['Gig']['name']['extra_file']) && !empty($_FILES['Gig']['name']['extra_file'])) {
                             $extra_model->setAttribute('extra_file', $_FILES['Gig']['name']['extra_file']);
                         }
                         if ($extra_model->validate()) {
@@ -140,6 +140,22 @@ class GigController extends Controller {
         $this->render('view', compact('model', 'booking_model', 'booking_temp', 'gig_comments'));
     }
 
+    public function actionUserdelete($id) {
+        $model = $this->loadModel($id);
+
+        if ($model->tutor_id != Yii::app()->user->id) {
+            Yii::app()->user->setFlash('danger', "Invalid Access !!!");
+            $this->goHome();
+        }
+        $valid = $model->saveAttributes(array('status' => '2'));
+        if ($valid):
+            Yii::app()->user->setFlash('success', "Gig Deleted successfully");
+        else:
+            Yii::app()->user->setFlash('danger', "Failed to delete. Try again later..");
+        endif;
+        $this->redirect(array('/site/gig/mygigs'));
+    }
+
     /**
      * Returns the data model based on the primary key given in the GET variable.
      * If the data model is not found, an HTTP exception will be raised.
@@ -164,7 +180,7 @@ class GigController extends Controller {
             Yii::app()->end();
         }
     }
-    
+
     protected function performAjaxValidationWithOutFileField($model) {
         if (isset($_POST['ajax'])) {
             echo CActiveForm::validate($model, Gig::ajaxValidationFields());
@@ -230,7 +246,7 @@ class GigController extends Controller {
 
         $sort_by = $page_size = '';
         $cat_ids = array();
-        
+
         if (isset($_REQUEST['sort_by'])) {
             $criteria->order = $sort_by = $_REQUEST['sort_by'];
         }
@@ -243,7 +259,7 @@ class GigController extends Controller {
         } else {
             $page_size = Gig::GIG_SEARCH_LIMIT;
         }
-        
+
         $criteria->compare($alias . '.gig_title', $search_text, true);
 
         $pages = new CPagination(Gig::model()->count($criteria));
@@ -264,18 +280,18 @@ class GigController extends Controller {
 
     public function actionMygigs() {
         $this->layout = '//layouts/user_dashboard';
-        
+
         $model = new Gig();
         $criteria = new CDbCriteria;
         $alias = $model->getTableAlias(false, false);
-        $criteria->compare($alias . '.tutor_id', Yii::app()->user->id);
         $criteria->order = 'created_at DESC';
 
-        $pages = new CPagination(Gig::model()->count($criteria));
+        $pages = new CPagination(Gig::model()->mine()->exceptDelete()->count($criteria));
         $pages->pageSize = Gig::MY_GIG_LIMIT;
         $pages->applyLimit($criteria);
-        $results = Gig::model()->findAll($criteria);
-        
+        $results = Gig::model()->mine()->exceptDelete()->findAll($criteria);
+
         $this->render('mygigs', compact('results'));
     }
+
 }

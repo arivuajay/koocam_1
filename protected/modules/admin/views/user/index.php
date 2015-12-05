@@ -32,6 +32,27 @@ $this->rightCornerLink = CHtml::link('<i class="fa fa-plus"></i> Create User', a
                         'filter' => CHtml::activeDropDownList($model, 'status', array("1" => "Active", "0" => "In-Active"), array('class' => 'form-control', 'prompt' => 'All')),
                     ),
                     array(
+                        'header' => 'Online Status',
+                        'name' => 'live_status',
+                        'type' => 'raw',
+                        'value' => function($data) {
+                            switch ($data->live_status) {
+                                case 'A':
+                                    echo '<span class="label label-success">Online</span>';
+                                    break;
+                                case 'B':
+                                    echo '<span class="label label-warning">Busy</span>';
+                                    break;
+                                case 'O':
+                                    echo '<span class="label label-danger">Offline</span>';
+                                    break;
+                                default:
+                                    break;
+                            }
+                        },
+                        'filter' => CHtml::activeDropDownList($model, 'live_status', array("A" => "Online", "B" => "Busy", 'O' => 'Offline'), array('class' => 'form-control', 'prompt' => 'All')),
+                    ),
+                    array(
                         'name' => 'created_at',
                         'filter' => false
                     ),

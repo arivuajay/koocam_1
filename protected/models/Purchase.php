@@ -26,6 +26,14 @@ class Purchase extends RActiveRecord {
         return '{{purchase}}';
     }
 
+    public function scopes() {
+        $alias = $this->getTableAlias(false, false);
+        $user_id = Yii::app()->user->id;
+        
+        return array(
+            'mine' => array('condition' => "$alias.user_id = $user_id"),
+        );
+    }
     /**
      * @return array validation rules for model attributes.
      */

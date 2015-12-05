@@ -184,22 +184,26 @@ class GigTokens extends RActiveRecord {
         $token = self::getAuthData($guid);
         $info = array();
         if (!empty($token)) {
-
             $is_tutor = $token->book->gig->tutor->user_id == Yii::app()->user->id;
             $is_learner = $token->book->bookUser->user_id == Yii::app()->user->id;
 
+            $tutor_name = $token->book->gig->tutor->fullname;
+            $tutor_thumb = $token->book->gig->tutor->getProfilethumb(array('class' => 'img-circle', 'width' => '50'));
+            $learner_name = $token->book->bookUser->fullname;
+            $learner_thumb = $token->book->bookUser->getProfilethumb(array('class' => 'img-circle', 'width' => '50'));
+            
             if ($is_tutor) {
                 $info['my_role'] = 'tutor';
-                $info['my_name'] = $token->book->gig->tutor->fullname;
-                $info['my_thumb'] = $token->book->gig->tutor->getProfilethumb(array('class' => 'img-circle', 'width' => '50'));
-                $info['their_name'] = $token->book->bookUser->fullname;
-                $info['their_thumb'] = $token->book->bookUser->getProfilethumb(array('class' => 'img-circle', 'width' => '50'));
+                $info['my_name'] = $tutor_name;
+                $info['my_thumb'] = $tutor_thumb;
+                $info['their_name'] = $learner_name;
+                $info['their_thumb'] = $learner_thumb;
             }else if($is_learner){
                 $info['my_role'] = 'learner';
-                $info['my_name'] = $token->book->bookUser->fullname;
-                $info['my_thumb'] = $token->book->bookUser->getProfilethumb(array('class' => 'img-circle', 'width' => '50'));
-                $info['their_name'] = $token->book->gig->tutor->fullname;
-                $info['their_thumb'] = $token->book->gig->tutor->getProfilethumb(array('class' => 'img-circle', 'width' => '50'));;
+                $info['my_name'] = $learner_name;
+                $info['my_thumb'] = $learner_thumb;
+                $info['their_name'] = $tutor_name;
+                $info['their_thumb'] = $tutor_thumb;
             }
             
             $info['token'] = $token;

@@ -97,7 +97,7 @@ echo CHtml::hiddenField('s', $search_text);
                     <?php foreach ($featured as $gig): ?>
                         <div class="featuerd-course-cont"> 
                             <div class="row"> 
-                                <div class="col-xs-4 col-sm-5 col-md-5 col-lg-5"><?php echo CHtml::link(CHtml::image($gig->getFilePath(false, '/users/' . $gig->tutor->user_id . '/thumb'), '', array()), array('/site/gig/view', 'slug' => $gig->slug), array()); ?> </div> 
+                                <div class="col-xs-4 col-sm-5 col-md-5 col-lg-5"><?php echo CHtml::link($gig->gigthumb, array('/site/gig/view', 'slug' => $gig->slug), array()); ?> </div> 
                                 <div class="col-xs-8 col-sm-7 col-md-7 col-lg-7">
                                     <p> <?php echo CHtml::link($gig->gig_title, array('/site/gig/view', 'slug' => $gig->slug), array()); ?> </p>
                                     <p>  <span> <?php echo CHtml::link($gig->tutor->fullname, array('/site/user/profile', 'slug' => $gig->tutor->slug), array()); ?> </span> </p>
