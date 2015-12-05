@@ -12,18 +12,23 @@
  * @property string $trans_user_amount
  * @property string $transaction_id
  * @property string $trans_message
+ * @property string $trans_reply
  * @property string $paypal_address
  * @property string $created_at
  * @property string $modified_at
+ * @property string $status
  *
  * The followings are the available model relations:
  * @property User $user
  */
 class Transaction extends RActiveRecord {
 
+    public $is_message;
+
     const TYPE_REVENUE = "R";
     const TYPE_EXPENSE = "E";
     const TYPE_WITHDRAW = "W";
+    const MIN_WITHDRAW_AMT = 10;
 
     /**
      * @return string the associated database table name
@@ -40,12 +45,17 @@ class Transaction extends RActiveRecord {
         // will receive user inputs.
         return array(
             array('user_id, trans_user_amount', 'required'),
+            array('paypal_address', 'email'),
+            array('paypal_address', 'required', 'on' => 'withdraw'),
+            array('transaction_id', 'required', 'on' => 'approve'),
+            array('trans_reply', 'required', 'on' => 'reject'),
+            array('trans_user_amount', 'numerical', 'min' => self::MIN_WITHDRAW_AMT, 'on' => 'withdraw'),
             array('user_id, book_id', 'numerical', 'integerOnly' => true),
             array('trans_type', 'length', 'max' => 1),
             array('trans_admin_amount, trans_user_amount', 'length', 'max' => 10),
             array('transaction_id', 'length', 'max' => 255),
             array('paypal_address', 'length', 'max' => 100),
-            array('trans_message, created_at, modified_at', 'safe'),
+            array('trans_message, created_at, modified_at, is_message, trans_reply, status', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('trans_id, user_id, trans_type, book_id, trans_admin_amount, trans_user_amount, transaction_id, trans_message, paypal_address, created_at, modified_at', 'safe', 'on' => 'search'),
@@ -72,13 +82,15 @@ class Transaction extends RActiveRecord {
             'user_id' => 'User',
             'trans_type' => 'Trans Type',
             'book_id' => 'Book',
-            'trans_admin_amount' => 'Trans Admin Amount',
-            'trans_user_amount' => 'Trans User Amount',
-            'transaction_id' => 'Transaction',
-            'trans_message' => 'Trans Message',
+            'trans_admin_amount' => 'Commission Amount',
+            'trans_user_amount' => 'Amount',
+            'transaction_id' => 'Transaction Id',
+            'trans_message' => 'Message',
+            'trans_reply' => 'Reply',
             'paypal_address' => 'Paypal Address',
             'created_at' => 'Created At',
             'modified_at' => 'Modified At',
+            'status' => 'Status',
         );
     }
 
@@ -107,6 +119,7 @@ class Transaction extends RActiveRecord {
         $criteria->compare('trans_user_amount', $this->trans_user_amount, true);
         $criteria->compare('transaction_id', $this->transaction_id, true);
         $criteria->compare('trans_message', $this->trans_message, true);
+        $criteria->compare('trans_reply', $this->trans_reply, true);
         $criteria->compare('paypal_address', $this->paypal_address, true);
         $criteria->compare('created_at', $this->created_at, true);
         $criteria->compare('modified_at', $this->modified_at, true);
@@ -171,6 +184,83 @@ class Transaction extends RActiveRecord {
         $return['admin_amount'] = $admin_amount;
         $return['user_amount'] = $user_amount;
         return $return;
+    }
+
+    public function beforeValidate() {
+        if ($this->is_message == 'Y') {
+            $this->validatorList->add(CValidator::createValidator('required', $this, 'trans_message', array()));
+        }
+//        if ($this->status == '2') {
+//            $this->validatorList->add(CValidator::createValidator('required', $this, 'trans_reply', array()));
+//        }
+
+        return parent::beforeValidate();
+    }
+
+    public function cashwithdrawMail() {
+        //To admin
+        $mail = new Sendmail;
+        
+        $user_email = $this->user->email;
+        $username = $this->user->fullname;
+        $amt = $this->trans_user_amount;
+        $paypal = $this->paypal_address;
+        
+        $trans_array = array(
+            "{SITENAME}" => SITENAME,
+            "{USERNAME}" => $username,
+            "{EMAIL_ID}" => $user_email,
+            "{AMOUNT}" => $amt,
+            "{PAYPAL}" => $paypal,
+            "{REQUEST_MESSAGE}" => $this->trans_message,
+        );
+        $message = $mail->getMessage('cash_withdraw_notification', $trans_array);
+        $Subject = $mail->translate("Cashwithdraw Request From {$username}");
+        $mail->send(ADMIN_EMAIL, $Subject, $message);
+        
+        //To User
+        $trans_array = array(
+            "{SITENAME}" => SITENAME,
+            "{USERNAME}" => $username,
+            "{AMOUNT}" => $amt,
+            "{PAYPAL}" => $paypal,
+        );
+        $message = $mail->getMessage('cash_withdraw_request', $trans_array);
+        $Subject = $mail->translate(SITENAME.": Cashwithdraw Request Sent");
+        $mail->send($user_email, $Subject, $message);
+    }
+    
+    public function cashApprove() {
+        $mail = new Sendmail;
+        $trans_array = array(
+            "{SITENAME}" => SITENAME,
+            "{USERNAME}" => $this->user->fullname,
+            "{AMOUNT}" => $this->trans_user_amount,
+            "{PAYPAL}" => $this->paypal_address,
+            "{TRANSACTION_ID}" => $this->transaction_id,
+            "{REPLY_MESSAGE}" => $this->trans_reply,
+        );
+        $message = $mail->getMessage('cash_withdraw_approve', $trans_array);
+        $Subject = $mail->translate(SITENAME.": Cashwithdraw Amount Sent");
+        $mail->send($this->user->email, $Subject, $message);
+        
+        $notifn_message = "Your Cash withdraw request for {$this->trans_user_amount}$ sent successfully to your account {$this->paypal_address}";
+        Notification::insertNotification($this->user->user_id, $notifn_message);
+    }
+    
+    public function cashReject() {
+        $mail = new Sendmail;
+        $trans_array = array(
+            "{SITENAME}" => SITENAME,
+            "{USERNAME}" => $this->user->fullname,
+            "{AMOUNT}" => $this->trans_user_amount,
+            "{REPLY_MESSAGE}" => $this->trans_reply,
+        );
+        $message = $mail->getMessage('cash_withdraw_reject', $trans_array);
+        $Subject = $mail->translate(SITENAME.": Cashwithdraw Request Canceled");
+        $mail->send($this->user->email, $Subject, $message);
+        
+        Notification::insertNotification($this->user->user_id, "Your Cash withdraw request for {$this->trans_user_amount}$ canceled");
     }
 
 }

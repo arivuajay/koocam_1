@@ -26,6 +26,14 @@
                     array('label' => '<i class="fa fa-wechat"></i> <span>Gig</span>', 'url' => array('/admin/gig/index'), 'visible' => '1'),
                 ),
             ),
+            array('label' => '<i class="fa fa-money"></i> <span>Payment Management</span>', 'url' => '#payment-menu',
+                'itemOptions' => array('class' => 'hasSubmenu'),
+                'submenuOptions' => array('id' => 'payment-menu'),
+                'visible' => '1',
+                'items' => array(
+                    array('label' => '<i class="fa fa-paypal"></i> <span>Cash Withdraw</span>', 'url' => array('/admin/transaction/cashwithdraw'), 'visible' => '1'),
+                ),
+            ),
         ),
         'htmlOptions' => array('class' => 'sidebar-menu')
     ));

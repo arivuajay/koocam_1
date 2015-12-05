@@ -34,6 +34,7 @@
  * @property Message[] $user2Messages
  * @property Gig[] $gigs
  * @property Purchase $gigPurchase
+ * @property UserPaypal[] $userPaypals
  */
 class User extends RActiveRecord {
 
@@ -119,6 +120,7 @@ class User extends RActiveRecord {
             'gigBookings' => array(self::HAS_MANY, 'GigBooking', 'book_user_id'),
             'gigComments' => array(self::HAS_MANY, 'GigComments', 'user_id'),
             'gigPurchase' => array(self::HAS_MANY, 'Purchase', 'user_id'),
+            'userPaypals' => array(self::HAS_MANY, 'UserPaypal', 'user_id'),
         );
     }
 

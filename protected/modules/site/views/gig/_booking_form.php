@@ -55,6 +55,7 @@ $gig_price = (int) $model->gig_price;
                         'options' => array(
                             'height' => '450',
                             'eventLimit' => true,
+                            'eventLimitText' => '',
                             'views' => array(
                                 'day' => array(
                                     'eventLimit' => 1

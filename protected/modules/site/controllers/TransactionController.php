@@ -26,7 +26,7 @@ class TransactionController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('mypayments'),
+                'actions' => array('mypayments', 'withdraw'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -40,8 +40,29 @@ class TransactionController extends Controller {
     public function actionMypayments() {
         $this->layout = '//layouts/user_dashboard';
 
-        $model = new Transaction;
+        $model = new Transaction('withdraw');
 
+        $this->render('mypayments', compact('model'));
+    }
+
+    public function actionWithdraw() {
+        $model = new Transaction('withdraw');
+        $this->performAjaxValidation($model);
+
+        if (Yii::app()->request->isPostRequest && Yii::app()->request->getPost('Transaction')) {
+            $model->attributes = Yii::app()->request->getPost('Transaction');
+            $model->user_id = Yii::app()->user->id;
+            $model->trans_type = 'W';
+            if ($model->validate()) {
+                if ($model->save(false)) {
+                    $model->cashwithdrawMail();
+                    Yii::app()->user->setFlash('success', "Request Sent Successfully. We will get back to you soon.");
+                } else {
+                    Yii::app()->user->setFlash('danger', "Failed to send request. Try again later");
+                }
+                $this->redirect(array('/site/transaction/mypayments'));
+            }
+        }
         $this->render('mypayments', compact('model'));
     }
 
