@@ -8,6 +8,7 @@
         </div>
     </div>
     <?php
+    /**/
     $this->widget('zii.widgets.CMenu', array(
         'activateParents' => true,
         'encodeLabel' => false,
