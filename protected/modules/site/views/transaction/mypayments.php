@@ -7,7 +7,9 @@ $this->title = 'My Payments';
 $this->breadcrumbs = array(
     'My Payments',
 );
-$this->renderPartial('_cash_withdraw', compact('model'));
+$balance = Transaction::myCurrentBalance();
+if ($balance > 0)
+    $this->renderPartial('_cash_withdraw', compact('model'));
 ?>
 <div class="col-xs-12 col-sm-8 col-md-9 col-lg-9">
     <div class="myprofile-inner">
@@ -15,11 +17,12 @@ $this->renderPartial('_cash_withdraw', compact('model'));
             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 total-expense"> 
                 <p> Total Expenses : <span> $ <?php echo $expense = Transaction::myTotalExpense(); ?> </span> </p>
                 <p> Total Revenues :  <b> $ <?php echo $revenue = Transaction::myTotalRevenue(); ?> </b> </p>
-                <p> Current Balance : <b> $ <?php echo $balance = Transaction::myCurrentBalance(); ?> </b> </p>
+                <p> Current Balance : <b> $ <?php echo $balance; ?> </b> </p>
                 <div class="row">
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
                         <?php
-                        echo CHtml::link('$ CASH OUT', 'javascript:void(0)', array('class' => 'btn btn-default  btn-lg explorebtn form-btn', 'data-toggle' => "modal", 'data-target' => "#withdraw-modal"));
+                        if ($balance > 0)
+                            echo CHtml::link('$ CASH OUT', 'javascript:void(0)', array('class' => 'btn btn-default  btn-lg explorebtn form-btn', 'data-toggle' => "modal", 'data-target' => "#withdraw-modal"));
                         ?>
                     </div>
                 </div>
@@ -27,51 +30,53 @@ $this->renderPartial('_cash_withdraw', compact('model'));
 
             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 total-expense"> 
                 <?php
-                $this->Widget('booster.widgets.TbHighCharts', array(
-                    'options' => array(
-                        'colors' => array('#B41B20', '#04A61B', '#04A61B'),
-                        'gradient' => array('enabled' => true),
-                        'credits' => array('enabled' => false),
-                        'exporting' => array('enabled' => false),
-                        'chart' => array(
-                            'plotBackgroundColor' => '#fff',
-                            'plotBorderWidth' => null,
-                            'plotShadow' => false,
-                            'height' => 300,
-                        ),
-                        'title' => false,
-                        'tooltip' => array(
-                            // 'pointFormat' => '{series.name}: <b>{point.percentage}%</b>',
-                            // 'percentageDecimals' => 1,
+                if ($expense > 0 || $revenue > 0) {
+                    $this->Widget('booster.widgets.TbHighCharts', array(
+                        'options' => array(
+                            'colors' => array('#B41B20', '#04A61B', '#04A61B'),
+                            'gradient' => array('enabled' => true),
+                            'credits' => array('enabled' => false),
+                            'exporting' => array('enabled' => false),
+                            'chart' => array(
+                                'plotBackgroundColor' => '#fff',
+                                'plotBorderWidth' => null,
+                                'plotShadow' => false,
+                                'height' => 300,
+                            ),
+                            'title' => false,
+                            'tooltip' => array(
+                                // 'pointFormat' => '{series.name}: <b>{point.percentage}%</b>',
+                                // 'percentageDecimals' => 1,
 //                            'formatter' => 'js:function() { return this.point.name+":  <b>"+Math.round(this.point.percentage)+"</b>%"; }',
-                            'formatter' => 'js:function() { return this.point.name+":  <b>"+this.y+"</b> $"; }',
-                        //the reason it didnt work before was because you need to use javascript functions to round and refrence the JSON as this.<array>.<index> ~jeffrey
-                        ),
-                        'plotOptions' => array(
-                            'pie' => array(
-                                'allowPointSelect' => true,
-                                'cursor' => 'pointer',
-                                'dataLabels' => array(
-                                    'enabled' => true,
-                                    'color' => '#AAAAAA',
-                                    'connectorColor' => '#AAAAAA',
-                                ),
-                                'showInLegend' => true,
-                            )
-                        ),
-                        'series' => array(
-                            array(
-                                'type' => 'pie',
-                                'name' => 'Percentage',
-                                'data' => array(
-                                    array('Total Expense', (float) $expense),
-                                    array('Total Revenue', (float) $revenue),
-                                    array('Current Balance', (float) $balance),
+                                'formatter' => 'js:function() { return this.point.name+":  <b>"+this.y+"</b> $"; }',
+                            //the reason it didnt work before was because you need to use javascript functions to round and refrence the JSON as this.<array>.<index> ~jeffrey
+                            ),
+                            'plotOptions' => array(
+                                'pie' => array(
+                                    'allowPointSelect' => true,
+                                    'cursor' => 'pointer',
+                                    'dataLabels' => array(
+                                        'enabled' => true,
+                                        'color' => '#AAAAAA',
+                                        'connectorColor' => '#AAAAAA',
+                                    ),
+                                    'showInLegend' => true,
+                                )
+                            ),
+                            'series' => array(
+                                array(
+                                    'type' => 'pie',
+                                    'name' => 'Percentage',
+                                    'data' => array(
+                                        array('Total Expense', (float) $expense),
+                                        array('Total Revenue', (float) $revenue),
+                                        array('Current Balance', (float) $balance),
+                                    ),
                                 ),
                             ),
-                        ),
-                    )
-                ));
+                        )
+                    ));
+                }
                 ?>
             </div>
 

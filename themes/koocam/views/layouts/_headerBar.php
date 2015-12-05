@@ -68,7 +68,9 @@ $themeUrl = $this->themeUrl;
                                             <?php $slug = User::model()->findByPk(Yii::app()->user->id)->slug; ?>
                                             <li><?php echo CHtml::link(' My Profile ', array('/site/user/profile', 'slug' => $slug), array()); ?></li>
                                             <li><?php echo CHtml::link(' My Purchase ', array('/site/purchase/mypurchase'), array()); ?></li>
-                                            <li><a href="#">My Payments</a></li>
+                                            <li>
+                                                <?php echo CHtml::link(' My payments ', array('/site/transaction/mypayments'), array()); ?>
+                                            </li>
                                             <li class="divider" role="separator"></li>
                                             <li><a href="#"> <i class="fa fa-gears"></i>&nbsp; Account Setting</a></li>    
                                             <li><?php echo CHtml::link(' Logout', array('/site/default/logout'), array()); ?></li>
