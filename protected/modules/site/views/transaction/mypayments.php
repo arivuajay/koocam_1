@@ -7,6 +7,7 @@ $this->title = 'My Payments';
 $this->breadcrumbs = array(
     'My Payments',
 );
+
 $balance = Transaction::myCurrentBalance();
 if ($balance > 0)
     $this->renderPartial('_cash_withdraw', compact('model'));
@@ -30,11 +31,12 @@ if ($balance > 0)
 
             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 total-expense"> 
                 <?php
+                
                 if ($expense > 0 || $revenue > 0) {
-                    $this->Widget('booster.widgets.TbHighCharts', array(
+                    $this->Widget('ext.highcharts.HighchartsWidget', array(
                         'options' => array(
                             'colors' => array('#B41B20', '#04A61B', '#04A61B'),
-                            'gradient' => array('enabled' => true),
+                            'gradient' => array('enabled' => false),
                             'credits' => array('enabled' => false),
                             'exporting' => array('enabled' => false),
                             'chart' => array(
@@ -59,9 +61,16 @@ if ($balance > 0)
                                         'enabled' => true,
                                         'color' => '#AAAAAA',
                                         'connectorColor' => '#AAAAAA',
+                                        'style' => array(
+                                            'textShadow' => false
+                                        ),
                                     ),
                                     'showInLegend' => true,
                                 )
+                            ),
+                            'legend' => array(
+                                'borderColor' => "#F0F0F0",
+                                'borderWidth' => 2,
                             ),
                             'series' => array(
                                 array(

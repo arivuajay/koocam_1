@@ -69,7 +69,7 @@ $themeUrl = $this->themeUrl;
                                             <li><?php echo CHtml::link(' My Profile ', array('/site/user/profile', 'slug' => $slug), array()); ?></li>
                                             <li><?php echo CHtml::link(' My Purchase ', array('/site/purchase/mypurchase'), array()); ?></li>
                                             <li>
-                                                <?php echo CHtml::link(' My payments ', array('/site/transaction/mypayments'), array()); ?>
+                                                <?php echo CHtml::link(' My Payments ', array('/site/transaction/mypayments'), array()); ?>
                                             </li>
                                             <li class="divider" role="separator"></li>
                                             <li><a href="#"> <i class="fa fa-gears"></i>&nbsp; Account Setting</a></li>    

@@ -24,8 +24,6 @@ class SiteModule extends CWebModule {
             )
         ));
         
-        Yii::app()->getComponent("booster");
-
         Yii::app()->user->setStateKeyPrefix('_site');
         Yii::app()->user->loginUrl = Yii::app()->createUrl("/{$this->id}/default/index");
     }

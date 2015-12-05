@@ -226,7 +226,7 @@ class Transaction extends RActiveRecord {
         $total_withdraw = Yii::app()->db->createCommand()
                 ->select('SUM(`trans_user_amount`) as total_withdraw')
                 ->from('{{transaction}}')
-                ->andWhere('user_id = ' . $user_id . ' AND trans_type = "' . $type_withdraw . '"')
+                ->andWhere('user_id = ' . $user_id . ' AND trans_type = "' . $type_withdraw . '" AND status != "2"')
                 ->queryRow();
         return ($total_withdraw['total_withdraw']) ? $total_withdraw['total_withdraw'] : "0.00";
     }

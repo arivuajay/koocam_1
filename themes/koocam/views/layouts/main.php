@@ -38,7 +38,7 @@
         $cs->registerCoreScript('jquery');
 //        $cs->registerScriptFile($themeUrl . '/js/jquery.1.11.3.min.js', $cs_pos_end);
 //        Because of Yiibooster extension called in SiteModule.php, Hide the below bootstrap.min.js
-//        $cs->registerScriptFile($themeUrl . '/js/bootstrap.min.js');
+        $cs->registerScriptFile($themeUrl . '/js/bootstrap.min.js');
         $cs->registerScriptFile($themeUrl . '/js/waypoints.min.js', $cs_pos_end);
         $cs->registerScriptFile($themeUrl . '/js/jquery.counterup.min.js', $cs_pos_end);
         $cs->registerScriptFile($themeUrl . '/js/owl.carousel.min.js', $cs_pos_end);
