@@ -14,7 +14,7 @@
 class BookingTemp extends RActiveRecord {
 
     public $temp_gig_id;
-    public $temp_book_session;
+    public $temp_book_session = 1;
     public $temp_book_is_extra;
     public $temp_book_user_id;
 

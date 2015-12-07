@@ -117,8 +117,8 @@ class GigBooking extends RActiveRecord {
                 if (!empty($booking_exists))
                     $this->addError($attribute, 'Someone Already booked this Time. Try other timings');
             endif;
-            
-            if(strtotime($start_time) <= time()){
+
+            if (strtotime($start_time) <= time()) {
                 $this->addError($attribute, 'Time should be greater than Current Time');
             }
         }
@@ -236,7 +236,7 @@ class GigBooking extends RActiveRecord {
         $session_count = 0;
         foreach ($bookings as $booking) {
             $session_count += $booking->book_session;
-            if($session_count == $session)
+            if ($session_count == $session)
                 break;
         }
         return ($session - $session_count);
@@ -251,16 +251,16 @@ class GigBooking extends RActiveRecord {
     }
 
     protected function beforeSave() {
-        if ($this->isNewRecord){
+        if ($this->isNewRecord) {
             $this->book_guid = Myclass::guid(false);
         }
 
         if ($this->is_message == 'N')
             $this->book_message = '';
 
-        if($this->book_approve == '1')
+        if ($this->book_approve == '1')
             $this->book_approved_time = date('Y-m-d H:i:s');
-        
+
         return parent::beforeSave();
     }
 
@@ -274,7 +274,7 @@ class GigBooking extends RActiveRecord {
         $this->book_date = $this->book_start_time;
 
         $this->setBookingPrice();
-        
+
         return parent::beforeValidate();
     }
 
@@ -298,7 +298,7 @@ class GigBooking extends RActiveRecord {
             $i++;
         } while ($i <= $this->book_session);
     }
-    
+
     public function setBookingPrice() {
         if (!empty($this->gig) && !empty($this->book_session)):
             $gig_price = $this->gig->gig_price;
@@ -381,4 +381,19 @@ class GigBooking extends RActiveRecord {
     public function getUserviewlink($htmlOptions = array()) {
         echo CHtml::link($this->bookUser->fullname, array('/admin/user/view', 'id' => $this->book_user_id), $htmlOptions);
     }
+
+    public static function price_calculation($user_country_id, $gig_price, $extra_price = 0) {
+        $return = array();
+
+        $total_price = $gig_price + $extra_price;
+        $return['processing_fees'] = $total_price * (PROCESSING_FEE_PERCENT / 100);
+        $return['service_tax'] = 0;
+        if ($user_country_id == DEFAULT_COUNTRY) {
+            $return['service_tax'] = $total_price * (SERVICE_TAX_PERCENT / 100);
+        }
+
+        $return['total_price'] = $total_price + $return['processing_fees'] + $return['service_tax'];
+        return $return;
+    }
+
 }

@@ -23,6 +23,9 @@ echo $form->hiddenField($booking_temp, 'temp_gig_id', array('value' => $model->g
 
 $session = GigBooking::gigSessionList(Yii::app()->user->id, $model->gig_id, date('Y-m-d'));
 $gig_price = (int) $model->gig_price;
+$extra_price = isset($model->gigExtras->extra_price) ? (int) $model->gigExtras->extra_price : 0;
+$user_country_id = Yii::app()->user->country_id;
+$price_calculation = GigBooking::price_calculation($user_country_id, $gig_price, $extra_price);
 ?>
 
 <div class="modal fade" id="startnow" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -62,7 +65,7 @@ $gig_price = (int) $model->gig_price;
                                             <?php echo $model->gigExtras->extra_description; ?>
                                         </div>
                                         <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2 ">
-                                            <div id="extras-prices" class="temp_extras-prices-bg" data-temp_gig_price="<?php echo $gig_price; ?>" data-temp_extra_price="<?php echo $extra_price = (int) $model->gigExtras->extra_price; ?>">
+                                            <div id="extras-prices" class="temp_extras-prices-bg" data-temp_gig_price="<?php echo $gig_price; ?>" data-temp_extra_price="<?php echo $extra_price ?>">
                                                 <?php echo $extra_price; ?> $
                                             </div>
                                         </div>
@@ -73,7 +76,10 @@ $gig_price = (int) $model->gig_price;
 
                         <div class="form-group">
                             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
-                                <h4 class="temp-total-price"> Price : $ <?php echo $gig_price; ?> </h4>
+                                <h4 class="temp-total-price"> Price : $ <span id="price"></span></h4>
+                                <span>Incl. Processing Fee: $ <span id="processing_fee"></span></span>
+                                <?php if ($price_calculation['service_tax'] > 0)  ?>
+                                <br><span>Incl. Service Tax: $ <span id="service_tax"></span></span>
                             </div>
                         </div>
                     </div>
@@ -94,30 +100,34 @@ $cs = Yii::app()->getClientScript();
 $cs_pos_end = CClientScript::POS_END;
 $temp_sessionId = CHTML::activeId($booking_temp, 'temp_book_session');
 
-$gig_price = $model->gig_price;
-$extra_price = isset($model->gigExtras->extra_price) ? $model->gigExtras->extra_price : 0;
+$price_calculation_url = Yii::app()->createAbsoluteUrl('/site/gigbooking/getbookingprice');
 
 $js = <<< EOD
     jQuery(document).ready(function ($) {
         var gig_price = $gig_price;
         var extra_price = $extra_price;
-        temp_extra_div = $('.temp_extras-prices-bg');
+        var user_country_id = $user_country_id;
+        var extra_checked = $('#temp_book_extra_inner').parent('div').hasClass('checked');
         
         $('#temp_book_extra_inner').on('ifChecked', function(event){
-            var newPrice = parseFloat(temp_extra_div.data('temp_gig_price')) + parseFloat(temp_extra_div.data('temp_extra_price'));
-            $('.temp-total-price').html('Price : $ '+newPrice);
+            gigPriceBySession($("#{$temp_sessionId}").val(), true);
         });
 
         $('#temp_book_extra_inner').on('ifUnchecked', function(event){
-            var newPrice = parseFloat(temp_extra_div.data('temp_gig_price'));
-            $('.temp-total-price').html('Price : $ '+newPrice);
+            gigPriceBySession($("#{$temp_sessionId}").val(), false);
         });
         
         // Session change Functions //
         $('#{$temp_sessionId}').on('change', function(){
-            session = $(this).val();
+            gigPriceBySession($(this).val(), $('#temp_book_extra_inner').parent('div').hasClass('checked'));
+        });
+        
+        gigPriceBySession($("#{$temp_sessionId}").val(), extra_checked);
+        
+        function gigPriceBySession(session_count, is_extra){
+            session = session_count;
             price = 0;
-            extra = $('#temp_book_extra_inner').parent('div').hasClass('checked') ? extra_price : 0;
+            extra = is_extra ? extra_price : 0;
         
             if(session != ''){
                 for (i = 0; i < session; i++) {
@@ -126,11 +136,25 @@ $js = <<< EOD
             }else{
                 price = gig_price;
             }
+            priceCalculation(user_country_id, price, extra);
+        }
         
-            tot_price = parseFloat(price) + parseFloat(extra);
-            $('.temp-total-price').html('Price : $ '+ tot_price);
-            temp_extra_div.data('temp_gig_price', price);
-        });
+        function priceCalculation(calc_user_country_id, calc_gig_price, calc_extra_price){
+            $.ajax({
+                type: 'POST',
+                url: '$price_calculation_url',
+                data: {user_country_id: calc_user_country_id, gig_price: calc_gig_price, extra_price: calc_extra_price},
+                dataType: 'json',
+                success:function(data){
+                    $('#price').html(data.total_price);
+                    $('#processing_fee').html(data.processing_fees);
+                    $('#service_tax').html(data.service_tax);
+                },
+                error: function(data) {
+                    alert('Something went wrong. Try again');
+                },
+            });
+        }
     });
 
 EOD;

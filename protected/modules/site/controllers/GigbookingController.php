@@ -32,7 +32,7 @@ class GigbookingController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('booking', 'calendarevents', 'getsessionoptions'),
+                'actions' => array('booking', 'calendarevents', 'getsessionoptions', 'getbookingprice'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -57,9 +57,9 @@ class GigbookingController extends Controller {
             if ($valid) {
                 $booking_model->book_start_time = Yii::app()->localtime->toUTC($booking_model->book_start_time);
                 $booking_model->book_end_time = Yii::app()->localtime->toUTC($booking_model->book_end_time);
-                
+
                 $valid = $valid && $booking_model->save(false);
-                if($valid)
+                if ($valid)
                     Yii::app()->user->setFlash('success', "Your Booking Confirmed.");
                 else
                     Yii::app()->user->setFlash('danger', "Some error occurs. Try again");
@@ -78,17 +78,16 @@ class GigbookingController extends Controller {
 //            } else {
 //                $date[strtotime($booking->book_date)] = 1;
 //            }
-
 //            if ($date[strtotime($booking->book_date)] <= $limit) {
-                $title = 'Busy ('.date('H:i', strtotime($booking->book_start_time)) . '-' . date('H:i', strtotime($booking->book_end_time)).')';
-                $items[] = array(
-                    'state' => 'TRUE',
-                    'title' => $title,
-                    'start' => date('Y-m-d', strtotime($booking->book_date)),
-                    'color' => '#7E7E7E',
-                        //                'start' => $booking->book_date,
+            $title = 'Busy (' . date('H:i', strtotime($booking->book_start_time)) . '-' . date('H:i', strtotime($booking->book_end_time)) . ')';
+            $items[] = array(
+                'state' => 'TRUE',
+                'title' => $title,
+                'start' => date('Y-m-d', strtotime($booking->book_date)),
+                'color' => '#7E7E7E',
+                    //                'start' => $booking->book_date,
 //                    'url' => $this->createUrl('/site/journal/listjournal', array('date' => date('Y-m-d', strtotime($booking->book_date))))
-                );
+            );
 //            }
         }
 
@@ -107,6 +106,14 @@ class GigbookingController extends Controller {
             }
         }
         echo $options;
+        Yii::app()->end();
+    }
+
+    public function actionGetbookingprice() {
+        if (isset($_POST)) {
+            $result = GigBooking::price_calculation($_POST['user_country_id'], $_POST['gig_price'], $_POST['extra_price']);
+            echo CJSON::encode($result);
+        }
         Yii::app()->end();
     }
 
