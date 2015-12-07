@@ -145,49 +145,35 @@ $themeUrl = $this->themeUrl;
             </div>
             <div class='col-md-offset-1 col-md-10'>
                 <div class="carousel slide" data-ride="carousel" id="quote-carousel"> 
+                    <?php $testimonials = Testimonial::model()->findAll(); ?>
                     <!-- Bottom Carousel Indicators -->
+                    
                     <ol class="carousel-indicators">
-                        <li data-target="#quote-carousel" data-slide-to="0" class="active"></li>
-                        <li data-target="#quote-carousel" data-slide-to="1"></li>
-                        <li data-target="#quote-carousel" data-slide-to="2"></li>
+                        <?php 
+                        for($i = 0; $i <= count($testimonials) - 1; $i++){
+                            $test_attr = $i == 0 ? 'class="active"' : '';
+                        ?>
+                        <li data-target="#quote-carousel" data-slide-to="<?php echo $i; ?>" <?php echo $test_attr; ?>></li>
+                        <?php } ?>
                     </ol>
 
                     <!-- Carousel Slides / Quotes -->
                     <div class="carousel-inner"> 
 
-                        <!-- Quote 1 -->
-                        <div class="item active">
+                        <?php foreach ($testimonials as $key => $testimonial): ?>
+                        <div class="item <?php echo $key == 0 ? 'active' : ''?>">
                             <blockquote>
                                 <div class="row">
-                                    <div class="col-sm-12 text-center"> <img class="img-circle" src="<?php echo $themeUrl ?>/images/testimonails-img1.jpg" alt="" > </div>
+                                    <div class="col-sm-12 text-center">
+                                        <?php echo $testimonial->getImage(array('class' => 'img-circle')); ?>
+                                    </div>
                                     <div class="col-sm-12 testimonial-content">
-                                        <p>Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit!</p>
-                                        <small>Someone famous</small> </div>
+                                        <p><?php echo $testimonial->testimonial_text; ?></p>
+                                        <small><?php echo $testimonial->testimonial_user; ?></small> </div>
                                 </div>
                             </blockquote>
                         </div>
-                        <!-- Quote 2 -->
-                        <div class="item">
-                            <blockquote>
-                                <div class="row">
-                                    <div class="col-sm-12 text-center"> <img class="img-circle" src="<?php echo $themeUrl ?>/images/testimonails-img1.jpg" alt="" > </div>
-                                    <div class="col-sm-12 testimonial-content">
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam auctor nec lacus ut tempor. Mauris.</p>
-                                        <small>Someone famous</small> </div>
-                                </div>
-                            </blockquote>
-                        </div>
-                        <!-- Quote 3 -->
-                        <div class="item">
-                            <blockquote>
-                                <div class="row">
-                                    <div class="col-sm-12 text-center"> <img class="img-circle" src="<?php echo $themeUrl ?>/images/testimonails-img1.jpg" alt="" > </div>
-                                    <div class="col-sm-12 testimonial-content">
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut rutrum elit in arcu blandit, eget pretium nisl accumsan. Sed ultricies commodo tortor, eu pretium mauris.</p>
-                                        <small>Someone famous</small> </div>
-                                </div>
-                            </blockquote>
-                        </div>
+                        <?php endforeach; ?>
                     </div>
                 </div>
             </div>

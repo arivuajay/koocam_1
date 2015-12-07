@@ -10,6 +10,7 @@
  * @property string $abuse_type
  * @property string $created_at
  * @property string $modified_at
+ * @property string $abuser_role
  *
  * The followings are the available model relations:
  * @property GigBooking $book
@@ -32,7 +33,7 @@ class ReportAbuse extends RActiveRecord {
         return array(
             array('book_id, abuse_type', 'required'),
             array('book_id', 'numerical', 'integerOnly' => true),
-            array('abuse_message, modified_at, abuse_type', 'safe'),
+            array('abuse_message, modified_at, abuse_type, abuser_role', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('abuse_id, book_id, abuse_message, created_at, modified_at', 'safe', 'on' => 'search'),
@@ -115,44 +116,42 @@ class ReportAbuse extends RActiveRecord {
 
     protected function afterSave() {
         if ($this->isNewRecord) {
+            $mail = new Sendmail;
+            
             $learner = $this->book->bookUser;
             $tutor = $this->book->gig->tutor;
             $gig = $this->book->gig;
-            
-            $mail = new Sendmail;
+
             $abuse_types = CJSON::decode($this->abuse_type);
             $message = '<p style="color: #545454; font-size: 13px; line-height: 20px;">Report: ';
             foreach ($abuse_types as $key => $type) {
-                $message .= self::getAbusetypename($type).', ';
+                $message .= self::getAbusetypename($type) . ', ';
             }
             $message = rtrim($message, ', ');
             $message .= '</p>';
-            
-            if(!empty($this->abuse_message)):
+
+            if (!empty($this->abuse_message)):
                 $message .= '<p style="color: #545454; font-size: 13px; line-height: 20px;">';
                 $message .= "Comments: {$this->abuse_message} </p>";
             endif;
-            
-            $is_tutor = $tutor->user_id == Yii::app()->user->id;
-            $is_learner = $learner->user_id == Yii::app()->user->id;
-            
+
             $tutor_name = $tutor->fullname;
             $tutor_email = $tutor->email;
             $learner_name = $learner->fullname;
             $learner_email = $learner->email;
-            
-            if ($is_tutor) {
+
+            if ($this->abuser_role == 'tutor') {
                 $sender = $tutor_name;
                 $sender_email = $tutor_email;
                 $abuser_name = $learner_name;
                 $abuser_email = $learner_email;
-            }else if($is_learner){
+            } else if ($this->abuser_role == 'learner') {
                 $sender = $learner_name;
                 $sender_email = $learner_email;
                 $abuser_name = $tutor_name;
                 $abuser_email = $tutor_email;
             }
-            
+
             $trans_array = array(
                 "{SITENAME}" => SITENAME,
                 "{SENDER}" => $sender,
@@ -176,29 +175,39 @@ class ReportAbuse extends RActiveRecord {
             'O' => 'Other Comments',
         );
     }
-    
+
     public static function getAbusetypename($type) {
         $types = self::getAbusetypeList();
         return $types[$type];
     }
-    
+
     public function beforeValidate() {
         if (is_array($this->abuse_type) && in_array('O', $this->abuse_type)) {
             $this->validatorList->add(CValidator::createValidator('required', $this, 'abuse_message', array()));
         }
         return parent::beforeValidate();
     }
-    
+
     protected function beforeSave() {
         if (is_array($this->abuse_type)) {
             $this->abuse_type = CJSON::encode($this->abuse_type);
         }
+
+        $is_tutor = $this->book->gig->tutor->user_id == Yii::app()->user->id;
+        $is_learner = $this->book->bookUser->user_id == Yii::app()->user->id;
+
+        if ($is_tutor) {
+            $this->abuser_role = 'learner';
+        } else if ($is_learner) {
+            $this->abuser_role = 'tutor';
+        }
         
         return parent::beforeSave();
     }
-    
+
     protected function afterFind() {
         $this->abuse_type = CJSON::decode($this->abuse_type);
         return parent::afterFind();
     }
+
 }

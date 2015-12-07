@@ -35,6 +35,7 @@
                     array('label' => '<i class="fa fa-paypal"></i> <span>Cash Withdraw</span>', 'url' => array('/admin/transaction/cashwithdraw'), 'visible' => '1'),
                 ),
             ),
+            array('label' => '<i class="fa fa-quote-left"></i> <span>Testimonials</span>', 'url' => array('/admin/testimonial/index'), 'visible' => '1'),
         ),
         'htmlOptions' => array('class' => 'sidebar-menu')
     ));

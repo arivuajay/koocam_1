@@ -23,7 +23,7 @@
 	'enableAjaxValidation'=>true,
 )); ?>\n"; ?>
 
-            <?php echo "<?php echo \$form->errorSummary($model);" ?> ?>
+            <?php echo "<?php echo \$form->errorSummary(\$model);" ?> ?>
             
             <?php
             $restrict = $this->giiGenerateHiddenFields();
