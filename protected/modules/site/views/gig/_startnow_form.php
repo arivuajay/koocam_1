@@ -5,7 +5,6 @@
 /* @var $form CActiveForm */
 /* @var $tutor User */
 
-$this->title = "View - {$model->gig_title}";
 $themeUrl = $this->themeUrl;
 $tutor = $model->tutor;
 
@@ -40,7 +39,7 @@ $gig_price = (int) $model->gig_price;
 
                 <div class="booking-form-cont">
                     <div class="row">
-                        
+
                         <div class="form-group">
                             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
                                 <?php echo $form->labelEx($booking_temp, 'temp_book_session'); ?>
@@ -48,7 +47,7 @@ $gig_price = (int) $model->gig_price;
                                 <?php echo $form->error($booking_temp, 'temp_book_session'); ?>
                             </div>
                         </div>
-                        
+
                         <?php if (!empty($model->gigExtras)) { ?>
                             <div class="form-group">
                                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -63,7 +62,7 @@ $gig_price = (int) $model->gig_price;
                                             <?php echo $model->gigExtras->extra_description; ?>
                                         </div>
                                         <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2 ">
-                                            <div id="extras-prices" class="extras-prices-bg" data-gig_price="<?php echo $gig_price; ?>" data-extra_price="<?php echo $extra_price = (int) $model->gigExtras->extra_price; ?>">
+                                            <div id="extras-prices" class="temp_extras-prices-bg" data-temp_gig_price="<?php echo $gig_price; ?>" data-temp_extra_price="<?php echo $extra_price = (int) $model->gigExtras->extra_price; ?>">
                                                 <?php echo $extra_price; ?> $
                                             </div>
                                         </div>
@@ -71,10 +70,10 @@ $gig_price = (int) $model->gig_price;
                                 </div>
                             </div>
                         <?php } ?>
-                        
+
                         <div class="form-group">
                             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
-                                <h4 class="total-price"> Price : $ <?php echo $gig_price; ?> </h4>
+                                <h4 class="temp-total-price"> Price : $ <?php echo $gig_price; ?> </h4>
                             </div>
                         </div>
                     </div>
@@ -93,17 +92,44 @@ $gig_price = (int) $model->gig_price;
 <?php
 $cs = Yii::app()->getClientScript();
 $cs_pos_end = CClientScript::POS_END;
+$temp_sessionId = CHTML::activeId($booking_temp, 'temp_book_session');
+
+$gig_price = $model->gig_price;
+$extra_price = isset($model->gigExtras->extra_price) ? $model->gigExtras->extra_price : 0;
 
 $js = <<< EOD
     jQuery(document).ready(function ($) {
+        var gig_price = $gig_price;
+        var extra_price = $extra_price;
+        temp_extra_div = $('.temp_extras-prices-bg');
+        
         $('#temp_book_extra_inner').on('ifChecked', function(event){
-            var newPrice = parseFloat(extra_div.data('gig_price')) + parseFloat(extra_div.data('extra_price'));
-            $('.total-price').html('Price : $ '+newPrice);
+            var newPrice = parseFloat(temp_extra_div.data('temp_gig_price')) + parseFloat(temp_extra_div.data('temp_extra_price'));
+            $('.temp-total-price').html('Price : $ '+newPrice);
         });
 
         $('#temp_book_extra_inner').on('ifUnchecked', function(event){
-            var newPrice = parseFloat(extra_div.data('gig_price'));
-            $('.total-price').html('Price : $ '+newPrice);
+            var newPrice = parseFloat(temp_extra_div.data('temp_gig_price'));
+            $('.temp-total-price').html('Price : $ '+newPrice);
+        });
+        
+        // Session change Functions //
+        $('#{$temp_sessionId}').on('change', function(){
+            session = $(this).val();
+            price = 0;
+            extra = $('#temp_book_extra_inner').parent('div').hasClass('checked') ? extra_price : 0;
+        
+            if(session != ''){
+                for (i = 0; i < session; i++) {
+                    price = parseFloat(price) + parseFloat(gig_price);
+                }
+            }else{
+                price = gig_price;
+            }
+        
+            tot_price = parseFloat(price) + parseFloat(extra);
+            $('.temp-total-price').html('Price : $ '+ tot_price);
+            temp_extra_div.data('temp_gig_price', price);
         });
     });
 

@@ -23,7 +23,19 @@ $is_not_my_profile = !Yii::app()->user->isGuest && Yii::app()->user->id != $mode
                 </h2>
                 <?php echo CHtml::link($user_profile->prof_tag, '#'); ?>
                 <br/>
-                <?php echo CHtml::image($themeUrl . '/images/ratings.png', ''); ?>
+                <?php
+                $this->widget('ext.DzRaty.DzRaty', array(
+                    'name' => 'user_rating',
+                    'value' => $model->user_rating,
+                    'options' => array(
+                        'readOnly' => TRUE,
+                        'half' => TRUE,
+                    ),
+                    'htmlOptions' => array(
+                        'class' => 'new-half-class'
+                    ),
+                ));
+                ?>
             </div>
         </div>
     </div>

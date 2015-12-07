@@ -6,21 +6,33 @@
 <div class="scroll-cont">
     <div class="container">
         <div class="owl-carousel">
-            <?php foreach ($gigs as $gig): ?>
+            <?php foreach ($gigs as $key => $gig): ?>
                 <div class="courses-thumb-cont">
                     <div class="course-thumbimg">
                         <div class="active-icon"> 
-                            <?php echo CHtml::image($themeUrl.'/images/online.png', '', array()); ?>
+                            <?php echo CHtml::image($themeUrl . '/images/online.png', '', array()); ?>
                         </div>
                         <?php
                         $image = $gig->gigthumb;
-                        echo CHtml::link($image, array('/site/gig/view', 'slug' => $gig->slug), array()); 
+                        echo CHtml::link($image, array('/site/gig/view', 'slug' => $gig->slug), array());
                         ?>
                     </div>
                     <div class="course-thumbdetails">
                         <h2><?php echo CHtml::link($gig->gig_title, array('/site/gig/view', 'slug' => $gig->slug), array()); ?></h2>
                         <p> <span> <?php echo CHtml::link($gig->tutor->fullname, array('/site/user/profile', 'slug' => $gig->tutor->slug), array()); ?> </span> </p>
-                        <p> <?php echo CHtml::image($themeUrl . '/images/rating.jpg', '', array()); ?></p>
+                        <?php
+                        $this->widget('ext.DzRaty.DzRaty', array(
+                            'name' => 'gig_rating_carousal' . $key,
+                            'value' => $gig->gig_rating,
+                            'options' => array(
+                                'readOnly' => TRUE,
+                                'half' => TRUE,
+                            ),
+                            'htmlOptions' => array(
+                                'class' => 'new-half-class'
+                            ),
+                        ));
+                        ?>
                     </div>
                     <div class="coures-pricedetails">
                         <div class="course-price"> <i class="fa fa-clock-o"></i> <b><?php echo $gig->gig_duration; ?></b> <span> min </span> </div>

@@ -32,7 +32,7 @@ class GigController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'upload', 'update', 'changepricepertime', 'mygigs', 'userdelete'),
+                'actions' => array('create', 'upload', 'update', 'changepricepertime', 'mygigs', 'userdelete', 'sendmessage'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -136,8 +136,9 @@ class GigController extends Controller {
         $booking_model = new GigBooking();
         $booking_temp = new BookingTemp();
         $gig_comments = new GigComments();
+        $message = new Message;
         $this->performAjaxValidation($booking_model);
-        $this->render('view', compact('model', 'booking_model', 'booking_temp', 'gig_comments'));
+        $this->render('view', compact('model', 'booking_model', 'booking_temp', 'gig_comments', 'message'));
     }
 
     public function actionUserdelete($id) {
@@ -154,6 +155,21 @@ class GigController extends Controller {
             Yii::app()->user->setFlash('danger', "Failed to delete. Try again later..");
         endif;
         $this->redirect(array('/site/gig/mygigs'));
+    }
+
+    public function actionSendmessage() {
+        $message = new Message;
+        $this->performAjaxValidation($message);
+
+        if (Yii::app()->request->isPostRequest && Yii::app()->request->getPost('Message')) {
+            $message->attributes = Yii::app()->request->getPost('Message');
+            $model = $this->loadModel($message->gig_id);
+
+            Message::insertMessage($message->message, Yii::app()->user->id, $model->tutor_id, $model->gig_id);
+
+            Yii::app()->user->setFlash('success', "Message sent successfully!!!");
+            $this->redirect(array('/site/gig/view', 'slug' => $model->slug));
+        }
     }
 
     /**

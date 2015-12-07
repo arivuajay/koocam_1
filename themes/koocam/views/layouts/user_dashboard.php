@@ -39,30 +39,39 @@ endif
                     <div class="profile-details">
                         <h2> PETER PARKER </h2>
                         <p> Expert in 3D Graphics </p>
-                        <p> <img src="images/ratings.png"  alt=""></p>
+                        <?php
+                        $this->widget('ext.DzRaty.DzRaty', array(
+                            'name' => 'user_dashboard_rating',
+                            'value' => $user->user_rating,
+                            'options' => array(
+                                'readOnly' => TRUE,
+                                'half' => TRUE,
+                            ),
+                            'htmlOptions' => array(
+                                'class' => 'new-half-class'
+                            ),
+                        ));
+                        ?>
                     </div>
                     <div class="profiles-list">
                         <?php
-                        /**/
-                        /**/
-                        /**/
                         $msg_count = Message::getMyUnReadMsgCount();
                         $msg_badge = $purchase_badge = $gig_badge = $balance_badge = '';
                         $balance = Transaction::myCurrentBalance();
-                        
-                        if($msg_count > 0)
-                            $msg_badge = '<span class="badge">'.$msg_count.'</span>';
-                        
-                        if($user->purchasecount > 0)
-                            $purchase_badge = '<span class="badge">'.$user->purchasecount.'</span>';
-                        
-                        if($user->gigcount > 0)
-                            $gig_badge = '<span class="badge">'.$user->gigcount.'</span>';
-                        
-                        if($balance > 0)
-                            $balance_badge = '<span class="badge"> $ '. (int) $balance.'</span>';
-                        
-                        
+
+                        if ($msg_count > 0)
+                            $msg_badge = '<span class="badge">' . $msg_count . '</span>';
+
+                        if ($user->purchasecount > 0)
+                            $purchase_badge = '<span class="badge">' . $user->purchasecount . '</span>';
+
+                        if ($user->gigcount > 0)
+                            $gig_badge = '<span class="badge">' . $user->gigcount . '</span>';
+
+                        if ($balance > 0)
+                            $balance_badge = '<span class="badge"> $ ' . (int) $balance . '</span>';
+
+
                         $this->widget('zii.widgets.CMenu', array(
                             'activateParents' => true,
                             'encodeLabel' => false,
@@ -70,14 +79,14 @@ endif
                             'activeCssClass' => 'myprofile-active',
                             'items' => array(
                                 array('label' => '<i class="fa fa-user"></i> My Profile', 'url' => '#'),
-                                array('label' => '<i class="fa fa-graduation-cap"></i> My Gigs '.$gig_badge, 'url' => array('/site/gig/mygigs')),
-                                array('label' => '<i class="fa fa-cart-plus"></i> My Purchase '.$purchase_badge, 'url' => array('/site/purchase/mypurchase')),
+                                array('label' => '<i class="fa fa-graduation-cap"></i> My Gigs ' . $gig_badge, 'url' => array('/site/gig/mygigs')),
+                                array('label' => '<i class="fa fa-cart-plus"></i> My Purchase ' . $purchase_badge, 'url' => array('/site/purchase/mypurchase')),
                                 array('label' => '<i class="fa fa-money"></i> My Payments ' . $balance_badge, 'url' => array('/site/transaction/mypayments')),
                                 array('label' => '<i class="fa fa-envelope"></i> Messages ' . $msg_badge, 'url' => array('/site/message/index')),
                                 array('label' => '<i class="fa fa-bell"></i> Notifications <span class="badge">20</span>', 'url' => '#'),
                                 array('label' => '<i class="fa fa-calendar-check-o"></i> Jobs <span class="badge">20</span>', 'url' => '#'),
                                 array('label' => '<i class="fa fa-gear"></i> Account Setting <span class="badge">20</span>', 'url' => '#'),
-                                array('label' => '<i class="fa fa-power-off"></i> Logout', 'url' =>  array('/site/default/logout')),
+                                array('label' => '<i class="fa fa-power-off"></i> Logout', 'url' => array('/site/default/logout')),
                             ),
                             'htmlOptions' => array('class' => 'sidebar-menu')
                         ));

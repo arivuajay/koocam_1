@@ -6,7 +6,6 @@
 /* @var $category GigCategory */
 $this->title = "Search GIG: {$search_text}";
 $themeUrl = $this->themeUrl;
-
 ?>
 
 <div id="inner-banner" class="tt-fullHeight3">
@@ -94,14 +93,26 @@ echo CHtml::hiddenField('s', $search_text);
                 <div class="widget-cont">
                     <h2> FEATURED COURSES</h2> 
                     <?php $featured = Gig::featuredGigs(); ?>
-                    <?php foreach ($featured as $gig): ?>
+                    <?php foreach ($featured as $key => $gig): ?>
                         <div class="featuerd-course-cont"> 
                             <div class="row"> 
                                 <div class="col-xs-4 col-sm-5 col-md-5 col-lg-5"><?php echo CHtml::link($gig->gigthumb, array('/site/gig/view', 'slug' => $gig->slug), array()); ?> </div> 
                                 <div class="col-xs-8 col-sm-7 col-md-7 col-lg-7">
                                     <p> <?php echo CHtml::link($gig->gig_title, array('/site/gig/view', 'slug' => $gig->slug), array()); ?> </p>
                                     <p>  <span> <?php echo CHtml::link($gig->tutor->fullname, array('/site/user/profile', 'slug' => $gig->tutor->slug), array()); ?> </span> </p>
-                                    <p>  <?php echo CHtml::image($themeUrl . '/images/rating.jpg', '', array()); ?></p>
+                                    <?php
+                                    $this->widget('ext.DzRaty.DzRaty', array(
+                                        'name' => 'gig_rating_feature' . $key,
+                                        'value' => $gig->gig_rating,
+                                        'options' => array(
+                                            'readOnly' => TRUE,
+                                            'half' => TRUE,
+                                        ),
+                                        'htmlOptions' => array(
+                                            'class' => 'new-half-class'
+                                        ),
+                                    ));
+                                    ?>
                                 </div> 
                             </div> 
                         </div>

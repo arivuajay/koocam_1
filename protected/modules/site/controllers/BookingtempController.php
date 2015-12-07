@@ -56,9 +56,14 @@ class BookingtempController extends Controller {
             $data['temp_book_total_price'] = $gig->gig_price;
             $data['temp_book_duration'] = $gig->gig_duration;
 
+            if ($post_data['temp_book_session'] == 2) {
+                $data['temp_book_gig_price'] = 2 * $gig->gig_price;
+                $data['temp_book_total_price'] = 2 * $gig->gig_price;
+            }
+
             if ($post_data['temp_book_is_extra'] == "Y") {
                 $data['temp_book_extra_price'] = $gig->gigExtras->extra_price;
-                $data['temp_book_total_price'] = $gig->gig_price + $gig->gigExtras->extra_price;
+                $data['temp_book_total_price'] = $data['temp_book_total_price'] + $data['temp_book_extra_price'];
             }
 
             $booking_temp->temp_value = serialize($data);
@@ -69,7 +74,7 @@ class BookingtempController extends Controller {
                 $cancelUrl = Yii::app()->createAbsoluteUrl('/site/bookingtemp/paypalcancel', array('slug' => $gig->slug));
                 $notifyUrl = Yii::app()->createAbsoluteUrl('/site/bookingtemp/paypalnotify');
 
-                $paypalManager->addField('item_name', $gig->gig_title .'-'. BookingTemp::TEMP_BOOKING_KEY);
+                $paypalManager->addField('item_name', $gig->gig_title . '-' . BookingTemp::TEMP_BOOKING_KEY);
                 $paypalManager->addField('amount', $data['temp_book_total_price']);
                 $paypalManager->addField('custom', $booking_temp->temp_guid);
                 $paypalManager->addField('return', $returnUrl);

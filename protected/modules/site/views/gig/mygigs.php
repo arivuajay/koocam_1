@@ -31,7 +31,19 @@ $themeUrl = $this->themeUrl;
                             <div class="course-thumbdetails">
                                 <h2><?php echo CHtml::link($gig->gig_title, array('/site/gig/view', 'slug' => $gig->slug), array()); ?></h2>
                                 <p> <span> <?php echo CHtml::link($gig->tutor->fullname, array('/site/user/profile', 'slug' => $gig->tutor->slug), array()); ?> </span> </p>
-                                <p> <?php echo CHtml::image($themeUrl . '/images/rating.jpg', '', array()); ?></p>
+                                <?php
+                                $this->widget('ext.DzRaty.DzRaty', array(
+                                    'name' => 'gig_rating_mygigs' . $key,
+                                    'value' => $gig->gig_rating,
+                                    'options' => array(
+                                        'readOnly' => TRUE,
+                                        'half' => TRUE,
+                                    ),
+                                    'htmlOptions' => array(
+                                        'class' => 'new-half-class'
+                                    ),
+                                ));
+                                ?>
                             </div>
                             <div class="coures-pricedetails">
                                 <div class="course-price"> <i class="fa fa-clock-o"></i> <b><?php echo $gig->gig_duration; ?></b> <span> min </span> </div>

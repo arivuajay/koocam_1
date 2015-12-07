@@ -31,7 +31,6 @@ $logged_user = !$is_tutor && !Yii::app()->user->isGuest;
                     ),
                 ));
                 ?>
-                <?php // echo CHtml::image($themeUrl . '/images/ratings.png', '', array()); ?> 
             </div>
         </div>
     </div>
@@ -65,9 +64,9 @@ $logged_user = !$is_tutor && !Yii::app()->user->isGuest;
                         <span class='st_googleplus_large custom-share' displayText='Google +'></span>
                         <span class='st_sharethis_large custom-share' displayText='ShareThis'></span>
                     </div>
-                    <?php if ($logged_user) { ?>
-                        <a href="#" data-target="#comments" data-toggle="modal">Comments</a>
-                    <?php } ?>
+                    <?php // if ($logged_user) { ?>
+                        <!--<a href="#" data-target="#comments" data-toggle="modal">Comments</a>-->
+                    <?php // } ?>
                 </div>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 course-details">
@@ -128,6 +127,7 @@ if ($logged_user) {
     $this->renderPartial('_booking_form', compact('model', 'booking_model'));
     $this->renderPartial('_startnow_form', compact('model', 'booking_temp'));
     echo $this->renderPartial('_comments_form', compact('model', 'gig_comments'));
+    echo $this->renderPartial('_message_form', compact('model', 'message'));
 }
 ?>
 
@@ -148,11 +148,15 @@ $js = <<< EOD
         $('#book_extra_main').on('ifChecked', function(event){
             var newPrice = parseFloat(extra_div.data('gig_price')) + parseFloat(extra_div.data('extra_price'));
             $('.gig_price_txt').html('$ '+newPrice);
+            $('#temp_book_extra_inner').iCheck('check'); 
+            $('#book_extra_inner').iCheck('check'); 
         });
 
         $('#book_extra_main').on('ifUnchecked', function(event){
             var newPrice = parseFloat(extra_div.data('gig_price'));
             $('.gig_price_txt').html('$ '+newPrice);
+            $('#temp_book_extra_inner').iCheck('uncheck'); 
+            $('#book_extra_inner').iCheck('uncheck'); 
         });
 
         $('#booking').on('shown.bs.modal', function () {

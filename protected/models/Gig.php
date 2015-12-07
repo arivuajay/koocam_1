@@ -53,7 +53,6 @@ class Gig extends RActiveRecord {
     const IMG_HEIGHT = 528;
     const THUMB_WIDTH = 500;
     const THUMB_HEIGHT = 440;
-    
     //PAGE LIMITS
     const GIG_SEARCH_LIMIT = 9;
     const MY_GIG_LIMIT = 9;
@@ -73,7 +72,7 @@ class Gig extends RActiveRecord {
             $this->gig_duration = Gig::GIG_MIN_DURATION;
             $this->gig_price = Gig::GIG_MIN_AMT;
             $this->extra_price = Gig::EXTRA_MIN_AMT;
-            
+
             $this->gig_avail_visual = 'Y';
         }
 
@@ -106,7 +105,7 @@ class Gig extends RActiveRecord {
     public function scopes() {
         $alias = $this->getTableAlias(false, false);
         $user_id = Yii::app()->user->id;
-        
+
         return array(
             'active' => array('condition' => "$alias.status = '1'"),
             'inactive' => array('condition' => "$alias.status = '0'"),
@@ -441,7 +440,8 @@ class Gig extends RActiveRecord {
         endif;
         return $button;
     }
-    public function getMessageButton($text = '<i class="fa fa-envelope-o"></i> Message', $class = 'big-btn btn big-btn3 btn-default', $data_target = 'booking') {
+
+    public function getMessageButton($text = '<i class="fa fa-envelope-o"></i> Message', $class = 'big-btn btn big-btn3 btn-default', $data_target = 'message') {
         $button = NULL;
         if (!$this->_is_tutor) :
             if ($this->_logged_user) {
@@ -457,4 +457,5 @@ class Gig extends RActiveRecord {
         $this->_is_tutor = !Yii::app()->user->isGuest && Yii::app()->user->id == $this->tutor_id;
         $this->_logged_user = !$this->_is_tutor && !Yii::app()->user->isGuest;
     }
+
 }

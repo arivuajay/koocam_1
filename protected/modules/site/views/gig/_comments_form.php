@@ -4,8 +4,6 @@
 /* @var $gig_comments GigComments */
 /* @var $form CActiveForm */
 
-$this->title = "Comments";
-
 $form = $this->beginWidget('CActiveForm', array(
     'id' => 'gig-comments-form',
     'action' => array('/site/gigcomments/create'),
@@ -27,7 +25,7 @@ echo $form->hiddenField($gig_comments, 'gig_id', array('value' => $model->gig_id
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title" id="myModalLabel"><?php echo $this->title; ?></h4>
+                <h4 class="modal-title" id="myModalLabel">Comments</h4>
             </div>
             <div class="modal-body">
                 <?php echo $form->errorSummary($gig_comments); ?>

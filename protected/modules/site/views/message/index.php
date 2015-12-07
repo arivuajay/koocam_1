@@ -39,9 +39,12 @@ $this->breadcrumbs = array(
                                             <?php echo $mdisplay; ?>
                                         </div>
                                         <?php if ($messages['gig_id']) { ?>
+                                        <?php $gig = Gig::model()->findByPk($messages['gig_id']);?>
                                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 message-from message-gig"> 
                                                 <b> Gig: </b> 
-                                                <a href="#"> Vestibulum bibendum pulvinar orci non lobortis  ? </a> 
+                                                <?php 
+                                                echo CHtml::link($gig->gig_title, array('/site/gig/view', 'slug' => $gig->slug))
+                                                ?>
                                             </div>
                                         <?php } ?>
                                     </div>
