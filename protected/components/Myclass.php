@@ -205,6 +205,15 @@ class Myclass extends CController {
         }
     }
     
+    public static function getTimezone() {
+        $ip = CHttpRequest::getUserHostAddress();
+        $query = @unserialize(file_get_contents('http://ip-api.com/php/' . $ip));
+        if ($query && $query['status'] == 'success') {
+            return $query;
+        } else {
+            return null;
+        }
+    }
     
 
 }

@@ -134,4 +134,14 @@ class Country extends RActiveRecord {
         return CHtml::listData(self::model()->$status()->findAll(), 'country_Id', 'country_name');
     }
 
+    public static function getCountryByName($name) {
+        $id = self::model()->findByAttributes(array('country_name' => $name))->country_Id;
+        if(empty($id)){
+            $model = new Country;
+            $model->country_name = $name;
+            $model->save(false);
+            $id = $model->country_Id;
+        }
+        return $id;
+    }
 }

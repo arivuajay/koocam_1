@@ -64,14 +64,15 @@ class UserIdentity extends CUserIdentity {
         $this->setState('name', $user->username);
         $this->setState('id', $user->user_id);
         $this->setState('slug', $user->slug);
+        $this->setState('country_id', $user->country_id);
 
         if ($user->is_auto_timezone == 'Y') {
-            $ip_info = $this->getTimezone();
+            $ip_info = Myclass::getTimezone();
             
             if(!empty($ip_info)){
                 $attr = array();
                 $attr['user_timezone_id'] = Timezone::getTimezoneByName($ip_info['timezone']);
-                $attr['user_locale_id'] = 124;
+                $attr['user_locale_id'] = DEFAULT_LOCALE;
                 
                 $user = User::model()->findByPk($this->_id);
                 $user->attributes = $attr;
@@ -87,14 +88,4 @@ class UserIdentity extends CUserIdentity {
         return;
     }
 
-    protected function getTimezone() {
-        $ip = CHttpRequest::getUserHostAddress();
-        $query = @unserialize(file_get_contents('http://ip-api.com/php/' . $ip));
-        if ($query && $query['status'] == 'success') {
-            return $query;
-        } else {
-            return null;
-        }
-    }
-    
 }

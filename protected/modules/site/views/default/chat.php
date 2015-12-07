@@ -6,7 +6,7 @@
 $this->title = 'Chat';
 $themeUrl = $this->themeUrl;
 $show_video = $token->book->gig->gig_avail_visual == 'Y' ? 'true' : 'false';
-$this->renderPartial('_report_abuse', compact('token', 'abuse_model'));
+$this->renderPartial('_report_abuse', compact('token', 'abuse_model', 'info'));
 ?>
 <div id="inner-banner" class="tt-fullHeight3 chat-banner">
     <div class="container homepage-txt">
@@ -69,7 +69,7 @@ $this->renderPartial('_report_abuse', compact('token', 'abuse_model'));
         ));
         ?>
         <div class="row">
-            <div class="col-xs-12 col-sm-8 col-md-8 col-lg-9 ">
+            <div class="col-xs-12 col-sm-8 col-md-8 col-lg-9 " id="p_sub_div">
                 <div id="subscribersDiv" class="subscriber-div"></div>
             </div>
             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-3 ">
@@ -111,32 +111,6 @@ $this->renderPartial('_report_abuse', compact('token', 'abuse_model'));
                         </div>
                         <div class="panel-body">
                             <ul class="chat" id="msgHistory">
-<!--                                <li class="left clearfix"><span class="chat-img pull-left">
-                                        <img src="http://placehold.it/50/55C1E7/fff&text=U" alt="User Avatar" class="img-circle" />
-                                    </span>
-                                    <div class="chat-body clearfix">
-                                        <div class="header">
-                                            <strong class="primary-font">Jack Sparrow</strong> 
-                                        </div>
-                                        <p>
-                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare
-                                            dolor, quis ullamcorper ligula sodales.
-                                        </p>
-                                    </div>
-                                </li>
-                                <li class="right clearfix"><span class="chat-img pull-right">
-                                        <img src="http://placehold.it/50/FA6F57/fff&text=ME" alt="User Avatar" class="img-circle" />
-                                    </span>
-                                    <div class="chat-body clearfix">
-                                        <div class="header">
-                                            <strong class="pull-right primary-font">Bhaumik Patel</strong> <br/>
-                                        </div>
-                                        <p>
-                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare
-                                            dolor, quis ullamcorper ligula sodales.
-                                        </p>
-                                    </div>
-                                </li>-->
                             </ul>
                         </div>
                         <div class="panel-footer">
@@ -146,6 +120,7 @@ $this->renderPartial('_report_abuse', compact('token', 'abuse_model'));
                                     <?php echo CHtml::submitButton('Send', array('class' => "btn btn-warning btn-sm", 'id' => "btn-chat")); ?>
                                 </span>
                             </div>
+                            <div id="chat_input_error" class="text-danger hide">Enter some text to chat !!! </div>
                         </div>
                     </div>
                     <?php echo CHtml::endForm(); ?>

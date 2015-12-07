@@ -22,6 +22,7 @@
  * @property integer $user_locale_id
  * @property integer $user_timezone_id
  * @property integer $user_rating
+ * @property integer $country_id
  * 
  * The followings are the available model relations:
  * @property UserProfile $userProfGig[] $gigs
@@ -35,9 +36,18 @@
  * @property Gig[] $gigs
  * @property Purchase $gigPurchase
  * @property UserPaypal[] $userPaypals
+ * @property Country $userCountry
  */
 class User extends RActiveRecord {
 
+    public function init() {
+        if($this->isNewRecord){
+            $this->user_timezone_id = DEFAULT_TIMEZONE;
+            $this->user_locale_id = DEFAULT_LOCALE;
+            $this->country_id = DEFAULT_COUNTRY;
+        }
+        parent::init();
+    }
     const GIG_PER_USER = 20;
 
     public function getFullname() {
@@ -96,11 +106,11 @@ class User extends RActiveRecord {
             array('email, username, slug', 'unique'),
             array('email', 'email'),
             array('password_hash', 'compare', 'compareAttribute' => 'confirm_password', 'on' => 'register'),
-            array('created_at, modified_at, user_activation_key, user_login_ip, user_last_login, is_auto_timezone, user_locale_id, user_timezone_id, i_agree, user_rating', 'safe'),
+            array('created_at, modified_at, user_activation_key, user_login_ip, user_last_login, is_auto_timezone, user_locale_id, user_timezone_id, i_agree, user_rating, country_id', 'safe'),
             array('i_agree', 'compare', 'compareValue' => true, 'message' => 'You must agree to the terms and conditions', 'on' => 'register'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('user_id, username, password_hash, password_reset_token, email, status, live_status, created_at, modified_at', 'safe', 'on' => 'search'),
+            array('user_id, username, password_hash, password_reset_token, email, status, live_status, created_at, modified_at, user_locale_id, user_timezone_id', 'safe', 'on' => 'search'),
         );
     }
 
@@ -121,6 +131,7 @@ class User extends RActiveRecord {
             'gigComments' => array(self::HAS_MANY, 'GigComments', 'user_id'),
             'gigPurchase' => array(self::HAS_MANY, 'Purchase', 'user_id'),
             'userPaypals' => array(self::HAS_MANY, 'UserPaypal', 'user_id'),
+            'userCountry' => array(self::BELONGS_TO, 'Country', 'country_id'),
         );
     }
 
@@ -212,6 +223,17 @@ class User extends RActiveRecord {
         $model->email = $this->email;
         $model->password_hash = $this->password_hash;
         $model->status = '0';
+        
+        $ip_info = Myclass::getTimezone();
+        if(!empty($ip_info)){
+            $model->country_id = Country::getCountryByName(strtoupper($ip_info['country']));
+        }
+        if ($model->is_auto_timezone == 'Y') {
+            if(!empty($ip_info)){
+                $model->user_timezone_id = Timezone::getTimezoneByName($ip_info['timezone']);
+            }
+        }
+        
         $model->save(false);
         ///////////////////////
         $confirmationlink = SITEURL . '/site/default/activation?activationkey=' . $model->user_activation_key . '&userid=' . $model->user_id;

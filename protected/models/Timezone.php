@@ -107,7 +107,7 @@ class Timezone extends CActiveRecord {
             $model = new Timezone;
             $model->name = $name;
             $model->save();
-            $id = $model->name;
+            $id = $model->id;
         }
         return $id;
     }
