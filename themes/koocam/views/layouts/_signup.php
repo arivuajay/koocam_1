@@ -36,7 +36,7 @@
                 </div>
                 <div class="form-group">                             
                     <?php echo $form->checkBox($model, 'i_agree'); ?>
-                    <?php echo ' I agree to the terms and conditions'; ?>
+                    <?php echo ' I agree to the '.CHtml::link('terms and conditions', array('/site/cms/view', 'slug' => 'terms-and-conditions'), array('target' => '_blank')); ?>
                     <?php echo $form->error($model, 'i_agree'); ?>
                 </div>
                 <div class="form-group"> 

@@ -8,10 +8,12 @@
             <div class="row">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <ul>
-                        <li><?php echo CHtml::link(' About Us ', array('/site/cms/view', 'slug' => 'about-us'), array()); ?></li>
-                        <li><?php echo CHtml::link(' Contact Us ', '#', array()); ?></li>
-                        <li><?php echo CHtml::link(' Privacy Policy ', array('/site/cms/view', 'slug' => 'privacy-policy'), array()); ?></li>
-                        <li><?php echo CHtml::link(' Terms and Conditions ', array('/site/cms/view', 'slug' => 'terms-and-conditions'), array()); ?></li>
+                        <li><?php echo CHtml::link(' About Us ', array('/site/cms/view', 'slug' => 'about-us')); ?></li>
+                        <li><?php echo CHtml::link(' How it Works ', array('/site/cms/view', 'slug' => 'how-it-works')); ?></li>
+                        <li><?php echo CHtml::link(' Contact Us ', '#'); ?></li>
+                        <li><?php echo CHtml::link(' Terms and Conditions ', array('/site/cms/view', 'slug' => 'terms-and-conditions')); ?></li>
+                        <li><?php echo CHtml::link(' Privacy Policy ', array('/site/cms/view', 'slug' => 'privacy-policy')); ?></li>
+                        <li><?php echo CHtml::link(' FAQ ', '#'); ?></li>
                     </ul>
                     <p> Copyrights © 2015. Koocam.com. Allrights reserved </p>
                 </div>
@@ -24,8 +26,8 @@
                 <span> Email : <?php echo CHtml::link('support@koocam.com', 'mailto:support@koocam.com'); ?></span> 
             </p>
             <p> 
-                <?php echo CHtml::link(CHtml::image($this->themeUrl.'/images/fb.png', '', array()), '#', array('target' => '_blank')); ?>
-                <?php echo CHtml::link(CHtml::image($this->themeUrl.'/images/twitter.png', '', array()), '#', array('target' => '_blank')); ?>
+                <?php echo CHtml::link(CHtml::image($this->themeUrl.'/images/fb.png', ''), '#', array('target' => '_blank')); ?>
+                <?php echo CHtml::link(CHtml::image($this->themeUrl.'/images/twitter.png', ''), '#', array('target' => '_blank')); ?>
                 <?php echo CHtml::link(CHtml::image($this->themeUrl.'/images/gplus.png', '', array('width' => '32', 'height' => '32')), '#', array('target' => '_blank')); ?>
                 <?php echo CHtml::link(CHtml::image($this->themeUrl.'/images/youtube.png', '', array('width' => '32', 'height' => '32')), '#', array('target' => '_blank')); ?>
             </p>

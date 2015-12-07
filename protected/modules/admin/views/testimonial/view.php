@@ -2,10 +2,10 @@
 /* @var $this TestimonialController */
 /* @var $model Testimonial */
 
-$this->title='View Testimonial';
-$this->breadcrumbs=array(
-	'Testimonials'=>array('index'),
-	$this->title,
+$this->title = 'View Testimonial';
+$this->breadcrumbs = array(
+    'Testimonials' => array('index'),
+    $this->title,
 );
 $this->rightCornerLink = CHtml::link('<i class="fa fa-reply"></i> Back', array('/admin/testimonial/index'), array("class" => "btn btn-inverse pull-right"));
 ?>
@@ -13,18 +13,22 @@ $this->rightCornerLink = CHtml::link('<i class="fa fa-reply"></i> Back', array('
 
 <div class="container-fluid">
     <div class="page-section third">
-        <?php $this->widget('zii.widgets.CDetailView', array(
-        'data'=>$model,
-        'htmlOptions' => array('class'=>'table table-striped table-bordered'),
-        'nullDisplay' => '-',
-        'attributes'=>array(
-        		'testimonial_id',
-		'testimonial_user',
-		'testimonial_text',
-		'testimonial_image',
-		'created_at',
-        ),
-        )); ?>
+        <?php
+        $this->widget('zii.widgets.CDetailView', array(
+            'data' => $model,
+            'htmlOptions' => array('class' => 'table table-striped table-bordered'),
+            'nullDisplay' => '-',
+            'attributes' => array(
+                'testimonial_user',
+                'testimonial_text',
+                array(
+                    'label' => $model->getAttributeLabel('testimonial_image'),
+                    'type' => 'raw',
+                    'value' => CHtml::image($model->getFilePath(), '', array('height' => 120)),
+                ),
+            ),
+        ));
+        ?>
 
     </div>
 </div>

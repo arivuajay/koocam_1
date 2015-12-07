@@ -180,6 +180,8 @@ class User extends RActiveRecord {
         $criteria->compare($alias . '.live_status', $this->live_status, true);
         $criteria->compare($alias . '.created_at', $this->created_at, true);
         $criteria->compare($alias . '.modified_at', $this->modified_at, true);
+        
+        $criteria->order = 'created_at desc';
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

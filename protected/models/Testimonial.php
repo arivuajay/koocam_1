@@ -10,6 +10,7 @@
  * @property string $testimonial_image
  * @property string $created_at
  * @property string $modified_at
+ * @property string $status
  */
 class Testimonial extends RActiveRecord {
 
@@ -20,6 +21,15 @@ class Testimonial extends RActiveRecord {
         return '{{testimonial}}';
     }
 
+    public function scopes() {
+        $alias = $this->getTableAlias(false, false);
+        return array(
+            'active' => array('condition' => "$alias.status = '1'"),
+            'inactive' => array('condition' => "$alias.status = '0'"),
+            'deleted' => array('condition' => "$alias.status = '2'"),
+            'all' => array('condition' => "$alias.status is not null"),
+        );
+    }
     /**
      * @return array validation rules for model attributes.
      */
@@ -31,7 +41,7 @@ class Testimonial extends RActiveRecord {
             array('testimonial_image', 'required', 'on' => 'create'),
             array('testimonial_user', 'length', 'max' => 50),
             array('testimonial_image', 'length', 'max' => 255),
-            array('created_at, modified_at', 'safe'),
+            array('created_at, modified_at, status', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('testimonial_id, testimonial_user, testimonial_text, testimonial_image, created_at, modified_at', 'safe', 'on' => 'search'),

@@ -140,12 +140,12 @@ class ReportAbuse extends RActiveRecord {
             $learner_name = $learner->fullname;
             $learner_email = $learner->email;
 
-            if ($this->abuser_role == 'tutor') {
+            if ($this->abuser_role == 'learner') {
                 $sender = $tutor_name;
                 $sender_email = $tutor_email;
                 $abuser_name = $learner_name;
                 $abuser_email = $learner_email;
-            } else if ($this->abuser_role == 'learner') {
+            } else if ($this->abuser_role == 'tutor') {
                 $sender = $learner_name;
                 $sender_email = $learner_email;
                 $abuser_name = $tutor_name;

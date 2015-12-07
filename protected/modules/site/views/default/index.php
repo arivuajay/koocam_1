@@ -145,7 +145,7 @@ $themeUrl = $this->themeUrl;
             </div>
             <div class='col-md-offset-1 col-md-10'>
                 <div class="carousel slide" data-ride="carousel" id="quote-carousel"> 
-                    <?php $testimonials = Testimonial::model()->findAll(); ?>
+                    <?php $testimonials = Testimonial::model()->active()->findAll(); ?>
                     <!-- Bottom Carousel Indicators -->
                     
                     <ol class="carousel-indicators">
