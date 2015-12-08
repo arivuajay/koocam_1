@@ -70,8 +70,8 @@ $themeUrl = $this->themeUrl;
                                             <li><?php echo CHtml::link(' My Purchase ', array('/site/purchase/mypurchase')); ?></li>
                                             <li><?php echo CHtml::link(' My Payments ', array('/site/transaction/mypayments')); ?></li>
                                             <li class="divider" role="separator"></li>
-                                            <li><a href="#"> <i class="fa fa-gears"></i>&nbsp; Account Setting</a></li>    
-                                            <li><?php echo CHtml::link(' Logout', array('/site/default/logout')); ?></li>
+                                            <li><?php echo CHtml::link(' <i class="fa fa-gears"></i>&nbsp; Account Setting ', array('/site/user/accountsetting')); ?></li>
+                                            <li><?php echo CHtml::link(' <i class="fa fa-power-off"></i>&nbsp; Logout', array('/site/default/logout')); ?></li>
                                         </ul>
                                     </li>
                                     <li>

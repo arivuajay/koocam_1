@@ -463,15 +463,15 @@ class Gig extends RActiveRecord {
         switch ($this->tutor->live_status) {
             case 'A':
                 $class = 'online';
-                $title = 'online';
+                $title = 'Online';
                 break;
             case 'B':
-                $class = 'busy';
-                $title = 'busy';
+                $class = 'online ideal';
+                $title = 'Busy';
                 break;
             case 'O':
-                $class = 'offline';
-                $title = 'offline';
+                $class = 'online offline';
+                $title = 'Offline';
                 break;
         }
         return "<div title='{$title}' data-placement='bottom' data-toggle='tooltip' class='{$class}' data-original-title='{$title}'> </div>";
