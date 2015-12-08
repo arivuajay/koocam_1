@@ -67,6 +67,7 @@
                     checkboxClass: 'icheckbox_flat-blue',
                     radioClass: 'iradio_flat-blue'
                 });
+                $('[data-toggle="tooltip"]').tooltip();
             });
                 
             $(window).load(function(){

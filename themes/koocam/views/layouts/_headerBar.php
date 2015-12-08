@@ -42,12 +42,15 @@ $themeUrl = $this->themeUrl;
 //                            ));
                             ?>
                             <ul class="nav navbar-nav">
-                                <li><?php echo CHtml::link(' Sell your time ', array('/site/gig/create'), array()); ?></li>
-                                <li><?php echo CHtml::link(' How its works ', array('/site/cms/view', 'slug' => 'how-it-works'), array()); ?></li>
-                                <?php if (!Yii::app()->user->isGuest) { ?>
+                                <li><?php echo CHtml::link(' Sell your time ', array('/site/gig/create')); ?></li>
+                                <li><?php echo CHtml::link(' How its works ', array('/site/cms/view', 'slug' => 'how-it-works')); ?></li>
+                                <?php
+                                if (!Yii::app()->user->isGuest) {
+                                    $user = User::model()->findByPk(Yii::app()->user->id);
+                                    ?>
                                     <li>
                                         <a data-toggle="dropdown" class="dropdown-toggle" href="#" aria-expanded="true">
-                                            <?php echo CHtml::image($themeUrl . '/images/my-jobs.png', '', array()); ?> <b> My Jobs </b> <span class="count">15</span>
+                                            <?php echo CHtml::image($themeUrl . '/images/my-jobs.png', ''); ?> <b> My Jobs </b> <span class="count">15</span>
                                             <span class="circle"></span>
                                         </a>
                                         <ul role="menu" class="dropdown-menu notifications  bullet pull-right" >
@@ -66,15 +69,35 @@ $themeUrl = $this->themeUrl;
                                         </a>
                                         <ul class="dropdown-menu dropdown-menu2 pull-right bullet" >
                                             <?php $slug = User::model()->findByPk(Yii::app()->user->id)->slug; ?>
-                                            <li><?php echo CHtml::link(' My Profile ', array('/site/user/profile', 'slug' => $slug), array()); ?></li>
-                                            <li><?php echo CHtml::link(' My Purchase ', array('/site/purchase/mypurchase'), array()); ?></li>
-                                            <li>
-                                                <?php echo CHtml::link(' My Payments ', array('/site/transaction/mypayments'), array()); ?>
-                                            </li>
+                                            <li><?php echo CHtml::link(' My Profile ', array('/site/user/profile', 'slug' => $slug)); ?></li>
+                                            <li><?php echo CHtml::link(' My Purchase ', array('/site/purchase/mypurchase')); ?></li>
+                                            <li><?php echo CHtml::link(' My Payments ', array('/site/transaction/mypayments')); ?></li>
                                             <li class="divider" role="separator"></li>
                                             <li><a href="#"> <i class="fa fa-gears"></i>&nbsp; Account Setting</a></li>    
-                                            <li><?php echo CHtml::link(' Logout', array('/site/default/logout'), array()); ?></li>
+                                            <li><?php echo CHtml::link(' Logout', array('/site/default/logout')); ?></li>
                                         </ul>
+                                    </li>
+                                    <li>
+                                        <?php
+                                        switch ($user->live_status) {
+                                            case 'A':
+                                                $btn_class = 'online-btn';
+                                                $btn_title = 'Online';
+                                                $btn_mode = 'A';
+                                                break;
+                                            case 'B':
+                                                $btn_class = 'online-btn';
+                                                $btn_title = 'Busy';
+                                                $btn_mode = 'B';
+                                                break;
+                                            case 'O':
+                                                $btn_class = 'offline-btn';
+                                                $btn_title = 'Offline';
+                                                $btn_mode = 'O';
+                                                break;
+                                        }
+                                        echo CHtml::link('<i class="fa fa-power-off"></i>', 'javascript:void(0)', array('class' => "{$btn_class}", 'data-toggle' => "tooltip", 'data-placement' => "bottom", 'id' => 'switch_status', 'data-mode' => $btn_mode));
+                                        ?>
                                     </li>
                                 <?php } else { ?>
                                     <li><a href="#" data-toggle="modal" data-target=".bs-example-modal-sm1"> Login </a></li>
@@ -89,3 +112,52 @@ $themeUrl = $this->themeUrl;
         </div>
     </div>
 </div>
+
+<?php
+if (!Yii::app()->user->isGuest) {
+    $cs = Yii::app()->getClientScript();
+    $cs_pos_end = CClientScript::POS_END;
+    $mode_url = Yii::app()->createAbsoluteUrl('/site/user/switchstatus');
+    $user_id = Yii::app()->user->id;
+    
+    $js = <<< EOD
+    jQuery(document).ready(function ($) {
+        $('#switch_status').on('click', function(){
+            _that = $(this);
+            
+            var mode = _that.data('mode');
+            var user_id = '{$user_id}';
+            
+            if(mode == 'A' || mode == 'O'){
+                new_mode = mode == 'A' ? 'O' : 'A';
+            
+                $.ajax({
+                    type: 'POST',
+                    url: '$mode_url',
+                    data: {'mode': new_mode, 'user_id': user_id},
+                    success:function(data){
+                        if(mode == 'A'){
+                            _that.addClass('offline-btn').removeClass('online-btn');
+                            _that.data('mode', 'O');
+                            _that.attr('title', 'Offline');
+                            _that.attr('data-original-title', 'Offline');
+                        }else if(mode == 'O'){
+                            _that.addClass('online-btn').removeClass('offline-btn');
+                            _that.data('mode', 'A');
+                            _that.attr('title', 'Online');
+                            _that.attr('data-original-title', 'Online');
+                        }
+                    },
+                    error: function(data) {
+                        alert("Something went wrong. Try again");
+                    },
+                });
+            }
+        
+        });
+    });
+        
+EOD;
+    Yii::app()->clientScript->registerScript('_headerBar', $js);
+}
+?>

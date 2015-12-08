@@ -32,7 +32,7 @@ class UserController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('profileupdate', 'sendmessage'),
+                'actions' => array('profileupdate', 'sendmessage', 'switchstatus'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -125,6 +125,14 @@ class UserController extends Controller {
         if ($model === null)
             throw new CHttpException(404, 'The requested page does not exist.');
         return $model;
+    }
+    
+    public function actionSwitchstatus() {
+        if(!empty($_POST['user_id']) && !empty($_POST['mode'])){
+            $model = $this->loadModel($_POST['user_id']);
+            $model->saveAttributes(array('live_status' => $_POST['mode']));
+        }
+        Yii::app()->end();
     }
 
 }

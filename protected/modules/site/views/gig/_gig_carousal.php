@@ -9,17 +9,12 @@
             <?php foreach ($gigs as $key => $gig): ?>
                 <div class="courses-thumb-cont">
                     <div class="course-thumbimg">
-                        <div class="active-icon"> 
-                            <?php echo CHtml::image($themeUrl . '/images/online.png', '', array()); ?>
-                        </div>
-                        <?php
-                        $image = $gig->gigthumb;
-                        echo CHtml::link($image, array('/site/gig/view', 'slug' => $gig->slug), array());
-                        ?>
+                        <?php echo $gig->tutorstatusicon; ?>
+                        <?php echo CHtml::link($gig->gigthumb, array('/site/gig/view', 'slug' => $gig->slug));?>
                     </div>
                     <div class="course-thumbdetails">
-                        <h2><?php echo CHtml::link($gig->gig_title, array('/site/gig/view', 'slug' => $gig->slug), array()); ?></h2>
-                        <p> <span> <?php echo CHtml::link($gig->tutor->fullname, array('/site/user/profile', 'slug' => $gig->tutor->slug), array()); ?> </span> </p>
+                        <h2><?php echo CHtml::link($gig->gig_title, array('/site/gig/view', 'slug' => $gig->slug)); ?></h2>
+                        <p> <span> <?php echo CHtml::link($gig->tutor->fullname, array('/site/user/profile', 'slug' => $gig->tutor->slug)); ?> </span> </p>
                         <?php
                         $this->widget('ext.DzRaty.DzRaty', array(
                             'name' => 'gig_rating_carousal' . $key,

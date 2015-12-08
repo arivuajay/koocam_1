@@ -16,8 +16,8 @@ $logged_user = !$is_tutor && !Yii::app()->user->isGuest;
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8 col-md-offset-1  col-lg-offset-2 page-details user-details">
                 <p><?php echo $tutor->profilethumb; ?></p>
-                <h2><?php echo CHtml::link($tutor->fullname, array('/site/default/profile', 'slug' => $tutor->slug), array()); ?></h2>
-                <?php echo CHtml::link($tutor->userProf->prof_tag, '#', array()); ?><br/>
+                <h2><?php echo CHtml::link($tutor->fullname, array('/site/user/profile', 'slug' => $tutor->slug)); ?></h2>
+                <?php echo CHtml::link($tutor->userProf->prof_tag, '#'); ?><br/>
                 <?php
                 $this->widget('ext.DzRaty.DzRaty', array(
                     'name' => 'gig_rating',
@@ -41,9 +41,11 @@ $logged_user = !$is_tutor && !Yii::app()->user->isGuest;
             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                 <div class="course-img">
                     <div class="price-bg"> <?php echo $model->gig_duration; ?> min<br/>
-                        <b class="gig_price_txt"> $ <?php echo $gig_price = (int) $model->gig_price; ?> </b></div>
-                    <div class="online" data-toggle="tooltip" data-placement="bottom" title="online"> </div>
-                    <?php echo $model->gigimage; ?></div>
+                        <b class="gig_price_txt"> $ <?php echo $gig_price = (int) $model->gig_price; ?> </b>
+                    </div>
+                    <?php echo $model->tutorstatusicon; ?>
+                    <?php echo $model->gigimage; ?>
+                </div>
                 <div class="row">
                     <?php
                     $model->setButtonOptions();
@@ -65,7 +67,7 @@ $logged_user = !$is_tutor && !Yii::app()->user->isGuest;
                         <span class='st_sharethis_large custom-share' displayText='ShareThis'></span>
                     </div>
                     <?php // if ($logged_user) { ?>
-                        <!--<a href="#" data-target="#comments" data-toggle="modal">Comments</a>-->
+                    <!--<a href="#" data-target="#comments" data-toggle="modal">Comments</a>-->
                     <?php // } ?>
                 </div>
             </div>

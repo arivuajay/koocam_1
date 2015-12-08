@@ -24,12 +24,12 @@ $themeUrl = $this->themeUrl;
                         <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2 purchase-img">
                             <?php
                             $image = $gig->gigthumb;
-                            echo CHtml::link($image, array('/site/gig/view', 'slug' => $gig->slug), array());
+                            echo CHtml::link($image, array('/site/gig/view', 'slug' => $gig->slug));
                             ?>                
                         </div>
                         <div class="col-xs-12 col-sm-5 col-md-4 col-lg-4 purchase-gig">
-                            <h2> <?php echo CHtml::link($gig->gig_title, array('/site/gig/view', 'slug' => $gig->slug), array()); ?></h2>
-                            <p> <span> <?php echo CHtml::link($gig->tutor->fullname, array('/site/user/profile', 'slug' => $gig->tutor->slug), array()); ?> </span> </p>
+                            <h2> <?php echo CHtml::link($gig->gig_title, array('/site/gig/view', 'slug' => $gig->slug)); ?></h2>
+                            <p> <span> <?php echo CHtml::link($gig->tutor->fullname, array('/site/user/profile', 'slug' => $gig->tutor->slug)); ?> </span> </p>
                         </div>
                         <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4 purchase-gig">
                             <p> <b> Date : </b>  <?php echo date(PHP_SHORT_DATE_FORMAT, strtotime($book->book_date)); ?>  </p>

@@ -19,8 +19,8 @@ $form = $this->beginWidget('CActiveForm', array(
     ),
         ));
 echo $form->hiddenField($booking_model, 'gig_id', array('value' => $model->gig_id));
-echo $form->hiddenField($booking_model, 'book_date', array());
-echo $form->hiddenField($booking_model, 'book_start_time', array());
+echo $form->hiddenField($booking_model, 'book_date');
+echo $form->hiddenField($booking_model, 'book_start_time');
 
 $session = GigBooking::gigSessionList(Yii::app()->user->id, $model->gig_id, date('Y-m-d'));
 $gig_price = (int) $model->gig_price;

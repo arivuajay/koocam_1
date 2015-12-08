@@ -458,4 +458,21 @@ class Gig extends RActiveRecord {
         $this->_logged_user = !$this->_is_tutor && !Yii::app()->user->isGuest;
     }
 
+    public function getTutorstatusicon() {
+        switch ($this->tutor->live_status) {
+            case 'A':
+                $class = 'online';
+                $title = 'online';
+                break;
+            case 'B':
+                $class = 'busy';
+                $title = 'busy';
+                break;
+            case 'O':
+                $class = 'offline';
+                $title = 'offline';
+                break;
+        }
+        return "<div title='{$title}' data-placement='bottom' data-toggle='tooltip' class='{$class}' data-original-title='{$title}'> </div>";
+    }
 }

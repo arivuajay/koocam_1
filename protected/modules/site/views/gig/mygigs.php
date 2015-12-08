@@ -25,12 +25,12 @@ $themeUrl = $this->themeUrl;
                                 </div>
                                 <?php
                                 $image = $gig->gigthumb;
-                                echo CHtml::link($image, array('/site/gig/view', 'slug' => $gig->slug), array());
+                                echo CHtml::link($image, array('/site/gig/view', 'slug' => $gig->slug));
                                 ?>
                             </div>
                             <div class="course-thumbdetails">
-                                <h2><?php echo CHtml::link($gig->gig_title, array('/site/gig/view', 'slug' => $gig->slug), array()); ?></h2>
-                                <p> <span> <?php echo CHtml::link($gig->tutor->fullname, array('/site/user/profile', 'slug' => $gig->tutor->slug), array()); ?> </span> </p>
+                                <h2><?php echo CHtml::link($gig->gig_title, array('/site/gig/view', 'slug' => $gig->slug)); ?></h2>
+                                <p> <span> <?php echo CHtml::link($gig->tutor->fullname, array('/site/user/profile', 'slug' => $gig->tutor->slug)); ?> </span> </p>
                                 <?php
                                 $this->widget('ext.DzRaty.DzRaty', array(
                                     'name' => 'gig_rating_mygigs' . $key,
