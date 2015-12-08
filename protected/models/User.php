@@ -37,6 +37,7 @@
  * @property Purchase $gigPurchase
  * @property UserPaypal[] $userPaypals
  * @property Country $userCountry
+ * @property SecurityQuestion $security_question
  */
 class User extends RActiveRecord {
 
@@ -59,6 +60,10 @@ class User extends RActiveRecord {
         }
         return $fullname;
     }
+    
+    public $old_password;
+    public $new_password;
+    public $repeat_password;
 
     public $confirm_password;
     public $i_agree;
@@ -100,19 +105,45 @@ class User extends RActiveRecord {
         return array(
             array('username, password_hash, email, confirm_password', 'required', 'on' => 'register'),
             array('username, email, password_hash', 'required', 'on' => 'insert'),
+            
             array('username, email, password_hash', 'required', 'on' => 'admin_add'),
             array('username, email', 'required', 'on' => 'admin_edit'),
+            
+            array('email, confirm_password', 'required', 'on' => 'account_setting'),
+            array('confirm_password', 'authenticate', 'on' => 'account_setting'),
+            
             array('username, password_hash, password_reset_token, email', 'length', 'max' => 255),
             array('status, live_status', 'length', 'max' => 1),
             array('email, username, slug', 'unique'),
             array('email', 'email'),
             array('password_hash', 'compare', 'compareAttribute' => 'confirm_password', 'on' => 'register'),
-            array('created_at, modified_at, user_activation_key, user_login_ip, user_last_login, is_auto_timezone, user_locale_id, user_timezone_id, i_agree, user_rating, country_id', 'safe'),
+            
+            array('old_password, new_password, repeat_password', 'required', 'on' => 'changePwd'),
+            array('old_password', 'findPasswords', 'on' => 'changePwd'),
+            array('repeat_password', 'compare', 'compareAttribute' => 'new_password', 'on' => 'changePwd'),
+            
+            array('security_question_id, answer', 'required', 'on' => 'account_setting_security'),
+            
+            array('created_at, modified_at, user_activation_key, user_login_ip, user_last_login, is_auto_timezone, user_locale_id, user_timezone_id, i_agree, user_rating, country_id, old_password, new_password, repeat_password, security_question_id, answer', 'safe'),
             array('i_agree', 'compare', 'compareValue' => true, 'message' => 'You must agree to the terms and conditions', 'on' => 'register'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('user_id, username, password_hash, password_reset_token, email, status, live_status, created_at, modified_at, user_locale_id, user_timezone_id', 'safe', 'on' => 'search'),
         );
+    }
+
+    public function authenticate($attribute, $params) {
+        $user = User::model()->findByPk(Yii::app()->user->id);
+        $is_correct_password = ($user->password_hash !== Myclass::encrypt($this->confirm_password)) ? false : true;
+        if (!$is_correct_password)
+            $this->addError('confirm_password', Myclass::t('Incorrect Password. Please enter your correct password.'));
+    }
+    
+    //matching the old password with your existing password.
+    public function findPasswords($attribute, $params) {
+        $user = User::model()->findByPk(Yii::app()->user->id);
+        if ($user->password_hash != Myclass::encrypt($this->old_password))
+            $this->addError($attribute, 'Old password is incorrect.');
     }
 
     /**
@@ -133,6 +164,7 @@ class User extends RActiveRecord {
             'gigPurchase' => array(self::HAS_MANY, 'Purchase', 'user_id'),
             'userPaypals' => array(self::HAS_MANY, 'UserPaypal', 'user_id'),
             'userCountry' => array(self::BELONGS_TO, 'Country', 'country_id'),
+            'security_question' => array(self::BELONGS_TO, 'SecurityQuestion', 'security_question_id'),
         );
     }
 

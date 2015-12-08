@@ -32,7 +32,7 @@ class UserController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('profileupdate', 'sendmessage', 'switchstatus'),
+                'actions' => array('profileupdate', 'sendmessage', 'switchstatus', 'accountsetting', 'editpersonalinformaiton', 'editemailaddress', 'changepassword', 'editsecurityquestionanswer'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -87,11 +87,87 @@ class UserController extends Controller {
         if (Yii::app()->request->isPostRequest && Yii::app()->request->getPost('Message')) {
             $message->attributes = Yii::app()->request->getPost('Message');
             $model = $this->loadModelSlug($message->userSlug);
-            
+
             Message::insertMessage($message->message, Yii::app()->user->id, $model->user_id);
-            
+
             Yii::app()->user->setFlash('success', "Message sent successfully!!!");
             $this->redirect(array('/site/user/profile', 'slug' => $model->slug));
+        }
+    }
+
+    public function actionAccountsetting() {
+        $this->layout = '//layouts/user_dashboard';
+        $model = $this->loadModel(Yii::app()->user->id);
+        $this->render('account_setting', compact('model'));
+    }
+
+    public function actionEditpersonalinformaiton() {
+        $model = $this->loadModel(Yii::app()->user->id);
+        $user_profile = $model->userProf;
+        if (empty($user_profile)) {
+            $user_profile = new UserProfile;
+        }
+        $this->performAjaxValidation($user_profile);
+        if (Yii::app()->request->isPostRequest && Yii::app()->request->getPost('UserProfile')) {
+            $user_profile->attributes = Yii::app()->request->getPost('UserProfile');
+            $user_profile->user_id = Yii::app()->user->id;
+            if ($user_profile->validate()) {
+                if ($user_profile->save()) {
+                    Yii::app()->user->setFlash('success', "Personal information edited successfully!!!");
+                    $this->redirect(array('accountsetting'));
+                }
+            }
+        }
+    }
+
+    public function actionEditemailaddress() {
+        $model = $this->loadModel(Yii::app()->user->id);
+        $model->scenario = 'account_setting';
+        $this->performAjaxValidation($model);
+        if (Yii::app()->request->isPostRequest && Yii::app()->request->getPost('User')) {
+            $model->attributes = Yii::app()->request->getPost('User');
+            $model->user_id = Yii::app()->user->id;
+            if ($model->validate()) {
+                if ($model->save(false)) {
+                    Yii::app()->user->setFlash('success', "Email address edited successfully!!!");
+                    $this->redirect(array('accountsetting'));
+                }
+            }
+        }
+    }
+
+    public function actionChangepassword() {
+        $model = $this->loadModel(Yii::app()->user->id);
+        $model->scenario = 'changePwd';
+        $this->performAjaxValidation($model);
+
+        if (isset($_POST['User'])) {
+            $model->attributes = $_POST['User'];
+            $valid = $model->validate();
+            if ($valid) {
+                $model->password_hash = Myclass::encrypt($model->new_password);
+                if ($model->save(false)) {
+                    Yii::app()->user->setFlash('success', "Password changed successfully!!!");
+                    $this->redirect(array('accountsetting'));
+                }
+            }
+        }
+    }
+
+    public function actionEditsecurityquestionanswer() {
+        $model = $this->loadModel(Yii::app()->user->id);
+        $model->scenario = "account_setting_security";
+        $this->performAjaxValidation($model);
+        
+        if (Yii::app()->request->isPostRequest && Yii::app()->request->getPost('User')) {
+            $model->attributes = Yii::app()->request->getPost('User');
+            $model->user_id = Yii::app()->user->id;
+            if ($model->validate()) {
+                if ($model->save(false)) {
+                    Yii::app()->user->setFlash('success', "Security question and answer edited successfully!!!");
+                    $this->redirect(array('accountsetting'));
+                }
+            }
         }
     }
 
@@ -126,9 +202,9 @@ class UserController extends Controller {
             throw new CHttpException(404, 'The requested page does not exist.');
         return $model;
     }
-    
+
     public function actionSwitchstatus() {
-        if(!empty($_POST['user_id']) && !empty($_POST['mode'])){
+        if (!empty($_POST['user_id']) && !empty($_POST['mode'])) {
             $model = $this->loadModel($_POST['user_id']);
             $model->saveAttributes(array('live_status' => $_POST['mode']));
         }
