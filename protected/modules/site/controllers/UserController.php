@@ -32,7 +32,7 @@ class UserController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('profileupdate', 'sendmessage', 'switchstatus', 'accountsetting', 'editpersonalinformaiton', 'editemailaddress', 'changepassword', 'editsecurityquestionanswer'),
+                'actions' => array('profileupdate', 'sendmessage', 'switchstatus', 'accountsetting', 'editpersonalinformaiton', 'editemailaddress', 'changepassword', 'editsecurityquestionanswer', 'paypaldelete'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -158,7 +158,7 @@ class UserController extends Controller {
         $model = $this->loadModel(Yii::app()->user->id);
         $model->scenario = "account_setting_security";
         $this->performAjaxValidation($model);
-        
+
         if (Yii::app()->request->isPostRequest && Yii::app()->request->getPost('User')) {
             $model->attributes = Yii::app()->request->getPost('User');
             $model->user_id = Yii::app()->user->id;
@@ -168,6 +168,14 @@ class UserController extends Controller {
                     $this->redirect(array('accountsetting'));
                 }
             }
+        }
+    }
+
+    public function actionPaypaldelete($paypal_id) {
+        $model = $this->loadModel(Yii::app()->user->id);
+        if (UserPaypal::model()->deleteAllByAttributes(array("user_id" => Yii::app()->user->id, "paypal_id" => $paypal_id))) {
+            Yii::app()->user->setFlash('success', "paypal address deleted successfully!!!");
+            $this->redirect(array('accountsetting'));
         }
     }
 

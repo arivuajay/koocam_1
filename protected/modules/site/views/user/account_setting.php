@@ -8,6 +8,7 @@ $this->title = 'Account Setting';
 $themeUrl = $this->themeUrl;
 $user_profile = $model->userProf;
 $user_security_question = $model->security_question;
+$user_paypals = $model->userPaypals;
 ?>
 <div class="col-xs-12 col-sm-8 col-md-9 col-lg-9">
     <div class="myprofile-inner">
@@ -106,15 +107,23 @@ $user_security_question = $model->security_question;
                         <p>&nbsp;</p>
 
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-heading">
-                            Paypal Setting  <span><a href="#"> <i class="fa fa-pencil"></i> edit </a></span>
+                            Paypal Setting 
                         </div>
 
+                        
                         <div class="form-group">  
+                            <?php if(!empty($user_paypals)){ ?>
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 age-verify ">
-                                <p>  demo@companyname.com </p>
-                                <p>  demo@companyname2.com </p>
+                                <?php foreach($user_paypals as $user_paypal){ ?>
+                                <p>  
+                                    <?php echo $user_paypal->paypal_address; ?>  
+                                    <?php echo CHtml::link('<i class="fa fa-trash"></i>', array('/site/user/paypaldelete', 'paypal_id' => $user_paypal->paypal_id), array('confirm' => 'Are you sure?'))?>
+                                </p>
+                                <?php } ?>
                             </div>
+                            <?php } ?>
                             <p>&nbsp;</p>
+                            
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-heading"> 
                                 <a href="#"> <i class="fa fa-user-times"></i> Deactivate My Account </a>
                             </div>
