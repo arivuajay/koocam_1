@@ -60,6 +60,7 @@ class DefaultController extends Controller {
         if (isset($_POST['LoginForm'])) {
             $model->attributes = $_POST['LoginForm'];
             if ($model->validate() && $model->login()):
+                User::switchStatus(Yii::app()->user->id, 'A');
                 Yii::app()->user->setFlash('success', "You logged in successfully!!!");
                 $this->goHome();
             endif;

@@ -51,7 +51,7 @@ $themeUrl = $this->themeUrl;
                                     <li>
                                         <?php
                                         $img = CHtml::image($themeUrl . '/images/my-jobs.png', '');
-                                        echo CHtml::link($img . '<b> My Jobs </b> <span class="count">15</span><span class="circle"></span>', '#', array('class' => '', 'data-toggle' => "modal", 'data-target' => "#booking-2"));
+                                        echo CHtml::link($img . '<b> My Jobs </b>', '#', array('class' => '', 'data-toggle' => "modal", 'data-target' => "#booking-2"));
                                         ?>
                                     </li>
                                     <li>
