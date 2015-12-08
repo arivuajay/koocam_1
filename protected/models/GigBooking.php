@@ -29,7 +29,7 @@
  * The followings are the available model relations:
  * @property Gig $gig
  * @property User $bookUser
- * @property GigTokens[] $gigTokens
+ * @property GigTokens $gigTokens
  * @property ReportAbuse $reportAbuses
  * @property Purchase $gigPurchase
  */
@@ -64,6 +64,7 @@ class GigBooking extends RActiveRecord {
             'deleted' => array('condition' => "$alias.book_approve = '2'"),
             'all' => array('condition' => "$alias.book_approve is not null"),
             'notdeleted' => array('condition' => "$alias.book_approve != '2'"),
+            'completed' => array('condition' => "$alias.book_payment_status = 'C'"),
         );
     }
 
@@ -133,7 +134,7 @@ class GigBooking extends RActiveRecord {
         return array(
             'gig' => array(self::BELONGS_TO, 'Gig', 'gig_id'),
             'bookUser' => array(self::BELONGS_TO, 'User', 'book_user_id'),
-            'gigTokens' => array(self::HAS_MANY, 'GigTokens', 'book_id'),
+            'gigTokens' => array(self::HAS_ONE, 'GigTokens', 'book_id'),
             'reportAbuses' => array(self::HAS_ONE, 'ReportAbuse', 'book_id'),
             'gigPurchase' => array(self::HAS_ONE, 'Purchase', 'book_id'),
         );

@@ -28,7 +28,7 @@ class DefaultController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('index', 'sociallogin', 'signupsocial', 'login', 'register', 'activation', 'filecrypt', 'download'),
+                'actions' => array('index', 'sociallogin', 'signupsocial', 'login', 'register', 'activation', 'filecrypt', 'download', 'ajaxrun'),
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -85,6 +85,7 @@ class DefaultController extends Controller {
     }
 
     public function actionLogout() {
+        User::switchStatus(Yii::app()->user->id, 'O');
         Yii::app()->user->logout(false);
         Yii::app()->user->setFlash('success', "You were logged out successfully");
         $this->goHome();
@@ -190,8 +191,16 @@ class DefaultController extends Controller {
             Yii::app()->user->setFlash('danger', "Invalid Access !!!");
             $this->goHome();
         }
-        $token = $info['token'];
         $abuse_model = new ReportAbuse();
+        $token = $info['token'];
+
+        if ($info['my_role'] == 'tutor' && $token->tutor_attendance == 0) {
+            GigTokens::saveAttendance($token->token_id, 1, $token->learner_attendance);
+        }
+        if ($info['my_role'] == 'learner' && $token->learner_attendance == 0) {
+            GigTokens::saveAttendance($token->token_id, $token->tutor_attendance, 1);
+        }
+
         $this->render('chat', compact('token', 'abuse_model', 'info'));
     }
 
@@ -232,7 +241,7 @@ class DefaultController extends Controller {
         if (isset($_POST['file']) && isset($_POST['guid'])) {
             $file_path = '/uploads/temp/' . $_POST['file'];
             $add_string = Myclass::getRandomString(7);
-            $df = Myclass::refencryption($file_path).$add_string;
+            $df = Myclass::refencryption($file_path) . $add_string;
             $text = $_POST['file'];
             echo CHtml::link($text, array('/site/default/filedownload', 'df' => $df, 'guid' => $_POST['guid']), array('target' => '_blank'));
         }
@@ -247,14 +256,14 @@ class DefaultController extends Controller {
         echo $token_key = Yii::app()->tok->generateToken($session_key, $role, $expire);
         exit;
     }
-    
+
     public function actionFiledownload($df, $guid) {
         $token = GigTokens::getAuthData($guid);
         if (empty($token)) {
             Yii::app()->user->setFlash('danger', "Invalid Access !!!");
             $this->goHome();
         }
-        $df = substr($df,0,-7);
+        $df = substr($df, 0, -7);
         $file_path = Yii::app()->createAbsoluteUrl(Myclass::refdecryption($df));
 
         $content = @file_get_contents($file_path);
@@ -262,6 +271,33 @@ class DefaultController extends Controller {
             throw new CHttpException(404, 'The requested page does not exist.');
         $filename = isset($_REQUEST["fn"]) ? $_REQUEST["fn"] : basename($file_path);
         Yii::app()->request->sendFile($filename, $content);
+    }
+
+    public function actionAjaxrun() {
+        $return['learner_waiting'] = 0;
+
+        if (!Yii::app()->user->isGuest) {
+            $current_time = Yii::app()->localtime->getUTCNow('Y-m-d H:i:s');
+            $user_id = Yii::app()->user->id;
+            $alias = GigBooking::model()->getTableAlias(false, false);
+            $condition = "$alias.book_start_time <= :currentTime AND $alias.book_end_time >= :currentTime";
+            $condition .= " AND gig.tutor_id = :my_user_id";
+            $condition .= " AND tutor.live_status = 'A'";
+            $condition .= " AND gigTokens.tutor_attendance = '0'";
+            
+            $bookings = GigBooking::model()->with('gig', 'gigTokens', 'gig.tutor')->active()->completed()->find(array(
+                'condition' => $condition,
+                'params' => array(':currentTime' => $current_time, ':my_user_id' => Yii::app()->user->id)
+            ));
+            if(!empty($bookings)){
+                $return['learner_waiting'] = 1;
+                $return['learner_name'] = $bookings->bookUser->fullname;
+                $return['learner_thumb'] = $bookings->bookUser->profilethumb;
+                $return['learner_link'] = CHtml::link('Start Chat', array('/site/default/chat', 'guid' => $bookings->book_guid), array('class' => "btn btn-default explorebtn"));
+            }
+        }
+        echo CJSON::encode($return);
+        exit;
     }
 
 }

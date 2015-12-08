@@ -41,19 +41,20 @@
 class User extends RActiveRecord {
 
     public function init() {
-        if($this->isNewRecord){
+        if ($this->isNewRecord) {
             $this->user_timezone_id = DEFAULT_TIMEZONE;
             $this->user_locale_id = DEFAULT_LOCALE;
             $this->country_id = DEFAULT_COUNTRY;
         }
         parent::init();
     }
+
     const GIG_PER_USER = 20;
 
     public function getFullname() {
-        if($this->userProf->prof_firstname == '' && $this->userProf->prof_lastname == ''){
+        if ($this->userProf->prof_firstname == '' && $this->userProf->prof_lastname == '') {
             $fullname = $this->username;
-        }else{
+        } else {
             $fullname = $this->userProf->prof_firstname . ' ' . $this->userProf->prof_lastname;
         }
         return $fullname;
@@ -180,7 +181,7 @@ class User extends RActiveRecord {
         $criteria->compare($alias . '.live_status', $this->live_status, true);
         $criteria->compare($alias . '.created_at', $this->created_at, true);
         $criteria->compare($alias . '.modified_at', $this->modified_at, true);
-        
+
         $criteria->order = 'created_at desc';
 
         return new CActiveDataProvider($this, array(
@@ -225,17 +226,17 @@ class User extends RActiveRecord {
         $model->email = $this->email;
         $model->password_hash = $this->password_hash;
         $model->status = '0';
-        
+
         $ip_info = Myclass::getTimezone();
-        if(!empty($ip_info)){
+        if (!empty($ip_info)) {
             $model->country_id = Country::getCountryByName(strtoupper($ip_info['country']));
         }
         if ($model->is_auto_timezone == 'Y') {
-            if(!empty($ip_info)){
+            if (!empty($ip_info)) {
                 $model->user_timezone_id = Timezone::getTimezoneByName($ip_info['timezone']);
             }
         }
-        
+
         $model->save(false);
         ///////////////////////
         $confirmationlink = SITEURL . '/site/default/activation?activationkey=' . $model->user_activation_key . '&userid=' . $model->user_id;
@@ -263,7 +264,7 @@ class User extends RActiveRecord {
     public function getLanguages($return_type = 'string') {
         $lang = '';
         $langArr = CJSON::decode($this->userProf->prof_languages);
-        if($return_type == 'array'){
+        if ($return_type == 'array') {
             return $langArr;
         }
         $languages = Language::model()->findAllByAttributes(array('lang_Id' => $langArr));
@@ -272,14 +273,14 @@ class User extends RActiveRecord {
         }
         return rtrim($lang, ', ');
     }
-    
-    public function getCountry(){
+
+    public function getCountry() {
         $Country = Country::model()->findByPk($this->userProf->country_id);
         return $Country->country_name;
     }
 
     public function getProfileimage($htmlOptions = array()) {
-        if(!empty($this->userProf->prof_picture))
+        if (!empty($this->userProf->prof_picture))
             $path = UPLOAD_DIR . '/users/' . $this->user_id . $this->userProf->prof_picture;
         if (!isset($path) || !is_file($path))
             $path = 'themes/koocam/images/profile-img.jpeg';
@@ -287,18 +288,24 @@ class User extends RActiveRecord {
     }
 
     public function getProfilethumb($htmlOptions = array('class' => 'img-circle')) {
-        if(!empty($this->userProf->prof_picture))
+        if (!empty($this->userProf->prof_picture))
             $path = UPLOAD_DIR . '/users/' . $this->user_id . '/thumb' . $this->userProf->prof_picture;
         if (!isset($path) || !is_file($path))
             $path = 'themes/koocam/images/profile-pic.jpeg';
         return CHtml::image(Yii::app()->createAbsoluteUrl($path), '', $htmlOptions);
     }
-    
+
     public function getGigcount() {
         return Gig::model()->mine()->exceptDelete()->count();
     }
-    
+
     public function getPurchasecount() {
         return count($this->gigPurchase);
     }
+
+    public static function switchStatus($user_id, $live_status) {
+        $user = User::model()->findByAttributes(array('user_id' => $user_id));
+        $user->saveAttributes(array('live_status' => $live_status));
+    }
+
 }

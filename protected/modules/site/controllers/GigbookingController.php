@@ -32,7 +32,7 @@ class GigbookingController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('booking', 'calendarevents', 'getsessionoptions', 'getbookingprice'),
+                'actions' => array('booking', 'calendarevents', 'getsessionoptions', 'getbookingprice', 'usercalendarevents'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -70,25 +70,38 @@ class GigbookingController extends Controller {
 
     public function actionCalendarevents($gig) {
         $bookings = GigBooking::model()->active()->findAll(array('order' => 'created_at DESC', 'condition' => "gig_id = {$gig}"));
-//        $limit = 10;
         $date = array();
         foreach ($bookings as $booking) {
-//            if (isset($date[strtotime($booking->book_date)])) {
-//                $date[strtotime($booking->book_date)] = $date[strtotime($booking->book_date)] + 1;
-//            } else {
-//                $date[strtotime($booking->book_date)] = 1;
-//            }
-//            if ($date[strtotime($booking->book_date)] <= $limit) {
             $title = 'Busy (' . date('H:i', strtotime($booking->book_start_time)) . '-' . date('H:i', strtotime($booking->book_end_time)) . ')';
             $items[] = array(
                 'state' => 'TRUE',
                 'title' => $title,
                 'start' => date('Y-m-d', strtotime($booking->book_date)),
                 'color' => '#7E7E7E',
-                    //                'start' => $booking->book_date,
 //                    'url' => $this->createUrl('/site/journal/listjournal', array('date' => date('Y-m-d', strtotime($booking->book_date))))
             );
-//            }
+        }
+
+        echo CJSON::encode($items);
+        Yii::app()->end();
+    }
+
+    public function actionUsercalendarevents($user_id) {
+        $bookings = GigBooking::model()->with('gig')->active()->findAll(array('order' => 't.created_at DESC', 'condition' => "gig.tutor_id = {$user_id} OR t.book_user_id = {$user_id}"));
+        $date = array();
+        foreach ($bookings as $booking) {
+            $color = '#777777';
+            if($booking->gig->tutor_id == Yii::app()->user->id){
+                $color = '#5CB85C';
+            }
+            $title = 'Busy (' . date('H:i', strtotime($booking->book_start_time)) . '-' . date('H:i', strtotime($booking->book_end_time)) . ')';
+            $items[] = array(
+                'state' => 'TRUE',
+                'title' => $title,
+                'start' => date('Y-m-d', strtotime($booking->book_date)),
+                'color' => $color,
+//                    'url' => $this->createUrl('/site/journal/listjournal', array('date' => date('Y-m-d', strtotime($booking->book_date))))
+            );
         }
 
         echo CJSON::encode($items);

@@ -9,6 +9,10 @@
  * @property string $session_key
  * @property string $token_key
  * @property string $session_data
+ * @property string $tutor_attendance
+ * @property string $tutor_attend_time
+ * @property string $learner_attendance
+ * @property string $learner_attend_time
  * @property string $created_at
  * @property string $modified_at
  *
@@ -35,10 +39,10 @@ class GigTokens extends RActiveRecord {
         return array(
             array('book_id, session_key, token_key, session_data', 'required'),
             array('book_id', 'numerical', 'integerOnly' => true),
-            array('session_key, token_key, session_data, modified_at', 'safe'),
+            array('session_key, token_key, session_data, modified_at, learner_attendance, tutor_attendance, tutor_attend_time, learner_attend_time', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('token_id, book_id, session_key, token_key, session_data, created_at, modified_at', 'safe', 'on' => 'search'),
+            array('token_id, book_id, session_key, token_key, session_data, created_at, modified_at, learner_attendance, tutor_attendance, tutor_attend_time, learner_attend_time', 'safe', 'on' => 'search'),
         );
     }
 
@@ -211,4 +215,17 @@ class GigTokens extends RActiveRecord {
         return $info;
     }
 
+    public static function saveAttendance($token_id, $tutor_attendance, $learner_attendance) {
+        $model = self::model()->findByPk($token_id);
+        $model->attributes = array('tutor_attendance' => $tutor_attendance, 'learner_attendance' => $learner_attendance);
+        if($tutor_attendance == 1){
+            $model->tutor_attend_time = date('Y-m-d H:i:s');
+            User::switchStatus($model->book->gig->tutor_id, 'B');
+        }
+        if($learner_attendance == 1){
+            $model->learner_attend_time = date('Y-m-d H:i:s');
+            User::switchStatus($model->book->bookUser->user_id, 'B');
+        }
+        $model->save(false);
+    }
 }

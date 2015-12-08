@@ -421,7 +421,8 @@ class Gig extends RActiveRecord {
         $button = NULL;
         if (!$this->_is_tutor) :
             if ($this->_logged_user) {
-                $button = CHtml::link($text, '#', array('class' => $class, 'data-toggle' => "modal", 'data-target' => "#$data_target"));
+                if($this->tutor->live_status == 'A')
+                    $button = CHtml::link($text, '#', array('class' => $class, 'data-toggle' => "modal", 'data-target' => "#$data_target"));
             } else {
                 $button = CHtml::link($text, '#', array('class' => $class, 'data-toggle' => "modal", 'data-target' => ".bs-example-modal-sm1", 'data-dismiss' => ".bs-example-modal-sm"));
             }

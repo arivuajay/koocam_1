@@ -49,13 +49,10 @@ $themeUrl = $this->themeUrl;
                                     $user = User::model()->findByPk(Yii::app()->user->id);
                                     ?>
                                     <li>
-                                        <a data-toggle="dropdown" class="dropdown-toggle" href="#" aria-expanded="true">
-                                            <?php echo CHtml::image($themeUrl . '/images/my-jobs.png', ''); ?> <b> My Jobs </b> <span class="count">15</span>
-                                            <span class="circle"></span>
-                                        </a>
-                                        <ul role="menu" class="dropdown-menu notifications  bullet pull-right" >
-                                            Calender will come :)
-                                        </ul>
+                                        <?php
+                                        $img = CHtml::image($themeUrl . '/images/my-jobs.png', '');
+                                        echo CHtml::link($img . '<b> My Jobs </b> <span class="count">15</span><span class="circle"></span>', '#', array('class' => '', 'data-toggle' => "modal", 'data-target' => "#booking-2"));
+                                        ?>
                                     </li>
                                     <li>
                                         <?php $this->renderPartial('//layouts/_message_box', compact('themeUrl')); ?>
@@ -96,7 +93,7 @@ $themeUrl = $this->themeUrl;
                                                 $btn_mode = 'O';
                                                 break;
                                         }
-                                        echo CHtml::link('<i class="fa fa-power-off"></i>', 'javascript:void(0)', array('class' => "{$btn_class}", 'data-toggle' => "tooltip", 'data-placement' => "bottom", 'id' => 'switch_status', 'data-mode' => $btn_mode));
+                                        echo CHtml::link('<i class="fa fa-power-off"></i>', 'javascript:void(0)', array('class' => "{$btn_class}", 'data-toggle' => "tooltip", 'data-placement' => "bottom", 'title' => "{$btn_title}", 'id' => 'switch_status', 'data-mode' => $btn_mode));
                                         ?>
                                     </li>
                                 <?php } else { ?>
@@ -115,11 +112,13 @@ $themeUrl = $this->themeUrl;
 
 <?php
 if (!Yii::app()->user->isGuest) {
+    $this->renderPartial('//layouts/_calendar_box', compact('themeUrl'));
+    
     $cs = Yii::app()->getClientScript();
     $cs_pos_end = CClientScript::POS_END;
     $mode_url = Yii::app()->createAbsoluteUrl('/site/user/switchstatus');
     $user_id = Yii::app()->user->id;
-    
+
     $js = <<< EOD
     jQuery(document).ready(function ($) {
         $('#switch_status').on('click', function(){
@@ -129,6 +128,7 @@ if (!Yii::app()->user->isGuest) {
             var user_id = '{$user_id}';
             
             if(mode == 'A' || mode == 'O'){
+                _that.tooltip("hide")
                 new_mode = mode == 'A' ? 'O' : 'A';
             
                 $.ajax({
@@ -139,21 +139,20 @@ if (!Yii::app()->user->isGuest) {
                         if(mode == 'A'){
                             _that.addClass('offline-btn').removeClass('online-btn');
                             _that.data('mode', 'O');
-                            _that.attr('title', 'Offline');
                             _that.attr('data-original-title', 'Offline');
                         }else if(mode == 'O'){
                             _that.addClass('online-btn').removeClass('offline-btn');
                             _that.data('mode', 'A');
-                            _that.attr('title', 'Online');
                             _that.attr('data-original-title', 'Online');
                         }
+                        _that.tooltip("toggle")
                     },
                     error: function(data) {
                         alert("Something went wrong. Try again");
                     },
                 });
             }
-        
+                    
         });
     });
         

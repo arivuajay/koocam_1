@@ -48,6 +48,7 @@
         $cs->registerScriptFile($themeUrl . '/js/jquery.lionbars.0.3.js', $cs_pos_end);
 
         $login = Yii::app()->createAbsoluteUrl('/site/default/signupsocial');
+        
         $js = <<< EOD
             jQuery(document).ready(function ($) {
                 $('.oAuthLogin').click(function(e) {
@@ -67,15 +68,23 @@
                     checkboxClass: 'icheckbox_flat-blue',
                     radioClass: 'iradio_flat-blue'
                 });
-                $('[data-toggle="tooltip"]').tooltip();
+                
+                $('[data-toggle="tooltip"]').tooltip({
+                    show: {
+                      effect: "slideDown",
+                      delay: 250
+                    }
+                });
             });
                 
             $(window).load(function(){
                 $('[data-toggle="popover"]').popover();
             });
 
+
 EOD;
 
+        $this->renderPartial('//layouts/_ajaxrun');
         Yii::app()->clientScript->registerScript('inline', $js);
         ?>
     </body>
