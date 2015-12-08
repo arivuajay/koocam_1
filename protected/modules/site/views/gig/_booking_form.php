@@ -45,7 +45,7 @@ $gig_price = (int) $model->gig_price;
                     $js_date_format = JS_SHORT_DATE_FORMAT_2;
                     $session_url = Yii::app()->createAbsoluteUrl('/site/gigbooking/getsessionoptions');
                     $user_id = Yii::app()->user->id;
-                    
+
                     $this->widget('ext.EFullCalendar.EFullCalendar', array(
                         'id' => 'booking-cal',
                         'htmlOptions' => array(
@@ -147,7 +147,7 @@ $gig_price = (int) $model->gig_price;
                                 <?php echo $form->dropDownList($booking_model, 'book_session', $session, array('class' => 'selectpicker', "data-style" => "btn-white", "data-size" => "5", 'prompt' => 'Select Session')); ?>
                                 <?php echo $form->error($booking_model, 'book_session'); ?>
                             </div>
-                            
+
                         </div>
                         <?php if (!empty($model->gigExtras)) { ?>
                             <div class="form-group">
@@ -185,8 +185,12 @@ $gig_price = (int) $model->gig_price;
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
-                                <h4 class="total-price"> Price : $ <?php echo $gig_price; ?> </h4>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 ">
+                                <h4 class="total-price"> Price : $ <span id="inner_price"></span></h4>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 ">
+                                <span>Incl. Processing Fee: $ <span id="inner_processing_fee"></span></span>
+                                <br><span>Incl. Service Tax: $ <span id="inner_service_tax"></span></span>
                             </div>
                         </div>
                     </div>
@@ -211,22 +215,32 @@ $sessionId = CHTML::activeId($booking_model, 'book_session');
 
 $gig_price = $model->gig_price;
 $extra_price = isset($model->gigExtras->extra_price) ? $model->gigExtras->extra_price : 0;
+$user_country_id = Yii::app()->user->country_id;
+
+$price_calculation_url = Yii::app()->createAbsoluteUrl('/site/gigbooking/getbookingprice');
 
 $js = <<< EOD
     jQuery(document).ready(function ($) {
         var gig_price = $gig_price;
         var extra_price = $extra_price;
+        var user_country_id = $user_country_id;
+        var extra_checked = $('#book_extra_inner').parent('div').hasClass('checked');
         
         // Extra Price functions //
         $('#book_extra_inner').on('ifChecked', function(event){
-            var newPrice = parseFloat(extra_div.data('gig_price')) + parseFloat(extra_div.data('extra_price'));
-            $('.total-price').html('Price : $ '+newPrice);
+            gigPriceBySessionInner($("#{$sessionId}").val(), true);
         });
 
         $('#book_extra_inner').on('ifUnchecked', function(event){
-            var newPrice = parseFloat(extra_div.data('gig_price'));
-            $('.total-price').html('Price : $ '+newPrice);
+            gigPriceBySessionInner($("#{$sessionId}").val(), false);
         });
+            
+        // Session change Functions //
+        $('#{$sessionId}').on('change', function(){
+            gigPriceBySessionInner($(this).val(), $('#book_extra_inner').parent('div').hasClass('checked'));
+        });
+        
+        gigPriceBySessionInner($("#{$sessionId}").val(), extra_checked);
 
         // Hours & minutes //
         $(".input-group-addon").on("click", function () {
@@ -272,12 +286,11 @@ $js = <<< EOD
             $('#message_div').addClass('hide');
         });
         
-        // Session change Functions //
-        $('#{$sessionId}').on('change', function(){
-            session = $(this).val();
+        function gigPriceBySessionInner(session_count, is_extra){
+            session = session_count;
             price = 0;
-            extra = $('#book_extra_inner').parent('div').hasClass('checked') ? extra_price : 0;
-        
+            extra = is_extra ? extra_price : 0;
+
             if(session != ''){
                 for (i = 0; i < session; i++) {
                     price = parseFloat(price) + parseFloat(gig_price);
@@ -285,18 +298,33 @@ $js = <<< EOD
             }else{
                 price = gig_price;
             }
-        
-            tot_price = parseFloat(price) + parseFloat(extra);
-            $('.total-price').html('Price : $ '+ tot_price);
-            extra_div.data('gig_price', price);
-        });
-        
+            priceCalculationInner(user_country_id, price, extra);
+        }
+
+        function priceCalculationInner(calc_user_country_id, calc_gig_price, calc_extra_price){
+            $.ajax({
+                type: 'POST',
+                url: '$price_calculation_url',
+                data: {user_country_id: calc_user_country_id, gig_price: calc_gig_price, extra_price: calc_extra_price},
+                dataType: 'json',
+                success:function(data){
+                    $('#inner_price').html(data.total_price);
+                    $('#inner_processing_fee').html(data.processing_fees);
+                    $('#inner_service_tax').html(data.service_tax);
+                },
+                error: function(data) {
+                    alert('Something went wrong. Try again');
+                },
+            });
+        }
     });
 
     function pad (str, max) {
         str = str.toString();
         return str.length < max ? pad("0" + str, max) : str;
     }
+        
+    
 
 EOD;
 Yii::app()->clientScript->registerScript('_booking_form', $js);

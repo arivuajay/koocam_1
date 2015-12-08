@@ -307,9 +307,15 @@ class GigBooking extends RActiveRecord {
                 $price = $gig_price + $price;
             }
             $this->book_gig_price = $price;
+            
+            $this->book_extra_price = 0;
             if ($this->book_is_extra)
                 $this->book_extra_price = $this->gig->gigExtras->extra_price;
-            $this->book_total_price = $this->book_gig_price + $this->book_extra_price;
+            
+            $price_calculation = self::price_calculation(Yii::app()->user->country_id, $this->book_gig_price, $this->book_extra_price);
+            $this->book_processing_fees = $price_calculation['processing_fees'];
+            $this->book_service_tax = $price_calculation['service_tax'];
+            $this->book_total_price = $price_calculation['total_price'];
             $this->book_duration = $this->gig->gig_duration;
         endif;
     }
