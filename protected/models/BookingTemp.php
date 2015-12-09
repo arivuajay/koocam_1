@@ -8,10 +8,13 @@
  * @property string $temp_guid
  * @property string $temp_key
  * @property string $temp_value
+ * @property integer $user_id
+ * @property integer $tutor_id
+ * @property string $status
  * @property string $created_at
  * @property string $modified_at
  */
-class BookingTemp extends RActiveRecord {
+class BookingTemp extends CActiveRecord {
 
     public $temp_gig_id;
     public $temp_book_session = 1;
@@ -36,7 +39,7 @@ class BookingTemp extends RActiveRecord {
         return array(
             array('temp_book_session', 'required'),
             array('temp_guid', 'length', 'max' => 50),
-            array('created_at, modified_at, temp_gig_id, temp_book_session, temp_book_is_extra, temp_book_user_id', 'safe'),
+            array('created_at, modified_at, temp_gig_id, temp_book_session, temp_book_is_extra, temp_book_user_id, user_id, tutor_id, status', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('temp_id, temp_guid, temp_key, temp_value, created_at, modified_at', 'safe', 'on' => 'search'),

@@ -12,11 +12,11 @@ $form = $this->beginWidget('CActiveForm', array(
     'id' => 'gig-startnow-form',
     'action' => array('/site/bookingtemp/booking'),
     'htmlOptions' => array('role' => 'form', 'class' => ''),
-    'enableAjaxValidation' => true,
     'clientOptions' => array(
         'validateOnSubmit' => true,
-        'hideErrorMessage' => true,
+        'hideErrorMessage' => false,
     ),
+    'enableAjaxValidation' => true,
         ));
 
 echo $form->hiddenField($booking_temp, 'temp_gig_id', array('value' => $model->gig_id));
@@ -86,9 +86,19 @@ $price_calculation = GigBooking::price_calculation($user_country_id, $gig_price,
                 </div>
 
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer" id="start-now-buttons">
                 <button type="button" class="btn  btn-cancel" data-dismiss="modal">Cancel</button>
-                <?php echo CHtml::submitButton('Pay Now !', array('class' => 'btn btn-red')); ?>
+                <?php
+                echo CHtml::ajaxSubmitButton(
+                        'Pay Now !', array('/site/bookingtemp/booking'), array(
+                            'type'=>'POST',
+                            'dataType'=>'json',
+                    'success' => 'function(data) {
+                            process_startnow_form(data);
+                        }'
+                        ), array('class' => 'btn btn-red')
+                );
+                ?>
             </div>
         </div>
     </div>
@@ -101,6 +111,7 @@ $cs_pos_end = CClientScript::POS_END;
 $temp_sessionId = CHTML::activeId($booking_temp, 'temp_book_session');
 
 $price_calculation_url = Yii::app()->createAbsoluteUrl('/site/gigbooking/getbookingprice');
+$start_now_url = Yii::app()->createAbsoluteUrl('/site/bookingtemp/booking');
 
 $js = <<< EOD
     jQuery(document).ready(function ($) {
@@ -155,7 +166,22 @@ $js = <<< EOD
                 },
             });
         }
+
     });
+                
+    function process_startnow_form(data){
+        if(data.status=="success"){
+            $("#start-now-buttons").html("Please wait while tutor will approve your booking...");
+        } else{
+            $.each(data, function(key, val) {
+                $("#gig-startnow-form #"+key+"_em_").text(val);                                                    
+                $("#gig-startnow-form #"+key+"_em_").show();
+            });
+        }
+        return false;
+    }
+                
+                
 
 EOD;
 Yii::app()->clientScript->registerScript('_start_now', $js);

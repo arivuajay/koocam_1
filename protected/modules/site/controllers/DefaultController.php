@@ -278,6 +278,7 @@ class DefaultController extends Controller {
         $return['learner_waiting'] = 0;
         $return['update_notification_count'] = 0;
         $return['update_message_count'] = 0;
+        $return['tutor_start_now_alert'] = 0;
 
         $themeUrl = $this->themeUrl;
         if (!Yii::app()->user->isGuest) {
@@ -289,19 +290,25 @@ class DefaultController extends Controller {
                 $return['learner_thumb'] = $bookings->bookUser->profilethumb;
                 $return['learner_link'] = CHtml::link('Start Chat', array('/site/default/chat', 'guid' => $bookings->book_guid), array('class' => "btn btn-default explorebtn"));
             }
-            
+
             //Notification Count
             $notifn_count = $this->notificationCount();
-            if($notifn_count > 0 && $notifn_count != $_POST['old_notifn_count']){
+            if ($notifn_count > 0 && $notifn_count != $_POST['old_notifn_count']) {
                 $return['update_notification_count'] = 1;
                 $return['notification_update'] = $this->renderPartial('//layouts/_notification_box', compact('themeUrl'), true, false);
             }
-            
+
             //Message Count
             $msg_count = $this->messageCount();
-            if($msg_count > 0 && $msg_count != $_POST['old_msg_count']){
+            if ($msg_count > 0 && $msg_count != $_POST['old_msg_count']) {
                 $return['update_message_count'] = 1;
                 $return['message_update'] = $this->renderPartial('//layouts/_message_box', compact('themeUrl'), true, false);
+            }
+            
+            //Tutor before paypal confirmation
+            $tutorstartnowalert = $this->tutorStartNowAlert();
+            if (!empty($tutorstartnowalert)) {
+                $return['tutor_start_now_alert'] = 1;
             }
         }
         echo CJSON::encode($return);
@@ -332,6 +339,17 @@ class DefaultController extends Controller {
     public function messageCount() {
         $my_unread_msg_count = Message::getMyUnReadMsgCount();
         return $my_unread_msg_count;
+    }
+
+    public function tutorStartNowAlert() {
+        $tutor_id = Yii::app()->user->id;
+        $temp_booking = BookingTemp::model()->find(array(
+            "condition" => "tutor_id = :tutor_id AND status = :status",
+            "params" => array(":tutor_id" => $tutor_id, ":status" => "0")
+        ));
+        if (!empty($temp_booking)) {
+            return $temp_booking;
+        }
     }
 
 }

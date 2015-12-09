@@ -45,49 +45,67 @@ class BookingtempController extends Controller {
         $this->performAjaxValidation($booking_temp);
 
         if (Yii::app()->request->isPostRequest && Yii::app()->request->getPost('BookingTemp')) {
-            $extra_price = 0;
-            
-            $post_data = Yii::app()->request->getPost('BookingTemp');
-            $gig = Gig::model()->findByPk($post_data['temp_gig_id']);
+            $booking_temp->attributes = Yii::app()->request->getPost('BookingTemp');
+            if ($booking_temp->validate()) {
+                $extra_price = 0;
 
-            $data = array();
-            $data = $post_data;
-            $data['temp_book_user_id'] = Yii::app()->user->id;
-            $data['temp_book_gig_price'] = $gig->gig_price;
-            $data['temp_book_duration'] = $gig->gig_duration;
+                $post_data = Yii::app()->request->getPost('BookingTemp');
+                $gig = Gig::model()->findByPk($post_data['temp_gig_id']);
 
-            if ($post_data['temp_book_session'] == 2) {
-                $data['temp_book_gig_price'] = 2 * $gig->gig_price;
+                $data = array();
+                $data = $post_data;
+                $data['temp_book_user_id'] = Yii::app()->user->id;
+                $data['temp_book_gig_price'] = $gig->gig_price;
+                $data['temp_book_duration'] = $gig->gig_duration;
+
+                if ($post_data['temp_book_session'] == 2) {
+                    $data['temp_book_gig_price'] = 2 * $gig->gig_price;
+                }
+
+                if ($post_data['temp_book_is_extra'] == "Y") {
+                    $extra_price = $gig->gigExtras->extra_price;
+                    $data['temp_book_extra_price'] = $extra_price;
+                }
+
+                $price_calculation = GigBooking::price_calculation(Yii::app()->user->country_id, $data['temp_book_gig_price'], $extra_price);
+
+                $data['temp_book_processing_fees'] = $price_calculation['processing_fees'];
+                $data['temp_book_service_tax'] = $price_calculation['service_tax'];
+                $data['temp_book_total_price'] = $price_calculation['total_price'];
+
+                $booking_temp->temp_value = serialize($data);
+                $booking_temp->user_id = Yii::app()->user->id;
+                $booking_temp->tutor_id = $gig->tutor_id;
+                $booking_temp->save(false);
+                echo CJSON::encode(array(
+                    'status' => 'success',
+                    'temp_guid' => $booking_temp->temp_guid,
+                    'created_at' => $booking_temp->created_at,
+                ));
+                Yii::app()->end();
+            } else {
+                $error = CActiveForm::validate($booking_temp);
+                if ($error != '[]')
+                    echo $error;
+                Yii::app()->end();
             }
 
-            if ($post_data['temp_book_is_extra'] == "Y") {
-                $extra_price = $gig->gigExtras->extra_price;
-                $data['temp_book_extra_price'] = $extra_price;
-            }
-            
-            $price_calculation = GigBooking::price_calculation(Yii::app()->user->country_id, $data['temp_book_gig_price'], $extra_price);
-            
-            $data['temp_book_processing_fees'] = $price_calculation['processing_fees'];
-            $data['temp_book_service_tax'] = $price_calculation['service_tax'];
-            $data['temp_book_total_price'] = $price_calculation['total_price'];
-            
-            $booking_temp->temp_value = serialize($data);
 
-            if ($booking_temp->save(false)) {
-                $paypalManager = new Paypal;
-                $returnUrl = Yii::app()->createAbsoluteUrl('/site/bookingtemp/paypalreturn', array('slug' => $gig->slug));
-                $cancelUrl = Yii::app()->createAbsoluteUrl('/site/bookingtemp/paypalcancel', array('slug' => $gig->slug));
-                $notifyUrl = Yii::app()->createAbsoluteUrl('/site/bookingtemp/paypalnotify');
-
-                $paypalManager->addField('item_name', $gig->gig_title . '-' . BookingTemp::TEMP_BOOKING_KEY);
-                $paypalManager->addField('amount', $data['temp_book_total_price']);
-                $paypalManager->addField('custom', $booking_temp->temp_guid);
-                $paypalManager->addField('return', $returnUrl);
-                $paypalManager->addField('cancel_return', $cancelUrl);
-                $paypalManager->addField('notify_url', $notifyUrl);
-
-                $paypalManager->submitPaypalPost();
-            }
+//            if ($booking_temp->save(false)) {
+//                $paypalManager = new Paypal;
+//                $returnUrl = Yii::app()->createAbsoluteUrl('/site/bookingtemp/paypalreturn', array('slug' => $gig->slug));
+//                $cancelUrl = Yii::app()->createAbsoluteUrl('/site/bookingtemp/paypalcancel', array('slug' => $gig->slug));
+//                $notifyUrl = Yii::app()->createAbsoluteUrl('/site/bookingtemp/paypalnotify');
+//
+//                $paypalManager->addField('item_name', $gig->gig_title . '-' . BookingTemp::TEMP_BOOKING_KEY);
+//                $paypalManager->addField('amount', $data['temp_book_total_price']);
+//                $paypalManager->addField('custom', $booking_temp->temp_guid);
+//                $paypalManager->addField('return', $returnUrl);
+//                $paypalManager->addField('cancel_return', $cancelUrl);
+//                $paypalManager->addField('notify_url', $notifyUrl);
+//
+//                $paypalManager->submitPaypalPost();
+//            }
         }
     }
 
