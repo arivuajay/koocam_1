@@ -45,47 +45,47 @@ label{
 
 
 .fc-more-cell > div {
-  float: left;
-  position: absolute;
-  width: 100%;
-  bottom:0px;
+  float: left  !important;
+  position: absolute  !important;
+  width: 100%  !important;
+  bottom:0px  !important;
 }
 
 .fc-more {
-  background: #31b604 none repeat scroll 0 0;
-  color: #ffffff;
-  left: -3px;
-  padding: 0 2px;
-  position: absolute;
-  top: 15px;
+  background: #31b604 none repeat scroll 0 0  !important;
+  color: #ffffff  !important;
+  left: -3px  !important;
+  padding: 0 2px  !important;
+  position: absolute  !important;
+  top: 15px  !important;
 }
 .fc-more:hover
 {
-	color:#ffffff;
+	color:#ffffff !important;
 }
 
 .fc-more-popover
 {
 	top:50px !important;
-	position:absolute;
+	position:absolute !important;
 }
 
 
 .fc-state-default {
-  background-color: #b41b1e;
-  background-image: linear-gradient(to bottom, #c01d23, #b41b1e);
-  background-repeat: repeat-x;
-  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset, 0 1px 2px rgba(0, 0, 0, 0.05);
-  color: #ffffff;
-  text-shadow:none;
+  background-color: #b41b1e !important;
+  background-image: linear-gradient(to bottom, #c01d23, #b41b1e)  !important;
+  background-repeat: repeat-x  !important;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25)  !important;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset, 0 1px 2px rgba(0, 0, 0, 0.05)  !important;
+  color: #ffffff  !important;
+  text-shadow:none  !important;
 }
 
 .fc-unthemed .fc-divider, .fc-unthemed .fc-popover .fc-header {
-  background: #b4191c none repeat scroll 0 0;
+  background: #b4191c none repeat scroll 0 0 !important;
   color:#ffffff;
 }
 
 .fc-unthemed .fc-popover .fc-header .fc-close {
-  color:#ffffff;
+  color:#ffffff !important;
 }

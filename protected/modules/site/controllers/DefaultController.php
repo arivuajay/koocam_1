@@ -278,19 +278,9 @@ class DefaultController extends Controller {
         $return['learner_waiting'] = 0;
 
         if (!Yii::app()->user->isGuest) {
-            $current_time = Yii::app()->localtime->getUTCNow('Y-m-d H:i:s');
-            $user_id = Yii::app()->user->id;
-            $alias = GigBooking::model()->getTableAlias(false, false);
-            $condition = "$alias.book_start_time <= :currentTime AND $alias.book_end_time >= :currentTime";
-            $condition .= " AND gig.tutor_id = :my_user_id";
-            $condition .= " AND tutor.live_status = 'A'";
-            $condition .= " AND gigTokens.tutor_attendance = '0'";
-            
-            $bookings = GigBooking::model()->with('gig', 'gigTokens', 'gig.tutor')->active()->completed()->find(array(
-                'condition' => $condition,
-                'params' => array(':currentTime' => $current_time, ':my_user_id' => Yii::app()->user->id)
-            ));
-            if(!empty($bookings)){
+            //Learner Waiting
+            $bookings = $this->learnerWaiting();
+            if (!empty($bookings)) {
                 $return['learner_waiting'] = 1;
                 $return['learner_name'] = $bookings->bookUser->fullname;
                 $return['learner_thumb'] = $bookings->bookUser->profilethumb;
@@ -298,7 +288,22 @@ class DefaultController extends Controller {
             }
         }
         echo CJSON::encode($return);
-        exit;
+        Yii::app()->end();
+    }
+
+    public function learnerWaiting() {
+        $current_time = Yii::app()->localtime->getUTCNow('Y-m-d H:i:s');
+        $user_id = Yii::app()->user->id;
+        $alias = GigBooking::model()->getTableAlias(false, false);
+        $condition = "$alias.book_start_time <= :currentTime AND $alias.book_end_time >= :currentTime";
+        $condition .= " AND gig.tutor_id = :my_user_id";
+        $condition .= " AND tutor.live_status = 'A'";
+        $condition .= " AND gigTokens.tutor_attendance = '0'";
+
+        return GigBooking::model()->with('gig', 'gigTokens', 'gig.tutor')->active()->completed()->find(array(
+            'condition' => $condition,
+            'params' => array(':currentTime' => $current_time, ':my_user_id' => Yii::app()->user->id)
+        ));
     }
 
 }
