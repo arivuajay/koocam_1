@@ -3,9 +3,14 @@ $ajaxRun = Yii::app()->createAbsoluteUrl('/site/default/ajaxrun');
 $js = <<< EOD
     jQuery(document).ready(function ($) {
         window.setInterval(function(){
+        
+            msg_count = $('#li_message_top').find('#top_msg_count').html();
+            notifn_count = $('#li_notifn_top').find('#top_notifn_count').html();
+        
             $.ajax({
                 type: 'POST',
                 dataType: 'json',
+                data: {'old_msg_count': msg_count, 'old_notifn_count' : notifn_count},
                 url: '$ajaxRun',
                 success:function(data){
                     if(data.learner_waiting == 1){
@@ -17,6 +22,14 @@ $js = <<< EOD
                         }else{
                             $('#learner-wait').modal('show');
                         }
+                    }
+        
+                    if(data.update_notification_count == 1){
+                        $('#li_notifn_top').html(data.notification_update);
+                    }
+        
+                    if(data.update_message_count == 1){
+                        $('#li_message_top').html(data.message_update);
                     }
                 },
                 error: function(data) {

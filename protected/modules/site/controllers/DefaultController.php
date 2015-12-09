@@ -276,7 +276,10 @@ class DefaultController extends Controller {
 
     public function actionAjaxrun() {
         $return['learner_waiting'] = 0;
+        $return['update_notification_count'] = 0;
+        $return['update_message_count'] = 0;
 
+        $themeUrl = $this->themeUrl;
         if (!Yii::app()->user->isGuest) {
             //Learner Waiting
             $bookings = $this->learnerWaiting();
@@ -286,6 +289,20 @@ class DefaultController extends Controller {
                 $return['learner_thumb'] = $bookings->bookUser->profilethumb;
                 $return['learner_link'] = CHtml::link('Start Chat', array('/site/default/chat', 'guid' => $bookings->book_guid), array('class' => "btn btn-default explorebtn"));
             }
+            
+            //Notification Count
+            $notifn_count = $this->notificationCount();
+            if($notifn_count > 0 && $notifn_count != $_POST['old_notifn_count']){
+                $return['update_notification_count'] = 1;
+                $return['notification_update'] = $this->renderPartial('//layouts/_notification_box', compact('themeUrl'), true, false);
+            }
+            
+            //Message Count
+            $msg_count = $this->messageCount();
+            if($msg_count > 0 && $msg_count != $_POST['old_msg_count']){
+                $return['update_message_count'] = 1;
+                $return['message_update'] = $this->renderPartial('//layouts/_message_box', compact('themeUrl'), true, false);
+            }
         }
         echo CJSON::encode($return);
         Yii::app()->end();
@@ -294,6 +311,7 @@ class DefaultController extends Controller {
     public function learnerWaiting() {
         $current_time = Yii::app()->localtime->getUTCNow('Y-m-d H:i:s');
         $user_id = Yii::app()->user->id;
+
         $alias = GigBooking::model()->getTableAlias(false, false);
         $condition = "$alias.book_start_time <= :currentTime AND $alias.book_end_time >= :currentTime";
         $condition .= " AND gig.tutor_id = :my_user_id";
@@ -301,9 +319,19 @@ class DefaultController extends Controller {
         $condition .= " AND gigTokens.tutor_attendance = '0'";
 
         return GigBooking::model()->with('gig', 'gigTokens', 'gig.tutor')->active()->completed()->find(array(
-            'condition' => $condition,
-            'params' => array(':currentTime' => $current_time, ':my_user_id' => Yii::app()->user->id)
+                    'condition' => $condition,
+                    'params' => array(':currentTime' => $current_time, ':my_user_id' => $user_id)
         ));
+    }
+
+    public function notificationCount() {
+        $notifications = Notification::getNotificationsByUserId(Yii::app()->user->id);
+        return count($notifications);
+    }
+
+    public function messageCount() {
+        $my_unread_msg_count = Message::getMyUnReadMsgCount();
+        return $my_unread_msg_count;
     }
 
 }

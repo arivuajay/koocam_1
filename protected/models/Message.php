@@ -167,6 +167,14 @@ class Message extends RActiveRecord {
         return $total_items;
     }
 
+    public static function getMyReadMsg($limit = 5) {
+        $session_userid = Yii::app()->user->id;
+        $user_read_no = self::USER_READ_YES;
+        $sql = "SELECT m1.* FROM {{message}} `m1`, {{user}} `user` WHERE ((user1=" . $session_userid . " AND user1read='{$user_read_no}') OR (user2=" . $session_userid . " AND user2read='{$user_read_no}')) And user.user_id = m1.user1 ORDER BY `m1`.`message_id` DESC LIMIT {$limit}";
+        $total_items = Yii::app()->db->createCommand($sql)->queryAll();
+        return $total_items;
+    }
+
     public static function insertMessage($msg, $user1, $user2, $gig_id = NULL) {
         $message = new Message;
         // Genreate the conversation id

@@ -91,10 +91,10 @@ a:focus {
 	background:#b81a1e;
 	color:#ffffff;
 	font-size:20px;
-	height:43px;
+	height:40px;
 }
 .search-cont .form-control {
-	height: 43px;
+	height: 40px;
 }
 .site-feature {
 	font-size:14px;
@@ -2082,3 +2082,15 @@ input[type=button] {
 {
 	color:#2e2e2e;
 }
+
+
+
+.btn-info {
+	border:none;
+}
+  
+  
+  .search-bg .dropdown-toggle
+  {
+	  width:200px !important ;
+  }

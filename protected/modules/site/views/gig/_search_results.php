@@ -11,8 +11,8 @@ $themeUrl = $this->themeUrl;
                     <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
                         <div class="courses-thumb-cont">
                             <div class="course-thumbimg">
-                                <div class="online" data-toggle="tooltip" data-placement="bottom" title="online"> </div>
                                 <?php
+                                echo $gig->tutorstatusicon;
                                 $image = $gig->gigthumb;
                                 echo CHtml::link($image, array('/site/gig/view', 'slug' => $gig->slug));
                                 ?>
@@ -22,7 +22,7 @@ $themeUrl = $this->themeUrl;
                                 <p> <span> <?php echo CHtml::link($gig->tutor->fullname, array('/site/user/profile', 'slug' => $gig->tutor->slug)); ?> </span> </p>
                                 <?php
                                 $this->widget('ext.DzRaty.DzRaty', array(
-                                    'name' => 'gig_rating_search' . $key,
+                                    'name' => 'gig_rating_search' . Myclass::getRandomString(5),
                                     'value' => $gig->gig_rating,
                                     'options' => array(
                                         'readOnly' => TRUE,
@@ -68,3 +68,13 @@ $themeUrl = $this->themeUrl;
         </nav>
     </div>
 </div>
+<?php
+$cs = Yii::app()->getClientScript();
+$js = <<< EOD
+    jQuery(document).ready(function ($) {
+//        dzRatyUpdate();
+    });
+                
+EOD;
+Yii::app()->clientScript->registerScript('_search_results', $js);
+?>

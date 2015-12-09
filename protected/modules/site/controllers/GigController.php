@@ -252,32 +252,41 @@ class GigController extends Controller {
     }
 
     public function actionSearch() {
+        $sort_by = $page_size = $category_id = '';
+        $cat_ids = array();
+        $search_text = isset($_REQUEST['s']) ? $_REQUEST['s'] : '';
+        
         $model = new Gig('search');
         $this->performAjaxValidation($model);
-
-        $search_text = isset($_REQUEST['s']) ? $_REQUEST['s'] : '';
-
-        $criteria = new CDbCriteria;
         $alias = $model->getTableAlias(false, false);
 
-        $sort_by = $page_size = '';
-        $cat_ids = array();
+        $criteria = new CDbCriteria;
+        $criteria->with = array('tutor');
 
-        if (isset($_REQUEST['sort_by'])) {
-            $criteria->order = $sort_by = $_REQUEST['sort_by'];
-        }
+        $criteria->compare($alias . '.gig_title', $search_text, true);
+        
         if (isset($_REQUEST['cat_id'])) {
             $cat_ids = $_REQUEST['cat_id'];
             $criteria->addInCondition('cat_id', $cat_ids);
         }
+        
+        if (isset($_REQUEST['category_id']) && $_REQUEST['category_id'] != 0) {
+            $category_id = $_REQUEST['category_id'];
+            $criteria->compare($alias . '.cat_id', $category_id);
+        }
+        
+        if (isset($_REQUEST['sort_by']) && !empty($_REQUEST['sort_by'])) {
+            $criteria->order = $sort_by = $_REQUEST['sort_by'];
+        }else{
+            $criteria->order = 'tutor.live_status ASC';
+        }
+
+        //Pagination
         if (isset($_REQUEST['page_size'])) {
             $page_size = $_REQUEST['page_size'];
         } else {
             $page_size = Gig::GIG_SEARCH_LIMIT;
         }
-
-        $criteria->compare($alias . '.gig_title', $search_text, true);
-
         $pages = new CPagination(Gig::model()->count($criteria));
         $pages->pageSize = $page_size;
         $pages->applyLimit($criteria);
@@ -290,7 +299,7 @@ class GigController extends Controller {
             echo json_encode($return);
             Yii::app()->end();
         } else {
-            $this->render('search', compact('model', 'results', 'search_text', 'pages', 'sort_by', 'page_size', 'cat_ids'));
+            $this->render('search', compact('model', 'results', 'search_text', 'pages', 'sort_by', 'page_size', 'cat_ids', 'category_id'));
         }
     }
 

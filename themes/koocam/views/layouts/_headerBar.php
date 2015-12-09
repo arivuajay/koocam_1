@@ -54,10 +54,10 @@ $themeUrl = $this->themeUrl;
                                         echo CHtml::link($img . '<b> My Jobs </b>', '#', array('class' => '', 'data-toggle' => "modal", 'data-target' => "#booking-2"));
                                         ?>
                                     </li>
-                                    <li>
+                                    <li id="li_message_top">
                                         <?php $this->renderPartial('//layouts/_message_box', compact('themeUrl')); ?>
                                     </li>
-                                    <li>
+                                    <li id="li_notifn_top">
                                         <?php $this->renderPartial('//layouts/_notification_box', compact('themeUrl')); ?>
                                     </li>
                                     <li role="presentation" class="dropdown">

@@ -14,7 +14,7 @@ $themeUrl = $this->themeUrl;
             <div class="search-cont">
                 <div class="search-bg">
                     <div class="row">
-                        <?php $this->renderPartial('_search', compact('model', 'search_text')); ?>
+                        <?php $this->renderPartial('_search', compact('model', 'search_text', 'category_id')); ?>
                     </div>
                     <!-- /.row --> 
                 </div>
@@ -54,7 +54,7 @@ echo CHtml::hiddenField('s', $search_text);
                                 'gig_duration ASC' => 'Minutes (LOW > HIGH)',
                                 'gig_duration DESC' => 'Minutes (HIGH > LOW)',
                             );
-                            echo CHtml::dropDownList('sort_by', $sort_by, $sort_options, array('class' => 'selectpicker sort_by', 'prompt' => "Sort By", 'id' => "first-disabled"));
+                            echo CHtml::dropDownList('sort_by', $sort_by, $sort_options, array('class' => 'selectpicker sort_by ajaxcall', 'prompt' => "Sort By", 'id' => "first-disabled"));
                             ?>
                         </div>
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-2">
@@ -66,7 +66,7 @@ echo CHtml::hiddenField('s', $search_text);
                                 '75' => 75,
                                 '100' => 100,
                             );
-                            echo CHtml::dropDownList('page_size', $page_size, $page_options, array('class' => 'selectpicker page_size', 'prompt' => "Show", 'id' => "first-disabled"));
+                            echo CHtml::dropDownList('page_size', $page_size, $page_options, array('class' => 'selectpicker page_size ajaxcall', 'prompt' => "Show", 'id' => "first-disabled"));
                             ?>
                         </div>
                     </div>
@@ -76,7 +76,7 @@ echo CHtml::hiddenField('s', $search_text);
                 </div>
             </div>
             <div class="col-xs-12 col-sm-4 col-md-3 col-lg-3 course-details">
-                <div class="widget-cont">
+                <div class="widget-cont hide">
                     <h2> Course Category </h2>
                     <div class="cate-filterlist">
                         <?php $categories = GigCategory::getCategoryList('active'); ?>
@@ -126,14 +126,17 @@ echo CHtml::hiddenField('s', $search_text);
 
 <?php
 $cs = Yii::app()->getClientScript();
+$cs_pos_end = CClientScript::POS_END;
 $search_url = Yii::app()->createAbsoluteUrl('/site/gig/search');
+$cs->registerCssFile($themeUrl . '/css/loader/jquery.loader.min.css');
+$cs->registerScriptFile($themeUrl . '/js/loader/jquery.loader.min.js', $cs_pos_end);
 
 $js = <<< EOD
     jQuery(document).ready(function ($) {
-        $('.selectpicker').on('change', function(){
+        $('.ajaxcall').on('change', function(){
             submit_form();
         });
-        
+
         $('#link_pager a').each(function(){
             $(this).click(function(ev){
                 ev.preventDefault();
@@ -158,9 +161,19 @@ $js = <<< EOD
             url: '$search_url',
             data:data,
             dataType:'json',
+            beforeSend: function(xhr){
+                $('#search_div').loader('show');
+            },
             success:function(data){
                 $('#itemcount').html(data.item_count);
                 $('#search_div').html(data.result);
+                $('#search_div').loader('hide');
+                $('[data-toggle="tooltip"]').tooltip({
+                    show: {
+                      effect: "slideDown",
+                      delay: 250
+                    }
+                });
             },
             error: function(data) {
                 alert("Something went wrong. Try again");
