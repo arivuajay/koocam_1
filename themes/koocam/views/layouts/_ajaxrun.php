@@ -4,8 +4,8 @@ $js = <<< EOD
     jQuery(document).ready(function ($) {
         window.setInterval(function(){
         
-            msg_count = $('#li_message_top').find('#top_msg_count').html();
-            notifn_count = $('#li_notifn_top').find('#top_notifn_count').html();
+            msg_count = $('#li_message_top').find('#top_msg_count').data('count');
+            notifn_count = $('#li_notifn_top').find('#top_notifn_count').data('count');
         
             $.ajax({
                 type: 'POST',

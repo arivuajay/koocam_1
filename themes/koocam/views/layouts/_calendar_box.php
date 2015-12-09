@@ -57,7 +57,7 @@
 
                 </div>
                 <div class="text-left">
-                    <span class="label label-default">My Bookings</span>&nbsp;&nbsp;<span class="label label-success">My Jobs</span>
+                    <span class="label label-primary">My Bookings</span>&nbsp;&nbsp;<span class="label label-warning">My Jobs</span>
                 </div>
             </div>
             <!--            <div class="modal-footer">

@@ -125,8 +125,12 @@ class Notification extends RActiveRecord {
         ));
     }
 
-    public static function getNotificationsByUserId($user_id) {
-        return self::model()->findAllByAttributes(array('user_id' => $user_id, 'notifn_read' => 'N'), array('order' => 'created_at DESC'));
+    public static function getNotificationCountByUserId($user_id, $read = 'N') {
+        return self::model()->countByAttributes(array('user_id' => $user_id, 'notifn_read' => $read));
+    }
+
+    public static function getNotificationsByUserId($user_id, $read = 'N', $limit = 5) {
+        return self::model()->findAllByAttributes(array('user_id' => $user_id, 'notifn_read' => $read), array('order' => 'created_at DESC', 'limit' => $limit));
     }
 
     public function getTopnotifymessage() {

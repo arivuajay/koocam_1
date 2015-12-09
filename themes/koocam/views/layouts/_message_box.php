@@ -3,7 +3,7 @@
     <b> My Messages </b> 
     <?php $my_unread_msg_count = Message::getMyUnReadMsgCount(); ?>
     <?php $hideCount = $my_unread_msg_count > 0 ? '' : 'hide'; ?>
-    <span class="count <?php echo $hideCount ?>" id="top_msg_count">
+    <span class="count <?php echo $hideCount ?>" id="top_msg_count" data-count="<?php echo $my_unread_msg_count ?>">
         <?php echo $my_unread_msg_count; ?>
     </span>
     <span class="circle"></span>
@@ -33,7 +33,11 @@
                 </span>
             </li>
         <?php } ?>
-
+        <?php if (!empty($un_read_msgs)) { ?>
+            <li class="notification-header">
+                <?php echo CHtml::link("View All Messages", array('/site/message')); ?>
+            </li>
+        <?php } ?>
     <?php } else { ?>
         <?php
         $read_msgs = Message::getMyReadMsg();
@@ -53,8 +57,10 @@
                 </span>
             </li>
         <?php } ?>
+        <?php if (!empty($read_msgs)) { ?>
+            <li class="notification-header">
+                <?php echo CHtml::link("View All Messages", array('/site/message')); ?>
+            </li>
+        <?php } ?>
     <?php } ?>
-    <li class="notification-header">
-        <?php echo CHtml::link("View All Messages", array('/site/message')); ?>
-    </li>
 </ul>

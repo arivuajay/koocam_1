@@ -58,9 +58,13 @@ endif
                         $msg_count = Message::getMyUnReadMsgCount();
                         $msg_badge = $purchase_badge = $gig_badge = $balance_badge = '';
                         $balance = Transaction::myCurrentBalance();
+                        $notifn_count = Notification::getNotificationCountByUserId(Yii::app()->user->id);
 
                         if ($msg_count > 0)
                             $msg_badge = '<span class="badge">' . $msg_count . '</span>';
+
+                        if ($notifn_count > 0)
+                            $notifn_badge = '<span class="badge">' . $notifn_count . '</span>';
 
                         if ($user->purchasecount > 0)
                             $purchase_badge = '<span class="badge">' . $user->purchasecount . '</span>';
@@ -83,9 +87,9 @@ endif
                                 array('label' => '<i class="fa fa-cart-plus"></i> My Purchase ' . $purchase_badge, 'url' => array('/site/purchase/mypurchase')),
                                 array('label' => '<i class="fa fa-money"></i> My Payments ' . $balance_badge, 'url' => array('/site/transaction/mypayments')),
                                 array('label' => '<i class="fa fa-envelope"></i> Messages ' . $msg_badge, 'url' => array('/site/message/index')),
-                                array('label' => '<i class="fa fa-bell"></i> Notifications <span class="badge">20</span>', 'url' => '#'),
+                                array('label' => '<i class="fa fa-bell"></i> Notifications '.$notifn_badge, 'url' => '#'),
                                 array('label' => '<i class="fa fa-calendar-check-o"></i> Jobs <span class="badge">20</span>', 'url' => '#'),
-                                array('label' => '<i class="fa fa-gear"></i> Account Setting <span class="badge">20</span>', 'url' => '#'),
+                                array('label' => '<i class="fa fa-gear"></i> Account Setting ', 'url' => '#'),
                                 array('label' => '<i class="fa fa-power-off"></i> Logout', 'url' => array('/site/default/logout')),
                             ),
                             'htmlOptions' => array('class' => 'sidebar-menu')

@@ -39,10 +39,10 @@ $cs = Yii::app()->getClientScript();
 $js = <<< EOD
     jQuery(document).ready(function ($) {
         $('#gig-search-form').submit(function(event){
-            if($('#Gig_search_text').val() == ''){
-                $('#search_error').removeClass('hide');
-                event.preventDefault();
-            }
+//            if($('#Gig_search_text').val() == ''){
+//                $('#search_error').removeClass('hide');
+//                event.preventDefault();
+//            }
         });
     });
                 

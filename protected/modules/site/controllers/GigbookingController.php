@@ -90,9 +90,9 @@ class GigbookingController extends Controller {
         $bookings = GigBooking::model()->with('gig')->active()->findAll(array('order' => 't.created_at DESC', 'condition' => "gig.tutor_id = {$user_id} OR t.book_user_id = {$user_id}"));
         $date = array();
         foreach ($bookings as $booking) {
-            $color = '#777777';
+            $color = '#337AB7';
             if($booking->gig->tutor_id == Yii::app()->user->id){
-                $color = '#5CB85C';
+                $color = '#F0AD4E';
             }
             $title = 'Busy (' . date('H:i', strtotime($booking->book_start_time)) . '-' . date('H:i', strtotime($booking->book_end_time)) . ')';
             $items[] = array(

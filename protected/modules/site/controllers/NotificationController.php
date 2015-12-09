@@ -32,7 +32,7 @@ class NotificationController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('view', 'index', 'approve', 'decline'),
+                'actions' => array('view', 'index', 'approve', 'decline', 'delete'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -44,6 +44,8 @@ class NotificationController extends Controller {
     }
 
     public function actionIndex() {
+        $this->layout = '//layouts/user_dashboard';
+        
         $model = new Notification();
         $criteria = new CDbCriteria;
         $alias = $model->getTableAlias(false, false);
@@ -105,6 +107,22 @@ class NotificationController extends Controller {
         $booking->saveAttributes(array('book_approve' => '2', 'book_declined_time' => Yii::app()->localtime->UTCNow));
         Yii::app()->user->setFlash('success', "Booking Rejected successfully");
         $this->redirect(array('/site/notification'));
+    }
+
+    public function actionDelete($id) {
+        $model = $this->loadModel($id);
+
+        if($model->user_id != Yii::app()->user->id){
+            Yii::app()->user->setFlash('danger', "Invalid Access !!!");
+            $this->goHome();
+        }
+        $model->delete();
+        
+        // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+        if(!isset($_GET['ajax'])){
+            Yii::app()->user->setFlash('success', 'Notification Deleted Successfully!!!');
+            $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('/site/notification/index'));
+        }
     }
 
     /**

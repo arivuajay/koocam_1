@@ -41,7 +41,7 @@ echo CHtml::hiddenField('s', $search_text);
                 <div class="in-search-cont">
                     <div class="row">
                         <div class="col-xs-12 col-sm-8 col-md-8 col-lg-7">
-                            <h2> Search Results for "<?php echo $search_text; ?>"</h2>
+                            <h2> Search Results <?php echo !empty($search_text) ? "for \"{$search_text}\"" : ''; ?></h2>
                             <h4 id="itemcount">(<?php echo $pages->itemCount; ?> Results Found)</h4>
                         </div>
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-3">
@@ -134,17 +134,16 @@ $cs->registerScriptFile($themeUrl . '/js/loader/jquery.loader.min.js', $cs_pos_e
 $js = <<< EOD
     jQuery(document).ready(function ($) {
         $('.ajaxcall').on('change', function(){
-            submit_form();
+            $("#gig-advanced-search-form").submit();
+//            submit_form();
         });
 
-        $('#link_pager a').each(function(){
-            $(this).click(function(ev){
-                ev.preventDefault();
-                $.get(this.href,{ajax:true},function(html){
-                    $('#search-results-inner-div').html(html);
-                });
-            });
-        });
+//        $('#link_pager').on('click', 'a',function(ev){
+//            ev.preventDefault();
+//            $.get(this.href,{ajax:true, custom_search:0},function(html){
+//                $('#search-results-inner-div').html(html);
+//            });
+//        });
         
         $('.category').on('ifChecked', function(event){
             submit_form();
@@ -156,6 +155,7 @@ $js = <<< EOD
         
     function submit_form(){
         var data = $("#gig-advanced-search-form").serialize();
+        data += '&custom_search=1';
         $.ajax({
             type: 'GET',
             url: '$search_url',

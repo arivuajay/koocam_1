@@ -282,7 +282,7 @@ class GigController extends Controller {
         }
 
         //Pagination
-        if (isset($_REQUEST['page_size'])) {
+        if (isset($_REQUEST['page_size']) && !empty($_REQUEST['page_size'])) {
             $page_size = $_REQUEST['page_size'];
         } else {
             $page_size = Gig::GIG_SEARCH_LIMIT;
@@ -295,8 +295,12 @@ class GigController extends Controller {
 
         if (Yii::app()->request->isAjaxRequest) {
             $result = $this->renderPartial('_search_results', compact('results', 'pages'), true);
-            $return = array('item_count' => "({$pages->itemCount} Results Found)", 'result' => $result);
-            echo json_encode($return);
+            if($_REQUEST['custom_search'] == 1){
+                $return = array('item_count' => "({$pages->itemCount} Results Found)", 'result' => $result);
+                echo json_encode($return);
+            }else{
+                echo $result;
+            }
             Yii::app()->end();
         } else {
             $this->render('search', compact('model', 'results', 'search_text', 'pages', 'sort_by', 'page_size', 'cat_ids', 'category_id'));
