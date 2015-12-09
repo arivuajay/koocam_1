@@ -28,7 +28,7 @@ class DefaultController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('index', 'sociallogin', 'signupsocial', 'login', 'register', 'activation', 'filecrypt', 'download', 'ajaxrun'),
+                'actions' => array('index', 'sociallogin', 'signupsocial', 'login', 'register', 'activation', 'filecrypt', 'download', 'ajaxrun', 'ajaxrunuser'),
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -278,7 +278,7 @@ class DefaultController extends Controller {
         $return['learner_waiting'] = 0;
         $return['update_notification_count'] = 0;
         $return['update_message_count'] = 0;
-        $return['tutor_start_now_alert'] = 0;
+        $return['tutor_before_paypal_alert'] = 0;
 
         $themeUrl = $this->themeUrl;
         if (!Yii::app()->user->isGuest) {
@@ -304,11 +304,19 @@ class DefaultController extends Controller {
                 $return['update_message_count'] = 1;
                 $return['message_update'] = $this->renderPartial('//layouts/_message_box', compact('themeUrl'), true, false);
             }
-            
+
             //Tutor before paypal confirmation
-            $tutorstartnowalert = $this->tutorStartNowAlert();
+            $tutorstartnowalert = $this->tutorBeforePaypalAlert();
             if (!empty($tutorstartnowalert)) {
-                $return['tutor_start_now_alert'] = 1;
+                $booking_data = unserialize($tutorstartnowalert->temp_value);
+                $return['tutor_before_paypal_alert'] = 1;
+                $user = User::model()->findByPk($tutorstartnowalert->user_id);
+                $gig = Gig::model()->findByPk($booking_data['temp_gig_id']);
+                $return['tutor_before_paypal_user_name'] = $user->username;
+                $return['tutor_before_paypal_user_thumb'] = $user->profilethumb;
+                $return['tutor_before_paypal_gig_name'] = $gig->gig_title;
+                $return['tutor_before_paypal_approve'] = CHtml::link('<i class="fa fa-check-square-o"></i> Approve', array('/site/bookingtemp/approve', 'temp_guid' => $tutorstartnowalert->temp_guid), array('class' => "btn btn-default  explorebtn form-btn"));
+                $return['tutor_before_paypal_reject'] = CHtml::link('<i class="fa fa-remove"></i> Reject', array('/site/bookingtemp/reject', 'temp_guid' => $tutorstartnowalert->temp_guid), array('class' => "btn btn-default  explorebtn form-btn deactiveate-btn"));
             }
         }
         echo CJSON::encode($return);
@@ -341,7 +349,7 @@ class DefaultController extends Controller {
         return $my_unread_msg_count;
     }
 
-    public function tutorStartNowAlert() {
+    public function tutorBeforePaypalAlert() {
         $tutor_id = Yii::app()->user->id;
         $temp_booking = BookingTemp::model()->find(array(
             "condition" => "tutor_id = :tutor_id AND status = :status",
@@ -350,6 +358,25 @@ class DefaultController extends Controller {
         if (!empty($temp_booking)) {
             return $temp_booking;
         }
+    }
+
+    public function actionAjaxrunuser() {
+        $return['user_waiting'] = 1;
+        $user_id = Yii::app()->user->id;
+        $guid = $_POST['temp_guid'];
+        $temp_booking = BookingTemp::model()->find(array(
+            "condition" => "user_id = :user_id AND temp_guid = :guid",
+            "params" => array(":user_id" => $user_id, ":guid" => $guid)
+        ));
+        if (!empty($temp_booking)) {
+            if ($temp_booking->status == "1") {
+                $return["user_before_paypal_status"] = "success";
+            } elseif ($temp_booking->status == "2") {
+                $return["user_before_paypal_status"] = "rejected";
+            }
+        }
+        echo CJSON::encode($return);
+        Yii::app()->end();
     }
 
 }

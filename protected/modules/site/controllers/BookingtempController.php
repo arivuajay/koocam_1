@@ -26,7 +26,7 @@ class BookingtempController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('booking'),
+                'actions' => array('booking', 'approve', 'reject', 'processpaypal', 'cancelbooking'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -77,11 +77,17 @@ class BookingtempController extends Controller {
                 $booking_temp->user_id = Yii::app()->user->id;
                 $booking_temp->tutor_id = $gig->tutor_id;
                 $booking_temp->save(false);
-                echo CJSON::encode(array(
+
+                $created_at = Yii::app()->localtime->fromUTC($booking_temp->created_at, 'short', 'short');
+                $created_at_time = strtotime($created_at);
+                $end_time = $created_at_time + (60 * 5); // 5 min greater from created
+                $end_time_format = date("Y/m/d H:i:s", $end_time);
+
+                echo json_encode(array(
                     'status' => 'success',
                     'temp_guid' => $booking_temp->temp_guid,
-                    'created_at' => $booking_temp->created_at,
-                ));
+                    'end_time_format' => $end_time_format,
+                ), JSON_UNESCAPED_SLASHES);
                 Yii::app()->end();
             } else {
                 $error = CActiveForm::validate($booking_temp);
@@ -89,23 +95,29 @@ class BookingtempController extends Controller {
                     echo $error;
                 Yii::app()->end();
             }
+        }
+    }
 
+    public function actionProcesspaypal($temp_guid) {
+        $booking_temp = BookingTemp::model()->findByAttributes(array('temp_guid' => $temp_guid, "status" => "1"));
 
-//            if ($booking_temp->save(false)) {
-//                $paypalManager = new Paypal;
-//                $returnUrl = Yii::app()->createAbsoluteUrl('/site/bookingtemp/paypalreturn', array('slug' => $gig->slug));
-//                $cancelUrl = Yii::app()->createAbsoluteUrl('/site/bookingtemp/paypalcancel', array('slug' => $gig->slug));
-//                $notifyUrl = Yii::app()->createAbsoluteUrl('/site/bookingtemp/paypalnotify');
-//
-//                $paypalManager->addField('item_name', $gig->gig_title . '-' . BookingTemp::TEMP_BOOKING_KEY);
-//                $paypalManager->addField('amount', $data['temp_book_total_price']);
-//                $paypalManager->addField('custom', $booking_temp->temp_guid);
-//                $paypalManager->addField('return', $returnUrl);
-//                $paypalManager->addField('cancel_return', $cancelUrl);
-//                $paypalManager->addField('notify_url', $notifyUrl);
-//
-//                $paypalManager->submitPaypalPost();
-//            }
+        if (!empty($booking_temp)) {
+            $booking_data = unserialize($booking_temp->temp_value);
+            $gig = Gig::model()->findByPk($booking_data['temp_gig_id']);
+
+            $paypalManager = new Paypal;
+            $returnUrl = Yii::app()->createAbsoluteUrl('/site/bookingtemp/paypalreturn', array('slug' => $gig->slug));
+            $cancelUrl = Yii::app()->createAbsoluteUrl('/site/bookingtemp/paypalcancel', array('slug' => $gig->slug));
+            $notifyUrl = Yii::app()->createAbsoluteUrl('/site/bookingtemp/paypalnotify');
+
+            $paypalManager->addField('item_name', $gig->gig_title . '-' . BookingTemp::TEMP_BOOKING_KEY);
+            $paypalManager->addField('amount', $booking_data['temp_book_total_price']);
+            $paypalManager->addField('custom', $booking_temp->temp_guid);
+            $paypalManager->addField('return', $returnUrl);
+            $paypalManager->addField('cancel_return', $cancelUrl);
+            $paypalManager->addField('notify_url', $notifyUrl);
+
+            $paypalManager->submitPaypalPost();
         }
     }
 
@@ -170,6 +182,52 @@ class BookingtempController extends Controller {
                 Purchase::insertPurchase($booking_model->book_id);
             }
         }
+    }
+
+    public function actionApprove($temp_guid) {
+        $booking_temp = BookingTemp::model()->findByAttributes(array('temp_guid' => $temp_guid, 'tutor_id' => Yii::app()->user->id, 'status' => '0'));
+        if (!empty($booking_temp)) {
+            $booking_created_at = $booking_temp->created_at;
+            $created_at_time = strtotime($booking_created_at);
+            $end_time = $created_at_time + (60 * 5); // 5 min greater from created
+            $end_time_format = date("Y/m/d H:i:s", $end_time);
+
+            $booking_temp->status = 1;
+            if ($booking_temp->save(false)) {
+                Yii::app()->user->setFlash("success", "You approved one booking.");
+            } else {
+                Yii::app()->user->setFlash("danger", "Sorry some problem occured.");
+            }
+        } else {
+            Yii::app()->user->setFlash("danger", "you don't have access this page.");
+        }
+        $this->goHome();
+    }
+
+    public function actionReject($temp_guid) {
+        $booking_temp = BookingTemp::model()->findByAttributes(array('temp_guid' => $temp_guid, 'tutor_id' => Yii::app()->user->id, 'status' => '0'));
+        if (!empty($booking_temp)) {
+            $booking_temp->status = 2;
+            if ($booking_temp->save(false)) {
+                Yii::app()->user->setFlash("success", "You reject one booking.");
+            } else {
+                Yii::app()->user->setFlash("danger", "Sorry some problem occured.");
+            }
+        } else {
+            Yii::app()->user->setFlash("danger", "you don't have access this page.");
+        }
+        $this->goHome();
+    }
+
+    public function actionCancelbooking($temp_guid) {
+        $booking_temp = BookingTemp::model()->findByAttributes(array('temp_guid' => $temp_guid));
+        if (!empty($booking_temp)) {
+            $booking_temp->status = 2;
+            if ($booking_temp->save(false)) {
+                Yii::app()->user->setFlash("danger", "Sorry your booking has been cancelled.");
+            }
+        }
+        $this->goHome();
     }
 
     /**

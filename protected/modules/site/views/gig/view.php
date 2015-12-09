@@ -141,6 +141,7 @@ if ($logged_user) {
 $cs = Yii::app()->getClientScript();
 $cs_pos_end = CClientScript::POS_END;
 $cs->registerScriptFile($themeUrl . '/js/bootstrap-timepicker.js', $cs_pos_end);
+$cs->registerScriptFile($themeUrl . '/js/jquery.countdown.min.js', $cs_pos_end);
 
 $js = <<< EOD
     jQuery(document).ready(function ($) {

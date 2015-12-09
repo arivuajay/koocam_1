@@ -3857,7 +3857,7 @@ margin-right:0
 	color:#777
 }
 .navbar-default .navbar-nav>li>a:focus, .navbar-default .navbar-nav>li>a:hover {
-	color:#333;
+	/*color:#333;*/
 	background-color:transparent
 }
 .navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:focus, .navbar-default .navbar-nav>.active>a:hover {
@@ -3881,7 +3881,6 @@ margin-right:0
 	border-color:#e7e7e7
 }
 .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:focus, .navbar-default .navbar-nav>.open>a:hover {
-
 }
 @media (max-width:767px) {
 .navbar-default .navbar-nav .open .dropdown-menu>li>a {

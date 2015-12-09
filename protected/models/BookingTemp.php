@@ -14,7 +14,7 @@
  * @property string $created_at
  * @property string $modified_at
  */
-class BookingTemp extends CActiveRecord {
+class BookingTemp extends RActiveRecord {
 
     public $temp_gig_id;
     public $temp_book_session = 1;

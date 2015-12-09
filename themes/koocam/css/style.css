@@ -2056,7 +2056,6 @@ input[type=button] {
 	color:#b1b2b9;
 }
 
-
 .notification-txt
 {
 	font-size:14px;
@@ -2098,3 +2097,37 @@ input[type=button] {
   {
 	  width:200px !important ;
   }
+
+
+
+.approve-img
+{
+	width:100%;
+	float:left;
+	text-align:center;
+}
+
+.approve-img h2
+{
+	font-size:25px;
+	color:#b81a1e;
+	line-height:35px;
+}
+
+.approve-img h2 a
+{
+	color:#b81a1e;
+}
+
+.approve-img h4
+{
+	font-size:20px;
+	line-height:29px;
+}
+
+.approve-time
+{
+	margin-top:-40px;
+	text-align:right;
+}
+

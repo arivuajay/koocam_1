@@ -91,8 +91,8 @@ $price_calculation = GigBooking::price_calculation($user_country_id, $gig_price,
                 <?php
                 echo CHtml::ajaxSubmitButton(
                         'Pay Now !', array('/site/bookingtemp/booking'), array(
-                            'type'=>'POST',
-                            'dataType'=>'json',
+                    'type' => 'POST',
+                    'dataType' => 'json',
                     'success' => 'function(data) {
                             process_startnow_form(data);
                         }'
@@ -112,6 +112,12 @@ $temp_sessionId = CHTML::activeId($booking_temp, 'temp_book_session');
 
 $price_calculation_url = Yii::app()->createAbsoluteUrl('/site/gigbooking/getbookingprice');
 $start_now_url = Yii::app()->createAbsoluteUrl('/site/bookingtemp/booking');
+
+$clock_html = '<span> %M </span> : <span>  %S </span>';
+
+$ajaxRun_user = Yii::app()->createAbsoluteUrl('/site/default/ajaxrunuser');
+$paypal_process = Yii::app()->createAbsoluteUrl('/site/bookingtemp/processpaypal/temp_guid/');
+$cancel_booking = Yii::app()->createAbsoluteUrl('/site/bookingtemp/cancelbooking/temp_guid/');
 
 $js = <<< EOD
     jQuery(document).ready(function ($) {
@@ -171,7 +177,39 @@ $js = <<< EOD
                 
     function process_startnow_form(data){
         if(data.status=="success"){
-            $("#start-now-buttons").html("Please wait while tutor will approve your booking...");
+            var temp_guid = data.temp_guid;
+            $("#start-now-buttons").html("Please wait <span id='clock'></span> min, while tutor will approve your booking...");
+                
+            var clock_html = '$clock_html';
+            var end_time = data.end_time_format;
+            $('#clock').countdown(end_time, function (event) {
+                $(this).html(event.strftime(clock_html));
+            }).on('update.countdown', function(event) {
+                if(1 >= event.offset.seconds && event.offset.minutes == 0){
+                    window.location = '{$cancel_booking}' + '/' + temp_guid;
+                }
+
+                if(event.offset.seconds % 5 == 0 || event.offset.seconds == 0){
+                    $.ajax({
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {'temp_guid': data.temp_guid},
+                        url: '$ajaxRun_user',
+                        success:function(data){
+                            if(data.user_before_paypal_status == "success"){
+                                window.location = '{$paypal_process}' + '/' + temp_guid;
+                            }
+                            if(data.user_before_paypal_status == "rejected"){
+                                alert("You booking is rejected by Tutor, Please try again");
+                                location.reload();
+                            }
+                        },
+                        error: function(data) {
+                        },
+                    });
+                }
+                
+            });
         } else{
             $.each(data, function(key, val) {
                 $("#gig-startnow-form #"+key+"_em_").text(val);                                                    
@@ -180,8 +218,6 @@ $js = <<< EOD
         }
         return false;
     }
-                
-                
 
 EOD;
 Yii::app()->clientScript->registerScript('_start_now', $js);
