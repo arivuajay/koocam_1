@@ -406,7 +406,7 @@ class Gig extends RActiveRecord {
         if (!empty($this->gig_media))
             $path = UPLOAD_DIR . '/users/' . $this->tutor_id . $this->gig_media;
         if (!isset($path) || !is_file($path))
-            $path = 'themes/koocam/images/profile-img.jpeg';
+            $path = 'themes/koocam/images/gig-img.jpg';
         return CHtml::image(Yii::app()->createAbsoluteUrl($path), '', $htmlOptions);
     }
 
@@ -414,7 +414,7 @@ class Gig extends RActiveRecord {
         if (!empty($this->gig_media))
             $path = UPLOAD_DIR . '/users/' . $this->tutor_id . '/thumb' . $this->gig_media;
         if (!isset($path) || !is_file($path))
-            $path = 'themes/koocam/images/profile-img.jpeg';
+            $path = 'themes/koocam/images/gig-img.jpg';
         return CHtml::image(Yii::app()->createAbsoluteUrl($path), '', $htmlOptions);
     }
 
