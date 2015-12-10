@@ -137,6 +137,7 @@ class GigBooking extends RActiveRecord {
             'gigTokens' => array(self::HAS_ONE, 'GigTokens', 'book_id'),
             'reportAbuses' => array(self::HAS_ONE, 'ReportAbuse', 'book_id'),
             'gigPurchase' => array(self::HAS_ONE, 'Purchase', 'book_id'),
+            'gigComment' => array(self::HAS_ONE, 'GigComments', 'gig_booking_id'),
         );
     }
 

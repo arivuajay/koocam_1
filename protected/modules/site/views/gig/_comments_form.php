@@ -16,6 +16,7 @@ $form = $this->beginWidget('CActiveForm', array(
         ));
 
 echo $form->hiddenField($gig_comments, 'gig_id', array('value' => $model->gig_id));
+echo $form->hiddenField($gig_comments, 'gig_booking_id', array('value' => ''));
 ?>
 
 <div class="modal fade" id="comments" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -55,7 +56,7 @@ echo $form->hiddenField($gig_comments, 'gig_id', array('value' => $model->gig_id
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn  btn-cancel" data-dismiss="modal">Cancel</button>
-                <?php echo CHtml::submitButton('Send', array('class' => 'btn btn-red')); ?>
+                <?php echo CHtml::submitButton('Submit', array('class' => 'btn btn-red')); ?>
             </div>
         </div>
     </div>

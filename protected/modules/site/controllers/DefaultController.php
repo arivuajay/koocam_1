@@ -306,28 +306,29 @@ class DefaultController extends Controller {
                     $return['message_update'] = $this->renderPartial('//layouts/_message_box', compact('themeUrl'), true, false);
                 }
 
-            //Tutor before paypal confirmation
-            $tutorstartnowalert = $this->tutorBeforePaypalAlert();
-            if (!empty($tutorstartnowalert)) {
-                $booking_data = unserialize($tutorstartnowalert->temp_value);
-                $return['tutor_before_paypal_alert'] = 1;
-                $user = User::model()->findByPk($tutorstartnowalert->user_id);
-                $gig = Gig::model()->findByPk($booking_data['temp_gig_id']);
-                $return['tutor_before_paypal_user_name'] = $user->username;
-                $return['tutor_before_paypal_user_thumb'] = $user->profilethumb;
-                $return['tutor_before_paypal_gig_name'] = $gig->gig_title;
-                
-                $created_at = $tutorstartnowalert->created_at;
-                $created_at_time = strtotime($created_at);
-                $end_time = $created_at_time + (60 * 3); // 3 min greater from created
-                $end_time_format = date("Y/m/d H:i:s", $end_time);
-                $return['tutor_before_paypal_countdown'] = $end_time_format;
-                
-                $return['tutor_before_paypal_approve'] = CHtml::link('<i class="fa fa-check-square-o"></i> Approve', array('/site/bookingtemp/approve', 'temp_guid' => $tutorstartnowalert->temp_guid), array('class' => "btn btn-default  explorebtn form-btn"));
-                $return['tutor_before_paypal_reject'] = CHtml::link('<i class="fa fa-remove"></i> Reject', array('/site/bookingtemp/reject', 'temp_guid' => $tutorstartnowalert->temp_guid), array('class' => "btn btn-default  explorebtn form-btn deactiveate-btn"));
+                //Tutor before paypal confirmation
+                $tutorstartnowalert = $this->tutorBeforePaypalAlert();
+                if (!empty($tutorstartnowalert)) {
+                    $booking_data = unserialize($tutorstartnowalert->temp_value);
+                    $return['tutor_before_paypal_alert'] = 1;
+                    $user = User::model()->findByPk($tutorstartnowalert->user_id);
+                    $gig = Gig::model()->findByPk($booking_data['temp_gig_id']);
+                    $return['tutor_before_paypal_user_name'] = $user->username;
+                    $return['tutor_before_paypal_user_thumb'] = $user->profilethumb;
+                    $return['tutor_before_paypal_gig_name'] = $gig->gig_title;
+
+                    $created_at = $tutorstartnowalert->created_at;
+                    $created_at_time = strtotime($created_at);
+                    $end_time = $created_at_time + (60 * 3); // 3 min greater from created
+                    $end_time_format = date("Y/m/d H:i:s", $end_time);
+                    $return['tutor_before_paypal_countdown'] = $end_time_format;
+
+                    $return['tutor_before_paypal_approve'] = CHtml::link('<i class="fa fa-check-square-o"></i> Approve', array('/site/bookingtemp/approve', 'temp_guid' => $tutorstartnowalert->temp_guid), array('class' => "btn btn-default  explorebtn form-btn"));
+                    $return['tutor_before_paypal_reject'] = CHtml::link('<i class="fa fa-remove"></i> Reject', array('/site/bookingtemp/reject', 'temp_guid' => $tutorstartnowalert->temp_guid), array('class' => "btn btn-default  explorebtn form-btn deactiveate-btn"));
+                }
+                echo CJSON::encode($return);
+                Yii::app()->end();
             }
-            echo CJSON::encode($return);
-            Yii::app()->end();
         }
     }
 

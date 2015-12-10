@@ -64,26 +64,23 @@ EOD;
 
 Yii::app()->clientScript->registerScript('_ajaxrun', $js);
 ?>
-<div class="modal fade" id="learner-wait" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
+
+<div class="modal fade approve" id="learner-wait" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Your Learner Comes to Online !!! </h4>
+                <h4 class="modal-title" id="myModalLabel">  Your Learner Comes to Online !!!  </h4>
             </div>
             <div class="modal-body">
-                <div class="booking-form-cont">
-                    <div class="row">
-                        <div class="form-group">
-                            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 ">
-                                <div id="learner-wait-thumb"></div>
-                            </div>
-                            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-5 ">
-                                <div id="learner-wait-name"></div>
-                            </div>
-                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 ">
-                                <div id="learner-wait-link"></div>
-                            </div>
+                <div class="approve-img">  
+                    <p class="row"> 
+                    <div class="clearfix"></div>
+                    <p id="learner-wait-thumb"> </p>
+                    <p> <h2 id="learner-wait-name"></h2> </p>
+                    <div class="form-group">
+                        <div class="row"> 
+                            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" id="learner-wait-link"></div> 
                         </div>
                     </div>
                 </div>
@@ -91,7 +88,6 @@ Yii::app()->clientScript->registerScript('_ajaxrun', $js);
         </div>
     </div>
 </div>
-
 
 <div class="modal fade approve" id="tutor-before-paypal-wait" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
     <div class="modal-dialog modal-sm">
