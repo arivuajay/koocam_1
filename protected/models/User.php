@@ -91,6 +91,7 @@ class User extends RActiveRecord {
             'active' => array('condition' => "$alias.status = '1'"),
             'inactive' => array('condition' => "$alias.status = '0'"),
             'deleted' => array('condition' => "$alias.status = '2'"),
+            'deactivated' => array('condition' => "$alias.status = '3'"),
             'all' => array('condition' => "$alias.status is not null"),
         );
     }

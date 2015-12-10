@@ -125,7 +125,7 @@ $user_paypals = $model->userPaypals;
                             <p>&nbsp;</p>
                             
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-heading"> 
-                                <a href="#"> <i class="fa fa-user-times"></i> Deactivate My Account </a>
+                                <?php echo CHtml::link('<i class="fa fa-user-times"></i> Deactivate My Account', array('/site/user/accountdeactivate'), array('confirm' => 'Are you sure to deactivate your account?')); ?>
                             </div>
                             <p>&nbsp;</p>
                         </div>

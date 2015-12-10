@@ -26,7 +26,7 @@ class UserIdentity extends CUserIdentity {
         if ($user === null):
             $this->errorCode = self::ERROR_USERNAME_INVALID;
 
-        elseif ($user->status == 0):
+        elseif ($user->status != 1):
             $this->errorCode = self::ERROR_ACCOUNT_BLOCKED;
         else:
             $is_correct_password = ($user->password_hash !== Myclass::encrypt($this->password)) ? false : true;
