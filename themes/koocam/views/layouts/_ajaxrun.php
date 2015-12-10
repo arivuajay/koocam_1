@@ -44,6 +44,8 @@ $js = <<< EOD
                         var end_time = data.tutor_before_paypal_countdown;
                         $('#tutor_clock').countdown(end_time, function (event) {
                             $(this).html(event.strftime(clock_html));
+                        }).on('finish.countdown', function(event){
+                            $('#tutor-before-paypal-wait').modal('hide');
                         });
         
                         if ($("#tutor-before-paypal-wait").data('bs.modal') && $("#tutor-before-paypal-wait").data('bs.modal').isShown){
