@@ -246,7 +246,7 @@ class Gig extends RActiveRecord {
             'gig_title' => 'Title',
             'cat_id' => 'Category',
             'gig_media' => 'Video or Photo',
-            'gig_tag' => 'Tag',
+            'gig_tag' => 'Tag (separate tags with commas)',
             'gig_description' => 'Description',
             'gig_duration' => 'Time (Minutes)',
             'gig_price' => 'Price ($)',
@@ -330,8 +330,12 @@ class Gig extends RActiveRecord {
         ));
     }
 
-    public static function topInstructors() {
-        return Gig::model()->active()->findAll(array('limit' => 10));
+    public static function topInstructors($tutor_id = '') {
+        if($tutor_id){
+          return Gig::model()->active()->findAll(array("condition" => "tutor_id = $tutor_id", 'limit' => 10));
+        } else {
+          return Gig::model()->active()->findAll(array('limit' => 10));
+        }
     }
 
     public static function featuredGigs() {

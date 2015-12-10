@@ -93,3 +93,7 @@ label{
 a.view-comment, a.write-comment{
     color: #FFF;
 }
+
+.online{
+    z-index: 1 !important;
+}

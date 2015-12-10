@@ -46,7 +46,7 @@ $categories = GigCategory::getCategoryList();
                 </div>
                 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
                     <?php echo $form->labelEx($model, 'gig_tag'); ?>
-                    <?php echo $form->textField($model, 'gig_tag', array('class' => 'form-control', 'placeholder' => $model->getAttributeLabel('gig_tag'), 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "Tags")); ?> 
+                    <?php echo $form->textField($model, 'gig_tag', array('class' => 'form-control', 'placeholder' => $model->getAttributeLabel('gig_tag'), 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "Tags (separate tags with commas)")); ?> 
                     <?php echo $form->error($model, 'gig_tag'); ?> 
                 </div>
             </div>

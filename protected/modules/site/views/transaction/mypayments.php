@@ -95,7 +95,7 @@ if ($balance > 0)
                         <tr>
                             <th>Date </th>
                             <th>Description </th>
-                            <th>Commision ($)</th>
+                            <th>Processing fees ($)</th>
                             <th>Payment ($)</th>
                         </tr>
                         <?php if (!empty($my_payments)) { ?>

@@ -24,12 +24,12 @@
                     <div class = "form-group form-control-material static">
                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                             <?php echo $form->labelEx($user_profile, 'prof_firstname'); ?>
-                            <?php echo $form->textField($user_profile, 'prof_firstname', array('class' => 'form-control', 'size' => 50, 'maxlength' => 50)); ?>
+                            <?php echo $form->textField($user_profile, 'prof_firstname', array('class' => 'form-control', 'size' => 50, 'maxlength' => 50, 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "Your Firstname")); ?>
                             <?php echo $form->error($user_profile, 'prof_firstname'); ?>
                         </div>
                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                             <?php echo $form->labelEx($user_profile, 'prof_lastname'); ?>
-                            <?php echo $form->textField($user_profile, 'prof_lastname', array('class' => 'form-control', 'size' => 50, 'maxlength' => 50)); ?>
+                            <?php echo $form->textField($user_profile, 'prof_lastname', array('class' => 'form-control', 'size' => 50, 'maxlength' => 50, 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "Your Lastname")); ?>
                             <?php echo $form->error($user_profile, 'prof_lastname'); ?>
                         </div>
                     </div>
@@ -37,7 +37,7 @@
                     <div class = "form-group form-control-material static">
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <?php echo $form->labelEx($user_profile, 'prof_address'); ?>
-                            <?php echo $form->textField($user_profile, 'prof_address', array('class' => 'form-control')); ?>
+                            <?php echo $form->textField($user_profile, 'prof_address', array('class' => 'form-control', 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "Your Address")); ?>
                             <?php echo $form->error($user_profile, 'prof_address'); ?>
                         </div>
                     </div>
@@ -45,21 +45,21 @@
                     <div class = "form-group form-control-material static">
                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                             <?php echo $form->labelEx($user_profile, 'prof_phone'); ?>
-                            <?php echo $form->textField($user_profile, 'prof_phone', array('class' => 'form-control', 'size' => 30, 'maxlength' => 30)); ?>
+                            <?php echo $form->textField($user_profile, 'prof_phone', array('class' => 'form-control', 'size' => 30, 'maxlength' => 30, 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "Your Phone number")); ?>
                             <?php echo $form->error($user_profile, 'prof_phone'); ?>
                         </div>
                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                             <?php echo $form->labelEx($user_profile, 'prof_website'); ?>
-                            <?php echo $form->textField($user_profile, 'prof_website', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100)); ?>
+                            <?php echo $form->textField($user_profile, 'prof_website', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100, 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "Ex. http://abc.com")); ?>
                             <?php echo $form->error($user_profile, 'prof_website'); ?>
                         </div>
                     </div>
                     
                     <div class = "form-group form-control-material static">
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            <?php echo $form->checkBox($user_profile, 'cancel_email_notify'); ?>
-                            <?php echo $form->labelEx($user_profile, 'cancel_email_notify'); ?>
-                            <?php echo $form->error($user_profile, 'cancel_email_notify'); ?>
+                            <?php echo $form->checkBox($user_profile, 'receive_email_notify'); ?>
+                            <?php echo $form->labelEx($user_profile, 'receive_email_notify'); ?>
+                            <?php echo $form->error($user_profile, 'receive_email_notify'); ?>
                         </div>
                     </div>
                     

@@ -36,10 +36,11 @@ $user_paypals = $model->userPaypals;
                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 age-verify ">
                             <?php
                             $cancel_email = "";
-                            if ($user_profile->cancel_email_notify)
+                            if ($user_profile->receive_email_notify)
                                 $cancel_email = 'checked';
                             ?>
-                            <input name="" type="checkbox" value="" <?php echo $cancel_email; ?> disabled>  Cancel email notifications
+                            <input name="" type="checkbox" value="" <?php echo $cancel_email; ?> disabled>  
+                            Receive notifications to email
                         </div>
                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
                             <label>  Address </label>
