@@ -54,6 +54,18 @@ $js = <<< EOD
                             $('#tutor-before-paypal-wait').modal('show');
                         }
                     }
+        
+                    if(data.end_learner_chat == 1){
+                        if($('#hidden_disconnect').length){
+                            $('#hidden_disconnect').trigger('click');
+                        }
+                    }
+        
+                    if(data.end_tutor_chat == 1){
+                        if($('#hidden_disconnect').length){
+                            $('#hidden_disconnect').trigger('click');
+                        }
+                    }
                 },
                 error: function(data) {
                 },

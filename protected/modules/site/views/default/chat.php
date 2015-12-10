@@ -8,7 +8,7 @@ $themeUrl = $this->themeUrl;
 $show_video = $token->book->gig->gig_avail_visual == 'Y' ? 'true' : 'false';
 $this->renderPartial('_report_abuse', compact('token', 'abuse_model', 'info'));
 if($info['my_role'] == 'learner')
-    $this->renderPartial('/gig/_comments_form', array('model' => $token->book->gig, 'gig_comments' => $gig_comments));
+    $this->renderPartial('/gig/_comments_form', array('model' => $token->book->gig, 'gig_comments' => $gig_comments, 'gig_booking_id' => $token->book_id));
 ?>
 <div id="inner-banner" class="tt-fullHeight3 chat-banner">
     <div class="container homepage-txt">

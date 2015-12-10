@@ -74,7 +74,7 @@ $themeUrl = $this->themeUrl;
                                             <li><?php echo CHtml::link(' <i class="fa fa-power-off"></i>&nbsp; Logout', array('/site/default/logout')); ?></li>
                                         </ul>
                                     </li>
-                                    <li>
+                                    <li id="user_status_li">
                                         <?php echo $user->statusbutton;?>
                                     </li>
                                 <?php } else { ?>

@@ -4,6 +4,9 @@
 /* @var $gig_comments GigComments */
 /* @var $form CActiveForm */
 
+if(!isset($gig_booking_id))
+    $gig_booking_id = '';
+
 $form = $this->beginWidget('CActiveForm', array(
     'id' => 'gig-comments-form',
     'action' => array('/site/gigcomments/create'),
@@ -16,7 +19,7 @@ $form = $this->beginWidget('CActiveForm', array(
         ));
 
 echo $form->hiddenField($gig_comments, 'gig_id', array('value' => $model->gig_id));
-echo $form->hiddenField($gig_comments, 'gig_booking_id', array('value' => ''));
+echo $form->hiddenField($gig_comments, 'gig_booking_id', array('value' => $gig_booking_id));
 ?>
 
 <div class="modal fade" id="comments" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">

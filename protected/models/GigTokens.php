@@ -16,6 +16,10 @@
  * @property string $created_at
  * @property string $modified_at
  * @property string $status
+ * @property string $tutor_end_call
+ * @property string $learner_end_call
+ * @property string $tutor_end_time
+ * @property string $learner_end_time
  *
  * The followings are the available model relations:
  * @property GigBooking $book
@@ -48,10 +52,10 @@ class GigTokens extends RActiveRecord {
         return array(
             array('book_id, session_key, token_key, session_data', 'required'),
             array('book_id', 'numerical', 'integerOnly' => true),
-            array('session_key, token_key, session_data, modified_at, learner_attendance, tutor_attendance, tutor_attend_time, learner_attend_time, status', 'safe'),
+            array('session_key, token_key, session_data, modified_at, learner_attendance, tutor_attendance, tutor_attend_time, learner_attend_time, status, tutor_end_call, learner_end_call, tutor_end_time, learner_end_time', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('token_id, book_id, session_key, token_key, session_data, created_at, modified_at, learner_attendance, tutor_attendance, tutor_attend_time, learner_attend_time, status', 'safe', 'on' => 'search'),
+            array('token_id, book_id, session_key, token_key, session_data, created_at, modified_at, learner_attendance, tutor_attendance, tutor_attend_time, learner_attend_time, status, tutor_end_call, learner_end_call, tutor_end_time, learner_end_time', 'safe', 'on' => 'search'),
         );
     }
 

@@ -287,6 +287,8 @@ class DefaultController extends Controller {
             $return['update_notification_count'] = 0;
             $return['update_message_count'] = 0;
             $return['tutor_before_paypal_alert'] = 0;
+            $return['end_learner_chat'] = 0;
+            $return['end_tutor_chat'] = 0;
 
             $themeUrl = $this->themeUrl;
             if (!Yii::app()->user->isGuest) {
@@ -297,6 +299,18 @@ class DefaultController extends Controller {
                     $return['learner_name'] = $bookings->bookUser->fullname;
                     $return['learner_thumb'] = $bookings->bookUser->profilethumb;
                     $return['learner_link'] = CHtml::link('Start Chat', array('/site/default/chat', 'guid' => $bookings->book_guid), array('class' => "btn btn-default explorebtn"));
+                }
+
+                //End Leaner Chat Screen
+                $tutorEnded = $this->tutorEnded();
+                if (!empty($tutorEnded)) {
+                    $return['end_learner_chat'] = 1;
+                }
+
+                //End Tutor Chat Screen
+                $learnerEnded = $this->learnerEnded();
+                if (!empty($learnerEnded)) {
+                    $return['end_tutor_chat'] = 1;
                 }
 
                 //Notification Count
@@ -361,9 +375,11 @@ class DefaultController extends Controller {
 
         $alias = GigBooking::model()->getTableAlias(false, false);
         $condition = "$alias.book_start_time <= :currentTime AND $alias.book_end_time >= :currentTime";
-        $condition .= " AND $alias.book_user_id = :my_user_id";
-        $condition .= " AND tutor.live_status = 'A'";
-        $condition .= " AND gigTokens.tutor_attendance = '0'";
+        $condition .= " AND gig.tutor_id = :my_user_id";
+        $condition .= " AND tutor.live_status = 'B'";
+        $condition .= " AND gigTokens.learner_end_call = '1'";
+        $condition .= " AND gigTokens.tutor_end_call = '0'";
+        $condition .= " AND gigTokens.status = '1'";
 
         return GigBooking::model()->with('gig', 'gigTokens', 'gig.tutor')->active()->completed()->find(array(
                     'condition' => $condition,
@@ -371,9 +387,26 @@ class DefaultController extends Controller {
         ));
     }
 
+    protected function tutorEnded() {
+        $current_time = Yii::app()->localtime->getUTCNow('Y-m-d H:i:s');
+        $user_id = Yii::app()->user->id;
+
+        $alias = GigBooking::model()->getTableAlias(false, false);
+        $condition = "$alias.book_start_time <= :currentTime AND $alias.book_end_time >= :currentTime";
+        $condition .= " AND $alias.book_user_id = :my_user_id";
+        $condition .= " AND bookUser.live_status = 'B'";
+        $condition .= " AND gigTokens.tutor_end_call = '1'";
+        $condition .= " AND gigTokens.learner_end_call = '0'";
+        $condition .= " AND gigTokens.status = '1'";
+
+        return GigBooking::model()->with('gig', 'gigTokens', 'gig.tutor', 'bookUser')->active()->completed()->find(array(
+                    'condition' => $condition,
+                    'params' => array(':currentTime' => $current_time, ':my_user_id' => $user_id)
+        ));
+    }
+
     protected function notificationCount() {
-        $notifications = Notification::getNotificationsByUserId(Yii::app()->user->id);
-        return count($notifications);
+        return Notification::getNotificationCountByUserId(Yii::app()->user->id);
     }
 
     protected function messageCount() {
@@ -415,10 +448,23 @@ class DefaultController extends Controller {
     public function actionDisconnect() {
         if(isset($_POST['token_id']) && Yii::app()->request->isAjaxRequest){
             $model = GigTokens::model()->findByPk($_POST['token_id']);
-            $model->saveAttributes(array('status'=> '1'));
+            if($_POST['role'] == 'tutor'){
+                $attr = array(
+                    'status'=> '1',
+                    'tutor_end_call'=> '1',
+                    'tutor_end_time'=> date('Y-m-d H:i:s'),
+                    );
+                User::switchStatus($model->book->gig->tutor_id, 'A');
+            }else if($_POST['role'] == 'learner'){
+                $attr = array(
+                    'status'=> '1',
+                    'learner_end_call'=> '1',
+                    'learner_end_time'=> date('Y-m-d H:i:s'),
+                    );
+                User::switchStatus($model->book->book_user_id, 'A');
+            }
+            $model->saveAttributes($attr);
             
-            User::switchStatus($model->book->book_user_id, 'A');
-            User::switchStatus($model->book->gig->tutor_id, 'A');
         }
     }
 }
