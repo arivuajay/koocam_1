@@ -125,6 +125,7 @@ class BookingTemp extends RActiveRecord {
         if ($this->isNewRecord) {
             $this->temp_guid = Myclass::guid(false);
             $this->temp_key = self::TEMP_BOOKING_KEY;
+            $this->created_at = date("Y-m-d H:i:s");
         }
 
         return parent::beforeSave();
