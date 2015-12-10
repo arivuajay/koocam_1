@@ -1165,7 +1165,7 @@ label {
 	display:none !important;
 }
 .dropdown-menu {
-	min-width: 290px;
+	min-width: 345px;
 }
 .dropdown-menu2 {
 	min-width: 160px;
@@ -2030,7 +2030,7 @@ input[type=button] {
 }
 
 .busy-btn {
-	color:#f8a620;
+	color:#f8a620 !important;
 }
 
 
