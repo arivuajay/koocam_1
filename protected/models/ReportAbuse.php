@@ -193,8 +193,8 @@ class ReportAbuse extends RActiveRecord {
             $this->abuse_type = CJSON::encode($this->abuse_type);
         }
 
-        $is_tutor = $this->book->gig->tutor->user_id == Yii::app()->user->id;
-        $is_learner = $this->book->bookUser->user_id == Yii::app()->user->id;
+        $is_tutor = $this->book->gig->tutor_id == Yii::app()->user->id;
+        $is_learner = $this->book->book_user_id == Yii::app()->user->id;
 
         if ($is_tutor) {
             $this->abuser_role = 'learner';

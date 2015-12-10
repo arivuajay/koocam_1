@@ -154,8 +154,8 @@ class GigTokens extends RActiveRecord {
         if (!empty($token)) {
             $is_tutor = $is_learner = false;
 
-            $is_tutor = $token->book->gig->tutor->user_id == Yii::app()->user->id;
-            $is_learner = $token->book->bookUser->user_id == Yii::app()->user->id;
+            $is_tutor = $token->book->gig->tutor_id == Yii::app()->user->id;
+            $is_learner = $token->book->book_user_id == Yii::app()->user->id;
 
             if ($is_tutor || $is_learner) {
                 $token_data = $token;
@@ -198,8 +198,8 @@ class GigTokens extends RActiveRecord {
         $token = self::getAuthData($guid);
         $info = array();
         if (!empty($token)) {
-            $is_tutor = $token->book->gig->tutor->user_id == Yii::app()->user->id;
-            $is_learner = $token->book->bookUser->user_id == Yii::app()->user->id;
+            $is_tutor = $token->book->gig->tutor_id == Yii::app()->user->id;
+            $is_learner = $token->book->book_user_id == Yii::app()->user->id;
 
             $tutor_name = $token->book->gig->tutor->fullname;
             $tutor_thumb = $token->book->gig->tutor->getProfilethumb(array('class' => 'img-circle', 'width' => '50'));
@@ -219,7 +219,7 @@ class GigTokens extends RActiveRecord {
                 $info['my_thumb'] = $learner_thumb;
                 $info['their_name'] = $tutor_name;
                 $info['their_thumb'] = $tutor_thumb;
-                User::switchStatus($token->book->bookUser->user_id, 'B');
+                User::switchStatus($token->book->book_user_id, 'B');
             }
 
             $info['token'] = $token;

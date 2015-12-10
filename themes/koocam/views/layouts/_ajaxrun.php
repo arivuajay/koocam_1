@@ -80,7 +80,7 @@ Yii::app()->clientScript->registerScript('_ajaxrun', $js);
                     <p> <h2 id="learner-wait-name"></h2> </p>
                     <div class="form-group">
                         <div class="row"> 
-                            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" id="learner-wait-link"></div> 
+                            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-12" id="learner-wait-link"></div> 
                         </div>
                     </div>
                 </div>

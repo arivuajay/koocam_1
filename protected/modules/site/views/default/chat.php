@@ -7,7 +7,8 @@ $this->title = 'Chat';
 $themeUrl = $this->themeUrl;
 $show_video = $token->book->gig->gig_avail_visual == 'Y' ? 'true' : 'false';
 $this->renderPartial('_report_abuse', compact('token', 'abuse_model', 'info'));
-$this->renderPartial('/gig/_comments_form', array('model' => $token->book->gig, 'gig_comments' => $gig_comments));
+if($info['my_role'] == 'learner')
+    $this->renderPartial('/gig/_comments_form', array('model' => $token->book->gig, 'gig_comments' => $gig_comments));
 ?>
 <div id="inner-banner" class="tt-fullHeight3 chat-banner">
     <div class="container homepage-txt">
@@ -68,6 +69,7 @@ $this->renderPartial('/gig/_comments_form', array('model' => $token->book->gig, 
             'my_thumb' => $info['my_thumb'],
             'their_thumb' => $info['their_thumb'],
             'token_id' => $token->token_id,
+            'role' => $info['my_role'],
         ));
         ?>
         <div class="row" id="chat_row">
@@ -169,7 +171,7 @@ $js = <<< EOD
         $('#clock').countdown(end_time.toDate(), function (event) {
             $(this).html(event.strftime(clock_html));
         }).on('update.countdown', function(event) {
-            if(alert_min >= event.offset.minutes && event.offset.hours == 0){
+            if(alert_min > event.offset.minutes && event.offset.hours == 0){
                 $('#time-alert').removeClass('hide');
             }
         }).on('finish.countdown', function(event){

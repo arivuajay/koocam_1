@@ -214,7 +214,10 @@ class DefaultController extends Controller {
             if ($model->save()) {
                 $token = $model->book->gigTokens;
                 $token->saveAttributes(array('status' => '1'));
-                Yii::app()->user->setFlash('success', "Your Report sent to admin successfully !!!");
+                User::switchStatus($model->book->book_user_id, 'A');
+                User::switchStatus($model->book->gig->tutor_id, 'A');
+            
+                Yii::app()->user->setFlash('success', "Your Report sent to admin successfully & Your Chat closed !!!");
                 $this->redirect(array('/site/purchase/mypurchase'));
 //                $this->redirect(array('/site/default/chat', 'guid' => $model->book->book_guid));
             }
@@ -352,6 +355,22 @@ class DefaultController extends Controller {
         ));
     }
 
+    protected function learnerEnded() {
+        $current_time = Yii::app()->localtime->getUTCNow('Y-m-d H:i:s');
+        $user_id = Yii::app()->user->id;
+
+        $alias = GigBooking::model()->getTableAlias(false, false);
+        $condition = "$alias.book_start_time <= :currentTime AND $alias.book_end_time >= :currentTime";
+        $condition .= " AND $alias.book_user_id = :my_user_id";
+        $condition .= " AND tutor.live_status = 'A'";
+        $condition .= " AND gigTokens.tutor_attendance = '0'";
+
+        return GigBooking::model()->with('gig', 'gigTokens', 'gig.tutor')->active()->completed()->find(array(
+                    'condition' => $condition,
+                    'params' => array(':currentTime' => $current_time, ':my_user_id' => $user_id)
+        ));
+    }
+
     protected function notificationCount() {
         $notifications = Notification::getNotificationsByUserId(Yii::app()->user->id);
         return count($notifications);
@@ -374,7 +393,7 @@ class DefaultController extends Controller {
         }
     }
 
-    protected function actionAjaxrunuser() {
+    public function actionAjaxrunuser() {
         $return['user_waiting'] = 1;
         $user_id = Yii::app()->user->id;
         $guid = $_POST['temp_guid'];
@@ -398,7 +417,7 @@ class DefaultController extends Controller {
             $model = GigTokens::model()->findByPk($_POST['token_id']);
             $model->saveAttributes(array('status'=> '1'));
             
-            User::switchStatus($model->book->bookUser->user_id, 'A');
+            User::switchStatus($model->book->book_user_id, 'A');
             User::switchStatus($model->book->gig->tutor_id, 'A');
         }
     }

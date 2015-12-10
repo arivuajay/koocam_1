@@ -75,26 +75,7 @@ $themeUrl = $this->themeUrl;
                                         </ul>
                                     </li>
                                     <li>
-                                        <?php
-                                        switch ($user->live_status) {
-                                            case 'A':
-                                                $btn_class = 'online-btn';
-                                                $btn_title = 'Online';
-                                                $btn_mode = 'A';
-                                                break;
-                                            case 'B':
-                                                $btn_class = 'online-btn';
-                                                $btn_title = 'Busy';
-                                                $btn_mode = 'B';
-                                                break;
-                                            case 'O':
-                                                $btn_class = 'offline-btn';
-                                                $btn_title = 'Offline';
-                                                $btn_mode = 'O';
-                                                break;
-                                        }
-                                        echo CHtml::link('<i class="fa fa-power-off"></i>', 'javascript:void(0)', array('class' => "{$btn_class}", 'data-toggle' => "tooltip", 'data-placement' => "bottom", 'title' => "{$btn_title}", 'id' => 'switch_status', 'data-mode' => $btn_mode));
-                                        ?>
+                                        <?php echo $user->statusbutton;?>
                                     </li>
                                 <?php } else { ?>
                                     <li><a href="#" data-toggle="modal" data-target=".bs-example-modal-sm1"> Login </a></li>

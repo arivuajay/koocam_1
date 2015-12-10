@@ -287,10 +287,10 @@ class GigBooking extends RActiveRecord {
         if ($this->isNewRecord) {
             $this->sendMailtoTutor();
             if ($this->is_message == 'Y' && !empty($this->book_message)) {
-                Message::insertMessage($this->book_message, $this->bookUser->user_id, $this->gig->tutor->user_id, $this->gig_id);
+                Message::insertMessage($this->book_message, $this->book_user_id, $this->gig->tutor_id, $this->gig_id);
             }
             $message = "You have a new booking from {$this->bookUser->fullname}";
-            Notification::insertNotification($this->gig->tutor->user_id, $message, 'book', $this->book_id);
+            Notification::insertNotification($this->gig->tutor_id, $message, 'book', $this->book_id);
         }
         return parent::afterSave();
     }
@@ -327,7 +327,7 @@ class GigBooking extends RActiveRecord {
 
     public function insertNotification() {
         $notifn_model = new Notification();
-        $notifn_model->user_id = $this->gig->tutor->user_id;
+        $notifn_model->user_id = $this->gig->tutor_id;
         $notifn_model->notifn_type = 'book';
         $notifn_model->notifn_rel_id = $this->book_id;
         $message = "You have a new booking from {$this->bookUser->fullname}";

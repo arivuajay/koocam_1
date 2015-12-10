@@ -60,11 +60,10 @@ class User extends RActiveRecord {
         }
         return $fullname;
     }
-    
+
     public $old_password;
     public $new_password;
     public $repeat_password;
-
     public $confirm_password;
     public $i_agree;
 
@@ -105,25 +104,19 @@ class User extends RActiveRecord {
         return array(
             array('username, password_hash, email, confirm_password', 'required', 'on' => 'register'),
             array('username, email, password_hash', 'required', 'on' => 'insert'),
-            
             array('username, email, password_hash', 'required', 'on' => 'admin_add'),
             array('username, email', 'required', 'on' => 'admin_edit'),
-            
             array('email, confirm_password', 'required', 'on' => 'account_setting'),
             array('confirm_password', 'authenticate', 'on' => 'account_setting'),
-            
             array('username, password_hash, password_reset_token, email', 'length', 'max' => 255),
             array('status, live_status', 'length', 'max' => 1),
             array('email, username, slug', 'unique'),
             array('email', 'email'),
             array('password_hash', 'compare', 'compareAttribute' => 'confirm_password', 'on' => 'register'),
-            
             array('old_password, new_password, repeat_password', 'required', 'on' => 'changePwd'),
             array('old_password', 'findPasswords', 'on' => 'changePwd'),
             array('repeat_password', 'compare', 'compareAttribute' => 'new_password', 'on' => 'changePwd'),
-            
             array('security_question_id, answer', 'required', 'on' => 'account_setting_security'),
-            
             array('created_at, modified_at, user_activation_key, user_login_ip, user_last_login, is_auto_timezone, user_locale_id, user_timezone_id, i_agree, user_rating, country_id, old_password, new_password, repeat_password, security_question_id, answer', 'safe'),
             array('i_agree', 'compare', 'compareValue' => true, 'message' => 'You must agree to the terms and conditions', 'on' => 'register'),
             // The following rule is used by search().
@@ -138,7 +131,7 @@ class User extends RActiveRecord {
         if (!$is_correct_password)
             $this->addError('confirm_password', Myclass::t('Incorrect Password. Please enter your correct password.'));
     }
-    
+
     //matching the old password with your existing password.
     public function findPasswords($attribute, $params) {
         $user = User::model()->findByPk(Yii::app()->user->id);
@@ -338,6 +331,27 @@ class User extends RActiveRecord {
     public static function switchStatus($user_id, $live_status) {
         $user = User::model()->findByAttributes(array('user_id' => $user_id));
         $user->saveAttributes(array('live_status' => $live_status));
+    }
+
+    public function getStatusbutton() {
+        switch ($this->live_status) {
+            case 'A':
+                $btn_class = 'online-btn';
+                $btn_title = 'Online';
+                $btn_mode = 'A';
+                break;
+            case 'B':
+                $btn_class = 'online-btn busy-btn';
+                $btn_title = 'Busy';
+                $btn_mode = 'B';
+                break;
+            case 'O':
+                $btn_class = 'offline-btn';
+                $btn_title = 'Offline';
+                $btn_mode = 'O';
+                break;
+        }
+        return CHtml::link('<i class="fa fa-power-off"></i>', 'javascript:void(0)', array('class' => "{$btn_class}", 'data-toggle' => "tooltip", 'data-placement' => "bottom", 'title' => "{$btn_title}", 'id' => 'switch_status', 'data-mode' => $btn_mode));
     }
 
 }
