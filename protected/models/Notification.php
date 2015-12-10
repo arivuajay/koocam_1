@@ -64,7 +64,7 @@ class Notification extends RActiveRecord {
         return array(
             'notifn_id' => 'Notifn',
             'user_id' => 'User',
-            'notifn_message' => 'Notifn Message',
+            'notifn_message' => 'Message',
             'notifn_type' => 'Notifn Type',
             'notifn_rel_id' => 'Notifn Rel',
             'notifn_read' => 'Read/Unread',

@@ -56,8 +56,19 @@ class UserController extends Controller {
      * @param integer $id the ID of the model to be displayed
      */
     public function actionView($id) {
+        $notifn_model = new Notification;
+        $this->performAjaxValidation($notifn_model);
+        
+        if (Yii::app()->request->isPostRequest && Yii::app()->request->getPost('Notification')) {
+             $notifn_model->attributes = Yii::app()->request->getPost('Notification');
+             if($notifn_model->save(false)){
+                Yii::app()->user->setFlash('success', 'Notification Sent to User Successfully!!!');
+                $this->redirect(array('/admin/user/view', 'id' => $id));
+             }
+        }
         $this->render('view', array(
             'model' => $this->loadModel($id),
+            'notifn_model' => $notifn_model
         ));
     }
 
@@ -184,7 +195,7 @@ class UserController extends Controller {
      * @param User $model the model to be validated
      */
     protected function performAjaxValidation($model) {
-        if (isset($_POST['ajax']) && $_POST['ajax'] === 'user-form') {
+        if (isset($_POST['ajax'])) {
             echo CActiveForm::validate($model);
             Yii::app()->end();
         }

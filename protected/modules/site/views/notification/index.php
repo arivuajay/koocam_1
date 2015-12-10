@@ -34,7 +34,7 @@ $this->breadcrumbs = array(
                                     <div class="notification-txt"><?php echo $mdisplay = $notification->notifn_message; ?></div>
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 notification-timing">
-                                            <?php $message_date = Yii::app()->localtime->fromUTC($notification->created_at); ?>
+                                            <?php $message_date = $notification->created_at; ?>
                                             <div class="mesage-details-2"> 
                                                 <span> <?php echo date("d M, Y", strtotime($message_date)); ?></span> , <i class="fa fa-clock-o"></i> <?php echo date("H:i", strtotime($message_date)); ?> 
                                                 &nbsp; </div>

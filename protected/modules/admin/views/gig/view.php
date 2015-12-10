@@ -36,6 +36,11 @@ $this->rightCornerLink = CHtml::link('<i class="fa fa-reply"></i> Back', array('
                                 'type' => 'raw',
                                 'value' => $model->getGigimage(array('style' => 'width: 100px; height: 100px;')),
                             ),
+                            array(
+                                'name' => 'view Gig page',
+                                'type' => 'raw',
+                                'value' => CHtml::link('Click to Go', array('/site/gig/view', 'slug' => $model->slug), array('target' => '_blank')),
+                            ),
                             'gig_tag',
                             'gig_description',
                             'gig_duration',

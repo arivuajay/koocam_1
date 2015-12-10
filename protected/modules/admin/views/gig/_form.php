@@ -73,13 +73,13 @@ $themeUrl = $this->themeUrl;
             </div>
 
             <div class = "form-group form-control-material static">
-                <?php echo $form->textField($model, 'gig_duration', array('class' => 'form-control time')); ?>
+                <?php echo $form->textField($model, 'gig_duration', array('class' => 'form-control time numberonly')); ?>
                 <?php echo $form->labelEx($model, 'gig_duration'); ?>
                 <?php // echo $form->error($model, 'gig_duration'); ?>
             </div>
 
             <div class = "form-group form-control-material static">
-                <?php echo $form->textField($model, 'gig_price', array('class' => 'form-control', 'size' => 10, 'maxlength' => 10)); ?>
+                <?php echo $form->textField($model, 'gig_price', array('class' => 'form-control numberonly', 'size' => 10, 'maxlength' => 10)); ?>
                 <?php echo $form->labelEx($model, 'gig_price'); ?>
                 <?php // echo $form->error($model, 'gig_price'); ?>
             </div>
@@ -135,6 +135,9 @@ $themeUrl = $this->themeUrl;
 $cs = Yii::app()->getClientScript();
 $cs_pos_end = CClientScript::POS_END;
 //$cs->registerScriptFile($themeUrl . '/js/mask.min.js', $cs_pos_end);
+$durationId = CHTML::activeId($model, 'gig_duration');
+$price_limit_url = Yii::app()->createAbsoluteUrl('/site/gig/changepricepertime');
+$priceId = CHTML::activeId($model, 'gig_price');
 
 $js = <<< EOD
     jQuery(document).ready(function ($) {
@@ -149,7 +152,34 @@ $js = <<< EOD
             }
         });
         
+        $(".numberonly").keypress(function (e) {
+             if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57))
+               return false;
+        });
+        
+        $("#{$durationId}").keypress(function (e) {
+            priceLimit();
+        });
+        
+        $('#{$durationId}').on('change', function(){
+            priceLimit();
+        });
     });
+        
+    function priceLimit(){
+        var data=$("#gig-form").serialize();
+        $.ajax({
+            type: 'POST',
+            url: '$price_limit_url',
+            data:data,
+            success:function(data){
+                $('#{$priceId}').val(data);
+            },
+            error: function(data) {
+                alert("Something went wrong. Try again");
+            },
+        });
+    }
 
 EOD;
 

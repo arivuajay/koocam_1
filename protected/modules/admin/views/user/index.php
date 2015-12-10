@@ -23,6 +23,13 @@ $this->rightCornerLink = CHtml::link('<i class="fa fa-plus"></i> Create User', a
                     'username',
                     'email',
                     array(
+                        'header' => 'Profile Picture',
+                        'type' => 'raw',
+                        'value' => function($data) use ($model){
+                            echo $data->getProfilethumb(array('class' => '', 'style' => 'height: 50px;'));
+                        },
+                    ),
+                    array(
                         'header' => 'Status',
                         'name' => 'status',
                         'type' => 'raw',

@@ -275,35 +275,36 @@ class DefaultController extends Controller {
     }
 
     public function actionAjaxrun() {
-        $return['learner_waiting'] = 0;
-        $return['update_notification_count'] = 0;
-        $return['update_message_count'] = 0;
-        $return['tutor_before_paypal_alert'] = 0;
+        if (Yii::app()->request->isAjaxRequest) {
+            $return['learner_waiting'] = 0;
+            $return['update_notification_count'] = 0;
+            $return['update_message_count'] = 0;
+            $return['tutor_before_paypal_alert'] = 0;
 
-        $themeUrl = $this->themeUrl;
-        if (!Yii::app()->user->isGuest) {
-            //Learner Waiting
-            $bookings = $this->learnerWaiting();
-            if (!empty($bookings)) {
-                $return['learner_waiting'] = 1;
-                $return['learner_name'] = $bookings->bookUser->fullname;
-                $return['learner_thumb'] = $bookings->bookUser->profilethumb;
-                $return['learner_link'] = CHtml::link('Start Chat', array('/site/default/chat', 'guid' => $bookings->book_guid), array('class' => "btn btn-default explorebtn"));
-            }
+            $themeUrl = $this->themeUrl;
+            if (!Yii::app()->user->isGuest) {
+                //Learner Waiting
+                $bookings = $this->learnerWaiting();
+                if (!empty($bookings)) {
+                    $return['learner_waiting'] = 1;
+                    $return['learner_name'] = $bookings->bookUser->fullname;
+                    $return['learner_thumb'] = $bookings->bookUser->profilethumb;
+                    $return['learner_link'] = CHtml::link('Start Chat', array('/site/default/chat', 'guid' => $bookings->book_guid), array('class' => "btn btn-default explorebtn"));
+                }
 
-            //Notification Count
-            $notifn_count = $this->notificationCount();
-            if ($notifn_count > 0 && $notifn_count != $_POST['old_notifn_count']) {
-                $return['update_notification_count'] = 1;
-                $return['notification_update'] = $this->renderPartial('//layouts/_notification_box', compact('themeUrl'), true, false);
-            }
+                //Notification Count
+                $notifn_count = $this->notificationCount();
+                if ($notifn_count > 0 && $notifn_count != $_POST['old_notifn_count']) {
+                    $return['update_notification_count'] = 1;
+                    $return['notification_update'] = $this->renderPartial('//layouts/_notification_box', compact('themeUrl'), true, false);
+                }
 
-            //Message Count
-            $msg_count = $this->messageCount();
-            if ($msg_count > 0 && $msg_count != $_POST['old_msg_count']) {
-                $return['update_message_count'] = 1;
-                $return['message_update'] = $this->renderPartial('//layouts/_message_box', compact('themeUrl'), true, false);
-            }
+                //Message Count
+                $msg_count = $this->messageCount();
+                if ($msg_count > 0 && $msg_count != $_POST['old_msg_count']) {
+                    $return['update_message_count'] = 1;
+                    $return['message_update'] = $this->renderPartial('//layouts/_message_box', compact('themeUrl'), true, false);
+                }
 
             //Tutor before paypal confirmation
             $tutorstartnowalert = $this->tutorBeforePaypalAlert();
@@ -325,12 +326,12 @@ class DefaultController extends Controller {
                 $return['tutor_before_paypal_approve'] = CHtml::link('<i class="fa fa-check-square-o"></i> Approve', array('/site/bookingtemp/approve', 'temp_guid' => $tutorstartnowalert->temp_guid), array('class' => "btn btn-default  explorebtn form-btn"));
                 $return['tutor_before_paypal_reject'] = CHtml::link('<i class="fa fa-remove"></i> Reject', array('/site/bookingtemp/reject', 'temp_guid' => $tutorstartnowalert->temp_guid), array('class' => "btn btn-default  explorebtn form-btn deactiveate-btn"));
             }
+            echo CJSON::encode($return);
+            Yii::app()->end();
         }
-        echo CJSON::encode($return);
-        Yii::app()->end();
     }
 
-    public function learnerWaiting() {
+    protected function learnerWaiting() {
         $current_time = Yii::app()->localtime->getUTCNow('Y-m-d H:i:s');
         $user_id = Yii::app()->user->id;
 
@@ -346,17 +347,17 @@ class DefaultController extends Controller {
         ));
     }
 
-    public function notificationCount() {
+    protected function notificationCount() {
         $notifications = Notification::getNotificationsByUserId(Yii::app()->user->id);
         return count($notifications);
     }
 
-    public function messageCount() {
+    protected function messageCount() {
         $my_unread_msg_count = Message::getMyUnReadMsgCount();
         return $my_unread_msg_count;
     }
 
-    public function tutorBeforePaypalAlert() {
+    protected function tutorBeforePaypalAlert() {
         $tutor_id = Yii::app()->user->id;
         $current_date = date("Y-m-d H:i:s");
         $temp_booking = BookingTemp::model()->find(array(
@@ -368,7 +369,7 @@ class DefaultController extends Controller {
         }
     }
 
-    public function actionAjaxrunuser() {
+    protected function actionAjaxrunuser() {
         $return['user_waiting'] = 1;
         $user_id = Yii::app()->user->id;
         $guid = $_POST['temp_guid'];

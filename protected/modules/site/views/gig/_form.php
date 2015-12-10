@@ -137,15 +137,21 @@ $categories = GigCategory::getCategoryList();
 $cs = Yii::app()->getClientScript();
 $cs_pos_end = CClientScript::POS_END;
 //$cs->registerScriptFile($themeUrl . '/js/mask.min.js', $cs_pos_end);
+$durationId = CHTML::activeId($model, 'gig_duration');
+$mediaId = CHTML::activeId($model, 'gig_media');
+$extraFileId = CHTML::activeId($model, 'extra_file');
+$isExtraId = CHTML::activeId($model, 'is_extra');
+$priceId = CHTML::activeId($model, 'gig_price');
+
 
 $price_limit_url = Yii::app()->createAbsoluteUrl('/site/gig/changepricepertime');
 
 $js = <<< EOD
     jQuery(document).ready(function ($) {
-        $('#Gig_is_extra').on('ifChecked', function(event){
+        $('#{$isExtraId}').on('ifChecked', function(event){
             $('#extras_div').removeClass('hide');
         });
-        $('#Gig_is_extra').on('ifUnchecked', function(event){
+        $('#{$isExtraId}').on('ifUnchecked', function(event){
             $('#extras_div').addClass('hide');
         });
 //        $(".time").mask("99:99");
@@ -185,14 +191,14 @@ $js = <<< EOD
             input_group.find("input").val(newVal).trigger('change');
         });
 
-        $('#Gig_gig_duration').on('change', function(){
+        $('#{$durationId}').on('change', function(){
             var data=$("#gig-create-form").serialize();
             $.ajax({
                 type: 'POST',
                 url: '$price_limit_url',
                 data:data,
                 success:function(data){
-                    $('#Gig_gig_price').val(data);
+                    $('#{$priceId}').val(data);
                 },
                 error: function(data) {
                     alert("Something went wrong. Try again");
@@ -200,11 +206,11 @@ $js = <<< EOD
             });
         });
         
-        $('#Gig_gig_media').live('change', function(){ 
+        $('#{$mediaId}').live('change', function(){ 
             $("#Gig_gig_media_value").html(this.value);
         });
         
-        $('#Gig_extra_file').live('change', function(){ 
+        $('#{$extraFileId}').live('change', function(){ 
             $("#Gig_extra_file_value").html(this.value);
         });
         
