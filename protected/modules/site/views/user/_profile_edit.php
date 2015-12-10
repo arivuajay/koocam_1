@@ -49,7 +49,7 @@
                     </div>
 
                     <div class = "form-group form-control-material static">
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="LangId">
                             <?php
                             $lang_array = $model->getLanguages('array');
 
@@ -78,7 +78,8 @@
                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
                             <?php echo $form->labelEx($user_profile, 'prof_picture'); ?>
                             <span class="btn btn-default btn-file">
-                                <i class="fa fa-upload"></i>   <?php echo $form->labelEx($user_profile, 'prof_picture'); ?>
+                                <i class="fa fa-upload"></i>   
+                                <span id="UserProfile_prof_picture_value"> Profile Picture </span>
                                 <?php echo $form->fileField($user_profile, 'prof_picture'); ?>
                             </span>
                             <?php echo $form->error($user_profile, 'prof_picture'); ?> 
@@ -130,3 +131,28 @@
         </div>
     </div>
 </div>
+<style type="text/css">
+    .modal { overflow: visible; }
+    .modal-body { overflow-y: visible !important; }
+</style>
+
+<?php
+$cs = Yii::app()->getClientScript();
+$cs_pos_end = CClientScript::POS_END;
+$pictureId = CHTML::activeId($user_profile, 'prof_picture');
+
+$js = <<< EOD
+    jQuery(document).ready(function ($) {
+        $('#{$pictureId}').live('change', function(){ 
+            $("#UserProfile_prof_picture_value").html(this.value);
+        });
+        
+        $('#LangId .bootstrap-select .dropdown-menu li').click(function(){
+            $('#LangId .selectpicker').selectpicker('refresh');
+        });
+    });
+
+EOD;
+
+Yii::app()->clientScript->registerScript('_profile_edit', $js);
+?>

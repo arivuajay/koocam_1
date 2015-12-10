@@ -73,7 +73,7 @@ class Gig extends RActiveRecord {
             $this->gig_price = Gig::GIG_MIN_AMT;
             $this->extra_price = Gig::EXTRA_MIN_AMT;
 
-            $this->gig_avail_visual = 'Y';
+            $this->gig_avail_visual = 'N';
         }
 
         parent::init();
@@ -250,7 +250,7 @@ class Gig extends RActiveRecord {
             'gig_description' => 'Description',
             'gig_duration' => 'Time (Minutes)',
             'gig_price' => 'Price ($)',
-            'gig_avail_visual' => 'Will be available on visual chat',
+            'gig_avail_visual' => 'Will not be available on visual chat',
             'is_extra' => 'Extras',
             'extra_price' => 'Extra File Price ($)',
             'extra_description' => 'About Extra File',

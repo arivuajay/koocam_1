@@ -70,7 +70,7 @@ $this->rightCornerLink = CHtml::link('<i class="fa fa-reply"></i> Back', array('
                         ),
                         array(
                             'name' => 'book_user_id',
-                            'value' => '$data->bookUser->fullname'
+                            'value' => '$data->bookUser->username'
                         ),
 //                        array(
 //                            'name' => 'book_user_id',

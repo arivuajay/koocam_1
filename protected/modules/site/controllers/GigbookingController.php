@@ -109,6 +109,7 @@ class GigbookingController extends Controller {
     }
 
     public function actionGetsessionoptions() {
+        $return['msg'] = '';
         $options = '<option value="">Select Session</option>';
         if (isset($_POST)) {
             $session_count = GigBooking::gigSessionList($_POST['user_id'], $_POST['gig_id'], $_POST['date']);
@@ -116,9 +117,12 @@ class GigbookingController extends Controller {
                 foreach ($session_count as $val) {
                     $options .= "<option value='$val'>$val</option>";
                 }
+            }else{
+                $return['msg'] = "You don't have Enough Sessions on {$_POST['date']}. Kindly Book on other date";
             }
+            $return['options'] = $options;
         }
-        echo $options;
+        echo CJSON::encode($return);
         Yii::app()->end();
     }
 

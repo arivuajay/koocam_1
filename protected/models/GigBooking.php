@@ -92,7 +92,7 @@ class GigBooking extends RActiveRecord {
             array('book_gig_price, book_extra_price, book_total_price', 'length', 'max' => 10),
             array('hours', 'numerical', 'min' => self::HOUR_MIN, 'max' => self::HOUR_MAX, 'integerOnly' => true),
             array('minutes', 'numerical', 'min' => self::MINUTE_MIN, 'max' => self::MINUTE_MAX, 'integerOnly' => true),
-            array('hours', 'durationValidate'),
+//            array('hours', 'durationValidate'),
             array('book_start_time', 'bookingValidate'),
 //            array('book_start_time', 'date', 'format' => Yii::app()->localtime->getLocalDateTimeFormat('short', 'short')),
             array('book_approved_time, book_payment_info, modified_at, book_session, is_message, book_message, book_declined_time, book_duration', 'safe'),

@@ -15,7 +15,7 @@ $form = $this->beginWidget('CActiveForm', array(
     'enableAjaxValidation' => true,
     'clientOptions' => array(
         'validateOnSubmit' => true,
-//        'hideErrorMessage' => true,
+        'hideErrorMessage' => true,
     ),
         ));
 echo $form->hiddenField($booking_model, 'gig_id', array('value' => $model->gig_id));
@@ -37,7 +37,7 @@ $gig_price = (int) $model->gig_price;
                 <h4 class="modal-title" id="myModalLabel"><?php echo $model->gig_title; ?></h4>
             </div>
             <div class="modal-body">
-                <?php // echo $form->errorSummary($booking_model); ?>
+                <?php echo $form->errorSummary($booking_model); ?>
 
                 <div class="popup-calendaer-cont">
                     <?php
@@ -87,10 +87,15 @@ $gig_price = (int) $model->gig_price;
                                     
                                     $.ajax({
                                         type: 'POST',
+                                        dataType: 'json',
                                         url: '$session_url',
                                         data: {user_id: '$user_id', gig_id: '{$model->gig_id}', date: newdate},
                                         success:function(data){
-                                            $('.selectpicker').html(data).selectpicker('refresh');
+                                            $('.selectpicker').html(data.options).selectpicker('refresh');
+                                            if(data.msg != '')
+                                                $('#session_alert').removeClass('hide').find('span').html(data.msg);
+                                            else
+                                                $('#session_alert').addClass('hide');
                                         },
                                         error: function(data) {
                                             alert('Something went wrong. Try again');
@@ -119,6 +124,14 @@ $gig_price = (int) $model->gig_price;
                                 Booking Date : <span id="booking_date_txt" onclick="$('.popup-calendaer-cont').slideDown();"><?php echo date(PHP_SHORT_DATE_FORMAT, strtotime($booking_model->book_date)); ?></span>
                             </div>
                         </div>
+                        <?php $ses_class = (!empty($session)) ? 'hide' : ''; ?>
+                        <?php $ses_msg = (empty($session)) ? "You don't have Enough Sessions on Today. Kindly Book on other date" : ''; ?>
+                        <div class="form-group <?php echo $ses_class?>" id="session_alert" >
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                <span class="text-danger"><?php echo $ses_msg; ?></span>
+                            </div>
+                        </div>
+                        
                         <div class="form-group">
                             <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 ">
                                 <?php echo $form->label($booking_model, 'hours'); ?>
@@ -134,9 +147,9 @@ $gig_price = (int) $model->gig_price;
                             <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 ">
                                 <?php echo $form->label($booking_model, 'minutes'); ?>
                                 <div class="input-group" data-max="<?php echo GigBooking::MINUTE_MAX ?>" data-min="<?php echo GigBooking::MINUTE_MIN ?>" data-start-incr="0">
-                                    <span class="input-group-addon" data-incr="1">+</span>
+                                    <span class="input-group-addon" data-incr="5">+</span>
                                     <?php echo $form->textField($booking_model, 'minutes', array('class' => 'form-control numberonly', 'placeholder' => '00', 'maxlength' => 2)); ?>
-                                    <span class="input-group-addon" data-incr="1">-</span>
+                                    <span class="input-group-addon" data-incr="5">-</span>
                                 </div>
                                 <?php echo $form->error($booking_model, 'minutes'); ?>
                             </div>

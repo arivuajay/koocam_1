@@ -26,7 +26,7 @@ $this->breadcrumbs = array(
                     ),
                     array(
                         'name' => 'user_id',
-                        'value' => '$data->user->fullname',
+                        'value' => '$data->user->username',
                     ),
                     'trans_user_amount',
                     'paypal_address',
@@ -113,7 +113,7 @@ $this->breadcrumbs = array(
                     "itemsCssClass" => "table v-middle",
                     'template' => '<div class="panel panel-default"><div class="table-responsive">{items}{pager}</div></div>',
                     'columns' => $gridColumns,
-                    'rowHtmlOptionsExpression' => 'array("data-trans_id" => $data->trans_id, "data-username" => $data->user->fullname, "data-amt" => $data->trans_user_amount, "data-paypal" => $data->paypal_address)',
+                    'rowHtmlOptionsExpression' => 'array("data-trans_id" => $data->trans_id, "data-username" => $data->user->username, "data-amt" => $data->trans_user_amount, "data-paypal" => $data->paypal_address)',
                         )
                 );
                 ?>

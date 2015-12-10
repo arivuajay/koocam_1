@@ -64,6 +64,7 @@ $cs_pos_end = CClientScript::POS_END;
 $js = <<< EOD
     jQuery(document).ready(function ($) {
         $('.box').lionbars();
+        
     });
 EOD;
 Yii::app()->clientScript->registerScript('readmessage', $js);

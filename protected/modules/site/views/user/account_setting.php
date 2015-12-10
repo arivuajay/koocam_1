@@ -57,6 +57,12 @@ $user_paypals = $model->userPaypals;
                             <p> <?php echo ($user_profile->prof_website) ? $user_profile->prof_website : '-'; ?> </p>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
+                            <label>  Default Country </label>
+                            <p> <?php echo $model->userCountry->country_name; ?> </p>
+                        </div>
+                    </div>
 
                     <div class="form-group">  
                         <!--Email Address Section-->

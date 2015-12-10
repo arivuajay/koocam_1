@@ -97,7 +97,7 @@ class MessageController extends Controller {
                             ->select('message.created_at, message.message, user.user_id, user.username')
                             ->from(array('{{message}} message', '{{user}} user'))
                             ->where("message.id1 = '$id1' and user.user_id = message.user1")
-                            ->order('message.id2 DESC')
+                            ->order('message.id2 ASC')
                             ->queryAll();
                 } else {
                     Yii::app()->user->setFlash('danger', 'You dont have the rights to access this page.!');

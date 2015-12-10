@@ -104,6 +104,11 @@ class User extends RActiveRecord {
         // will receive user inputs.
         return array(
             array('username, password_hash, email, confirm_password', 'required', 'on' => 'register'),
+            array(
+                'username',
+                'match', 'not' => true, 'pattern' => '/[^a-zA-Z_-]/',
+                'message' => 'Invalid characters in username.(Spaces not Allowed)',
+            ),
             array('username, email, password_hash', 'required', 'on' => 'insert'),
             array('username, email, password_hash', 'required', 'on' => 'admin_add'),
             array('username, email', 'required', 'on' => 'admin_edit'),
