@@ -23,10 +23,10 @@ class RActiveRecord extends CActiveRecord {
         if ($this->modified_at == '0000-00-00 00:00:00') {
             $this->modified_at = '';
         } else {
-            $this->modified_at = Yii::app()->localtime->toLocalDateTime($this->modified_at, 'short', 'short');
+            $this->modified_at = Yii::app()->localtime->fromUTC($this->modified_at);
         }
         
-        $this->created_at = Yii::app()->localtime->toLocalDateTime($this->created_at, 'short', 'short');
+        $this->created_at = Yii::app()->localtime->fromUTC($this->created_at);
         
         $this->convertTime('from');
         return parent::afterFind();
