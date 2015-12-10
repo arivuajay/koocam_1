@@ -15,6 +15,7 @@
  * @property string $learner_attend_time
  * @property string $created_at
  * @property string $modified_at
+ * @property string $status
  *
  * The followings are the available model relations:
  * @property GigBooking $book
@@ -30,6 +31,14 @@ class GigTokens extends RActiveRecord {
         return '{{gig_tokens}}';
     }
 
+    public function scopes() {
+        $alias = $this->getTableAlias(false, false);
+        return array(
+            'pending' => array('condition' => "$alias.status = '0'"),
+            'completed' => array('condition' => "$alias.status = '1'"),
+        );
+    }
+    
     /**
      * @return array validation rules for model attributes.
      */
@@ -39,10 +48,10 @@ class GigTokens extends RActiveRecord {
         return array(
             array('book_id, session_key, token_key, session_data', 'required'),
             array('book_id', 'numerical', 'integerOnly' => true),
-            array('session_key, token_key, session_data, modified_at, learner_attendance, tutor_attendance, tutor_attend_time, learner_attend_time', 'safe'),
+            array('session_key, token_key, session_data, modified_at, learner_attendance, tutor_attendance, tutor_attend_time, learner_attend_time, status', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('token_id, book_id, session_key, token_key, session_data, created_at, modified_at, learner_attendance, tutor_attendance, tutor_attend_time, learner_attend_time', 'safe', 'on' => 'search'),
+            array('token_id, book_id, session_key, token_key, session_data, created_at, modified_at, learner_attendance, tutor_attendance, tutor_attend_time, learner_attend_time, status', 'safe', 'on' => 'search'),
         );
     }
 
@@ -131,9 +140,10 @@ class GigTokens extends RActiveRecord {
 
     public static function getChatToken($guid) {
         $token_exists = null;
-        $booking_model = GigBooking::model()->findByAttributes(array('book_guid' => $guid, 'book_approve' => '1'));
+        $booking_model = GigBooking::model()->notExpired()->active()->findByAttributes(array('book_guid' => $guid));
+//        $booking_model = GigBooking::model()->findByAttributes(array('book_guid' => $guid, 'book_approve' => '1'));
         if (!empty($booking_model)) {
-            $token_exists = GigTokens::model()->findByAttributes(array('book_id' => $booking_model->book_id));
+            $token_exists = self::model()->pending()->findByAttributes(array('book_id' => $booking_model->book_id));
         }
         return $token_exists;
     }
@@ -158,11 +168,11 @@ class GigTokens extends RActiveRecord {
         $ret = false;
         $booking_model = GigBooking::model()->findByAttributes(array('book_guid' => $guid, 'book_approve' => '1'));
         if (!empty($booking_model)) {
-            $token_exists = GigTokens::model()->findByAttributes(array('book_id' => $booking_model->book_id));
+            $token_exists = self::model()->findByAttributes(array('book_id' => $booking_model->book_id));
 
             if (empty($token_exists)) {
                 $token_model = new GigTokens;
-                $role = GigTokens::TOKEN_ROLE;
+                $role = self::TOKEN_ROLE;
                 $expire = time() + ($booking_model->book_duration * 60);
                 $session_data = array(
                     'expire' => $expire,
@@ -195,21 +205,23 @@ class GigTokens extends RActiveRecord {
             $tutor_thumb = $token->book->gig->tutor->getProfilethumb(array('class' => 'img-circle', 'width' => '50'));
             $learner_name = $token->book->bookUser->fullname;
             $learner_thumb = $token->book->bookUser->getProfilethumb(array('class' => 'img-circle', 'width' => '50'));
-            
+
             if ($is_tutor) {
                 $info['my_role'] = 'tutor';
                 $info['my_name'] = $tutor_name;
                 $info['my_thumb'] = $tutor_thumb;
                 $info['their_name'] = $learner_name;
                 $info['their_thumb'] = $learner_thumb;
-            }else if($is_learner){
+                User::switchStatus($token->book->gig->tutor_id, 'B');
+            } else if ($is_learner) {
                 $info['my_role'] = 'learner';
                 $info['my_name'] = $learner_name;
                 $info['my_thumb'] = $learner_thumb;
                 $info['their_name'] = $tutor_name;
                 $info['their_thumb'] = $tutor_thumb;
+                User::switchStatus($token->book->bookUser->user_id, 'B');
             }
-            
+
             $info['token'] = $token;
         }
         return $info;
@@ -218,14 +230,13 @@ class GigTokens extends RActiveRecord {
     public static function saveAttendance($token_id, $tutor_attendance, $learner_attendance) {
         $model = self::model()->findByPk($token_id);
         $model->attributes = array('tutor_attendance' => $tutor_attendance, 'learner_attendance' => $learner_attendance);
-        if($tutor_attendance == 1){
+        if ($tutor_attendance == 1) {
             $model->tutor_attend_time = date('Y-m-d H:i:s');
-            User::switchStatus($model->book->gig->tutor_id, 'B');
         }
-        if($learner_attendance == 1){
+        if ($learner_attendance == 1) {
             $model->learner_attend_time = date('Y-m-d H:i:s');
-            User::switchStatus($model->book->bookUser->user_id, 'B');
         }
         $model->save(false);
     }
+
 }

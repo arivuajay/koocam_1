@@ -7,6 +7,7 @@ $this->title = 'Chat';
 $themeUrl = $this->themeUrl;
 $show_video = $token->book->gig->gig_avail_visual == 'Y' ? 'true' : 'false';
 $this->renderPartial('_report_abuse', compact('token', 'abuse_model', 'info'));
+$this->renderPartial('/gig/_comments_form', array('model' => $token->book->gig, 'gig_comments' => $gig_comments));
 ?>
 <div id="inner-banner" class="tt-fullHeight3 chat-banner">
     <div class="container homepage-txt">
@@ -66,9 +67,10 @@ $this->renderPartial('_report_abuse', compact('token', 'abuse_model', 'info'));
             'their_name' => $info['their_name'],
             'my_thumb' => $info['my_thumb'],
             'their_thumb' => $info['their_thumb'],
+            'token_id' => $token->token_id,
         ));
         ?>
-        <div class="row">
+        <div class="row" id="chat_row">
             <div class="col-xs-12 col-sm-8 col-md-8 col-lg-9 " id="p_sub_div">
                 <div id="subscribersDiv" class="subscriber-div"></div>
             </div>
@@ -78,7 +80,7 @@ $this->renderPartial('_report_abuse', compact('token', 'abuse_model', 'info'));
                         <div class="my-chat">
                             <div id="myPublisherDiv"></div>
                         </div>
-                        <div id="time-alert" class="text-danger hide"><span class="blink">Time going to End !!!</span></div>
+                        <div id="time-alert" class="text-white hide"><span class="blink">Time going to End !!!</span></div>
                         <div class="chat-count" id="clock">
                             <div class="hour">  Hour  <br/>  <span>00</span></div>
                             <div class="hour">  Min  <br/>  <span>00</span></div>
@@ -87,6 +89,7 @@ $this->renderPartial('_report_abuse', compact('token', 'abuse_model', 'info'));
                         <div class="chat-btns-cont">
                             <div class="row"> 
                                 <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 "> 
+                                    <?php echo CHtml::link('hidden_disconnect', 'javascript:void(0)', array('id' => 'hidden_disconnect', 'class' => 'hide')); ?>
                                     <?php echo CHtml::link(CHtml::image($themeUrl . '/images/callend.png'), 'javascript:void(0)', array('id' => 'disconnect')); ?>
                                 </div>
                                 <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 "> 
@@ -127,6 +130,17 @@ $this->renderPartial('_report_abuse', compact('token', 'abuse_model', 'info'));
                 </div>
             </div>
         </div>
+        
+        <div class="row hide" id="after_chat">
+            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-12 text-center">
+                <p>Your Chat Completed Successfully !!!</p>
+                <br />
+                <div>
+                    <?php echo CHtml::link('Go to Home', array('/site/default/index'), array('class' => 'btb btn-lg btn-success')); ?>
+                </div>
+            </div>
+            
+        </div>
         <br />
         <!--            <div id="msgHistory"></div>
                     <a href="javascript:void(0)" id="connect" class="hide">Connect Again</a>-->
@@ -155,13 +169,11 @@ $js = <<< EOD
         $('#clock').countdown(end_time.toDate(), function (event) {
             $(this).html(event.strftime(clock_html));
         }).on('update.countdown', function(event) {
-            if (event.elapsed) {
-                $('#clock').countdown('stop');
-            }else{
-                if(alert_min >= event.offset.minutes && event.offset.hours == 0){
-                    $('#time-alert').removeClass('hide');
-                }
+            if(alert_min >= event.offset.minutes && event.offset.hours == 0){
+                $('#time-alert').removeClass('hide');
             }
+        }).on('finish.countdown', function(event){
+            $('#hidden_disconnect').trigger('click');
         });
         $('.blink').blink({delay:300});
     });

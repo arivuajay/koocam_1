@@ -48,7 +48,8 @@ class GigcommentsController extends Controller {
             } else {
                 Yii::app()->user->setFlash('danger', "Sorry, comment not sent. Please try again.");
             }
-            $this->redirect(array('/site/gig/view', 'slug' => $model->gig->slug));
+            $this->redirect(array('/site/purchase/mypurchase'));
+//            $this->redirect(array('/site/gig/view', 'slug' => $model->gig->slug));
         }
     }
 

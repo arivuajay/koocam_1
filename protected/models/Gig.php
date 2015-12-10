@@ -300,6 +300,8 @@ class Gig extends RActiveRecord {
         $criteria->addSearchCondition('tutor.username', $this->tutorUserName);
         $criteria->addSearchCondition('cat.cat_name', $this->gigCategory);
 
+        $criteria->order = "{$alias}.created_at DESC";
+        
         $criteria->with = array('tutor', 'cat');
 
         return new CActiveDataProvider($this, array(

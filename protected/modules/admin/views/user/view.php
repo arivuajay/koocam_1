@@ -69,6 +69,7 @@ $this->rightCornerLink = CHtml::link('<i class="fa fa-reply"></i> Back', array('
                         'enableAjaxValidation' => true,
                     ));
                     echo $form->hiddenField($notifn_model, 'user_id', array('value' => $model->user_id));
+                    echo $form->hiddenField($notifn_model, 'notifn_type', array('value' => 'admin'));
                     ?>
 
                     <?php echo $form->errorSummary($notifn_model); ?>

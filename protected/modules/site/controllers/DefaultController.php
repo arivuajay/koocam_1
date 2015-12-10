@@ -32,7 +32,7 @@ class DefaultController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('logout', 'test', 'chat', 'reportabuse', 'upload', 'testtoken', 'filedownload'),
+                'actions' => array('logout', 'test', 'chat', 'reportabuse', 'upload', 'testtoken', 'filedownload', 'disconnect'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -193,6 +193,7 @@ class DefaultController extends Controller {
             $this->goHome();
         }
         $abuse_model = new ReportAbuse();
+        $gig_comments = new GigComments();
         $token = $info['token'];
 
         if ($info['my_role'] == 'tutor' && $token->tutor_attendance == 0) {
@@ -202,7 +203,7 @@ class DefaultController extends Controller {
             GigTokens::saveAttendance($token->token_id, $token->tutor_attendance, 1);
         }
 
-        $this->render('chat', compact('token', 'abuse_model', 'info'));
+        $this->render('chat', compact('token', 'abuse_model', 'info', 'gig_comments'));
     }
 
     public function actionReportabuse() {
@@ -211,8 +212,11 @@ class DefaultController extends Controller {
         if (Yii::app()->request->isPostRequest && Yii::app()->request->getPost('ReportAbuse')) {
             $model->attributes = Yii::app()->request->getPost('ReportAbuse');
             if ($model->save()) {
+                $token = $model->book->gigTokens;
+                $token->saveAttributes(array('status' => '1'));
                 Yii::app()->user->setFlash('success', "Your Report sent to admin successfully !!!");
-                $this->redirect(array('/site/default/chat', 'guid' => $model->book->book_guid));
+                $this->redirect(array('/site/purchase/mypurchase'));
+//                $this->redirect(array('/site/default/chat', 'guid' => $model->book->book_guid));
             }
         }
     }
@@ -389,4 +393,13 @@ class DefaultController extends Controller {
         Yii::app()->end();
     }
 
+    public function actionDisconnect() {
+        if(isset($_POST['token_id']) && Yii::app()->request->isAjaxRequest){
+            $model = GigTokens::model()->findByPk($_POST['token_id']);
+            $model->saveAttributes(array('status'=> '1'));
+            
+            User::switchStatus($model->book->bookUser->user_id, 'A');
+            User::switchStatus($model->book->gig->tutor_id, 'A');
+        }
+    }
 }

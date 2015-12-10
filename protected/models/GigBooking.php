@@ -57,6 +57,8 @@ class GigBooking extends RActiveRecord {
     public function scopes() {
         $alias = $this->getTableAlias(false, false);
         $userID = Yii::app()->user->id;
+        $now = date('Y-m-d H:i:s');
+        
         return array(
             'uniqueDays' => array('select' => "DISTINCT(DATE($alias.book_date)) AS `dist_date`"),
             'active' => array('condition' => "$alias.book_approve = '1'"),
@@ -65,6 +67,7 @@ class GigBooking extends RActiveRecord {
             'all' => array('condition' => "$alias.book_approve is not null"),
             'notdeleted' => array('condition' => "$alias.book_approve != '2'"),
             'completed' => array('condition' => "$alias.book_payment_status = 'C'"),
+            'notExpired' => array('condition' => "$alias.book_end_time >= '{$now}'"),
         );
     }
 
