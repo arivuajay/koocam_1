@@ -78,9 +78,9 @@ class BookingtempController extends Controller {
                 $booking_temp->tutor_id = $gig->tutor_id;
                 $booking_temp->save(false);
 
-                $created_at = Yii::app()->localtime->fromUTC($booking_temp->created_at, 'short', 'short');
+                $created_at = Yii::app()->localtime->fromUTC($booking_temp->created_at);
                 $created_at_time = strtotime($created_at);
-                $end_time = $created_at_time + (60 * 5); // 5 min greater from created
+                $end_time = $created_at_time + (60 * 3); // 5 min greater from created
                 $end_time_format = date("Y/m/d H:i:s", $end_time);
 
                 echo json_encode(array(

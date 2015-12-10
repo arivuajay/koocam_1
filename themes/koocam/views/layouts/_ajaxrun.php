@@ -1,9 +1,10 @@
 <?php
 $ajaxRun = Yii::app()->createAbsoluteUrl('/site/default/ajaxrun');
+$clock_html = '<span> %M </span> : <span>  %S </span>';
+
 $js = <<< EOD
     jQuery(document).ready(function ($) {
         window.setInterval(function(){
-        
             msg_count = $('#li_message_top').find('#top_msg_count').data('count');
             notifn_count = $('#li_notifn_top').find('#top_notifn_count').data('count');
         
@@ -38,6 +39,12 @@ $js = <<< EOD
                         $('#tutor_before_paypal_gig_name').html(data.tutor_before_paypal_gig_name);
                         $('#tutor_before_paypal_approve').html(data.tutor_before_paypal_approve);
                         $('#tutor_before_paypal_reject').html(data.tutor_before_paypal_reject);
+        
+                        var clock_html = '$clock_html';
+                        var end_time = data.tutor_before_paypal_countdown;
+                        $('#tutor_clock').countdown(end_time, function (event) {
+                            $(this).html(event.strftime(clock_html));
+                        });
         
                         if ($("#tutor-before-paypal-wait").data('bs.modal') && $("#tutor-before-paypal-wait").data('bs.modal').isShown){
                             return;
@@ -97,9 +104,9 @@ Yii::app()->clientScript->registerScript('_ajaxrun', $js);
 
                 <div class="approve-img">  
                     <p class="row"> 
-<!--                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 pull-right approve-time ">   
-                        <p> <a href="#" class="btn btn-default"> <b> 5:00  </b></a> </p> 
-                    </div>-->
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 pull-right approve-time ">   
+                        <p> <a href="#" class="btn btn-default"> <b id="tutor_clock"></b></a> </p> 
+                    </div>
                     <div class="clearfix"></div>
                     <p id="tutor_before_paypal_user_thumb"> </p>
                     <p> <h2 id="tutor_before_paypal_user_name"></h2> </p>
@@ -115,3 +122,9 @@ Yii::app()->clientScript->registerScript('_ajaxrun', $js);
         </div>
     </div>
 </div>
+<?php
+$themeUrl = $this->themeUrl;
+$cs = Yii::app()->getClientScript();
+$cs_pos_end = CClientScript::POS_END;
+$cs->registerScriptFile($themeUrl . '/js/jquery.countdown.min.js', $cs_pos_end);
+?>
