@@ -87,7 +87,7 @@ endif
                                 array('label' => '<i class="fa fa-cart-plus"></i> My Purchase ' . $purchase_badge, 'url' => array('/site/purchase/mypurchase')),
                                 array('label' => '<i class="fa fa-money"></i> My Payments ' . $balance_badge, 'url' => array('/site/transaction/mypayments')),
                                 array('label' => '<i class="fa fa-envelope"></i> Messages ' . $msg_badge, 'url' => array('/site/message/index')),
-                                array('label' => '<i class="fa fa-bell"></i> Notifications '.$notifn_badge, 'url' => '#'),
+                                array('label' => '<i class="fa fa-bell"></i> Notifications '.$notifn_badge, 'url' => array('/site/notification/index')),
                                 array('label' => '<i class="fa fa-calendar-check-o"></i> Jobs '.$myjobs, 'url' => array('/site/gigbooking/myjobs')),
                                 array('label' => '<i class="fa fa-gear"></i> Account Setting ', 'url' => '#'),
                                 array('label' => '<i class="fa fa-power-off"></i> Logout', 'url' => array('/site/default/logout')),

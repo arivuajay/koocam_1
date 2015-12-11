@@ -45,7 +45,7 @@
                     <div class = "form-group form-control-material static">
                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                             <?php echo $form->labelEx($user_profile, 'prof_phone'); ?>
-                            <?php echo $form->textField($user_profile, 'prof_phone', array('class' => 'form-control', 'size' => 30, 'maxlength' => 30, 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "Your Phone number")); ?>
+                            <?php echo $form->textField($user_profile, 'prof_phone', array('class' => 'form-control numberonly', 'size' => 30, 'maxlength' => 30, 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "Your Phone number")); ?>
                             <?php echo $form->error($user_profile, 'prof_phone'); ?>
                         </div>
                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
@@ -76,3 +76,20 @@
     </div>
 </div>
 </div>
+
+<?php 
+$cs = Yii::app()->getClientScript();
+$cs_pos_end = CClientScript::POS_END;
+
+$js = <<< EOD
+    jQuery(document).ready(function ($) {
+        $(".numberonly").keypress(function (e) {
+             if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57))
+               return false;
+        });
+    });
+
+EOD;
+
+Yii::app()->clientScript->registerScript('_personal_information_form', $js);
+?>

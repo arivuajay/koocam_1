@@ -114,8 +114,9 @@ class GigbookingController extends Controller {
         if (isset($_POST)) {
             $session_count = GigBooking::gigSessionList($_POST['user_id'], $_POST['gig_id'], $_POST['date']);
             if (!empty($session_count)) {
-                foreach ($session_count as $val) {
-                    $options .= "<option value='$val'>$val</option>";
+                foreach ($session_count as $key => $val) {
+                    $selected = $key == 1 ? 'selected' : '';
+                    $options .= "<option value='{$val}' {$selected}>{$val}</option>";
                 }
             } else {
                 $return['msg'] = "You don't have Enough Sessions on {$_POST['date']}. Kindly Book on other date";

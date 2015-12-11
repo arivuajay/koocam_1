@@ -23,7 +23,12 @@ $this->rightCornerLink = CHtml::link('<i class="fa fa-reply"></i> Back', array('
                 array(
                     'label' => $model->getAttributeLabel('cat_image'),
                     'type' => 'raw',
-                    'value' => CHtml::image($model->getFilePath(), '', array('height' => 200)),
+                    'value' => CHtml::image($model->getFilePath(false, '', 'cat_image'), '', array('height' => 200)),
+                ),
+                array(
+                    'label' => $model->getAttributeLabel('cat_cover_image'),
+                    'type' => 'raw',
+                    'value' => CHtml::image($model->getFilePath(false, '', 'cat_cover_image'), '', array('height' => 200)),
                 ),
                 array(
                     'label' => 'Status',

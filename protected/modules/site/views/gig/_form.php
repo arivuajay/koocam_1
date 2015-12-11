@@ -50,6 +50,13 @@ $categories = GigCategory::getCategoryList();
                     <?php echo $form->error($model, 'gig_tag'); ?> 
                 </div>
             </div>
+            <?php if(!$model->isNewRecord){ ?>
+            <div class="form-group">
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-12 ">
+                    <?php echo $model->getGigimage(array('style' => 'height: 150px;')); ?>
+                </div>
+            </div>
+            <?php } ?>
 
             <div class="form-group">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 ">  
@@ -90,7 +97,7 @@ $categories = GigCategory::getCategoryList();
 
             <div class="form-group">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <?php echo $form->checkBox($model, 'is_extra', array('value' => 'Y', 'uncheckValue' => 'N')); ?>&nbsp;&nbsp;<?php echo $form->labelEx($model, 'is_extra'); ?>
+                    <?php echo $form->checkBox($model, 'is_extra', array('value' => 'Y', 'uncheckValue' => 'N')); ?>&nbsp;&nbsp;<?php echo $form->labelEx($model, 'is_extra', array('data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => " Are you want to add Extra Price ?")); ?>
                 </div>
             </div>
             <?php
@@ -119,7 +126,7 @@ $categories = GigCategory::getCategoryList();
             </div>
             <div class="form-group">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 ">
-                    <?php echo $form->checkBox($model, 'gig_avail_visual', array('value' => 'Y', 'uncheckValue' => 'N')); ?>&nbsp;&nbsp; <?php echo $form->labelEx($model, 'gig_avail_visual'); ?>
+                    <?php echo $form->checkBox($model, 'gig_avail_visual', array('value' => 'N', 'uncheckValue' => 'Y')); ?>&nbsp;&nbsp; <?php echo $form->labelEx($model, 'gig_avail_visual'); ?>
                 </div>
             </div>
             <div class="form-group">

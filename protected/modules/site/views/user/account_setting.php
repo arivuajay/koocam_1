@@ -144,6 +144,9 @@ $user_paypals = $model->userPaypals;
 </div>
 
 <?php
+if(empty($user_profile))
+    $user_profile = new UserProfile;
+
 $this->renderPartial('_personal_information_form', compact('model', 'user_profile'));
 $this->renderPartial('_email_address_form', compact('model'));
 $this->renderPartial('_change_password_form', compact('model'));

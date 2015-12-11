@@ -44,7 +44,10 @@ $logged_user = !$is_tutor && !Yii::app()->user->isGuest;
                         <b class="gig_price_txt"> $ <?php echo $gig_price = (int) $model->gig_price; ?> </b>
                     </div>
                     <?php echo $model->tutorstatusicon; ?>
-                    <?php echo $model->gigimage; ?>
+                    <iframe width="420" height="315"
+                            src="http://www.youtube.com/embed/XGSy3_Czz8k?autoplay=1">
+                    </iframe> 
+                    <?php // echo $model->gigimage; ?>
                 </div>
                 <div class="row">
                     <?php

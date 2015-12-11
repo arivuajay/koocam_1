@@ -5,6 +5,7 @@
 
 $this->title = 'Koocam - Home';
 $themeUrl = $this->themeUrl;
+
 ?>
 
 <div id="home" class="tt-fullHeight">
@@ -80,7 +81,7 @@ $themeUrl = $this->themeUrl;
                 <div class="col-xs-<?php echo $col[$key]['xs'] ?> col-sm-<?php echo $col[$key]['sm'] ?> col-md-<?php echo $col[$key]['md'] ?> col-lg-<?php echo $col[$key]['lg'] ?> cate-cont">
                     <div class="cate-img">
                         <div class="cate-bg"> <a href="#"> <?php echo $category->cat_name; ?> </a> </div>
-                        <?php echo CHtml::image($category->getFilePath(), '', array('width' => "640", 'height' => "540")); ?>
+                        <?php echo CHtml::image($category->getFilePath(false, '', 'cat_image'), '', array('width' => "640", 'height' => "540")); ?>
                     </div>
                 </div>
             <?php endforeach; ?>

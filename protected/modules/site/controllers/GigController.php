@@ -121,7 +121,7 @@ class GigController extends Controller {
                         }
                     }
                     Yii::app()->user->setFlash('success', "Gig updated successfully");
-                    $this->refresh();
+                    $this->redirect(array('/site/gig/view', 'slug' => $model->slug));
                 }
             }
         }

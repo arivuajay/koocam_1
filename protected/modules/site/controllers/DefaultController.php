@@ -62,7 +62,13 @@ class DefaultController extends Controller {
             if ($model->validate() && $model->login()):
                 User::switchStatus(Yii::app()->user->id, 'A');
                 Yii::app()->user->setFlash('success', "You logged in successfully!!!");
-                $this->redirect(Yii::app()->getRequest()->getUrlReferrer());
+                if(isset(Yii::app()->session['refer_url'])){
+                    $refer_url = Yii::app()->session['refer_url'];
+                    unset(Yii::app()->session['refer_url']);
+                }else{
+                    $refer_url = Yii::app()->getRequest()->getUrlReferrer();
+                }
+                $this->redirect($refer_url);
             endif;
         }
     }

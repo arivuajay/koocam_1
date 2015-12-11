@@ -50,7 +50,7 @@ class Transaction extends RActiveRecord {
             array('paypal_address', 'required', 'on' => 'withdraw'),
             array('transaction_id', 'required', 'on' => 'approve'),
             array('trans_reply', 'required', 'on' => 'reject'),
-            array('trans_user_amount', 'numerical', 'min' => self::MIN_WITHDRAW_AMT, 'on' => 'withdraw'),
+            array('trans_user_amount', 'numerical', 'min' => self::MIN_WITHDRAW_AMT, 'max' => Transaction::myCurrentBalance(), 'on' => 'withdraw'),
             array('user_id, book_id', 'numerical', 'integerOnly' => true),
             array('trans_type', 'length', 'max' => 1),
             array('trans_admin_amount, trans_user_amount', 'length', 'max' => 10),
@@ -232,14 +232,14 @@ class Transaction extends RActiveRecord {
     }
 
     public static function myCurrentBalance() {
+        $balance = 0;
         $total_revenue = self::myTotalRevenue();
         $total_withdraw = self::myTotalWithdraw();
         if ($total_revenue > 0) {
             $current_balance = $total_revenue - $total_withdraw;
-            return number_format($current_balance, "2");
-        } else {
-            return "0.00";
+            $balance = $current_balance > 0 ? number_format($current_balance, "2") : 0;
         }
+        return $balance;
     }
 
     public function beforeValidate() {
@@ -342,6 +342,11 @@ class Transaction extends RActiveRecord {
         $mail->send($this->user->email, $Subject, $message);
 
         Notification::insertNotification($this->user->user_id, "Your Cash withdraw request for {$this->trans_user_amount}$ canceled");
+    }
+    
+    public function getMylastpaypal() {
+        $user_id = Yii::app()->user->id;
+        return self::model()->find('user_id = :user_id And trans_type = :type Order by created_at DESC' , array(':user_id' => $user_id, ':type' => 'W'))->paypal_address;
     }
 
 }

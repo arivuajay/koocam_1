@@ -84,7 +84,7 @@
                             </span>
                             <?php echo $form->error($user_profile, 'prof_picture'); ?> 
                         </div>
-                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
+                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 hide">
                             <?php echo $form->labelEx($user_profile, 'country_id'); ?> 
                             <?php echo $form->dropDownList($user_profile, 'country_id', Country::getCountryList(), array('class' => 'selectpicker', 'prompt' => '')); ?> 
                             <?php echo $form->error($user_profile, 'country_id'); ?>

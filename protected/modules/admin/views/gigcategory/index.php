@@ -23,8 +23,17 @@ $this->rightCornerLink = CHtml::link('<i class="fa fa-plus"></i> Create Gig Cate
                     array(
                         'name' => 'cat_image',
                         'type' => 'raw',
+                        'filter' => false,
                         'value' => function($data){
-                            echo CHtml::image($data->getFilePath(), '', array('height' => 100));
+                            echo $data->getCategoryimage(array('height' => 100));
+                        },
+                    ),
+                    array(
+                        'name' => 'cat_cover_image',
+                        'type' => 'raw',
+                        'filter' => false,
+                        'value' => function($data){
+                            echo $data->getCoverimage(array('height' => 100));
                         },
                     ),
                     array(

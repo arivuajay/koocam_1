@@ -45,6 +45,8 @@ class GigBooking extends RActiveRecord {
     const HOUR_MAX = 23;
     const MINUTE_MIN = 0;
     const MINUTE_MAX = 59;
+    
+    const BOOKING_INTERVAL = 10;
 
     public function init() {
         if ($this->isNewRecord) {
@@ -85,13 +87,14 @@ class GigBooking extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('gig_id, book_date, book_start_time, book_session, minutes, hours', 'required'),
+            array('gig_id, book_date, book_start_time, book_session', 'required'),
+//            array('gig_id, book_date, book_start_time, book_session, minutes, hours', 'required'),
             array('gig_id, book_user_id', 'numerical', 'integerOnly' => true),
             array('book_guid', 'length', 'max' => 50),
             array('book_is_extra, book_approve, book_payment_status', 'length', 'max' => 1),
             array('book_gig_price, book_extra_price, book_total_price', 'length', 'max' => 10),
-            array('hours', 'numerical', 'min' => self::HOUR_MIN, 'max' => self::HOUR_MAX, 'integerOnly' => true),
-            array('minutes', 'numerical', 'min' => self::MINUTE_MIN, 'max' => self::MINUTE_MAX, 'integerOnly' => true),
+//            array('hours', 'numerical', 'min' => self::HOUR_MIN, 'max' => self::HOUR_MAX, 'integerOnly' => true),
+//            array('minutes', 'numerical', 'min' => self::MINUTE_MIN, 'max' => self::MINUTE_MAX, 'integerOnly' => true),
 //            array('hours', 'durationValidate'),
             array('book_start_time', 'bookingValidate'),
 //            array('book_start_time', 'date', 'format' => Yii::app()->localtime->getLocalDateTimeFormat('short', 'short')),
@@ -110,13 +113,13 @@ class GigBooking extends RActiveRecord {
     }
 
     public function bookingValidate($attribute, $params) {
-        if (!empty($this->book_start_time)) {
+        if (!empty($this->book_start_time) && !empty($this->gig_id)) {
 
             $start_time = Yii::app()->localtime->toUTC($this->book_start_time);
             if (!empty($this->gig) && !empty($this->book_session) && $this->book_session > 0):
                 $this->setEndtime();
                 $end_time = Yii::app()->localtime->toUTC($this->book_end_time);
-                $booking_exists = self::checkBooking($start_time, $end_time);
+                $booking_exists = self::checkBooking($start_time, $end_time, $this->gig_id);
 
                 if (!empty($booking_exists))
                     $this->addError($attribute, 'Someone Already booked this Time. Try other timings');
@@ -274,8 +277,10 @@ class GigBooking extends RActiveRecord {
             $this->validatorList->add(CValidator::createValidator('required', $this, 'book_message', array()));
         }
 
-        $seconds = $this->hours * 3600 + $this->minutes * 60;
-        $this->book_start_time = $this->book_date . ' ' . gmdate("H:i:s", $seconds);
+        $this->book_start_time = $this->book_date.' '. $this->book_start_time.':00';
+//        $seconds = $this->hours * 3600 + $this->minutes * 60;
+//        $this->book_start_time = $this->book_date . ' ' . gmdate("H:i:s", $seconds);
+        
         $this->book_date = $this->book_start_time;
 
         $this->setBookingPrice();
@@ -377,15 +382,17 @@ class GigBooking extends RActiveRecord {
         $mail->send($tutor->email, $Subject, $message);
     }
 
-    public static function checkBooking($start_time, $end_time) {
+    public static function checkBooking($start_time, $end_time, $gig_id) {
+//        $end_time = date('Y-m-d H:i:s', strtotime($end_time).' +'.self::BOOKING_INTERVAL.' minutes');
+        
         $alias = self::model()->getTableAlias(false, false);
         $condition = "(($alias.book_start_time <= :start_time And $alias.book_end_time >= :start_time)";
         $condition .= " OR ($alias.book_start_time <= :end_time And $alias.book_end_time >= :end_time)) ";
-//        $condition .= " And $alias.book_approve = '1'";
+        $condition .= " And $alias.gig_id = :gig_id";
 
         return self::model()->active()->findAll(array(
                     'condition' => $condition,
-                    'params' => array(':start_time' => $start_time, ':end_time' => $end_time)
+                    'params' => array(':start_time' => $start_time, ':end_time' => $end_time, ':gig_id' => $gig_id)
         ));
     }
 

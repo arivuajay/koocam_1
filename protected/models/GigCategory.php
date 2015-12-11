@@ -8,6 +8,7 @@
  * @property string $cat_name
  * @property string $cat_description
  * @property string $cat_image
+ * @property string $cat_cover_image
  * @property string $status
  * @property string $created_at
  * @property string $modified_at
@@ -28,9 +29,9 @@ class GigCategory extends RActiveRecord {
 
     public function behaviors() {
         return array(
-            'NUploadFile' => array(
+             'NUploadFile' => array(
                 'class' => 'ext.nuploadfile.NUploadFile',
-                'fileField' => 'cat_image',
+                'fileField' => array('cat_image', 'cat_cover_image'),
             ),
             'SlugBehavior' => array(
                 'class' => 'application.models.behaviors.SlugBehavior',
@@ -62,12 +63,14 @@ class GigCategory extends RActiveRecord {
             array('cat_name, slug', 'unique'),
             array('created_by, modified_by', 'numerical', 'integerOnly' => true),
             array('cat_name', 'length', 'max' => 100),
-            array('cat_image', 'length', 'max' => 500),
+            array('cat_image, cat_cover_image', 'length', 'max' => 500),
             array('status', 'length', 'max' => 1),
-            array('cat_description, modified_at', 'safe'),
+            array('cat_image, cat_cover_image', 'file', 'allowEmpty' => false, 'on' => 'create'),
+            array('cat_image, cat_cover_image', 'file', 'allowEmpty' => true, 'on' => 'update'),
+            array('cat_description, modified_at, cat_cover_image', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('cat_id, cat_name, cat_description, cat_image, status, created_at, modified_at, created_by, modified_by', 'safe', 'on' => 'search'),
+            array('cat_id, cat_name, cat_description, cat_image, status, created_at, modified_at, created_by, modified_by, cat_cover_image', 'safe', 'on' => 'search'),
         );
     }
 
@@ -91,6 +94,7 @@ class GigCategory extends RActiveRecord {
             'cat_name' => 'Category Name',
             'cat_description' => 'Category Description',
             'cat_image' => 'Category Image',
+            'cat_cover_image' => 'Cover Image',
             'status' => 'Status',
             'created_at' => 'Created At',
             'modified_at' => 'Modified At',
@@ -159,5 +163,21 @@ class GigCategory extends RActiveRecord {
     
     public static function popularCategory($limit = 6) {
         return GigCategory::model()->active()->findAll(array('limit' => $limit));
+    }
+    
+    public function getCategoryimage($htmlOptions = array()) {
+        if (!empty($this->cat_image))
+            $path = UPLOAD_DIR . $this->cat_image;
+        if (!isset($path) || !is_file($path))
+            $path = 'themes/koocam/images/gig-img.jpg';
+        return CHtml::image(Yii::app()->createAbsoluteUrl($path), '', $htmlOptions);
+    }
+    
+    public function getCoverimage($htmlOptions = array()) {
+        if (!empty($this->cat_cover_image))
+            $path = UPLOAD_DIR . $this->cat_cover_image;
+        if (!isset($path) || !is_file($path))
+            $path = 'themes/koocam/images/inner-banner.jpg';
+        return CHtml::image(Yii::app()->createAbsoluteUrl($path), '', $htmlOptions);
     }
 }

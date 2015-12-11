@@ -33,9 +33,15 @@
             </div>
 
             <div class="form-group form-control-material static">
+                <?php echo $model->getAttributeLabel('cat_image') ?>
                 <?php echo $form->fileField($model, 'cat_image'); ?>
-                <?php // echo $form->labelEx($model, 'cat_image'); ?>
                 <?php echo $form->error($model, 'cat_image'); ?>
+            </div>
+
+            <div class="form-group form-control-material static">
+                <?php echo $model->getAttributeLabel('cat_cover_image') ?>
+                <?php echo $form->fileField($model, 'cat_cover_image'); ?>
+                <?php echo $form->error($model, 'cat_cover_image'); ?>
             </div>
 
             <div class="form-group checkbox checkbox-primary">

@@ -42,7 +42,7 @@ class Gig extends RActiveRecord {
     const GIG_MIN_DURATION = 5;
     const GIG_MAX_DURATION = 60;
     const GIG_ALLOW_FILE_TYPES = 'jpg, gif, png';
-    const GIG_ALLOW_FILE_SIZE = 1; //In MB
+    const GIG_ALLOW_FILE_SIZE = 5; //In MB
     const EXTRA_ALLOW_FILE_TYPES = 'jpg, gif, png, pdf, doc';
     const EXTRA_ALLOW_FILE_SIZE = 5; //In MB
     const GIG_MIN_AMT = 5;

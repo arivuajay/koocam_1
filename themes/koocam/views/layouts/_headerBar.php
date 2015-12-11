@@ -67,6 +67,7 @@ $themeUrl = $this->themeUrl;
                                         <ul class="dropdown-menu dropdown-menu2 pull-right bullet" >
                                             <?php $slug = User::model()->findByPk(Yii::app()->user->id)->slug; ?>
                                             <li><?php echo CHtml::link(' My Profile ', array('/site/user/profile', 'slug' => $slug)); ?></li>
+                                            <li><?php echo CHtml::link(' My Gigs ', array('/site/gig/mygigs')); ?></li>
                                             <li><?php echo CHtml::link(' My Purchase ', array('/site/purchase/mypurchase')); ?></li>
                                             <li><?php echo CHtml::link(' My Payments ', array('/site/transaction/mypayments')); ?></li>
                                             <li class="divider" role="separator"></li>

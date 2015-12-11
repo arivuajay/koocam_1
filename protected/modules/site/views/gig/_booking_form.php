@@ -126,14 +126,23 @@ $gig_price = (int) $model->gig_price;
                         </div>
                         <?php $ses_class = (!empty($session)) ? 'hide' : ''; ?>
                         <?php $ses_msg = (empty($session)) ? "You don't have Enough Sessions on Today. Kindly Book on other date" : ''; ?>
-                        <div class="form-group <?php echo $ses_class?>" id="session_alert" >
+                        <div class="form-group <?php echo $ses_class ?>" id="session_alert" >
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                 <span class="text-danger"><?php echo $ses_msg; ?></span>
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
-                            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 ">
+                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
+                                 <?php echo $form->label($booking_model, 'book_start_time'); ?>
+                                <div class="input-group bootstrap-timepicker timepicker">
+                                    <?php echo $form->textField($booking_model, 'book_start_time', array('class' => 'form-control input-small no-text', 'placeholder' => '', 'id' => 'timepicker1')); ?>
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+                                </div>
+
+                            </div>
+                            
+                            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 hide">
                                 <?php echo $form->label($booking_model, 'hours'); ?>
                                 <div class="input-group" data-max="<?php echo GigBooking::HOUR_MAX ?>" data-min="<?php echo GigBooking::HOUR_MIN ?>" data-start-incr="0">
                                     <span class="input-group-addon" data-incr="1">+</span>
@@ -144,7 +153,7 @@ $gig_price = (int) $model->gig_price;
                                 <?php echo $form->error($booking_model, 'book_start_time'); ?>
                             </div>
 
-                            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 ">
+                            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 hide">
                                 <?php echo $form->label($booking_model, 'minutes'); ?>
                                 <div class="input-group" data-max="<?php echo GigBooking::MINUTE_MAX ?>" data-min="<?php echo GigBooking::MINUTE_MIN ?>" data-start-incr="0">
                                     <span class="input-group-addon" data-incr="5">+</span>
@@ -157,7 +166,7 @@ $gig_price = (int) $model->gig_price;
 
                             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
                                 <?php echo $form->label($booking_model, 'book_session'); ?>
-                                <?php echo $form->dropDownList($booking_model, 'book_session', $session, array('class' => 'selectpicker', "data-style" => "btn-white", "data-size" => "5", 'prompt' => 'Select Session')); ?>
+                                <?php echo $form->dropDownList($booking_model, 'book_session', $session, array('class' => 'selectpicker', "data-style" => "btn-white", "data-size" => "5", 'prompt' => 'Select Session', 'value' => empty($session) ? 0 : 1)); ?>
                                 <?php echo $form->error($booking_model, 'book_session'); ?>
                             </div>
 
@@ -225,6 +234,7 @@ $cs_pos_end = CClientScript::POS_END;
 
 $messageId = CHTML::activeId($booking_model, 'is_message');
 $sessionId = CHTML::activeId($booking_model, 'book_session');
+$timeId = CHTML::activeId($booking_model, 'book_start_time');
 
 $gig_price = $model->gig_price;
 $extra_price = isset($model->gigExtras->extra_price) ? $model->gigExtras->extra_price : 0;
@@ -256,7 +266,7 @@ $js = <<< EOD
         gigPriceBySessionInner($("#{$sessionId}").val(), extra_checked);
 
         // Hours & minutes //
-        $(".input-group-addon").on("click", function () {
+        $(".input-group-addon-xx").on("click", function () {
             var button = $(this);
             var input_group = button.closest('.input-group');
             var oldValue = input_group.find("input").val();
@@ -290,6 +300,10 @@ $js = <<< EOD
              if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57))
                return false;
         });
+        
+        $(".no-text").keypress(function (e) {
+            return false;
+        });
 
         // Want to send message Functions //
         $('#{$messageId}').on('ifChecked', function(event){
@@ -297,6 +311,11 @@ $js = <<< EOD
         });
         $('#{$messageId}').on('ifUnchecked', function(event){
             $('#message_div').addClass('hide');
+        });
+        
+        $('#timepicker1').timepicker({
+            showMeridian:false,
+            minuteStep: 5,
         });
         
         function gigPriceBySessionInner(session_count, is_extra){

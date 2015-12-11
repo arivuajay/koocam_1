@@ -44,6 +44,8 @@ class GigcommentsController extends Controller {
             $model->attributes = Yii::app()->request->getPost('GigComments');
             $model->user_id = Yii::app()->user->id;
             if ($model->save()) {
+                $message = "{$model->user->fullname} Commented on your Gig ({$model->gig->gig_title})";
+                Notification::insertNotification($model->gig->tutor_id, $message);
                 Yii::app()->user->setFlash('success', "Your comment sent successfully!!!.");
             } else {
                 Yii::app()->user->setFlash('danger', "Sorry, comment not sent. Please try again.");

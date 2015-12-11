@@ -62,6 +62,16 @@ class UserController extends Controller {
         if (Yii::app()->request->isPostRequest && Yii::app()->request->getPost('Notification')) {
              $notifn_model->attributes = Yii::app()->request->getPost('Notification');
              if($notifn_model->save(false)){
+                $mail = new Sendmail;
+                $trans_array = array(
+                    "{SITENAME}" => SITENAME,
+                    "{USERNAME}" => $notifn_model->notifnUser->fullname,
+                    "{NOTIFICATION}" => $notifn_model->notifn_message,
+                );
+                $message = $mail->getMessage('user_notification', $trans_array);
+                $Subject = $mail->translate(SITENAME.": New Notification");
+                $mail->send($notifn_model->notifnUser->email, $Subject, $message);
+                
                 Yii::app()->user->setFlash('success', 'Notification Sent to User Successfully!!!');
                 $this->redirect(array('/admin/user/view', 'id' => $id));
              }

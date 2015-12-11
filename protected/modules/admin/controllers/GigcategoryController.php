@@ -66,14 +66,13 @@ class GigcategoryController extends Controller {
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
     public function actionCreate() {
-        $model = new GigCategory;
+        $model = new GigCategory('create');
 
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation($model);
 
         if (isset($_POST['GigCategory'])) {
             $model->attributes = $_POST['GigCategory'];
-            $model->setAttribute('cat_image', isset($_FILES['GigCategory']['name']['cat_image']) ? $_FILES['GigCategory']['name']['cat_image'] : '');
             if ($model->validate()) {
                 $model->setUploadDirectory(UPLOAD_DIR);
                 $model->uploadFile();
@@ -96,13 +95,14 @@ class GigcategoryController extends Controller {
      */
     public function actionUpdate($id) {
         $model = $this->loadModel($id);
+        $model->scenario = 'update';
 
         // Uncomment the following line if AJAX validation is needed
         $this->performAjaxValidation($model);
 
         if (isset($_POST['GigCategory'])) {
             $model->attributes = $_POST['GigCategory'];
-            $model->setAttribute('cat_image', isset($_FILES['GigCategory']['name']['cat_image']) ? $_FILES['GigCategory']['name']['cat_image'] : '');
+            
             if ($model->validate()) {
                 $model->setUploadDirectory(UPLOAD_DIR);
                 $model->uploadFile();

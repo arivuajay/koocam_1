@@ -19,6 +19,10 @@ $form = $this->beginWidget('CActiveForm', array(
 $paypal_address = UserPaypal::getUserpaypal();
 $paypal_address['others@others.other'] = 'Add New Paypal';
 
+$selected = array();
+if(!empty($model->mylastpaypal)){
+    $selected[$model->mylastpaypal] = array('selected'=>true);
+}
 ?>
 <div class="modal fade" id="withdraw-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
@@ -35,11 +39,11 @@ $paypal_address['others@others.other'] = 'Add New Paypal';
                         <div class="form-group">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                                 <?php echo $form->labelEx($model, 'paypal_address'); ?>
-                                <?php echo $form->dropDownList($model, 'paypal_address', $paypal_address, array('class' => 'selectpicker', 'prompt' => 'Select Paypal Address')); ?>
+                                <?php echo $form->dropDownList($model, 'paypal_address', $paypal_address, array('class' => 'selectpicker', 'prompt' => 'Select Paypal Address', 'options' => $selected)); ?>
                                 <?php echo $form->error($model, 'paypal_address'); ?>
                             </div>
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                                <?php echo $form->labelEx($model, 'trans_user_amount'); ?>
+                                <?php echo $form->labelEx($model, 'trans_user_amount');  ?>
                                 <?php echo $form->textField($model, 'trans_user_amount', array('class' => 'form-control numberonly', 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "Withdraw Amount. Minimum ".Transaction::MIN_WITHDRAW_AMT." $")); ?>
                                 <?php echo $form->error($model, 'trans_user_amount'); ?>
                             </div>
@@ -51,7 +55,7 @@ $paypal_address['others@others.other'] = 'Add New Paypal';
                                 <?php echo $form->error($model, 'new_paypal'); ?>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group hide">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                 <?php echo $form->checkBox($model, 'is_message', array('value' => 'Y', 'uncheckValue' => 'N')); ?>
                                 Want to send Message ?
