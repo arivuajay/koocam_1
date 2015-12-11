@@ -16,7 +16,7 @@ $is_not_my_profile = !Yii::app()->user->isGuest && Yii::app()->user->id != $mode
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8 col-md-offset-1  col-lg-offset-2 page-details ">
                 <h2> 
-                    <?php echo CHtml::link($model->fullname, array('/site/user/profile', 'slug' => $model->slug)); ?> 
+                    <?php echo CHtml::link($model->username, array('/site/user/profile', 'slug' => $model->slug)); ?> 
                     <?php if ($is_user) { ?>
                         <button class="btn btn-default edit-btn" data-toggle="modal" data-target=".bs-example-modal-sm2" data-dismiss=".bs-example-modal-sm2"> <i class="fa fa-pencil"></i> </button>
                     <?php } ?>
