@@ -46,7 +46,8 @@ class GigBooking extends RActiveRecord {
     const MINUTE_MIN = 0;
     const MINUTE_MAX = 59;
     
-    const BOOKING_INTERVAL = 10;
+    const PRE_BOOKING_WAIT = 5;
+	const BOOKING_INTERVAL = 10;
 
     public function init() {
         if ($this->isNewRecord) {
@@ -56,11 +57,16 @@ class GigBooking extends RActiveRecord {
         parent::init();
     }
 
+    //Tutor Revenue only the user gig price / extra price, Not include the user procession / service fees.
+    public function getBeforetaxamount() {
+        return $this->book_gig_price + $this->book_extra_price;
+    }
+
     public function scopes() {
         $alias = $this->getTableAlias(false, false);
         $userID = Yii::app()->user->id;
         $now = date('Y-m-d H:i:s');
-        
+
         return array(
             'uniqueDays' => array('select' => "DISTINCT(DATE($alias.book_date)) AS `dist_date`"),
             'active' => array('condition' => "$alias.book_approve = '1'"),
@@ -291,6 +297,7 @@ class GigBooking extends RActiveRecord {
     protected function afterSave() {
         if ($this->isNewRecord) {
             $this->sendMailtoTutor();
+            $this->sendMailtoLearner();
             if ($this->is_message == 'Y' && !empty($this->book_message)) {
                 Message::insertMessage($this->book_message, $this->book_user_id, $this->gig->tutor_id, $this->gig_id);
             }
@@ -317,11 +324,11 @@ class GigBooking extends RActiveRecord {
                 $price = $gig_price + $price;
             }
             $this->book_gig_price = $price;
-            
+
             $this->book_extra_price = 0;
             if ($this->book_is_extra)
                 $this->book_extra_price = $this->gig->gigExtras->extra_price;
-            
+
             $price_calculation = self::price_calculation(Yii::app()->user->country_id, $this->book_gig_price, $this->book_extra_price);
             $this->book_processing_fees = $price_calculation['processing_fees'];
             $this->book_service_tax = $price_calculation['service_tax'];
@@ -380,6 +387,28 @@ class GigBooking extends RActiveRecord {
         $message = $mail->getMessage('gig_booking_tutor', $trans_array);
         $Subject = $mail->translate("New Booking For Your GIG ({$this->gig->gig_title})");
         $mail->send($tutor->email, $Subject, $message);
+    }
+    
+    public function sendMailtoLearner() {
+        $tutor = $this->gig->tutor;
+        $learner = $this->bookUser;
+        $book_date = date(PHP_SHORT_DATE_FORMAT, strtotime($this->book_date));
+        
+        $mail = new Sendmail;
+        $trans_array = array(
+            "{SITENAME}" => SITENAME,
+            "{USERNAME}" => $learner->fullname,
+            "{EMAIL_ID}" => $learner->email,
+            "{TUTOR}" => $tutor->fullname,
+            "{GIG}" => $this->gig->gig_title,
+            "{BOOK_DATE}" => $book_date,
+            "{FROM_TIME}" => date('H:i', strtotime($this->book_start_time)),
+            "{TO_TIME}" => date('H:i', strtotime($this->book_end_time)),
+            "{BOOK_URL}" => Yii::app()->createAbsoluteUrl("/site/gigbooking/prebooking", array("book_guid" => $this->book_guid)),
+        );
+        $message = $mail->getMessage('gig_booking_learner', $trans_array);
+        $Subject = $mail->translate("New Booking For GIG ({$this->gig->gig_title})");
+        $mail->send($learner->email, $Subject, $message);
     }
 
     public static function checkBooking($start_time, $end_time, $gig_id) {

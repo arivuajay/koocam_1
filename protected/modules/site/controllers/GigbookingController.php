@@ -32,7 +32,7 @@ class GigbookingController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('booking', 'calendarevents', 'getsessionoptions', 'getbookingprice', 'usercalendarevents', 'myjobs'),
+                'actions' => array('booking', 'calendarevents', 'getsessionoptions', 'getbookingprice', 'usercalendarevents', 'myjobs', 'prebooking'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -142,15 +142,48 @@ class GigbookingController extends Controller {
 
         $criteria = new CDbCriteria;
         $criteria->with = array('gig');
-        $criteria->compare('gig.tutor_id' , $tutor_id);
-        
+        $criteria->compare('gig.tutor_id', $tutor_id);
+
         $pages = new CPagination(GigBooking::model()->active()->count($criteria));
         $pages->pageSize = 10;
         $pages->applyLimit($criteria);
-        
+
         $results = GigBooking::model()->active()->findAll($criteria);
 
         $this->render('myjobs', compact('results', 'pages'));
+    }
+
+    public function actionPrebooking($book_guid) {
+        $user_id = Yii::app()->user->id;
+        $booking = GigBooking::model()->active()->findByAttributes(array(
+            'book_guid' => $book_guid,
+            'book_user_id' => $user_id,
+        ));
+
+        if (!empty($booking)) {
+            
+            $current_time = Yii::app()->localtime->getLocalNow("Y-m-d H:i:s");
+            echo '<pre>';
+            print_r($current_time);
+
+            $book_expiry_time = date('Y-m-d H:i:s', strtotime($booking->book_start_time) . ' +' . GigBooking::PRE_BOOKING_WAIT . ' minutes');
+            echo '<pre>';
+            print_r($book_expiry_time);
+            exit;
+
+
+
+            if ($current_time <= $book_expiry_time) {
+                $booking_temp = new BookingTemp;
+                $this->render('prebooking', compact('booking', 'booking_temp')); 
+            } else {
+                Yii::app()->user->setFlash('danger', "Sorry your booking time is expired");
+                $this->goHome();
+            }
+        } else {
+            Yii::app()->user->setFlash('danger', "Sorry you don't have a permission to access this page");
+            $this->goHome();
+        }
     }
 
     /**

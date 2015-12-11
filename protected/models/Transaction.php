@@ -177,7 +177,9 @@ class Transaction extends RActiveRecord {
             $learner_transaction->save(false);
 
             //Tutor Transaction - Revenue
-            $calculation_price = self::adminCommissionCalculation($gig_booking->book_total_price);
+            //Tutor Revenue only the user gig price / extra price, Not include the user procession / service fees.
+            $book_total_price_tutor = $gig_booking->beforetaxamount;
+            $calculation_price = self::adminCommissionCalculation($book_total_price_tutor);
             $tutor_transaction = new Transaction;
             $tutor_transaction->user_id = $gig_booking->gig->tutor_id;
             $tutor_transaction->trans_type = self::TYPE_REVENUE;

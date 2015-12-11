@@ -87,7 +87,7 @@ class BookingtempController extends Controller {
                     'status' => 'success',
                     'temp_guid' => $booking_temp->temp_guid,
                     'end_time_format' => $end_time_format,
-                ), JSON_UNESCAPED_SLASHES);
+                        ), JSON_UNESCAPED_SLASHES);
                 Yii::app()->end();
             } else {
                 $error = CActiveForm::validate($booking_temp);
@@ -98,7 +98,11 @@ class BookingtempController extends Controller {
         }
     }
 
-    public function actionProcesspaypal($temp_guid) {
+    public function actionProcesspaypal($temp_guid, $book_id = '') {
+        if($book_id){
+            $gig_booking = GigBooking::model()->deleteByPk($book_id);
+        }
+        
         $booking_temp = BookingTemp::model()->findByAttributes(array('temp_guid' => $temp_guid, "status" => "1"));
 
         if (!empty($booking_temp)) {
@@ -187,11 +191,6 @@ class BookingtempController extends Controller {
     public function actionApprove($temp_guid) {
         $booking_temp = BookingTemp::model()->findByAttributes(array('temp_guid' => $temp_guid, 'tutor_id' => Yii::app()->user->id, 'status' => '0'));
         if (!empty($booking_temp)) {
-            $booking_created_at = $booking_temp->created_at;
-            $created_at_time = strtotime($booking_created_at);
-            $end_time = $created_at_time + (60 * 5); // 5 min greater from created
-            $end_time_format = date("Y/m/d H:i:s", $end_time);
-
             $booking_temp->status = 1;
             if ($booking_temp->save(false)) {
                 Yii::app()->user->setFlash("success", "You approved one booking.");
