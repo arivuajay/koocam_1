@@ -56,7 +56,7 @@ endif
                     <div class="profiles-list">
                         <?php
                         $msg_count = Message::getMyUnReadMsgCount();
-                        $msg_badge = $purchase_badge = $gig_badge = $balance_badge = '';
+                        $msg_badge = $purchase_badge = $gig_badge = $balance_badge = $myjobs = '';
                         $balance = Transaction::myCurrentBalance();
                         $notifn_count = Notification::getNotificationCountByUserId(Yii::app()->user->id);
 
@@ -88,7 +88,7 @@ endif
                                 array('label' => '<i class="fa fa-money"></i> My Payments ' . $balance_badge, 'url' => array('/site/transaction/mypayments')),
                                 array('label' => '<i class="fa fa-envelope"></i> Messages ' . $msg_badge, 'url' => array('/site/message/index')),
                                 array('label' => '<i class="fa fa-bell"></i> Notifications '.$notifn_badge, 'url' => '#'),
-                                array('label' => '<i class="fa fa-calendar-check-o"></i> Jobs <span class="badge">20</span>', 'url' => '#'),
+                                array('label' => '<i class="fa fa-calendar-check-o"></i> Jobs '.$myjobs, 'url' => array('/site/gigbooking/myjobs')),
                                 array('label' => '<i class="fa fa-gear"></i> Account Setting ', 'url' => '#'),
                                 array('label' => '<i class="fa fa-power-off"></i> Logout', 'url' => array('/site/default/logout')),
                             ),

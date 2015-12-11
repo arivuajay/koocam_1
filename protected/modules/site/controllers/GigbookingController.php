@@ -32,7 +32,7 @@ class GigbookingController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('booking', 'calendarevents', 'getsessionoptions', 'getbookingprice', 'usercalendarevents'),
+                'actions' => array('booking', 'calendarevents', 'getsessionoptions', 'getbookingprice', 'usercalendarevents', 'myjobs'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -91,7 +91,7 @@ class GigbookingController extends Controller {
         $date = array();
         foreach ($bookings as $booking) {
             $color = '#337AB7';
-            if($booking->gig->tutor_id == Yii::app()->user->id){
+            if ($booking->gig->tutor_id == Yii::app()->user->id) {
                 $color = '#F0AD4E';
             }
             $title = 'Busy (' . date('H:i', strtotime($booking->book_start_time)) . '-' . date('H:i', strtotime($booking->book_end_time)) . ')';
@@ -117,7 +117,7 @@ class GigbookingController extends Controller {
                 foreach ($session_count as $val) {
                     $options .= "<option value='$val'>$val</option>";
                 }
-            }else{
+            } else {
                 $return['msg'] = "You don't have Enough Sessions on {$_POST['date']}. Kindly Book on other date";
             }
             $return['options'] = $options;
@@ -132,6 +132,24 @@ class GigbookingController extends Controller {
             echo CJSON::encode($result);
         }
         Yii::app()->end();
+    }
+
+    public function actionMyjobs() {
+        $this->layout = '//layouts/user_dashboard';
+
+        $tutor_id = Yii::app()->user->id;
+
+        $criteria = new CDbCriteria;
+        $criteria->with = array('gig');
+        $criteria->compare('gig.tutor_id' , $tutor_id);
+        
+        $pages = new CPagination(GigBooking::model()->active()->count($criteria));
+        $pages->pageSize = 10;
+        $pages->applyLimit($criteria);
+        
+        $results = GigBooking::model()->active()->findAll($criteria);
+
+        $this->render('myjobs', compact('results', 'pages'));
     }
 
     /**
