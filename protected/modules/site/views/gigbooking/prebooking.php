@@ -23,6 +23,7 @@ $themeUrl = $this->themeUrl;
                     Your booking will open <br> <span id="clock"></span>
                 </div>
             </div>
+            
             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-12 text-center hide" id="display_startnow">
                 <a href="#" data-target="#prebookingstartnow" data-toggle="modal" class="big-btn btn btn-default">
                     <i class="fa fa-video-camera"></i> Start Now !
@@ -156,6 +157,7 @@ $js = <<< EOD
         var clock_html = '$clock_html';
         var end_time = '$end_time';
         
+        
         $('#clock').countdown(end_time, function (event) {
             $(this).html(event.strftime(clock_html));
         }).on('update.countdown', function(event) {
@@ -168,6 +170,7 @@ $js = <<< EOD
     });
         
     function process_startnow_form(data){
+        var book_id = $book_id;
         if(data.status=="success"){
             var temp_guid = data.temp_guid;
             $("#start-now-buttons").html("Please wait <span id='new_clock'></span> min, while tutor will approve your booking...");
@@ -188,8 +191,8 @@ $js = <<< EOD
                         data: {'temp_guid': data.temp_guid},
                         url: '$ajaxRun_user',
                         success:function(data){
-                            if(data.user_before_paypal_status == "success"){
-                                window.location = '{$paypal_process}' + '/' + temp_guid;
+                            if(data.user_before_paypal_status == "success"){ 
+                                window.location = '{$paypal_process}' + '/' + temp_guid + '/book_id/' + book_id;
                             }
                             if(data.user_before_paypal_status == "rejected"){
                                 alert("You booking is rejected by Tutor, Please try again");

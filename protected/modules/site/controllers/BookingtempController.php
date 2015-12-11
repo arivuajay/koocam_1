@@ -100,7 +100,7 @@ class BookingtempController extends Controller {
 
     public function actionProcesspaypal($temp_guid, $book_id = '') {
         if($book_id){
-            $gig_booking = GigBooking::model()->deleteByPk($book_id);
+            GigBooking::model()->findByPk($book_id)->delete();
         }
         
         $booking_temp = BookingTemp::model()->findByAttributes(array('temp_guid' => $temp_guid, "status" => "1"));

@@ -163,15 +163,8 @@ class GigbookingController extends Controller {
         if (!empty($booking)) {
             
             $current_time = Yii::app()->localtime->getLocalNow("Y-m-d H:i:s");
-            echo '<pre>';
-            print_r($current_time);
 
             $book_expiry_time = date('Y-m-d H:i:s', strtotime($booking->book_start_time) . ' +' . GigBooking::PRE_BOOKING_WAIT . ' minutes');
-            echo '<pre>';
-            print_r($book_expiry_time);
-            exit;
-
-
 
             if ($current_time <= $book_expiry_time) {
                 $booking_temp = new BookingTemp;
