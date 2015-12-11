@@ -9,11 +9,11 @@
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <ul>
                         <li><?php echo CHtml::link(' About Us ', array('/site/cms/view', 'slug' => 'about-us')); ?></li>
-                        <li><?php echo CHtml::link(' How it Works ', array('/site/cms/view', 'slug' => 'how-it-works')); ?></li>
+                        <li><?php echo CHtml::link(' How it Works ', array('/site/default/howitworks')); ?></li>
                         <li><?php echo CHtml::link(' Contact Us ', '#'); ?></li>
                         <li><?php echo CHtml::link(' Terms and Conditions ', array('/site/cms/view', 'slug' => 'terms-and-conditions')); ?></li>
                         <li><?php echo CHtml::link(' Privacy Policy ', array('/site/cms/view', 'slug' => 'privacy-policy')); ?></li>
-                        <li><?php echo CHtml::link(' FAQ ', '#'); ?></li>
+                        <li><?php echo CHtml::link(' FAQ ', array('/site/default/faq')); ?></li>
                     </ul>
                     <p> Copyrights © 2015. Koocam.com. Allrights reserved </p>
                 </div>

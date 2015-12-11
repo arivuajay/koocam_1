@@ -1245,6 +1245,9 @@ label {
 .privacy-banner {
 	background: url(../images/terms-conditions.jpg) no-repeat center center !important;
 }
+.howitworks-banner {
+	background: url(../images/how-it-works.jpg) no-repeat center center !important;
+}
 .panel-default > .panel-heading {
 	border-color: #ddd;
 }
@@ -2131,3 +2134,60 @@ input[type=button] {
 	text-align:right;
 }
 
+
+.notfound
+{
+	color:#4e4e4e;
+	text-align:center;
+	font-size:30px;
+	line-height:40px;
+}
+
+
+.stepimg
+{
+	width:100%;
+	float:left;
+	text-align:center
+}
+
+.stepimg img
+{
+	width:230px;
+	
+}
+
+.step-txt
+{
+	width:100%;
+	float:left;
+	margin-top:15px;
+	text-align:center;
+	margin-bottom:40px;
+}
+
+.step-txt h2
+{
+	font-size:34px;
+	font-weight:700;
+	margin:0px 0px 15px 0px;
+}
+
+.line2
+{
+	background:url(../images/line2.png) center no-repeat;
+	min-height:263px;
+}
+
+
+.howitworks-video
+{
+	margin-top:25px;
+}
+
+.howitworks-video iframe
+{
+	float:left;
+	margin-right:25px;
+	width:50%;
+}

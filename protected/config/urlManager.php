@@ -9,6 +9,8 @@ return array(
     '<controller:\w+>/<action:\w+>' => '<controller>/<action>',
     'login' => 'site/users/login',
     'home' => 'site/default/index',
+    'faq' => array('site/default/faq', 'urlSuffix' => '.html'),
+    'howitworks' => array('site/default/howitworks', 'urlSuffix' => '.html'),
     'chat/<guid:[-\w]+>' => 'site/default/chat',
     'gig/<slug:[-\w]+>' => array('site/gig/view', 'urlSuffix' => '.html'),
     'category/<slug:[-\w]+>' => array('site/gigcategory/view', 'urlSuffix' => '.html'),

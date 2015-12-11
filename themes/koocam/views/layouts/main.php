@@ -75,6 +75,18 @@
                       delay: 250
                     }
                 });
+                
+                $("input").not(".allow_foriegn").keydown(function() {
+                    var patt = /[^\u0000-\u007F ]+/;
+                    var value = $(this).val();
+                    var patt_value = value.replace(patt,'');
+                    if (patt_value != value)
+                    {
+                        alert("only english please.");
+                        $(this).val('');
+                    }
+                });
+
             });
                 
             $(window).load(function(){

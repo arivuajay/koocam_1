@@ -30,7 +30,7 @@
                     <div class = "form-group form-control-material static">
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <?php echo $form->labelEx($message, 'message'); ?>
-                            <?php echo $form->textArea($message, 'message', array('class' => 'form-control', 'rows' => 3, 'cols' => 50)); ?>
+                            <?php echo $form->textArea($message, 'message', array('class' => 'form-control allow_foriegn', 'rows' => 3, 'cols' => 50)); ?>
                             <?php echo $form->error($message, 'message'); ?>
                         </div>
                     </div>

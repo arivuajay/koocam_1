@@ -12,7 +12,7 @@ echo $form->hiddenField($model, 'id2', array("value" => count($mymessages) + 1))
 <div class="replybox-cont">
     <div class="form-group">
         <?php // echo $form->labelEx($model, 'message'); ?>
-        <?php echo $form->textArea($model, 'message', array('class' => 'form-control form-txtarea', 'maxlength' => 1000, 'rows' => 5, 'cols' => 50, 'placeholder' => 'Tell About Something......')); ?> 
+        <?php echo $form->textArea($model, 'message', array('class' => 'form-control form-txtarea allow_foriegn', 'maxlength' => 1000, 'rows' => 5, 'cols' => 50, 'placeholder' => 'Tell About Something......')); ?> 
         <?php echo $form->error($model, 'message'); ?>
     </div>
     <div class="">

@@ -243,6 +243,26 @@
   font-size: 16px;
 }
 
+
+
+.line2
+{
+	background:url(../images/line4.png) center no-repeat;
+	min-height:75px;
+}
+
+.step-txt
+{
+	margin-bottom:0px;
+}
+
+.howitworks-video iframe
+{
+	float:left;
+	margin-right:25px;
+	width:100%;
+}
+
 }
 @media (min-width:768px) and (max-width:991px) {
  .nav > li > a {
@@ -350,6 +370,24 @@ display:none!important
 	background-color: transparent !important;
 	color: #ffffff !important;
 }
+
+
+.step-txt h2 {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 15px;
+}
+
+
+
+.line2, .line3 {
+background-size:150%;
+min-height: 160px;
+}
+
+
+
+
 }
 @media (min-width:992px) and (max-width:1199px) {
 .nav > li > a {
@@ -400,6 +438,23 @@ display:none!important
 	background-color: transparent !important;
 	color: #ffffff !important;
 }
+
+.step-txt h2 {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 15px;
+}
+
+
+
+.line2, .line3 {
+background-size:150%;
+min-height: 220px;
+}
+
+
+
+
 }
 @media (min-width:1200px) {
 .hidden-lg {

@@ -28,7 +28,7 @@ class DefaultController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('index', 'sociallogin', 'signupsocial', 'login', 'register', 'activation', 'filecrypt', 'download', 'ajaxrun', 'ajaxrunuser'),
+                'actions' => array('index', 'sociallogin', 'signupsocial', 'login', 'register', 'activation', 'filecrypt', 'download', 'ajaxrun', 'ajaxrunuser', 'howitworks', 'faq'),
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -472,5 +472,14 @@ class DefaultController extends Controller {
             $model->saveAttributes($attr);
             
         }
+    }
+    
+    public function actionHowitworks() {
+        $this->render('howitworks');
+    }
+    
+    public function actionFaq() {
+        $faqs = Faq::model()->active()->findAll();
+        $this->render('faq', compact('faqs'));
     }
 }

@@ -143,7 +143,6 @@ $categories = GigCategory::getCategoryList();
 <?php
 $cs = Yii::app()->getClientScript();
 $cs_pos_end = CClientScript::POS_END;
-//$cs->registerScriptFile($themeUrl . '/js/mask.min.js', $cs_pos_end);
 $durationId = CHTML::activeId($model, 'gig_duration');
 $mediaId = CHTML::activeId($model, 'gig_media');
 $extraFileId = CHTML::activeId($model, 'extra_file');
@@ -161,7 +160,6 @@ $js = <<< EOD
         $('#{$isExtraId}').on('ifUnchecked', function(event){
             $('#extras_div').addClass('hide');
         });
-//        $(".time").mask("99:99");
         
         $(".numberonly").keypress(function (e) {
              if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57))
@@ -223,7 +221,8 @@ $js = <<< EOD
         
     });
 
+
 EOD;
 
-Yii::app()->clientScript->registerScript('gig_form', $js);
+Yii::app()->clientScript->registerScript('_form', $js);
 ?>
