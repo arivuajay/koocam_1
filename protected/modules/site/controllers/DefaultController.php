@@ -412,6 +412,7 @@ class DefaultController extends Controller {
         $condition .= " AND gig.tutor_id = :my_user_id";
         $condition .= " AND tutor.live_status = 'A'";
         $condition .= " AND gigTokens.tutor_attendance = '0'";
+        $condition .= " AND gigTokens.status = '0'";
 
         return GigBooking::model()->with('gig', 'gigTokens', 'gig.tutor')->active()->completed()->find(array(
                     'condition' => $condition,
