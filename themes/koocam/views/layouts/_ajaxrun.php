@@ -18,6 +18,7 @@ $js = <<< EOD
                         $('#learner-wait-thumb').html(data.learner_thumb);
                         $('#learner-wait-name').html(data.learner_name);
                         $('#learner-wait-link').html(data.learner_link);
+                        $('#li_notifn_alert').html(data.learner_alert);
                         if ($("#learner-wait").data('bs.modal') && $("#learner-wait").data('bs.modal').isShown){
                             return;
                         }else{
@@ -27,10 +28,12 @@ $js = <<< EOD
         
                     if(data.update_notification_count == 1){
                         $('#li_notifn_top').html(data.notification_update);
+                        $('#li_notifn_alert').html(data.notification_alert);
                     }
         
                     if(data.update_message_count == 1){
                         $('#li_message_top').html(data.message_update);
+                        $('#li_notifn_alert').html(data.message_alert);
                     }
         
                     if(data.tutor_before_paypal_alert == 1){
@@ -39,6 +42,7 @@ $js = <<< EOD
                         $('#tutor_before_paypal_gig_name').html(data.tutor_before_paypal_gig_name);
                         $('#tutor_before_paypal_approve').html(data.tutor_before_paypal_approve);
                         $('#tutor_before_paypal_reject').html(data.tutor_before_paypal_reject);
+                        $('#li_notifn_alert').html(data.tutor_alert);
         
                         var clock_html = '$clock_html';
                         var end_time = data.tutor_before_paypal_countdown;
@@ -78,6 +82,8 @@ EOD;
 
 Yii::app()->clientScript->registerScript('_ajaxrun', $js);
 ?>
+
+<div id="li_notifn_alert" class="hide"></div>
 
 <div class="modal fade approve" id="learner-wait" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
     <div class="modal-dialog modal-sm">

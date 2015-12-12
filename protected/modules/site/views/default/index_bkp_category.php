@@ -5,6 +5,7 @@
 
 $this->title = 'Koocam - Home';
 $themeUrl = $this->themeUrl;
+
 ?>
 
 <div id="home" class="tt-fullHeight">
@@ -37,20 +38,54 @@ $themeUrl = $this->themeUrl;
             </div>
             <?php
             $categories = GigCategory::popularCategory();
+            $col = array(
+                0 => array(
+                    'xs' => 12,
+                    'sm' => 4,
+                    'md' => 4,
+                    'lg' => 4,
+                ),
+                1 => array(
+                    'xs' => 12,
+                    'sm' => 4,
+                    'md' => 4,
+                    'lg' => 4,
+                ),
+                2 => array(
+                    'xs' => 12,
+                    'sm' => 4,
+                    'md' => 4,
+                    'lg' => 4,
+                ),
+                3 => array(
+                    'xs' => 12,
+                    'sm' => 6,
+                    'md' => 6,
+                    'lg' => 6,
+                ),
+                4 => array(
+                    'xs' => 12,
+                    'sm' => 3,
+                    'md' => 3,
+                    'lg' => 3,
+                ),
+                5 => array(
+                    'xs' => 12,
+                    'sm' => 3,
+                    'md' => 3,
+                    'lg' => 3,
+                ),
+            );
             foreach ($categories as $key => $category):
                 ?>
-                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 cate-cont">
+                <div class="col-xs-<?php echo $col[$key]['xs'] ?> col-sm-<?php echo $col[$key]['sm'] ?> col-md-<?php echo $col[$key]['md'] ?> col-lg-<?php echo $col[$key]['lg'] ?> cate-cont">
                     <div class="cate-img">
-                        <div class="cate-bg"> 
-                            <?php echo CHtml::link($category->cat_name, array('/site/gig/search', 'category_id' => $category->cat_id)); ?>
-                        </div>
-                        <?php echo $category->getCategoryimage(array('width' => "640", 'height' => "540")); ?>
+                        <div class="cate-bg"> <a href="#"> <?php echo $category->cat_name; ?> </a> </div>
+                        <?php echo $category->getCategoryimage(array('width' => "640", 'height' => "540")); // CHtml::image($category->getFilePath(false, '', 'cat_image'), '', array('width' => "640", 'height' => "540")); ?>
                     </div>
                 </div>
             <?php endforeach; ?>
-            <div class="explore-btn"> 
-                <?php echo CHtml::link('Browse All Categories', array('/site/gig/search', 'category_id' => 0), array('class' => 'btn btn-default  btn-lg explorebtn')); ?>
-            </div>
+            <div class="explore-btn"> <a href="#" class="btn btn-default  btn-lg explorebtn"> Browse All Categories </a> </div>
         </div>
     </div>
 </div>
@@ -113,13 +148,13 @@ $themeUrl = $this->themeUrl;
                 <div class="carousel slide" data-ride="carousel" id="quote-carousel"> 
                     <?php $testimonials = Testimonial::model()->active()->findAll(); ?>
                     <!-- Bottom Carousel Indicators -->
-
+                    
                     <ol class="carousel-indicators">
-                        <?php
-                        for ($i = 0; $i <= count($testimonials) - 1; $i++) {
+                        <?php 
+                        for($i = 0; $i <= count($testimonials) - 1; $i++){
                             $test_attr = $i == 0 ? 'class="active"' : '';
-                            ?>
-                            <li data-target="#quote-carousel" data-slide-to="<?php echo $i; ?>" <?php echo $test_attr; ?>></li>
+                        ?>
+                        <li data-target="#quote-carousel" data-slide-to="<?php echo $i; ?>" <?php echo $test_attr; ?>></li>
                         <?php } ?>
                     </ol>
 
@@ -127,18 +162,18 @@ $themeUrl = $this->themeUrl;
                     <div class="carousel-inner"> 
 
                         <?php foreach ($testimonials as $key => $testimonial): ?>
-                            <div class="item <?php echo $key == 0 ? 'active' : '' ?>">
-                                <blockquote>
-                                    <div class="row">
-                                        <div class="col-sm-12 text-center">
-                                            <?php echo $testimonial->getImage(array('class' => 'img-circle')); ?>
-                                        </div>
-                                        <div class="col-sm-12 testimonial-content">
-                                            <p><?php echo $testimonial->testimonial_text; ?></p>
-                                            <small><?php echo $testimonial->testimonial_user; ?></small> </div>
+                        <div class="item <?php echo $key == 0 ? 'active' : ''?>">
+                            <blockquote>
+                                <div class="row">
+                                    <div class="col-sm-12 text-center">
+                                        <?php echo $testimonial->getImage(array('class' => 'img-circle')); ?>
                                     </div>
-                                </blockquote>
-                            </div>
+                                    <div class="col-sm-12 testimonial-content">
+                                        <p><?php echo $testimonial->testimonial_text; ?></p>
+                                        <small><?php echo $testimonial->testimonial_user; ?></small> </div>
+                                </div>
+                            </blockquote>
+                        </div>
                         <?php endforeach; ?>
                     </div>
                 </div>

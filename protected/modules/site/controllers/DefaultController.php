@@ -313,6 +313,12 @@ class DefaultController extends Controller {
                     $return['learner_name'] = $bookings->bookUser->fullname;
                     $return['learner_thumb'] = $bookings->bookUser->profilethumb;
                     $return['learner_link'] = CHtml::link('Start Chat', array('/site/default/chat', 'guid' => $bookings->book_guid), array('class' => "btn btn-default explorebtn"));
+                    $audio = $themeUrl . '/sounds/Bell_Notification.wav';
+                    $return['learner_alert'] = '<audio controls="controls" autoplay>
+                    <source src="' . $audio . '" type="audio/wav">
+                        <embed src="' . $audio . '">
+                        Your browser is not supporting audio
+                    </audio>';
                 }
 
                 //End Leaner Chat Screen
@@ -332,6 +338,12 @@ class DefaultController extends Controller {
                 if ($notifn_count > 0 && $notifn_count != $_POST['old_notifn_count']) {
                     $return['update_notification_count'] = 1;
                     $return['notification_update'] = $this->renderPartial('//layouts/_notification_box', compact('themeUrl'), true, false);
+                    $audio = $themeUrl . '/sounds/Bell_Notification.wav';
+                    $return['notification_alert'] = '<audio controls="controls" autoplay>
+                    <source src="' . $audio . '" type="audio/wav">
+                        <embed src="' . $audio . '">
+                        Your browser is not supporting audio
+                    </audio>';
                 }
 
                 //Message Count
@@ -339,6 +351,12 @@ class DefaultController extends Controller {
                 if ($msg_count > 0 && $msg_count != $_POST['old_msg_count']) {
                     $return['update_message_count'] = 1;
                     $return['message_update'] = $this->renderPartial('//layouts/_message_box', compact('themeUrl'), true, false);
+                    $audio = $themeUrl . '/sounds/Incoming_Message.wav';
+                    $return['message_alert'] = '<audio controls="controls" autoplay>
+                    <source src="' . $audio . '" type="audio/wav">
+                        <embed src="' . $audio . '">
+                        Your browser is not supporting audio
+                    </audio>';
                 }
 
                 //Tutor before paypal confirmation
@@ -360,6 +378,12 @@ class DefaultController extends Controller {
 
                     $return['tutor_before_paypal_approve'] = CHtml::link('<i class="fa fa-check-square-o"></i> Approve', array('/site/bookingtemp/approve', 'temp_guid' => $tutorstartnowalert->temp_guid), array('class' => "btn btn-default  explorebtn form-btn"));
                     $return['tutor_before_paypal_reject'] = CHtml::link('<i class="fa fa-remove"></i> Reject', array('/site/bookingtemp/reject', 'temp_guid' => $tutorstartnowalert->temp_guid), array('class' => "btn btn-default  explorebtn form-btn deactiveate-btn"));
+                    $audio = $themeUrl . '/sounds/Incoming_Message.wav';
+                    $return['tutor_alert'] = '<audio controls="controls" autoplay>
+                    <source src="' . $audio . '" type="audio/wav">
+                        <embed src="' . $audio . '">
+                        Your browser is not supporting audio
+                    </audio>';
                 }
             }
             echo CJSON::encode($return);

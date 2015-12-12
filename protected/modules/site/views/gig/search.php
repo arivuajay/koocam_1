@@ -6,9 +6,16 @@
 /* @var $category GigCategory */
 $this->title = "Search GIG: {$search_text}";
 $themeUrl = $this->themeUrl;
+
+$cover_image = '';
+if($category_id){
+    $gig_category = GigCategory::model()->findByPk($category_id);
+    $cover_image =  'background: #222 url(' . $gig_category->coverimageurl . ')';
+}
+
 ?>
 
-<div id="inner-banner" class="tt-fullHeight3">
+<div id="inner-banner" class="tt-fullHeight3" style = "<?php echo $cover_image; ?>">
     <div class="container">
         <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8 col-lg-offset-2 col-md-offset-1">
             <div class="search-cont">

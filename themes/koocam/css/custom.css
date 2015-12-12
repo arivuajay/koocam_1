@@ -101,3 +101,7 @@ a.view-comment, a.write-comment{
 .bootstrap-timepicker-widget{
     z-index: 2000 !important;
 }
+
+.bootstrap-select.btn-group.show-tick .dropdown-menu li.selected a span.check-mark{
+    position: relative !important;
+}
