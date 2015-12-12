@@ -28,7 +28,7 @@ class DefaultController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('index', 'sociallogin', 'signupsocial', 'login', 'register', 'activation', 'filecrypt', 'download', 'ajaxrun', 'ajaxrunuser', 'howitworks', 'faq'),
+                'actions' => array('index', 'sociallogin', 'signupsocial', 'login', 'register', 'activation', 'filecrypt', 'download', 'ajaxrun', 'ajaxrunuser', 'howitworks', 'faq', 'contactus'),
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -62,10 +62,10 @@ class DefaultController extends Controller {
             if ($model->validate() && $model->login()):
                 User::switchStatus(Yii::app()->user->id, 'A');
                 Yii::app()->user->setFlash('success', "You logged in successfully!!!");
-                if(isset(Yii::app()->session['refer_url'])){
+                if (isset(Yii::app()->session['refer_url'])) {
                     $refer_url = Yii::app()->session['refer_url'];
                     unset(Yii::app()->session['refer_url']);
-                }else{
+                } else {
                     $refer_url = Yii::app()->getRequest()->getUrlReferrer();
                 }
                 $this->redirect($refer_url);
@@ -222,7 +222,7 @@ class DefaultController extends Controller {
                 $token->saveAttributes(array('status' => '1'));
                 User::switchStatus($model->book->book_user_id, 'A');
                 User::switchStatus($model->book->gig->tutor_id, 'A');
-            
+
                 Yii::app()->user->setFlash('success', "Your Report sent to admin successfully & Your Chat closed !!!");
                 $this->redirect(array('/site/purchase/mypurchase'));
 //                $this->redirect(array('/site/default/chat', 'guid' => $model->book->book_guid));
@@ -452,34 +452,62 @@ class DefaultController extends Controller {
     }
 
     public function actionDisconnect() {
-        if(isset($_POST['token_id']) && Yii::app()->request->isAjaxRequest){
+        if (isset($_POST['token_id']) && Yii::app()->request->isAjaxRequest) {
             $model = GigTokens::model()->findByPk($_POST['token_id']);
-            if($_POST['role'] == 'tutor'){
+            if ($_POST['role'] == 'tutor') {
                 $attr = array(
-                    'status'=> '1',
-                    'tutor_end_call'=> '1',
-                    'tutor_end_time'=> date('Y-m-d H:i:s'),
-                    );
+                    'status' => '1',
+                    'tutor_end_call' => '1',
+                    'tutor_end_time' => date('Y-m-d H:i:s'),
+                );
                 User::switchStatus($model->book->gig->tutor_id, 'A');
-            }else if($_POST['role'] == 'learner'){
+            } else if ($_POST['role'] == 'learner') {
                 $attr = array(
-                    'status'=> '1',
-                    'learner_end_call'=> '1',
-                    'learner_end_time'=> date('Y-m-d H:i:s'),
-                    );
+                    'status' => '1',
+                    'learner_end_call' => '1',
+                    'learner_end_time' => date('Y-m-d H:i:s'),
+                );
                 User::switchStatus($model->book->book_user_id, 'A');
             }
             $model->saveAttributes($attr);
-            
         }
     }
-    
+
     public function actionHowitworks() {
         $this->render('howitworks');
     }
-    
+
     public function actionFaq() {
         $faqs = Faq::model()->active()->findAll();
         $this->render('faq', compact('faqs'));
     }
+
+    public function actionContactus() {
+        $model = new ContactForm;
+        $this->performAjaxValidation($model);
+        if (Yii::app()->request->isPostRequest && Yii::app()->request->getPost('ContactForm')) {
+            $model->attributes = Yii::app()->request->getPost('ContactForm');
+            $category = '-';
+            if(isset($model->category) && $model->category != ''){
+                $category = $model->category;
+            }
+            
+            $mail = new Sendmail;
+            $trans_array = array(
+                "{SITENAME}" => SITENAME,
+                "{ADMINNAME}" => "Admin",
+                "{FULLNAME}" => $model->fullname,
+                "{EMAIL}" => $model->email,
+                "{MESSAGE}" => $model->message,
+                "{CATEGORY}" => $category,
+            );
+            $message = $mail->getMessage('contact_us_site', $trans_array);
+            $Subject = $mail->translate(SITENAME . " - Contact Us");
+            $mail->send(ADMIN_EMAIL, $Subject, $message);
+            Yii::app()->user->setFlash('success', "Your message sent successfully!!!");
+            $this->refresh();
+        }
+        $this->render('contactus', compact('model'));
+    }
+
 }

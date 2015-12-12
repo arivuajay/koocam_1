@@ -23,7 +23,7 @@ $themeUrl = $this->themeUrl;
                     Your booking will open <br> <span id="clock"></span>
                 </div>
             </div>
-            
+
             <div class="col-xs-12 col-sm-4 col-md-4 col-lg-12 text-center hide" id="display_startnow">
                 <a href="#" data-target="#prebookingstartnow" data-toggle="modal" class="big-btn btn btn-default">
                     <i class="fa fa-video-camera"></i> Start Now !
@@ -156,7 +156,6 @@ $js = <<< EOD
     jQuery(document).ready(function ($) {
         var clock_html = '$clock_html';
         var end_time = '$end_time';
-        
         
         $('#clock').countdown(end_time, function (event) {
             $(this).html(event.strftime(clock_html));

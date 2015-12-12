@@ -97,3 +97,7 @@ a.view-comment, a.write-comment{
 .online{
     z-index: 1 !important;
 }
+
+.bootstrap-timepicker-widget{
+    z-index: 2000 !important;
+}

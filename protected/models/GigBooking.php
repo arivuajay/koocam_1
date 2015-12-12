@@ -402,8 +402,8 @@ class GigBooking extends RActiveRecord {
             "{TUTOR}" => $tutor->fullname,
             "{GIG}" => $this->gig->gig_title,
             "{BOOK_DATE}" => $book_date,
-            "{FROM_TIME}" => date('H:i', strtotime($this->book_start_time)),
-            "{TO_TIME}" => date('H:i', strtotime($this->book_end_time)),
+            "{FROM_TIME}" => date('H:i', strtotime(Yii::app()->localtime->fromUTC($this->book_start_time))),
+            "{TO_TIME}" => date('H:i', strtotime(Yii::app()->localtime->fromUTC($this->book_end_time))),
             "{BOOK_URL}" => Yii::app()->createAbsoluteUrl("/site/gigbooking/prebooking", array("book_guid" => $this->book_guid)),
         );
         $message = $mail->getMessage('gig_booking_learner', $trans_array);

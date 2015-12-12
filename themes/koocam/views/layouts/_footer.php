@@ -10,7 +10,7 @@
                     <ul>
                         <li><?php echo CHtml::link(' About Us ', array('/site/cms/view', 'slug' => 'about-us')); ?></li>
                         <li><?php echo CHtml::link(' How it Works ', array('/site/default/howitworks')); ?></li>
-                        <li><?php echo CHtml::link(' Contact Us ', '#'); ?></li>
+                        <li><?php echo CHtml::link(' Contact Us ', array('/site/default/contactus')); ?></li>
                         <li><?php echo CHtml::link(' Terms and Conditions ', array('/site/cms/view', 'slug' => 'terms-and-conditions')); ?></li>
                         <li><?php echo CHtml::link(' Privacy Policy ', array('/site/cms/view', 'slug' => 'privacy-policy')); ?></li>
                         <li><?php echo CHtml::link(' FAQ ', array('/site/default/faq')); ?></li>

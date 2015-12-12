@@ -238,7 +238,7 @@ a {
 }
 .course-thumbdetails h2 {
 	font-size:19px;
-	margin:0px 0px 10px 0px;
+	margin:0px 0px 5px 0px;
 }
 .course-thumbdetails a {
 	color:#1e1e1e;
@@ -2190,4 +2190,10 @@ input[type=button] {
 	float:left;
 	margin-right:25px;
 	width:50%;
+}
+
+.course-thumbdetails .new-half-class.raty-icons
+{
+	float:left;
+	margin-bottom:10px;
 }
