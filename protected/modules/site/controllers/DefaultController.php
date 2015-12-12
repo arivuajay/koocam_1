@@ -28,7 +28,7 @@ class DefaultController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('index', 'sociallogin', 'signupsocial', 'login', 'register', 'activation', 'filecrypt', 'download', 'ajaxrun', 'ajaxrunuser', 'howitworks', 'faq', 'contactus'),
+                'actions' => array('index', 'sociallogin', 'signupsocial', 'login', 'register', 'activation', 'filecrypt', 'download', 'ajaxrun', 'ajaxrunuser', 'howitworks', 'faq', 'contactus', 'error'),
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -41,6 +41,14 @@ class DefaultController extends Controller {
                 'deniedCallback' => array($this, 'deniedCallback'),
             ),
         );
+    }
+
+    public function actionError() {
+        $error = Yii::app()->errorHandler->error;
+        if ($error)
+            $this->render('error', array('error' => $error));
+        else
+            $this->render('error');
     }
 
     public function actionIndex() {
@@ -488,10 +496,10 @@ class DefaultController extends Controller {
         if (Yii::app()->request->isPostRequest && Yii::app()->request->getPost('ContactForm')) {
             $model->attributes = Yii::app()->request->getPost('ContactForm');
             $category = '-';
-            if(isset($model->category) && $model->category != ''){
+            if (isset($model->category) && $model->category != '') {
                 $category = $model->category;
             }
-            
+
             $mail = new Sendmail;
             $trans_array = array(
                 "{SITENAME}" => SITENAME,

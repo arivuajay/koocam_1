@@ -1,7 +1,7 @@
 <?php
 
 class SiteModule extends CWebModule {
-    
+
     public $homeUrl = array('/site/default/index');
     public $layout = '//layouts/column1';
 
@@ -12,18 +12,19 @@ class SiteModule extends CWebModule {
         $this->setImport(array(
             'site.components.*',
         ));
-        Yii::app()->theme = 'koocam'; 
+        Yii::app()->theme = 'koocam';
         $this->layoutPath = Yii::getPathOfAlias('webroot.themes.' . Yii::app()->theme->name . '.views.layouts');
 
-        $this->setComponents(array(
+        Yii::app()->setComponents(array(
             'errorHandler' => array(
-                'errorAction' => '/site/default/error'),
+                'errorAction' => '/site/default/error'
+            ),
             'user' => array(
                 'class' => 'CWebUser',
                 'allowAutoLogin' => true,
             )
         ));
-        
+
         Yii::app()->user->setStateKeyPrefix('_site');
         Yii::app()->user->loginUrl = Yii::app()->createUrl("/{$this->id}/default/index");
     }
@@ -36,4 +37,5 @@ class SiteModule extends CWebModule {
         } else
             return false;
     }
+
 }
