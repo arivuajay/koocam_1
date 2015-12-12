@@ -201,10 +201,10 @@ class Myclass extends CController {
             if ($time < $unit)
                 continue;
             $numberOfUnits = floor($time / $unit);
-            return $numberOfUnits . ' ' . $text . (($numberOfUnits > 1) ? 's' : '').' ago';
+            return $numberOfUnits . ' ' . $text . (($numberOfUnits > 1) ? 's' : '') . ' ago';
         }
     }
-    
+
     public static function getTimezone() {
         $ip = CHttpRequest::getUserHostAddress();
         $query = @unserialize(file_get_contents('http://ip-api.com/php/' . $ip));
@@ -214,8 +214,20 @@ class Myclass extends CController {
             return null;
         }
     }
-    
-    
-    
+
+    public static function is_url_exist($url) {
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_NOBODY, true);
+        curl_exec($ch);
+        $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        if ($code == 200) {
+            $status = true;
+        } else {
+            $status = false;
+        }
+        curl_close($ch);
+        return $status;
+    }
 
 }

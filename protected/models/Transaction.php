@@ -176,6 +176,22 @@ class Transaction extends RActiveRecord {
             $learner_transaction->trans_user_amount = $gig_booking->book_total_price;
             $learner_transaction->save(false);
 
+            //Learner Purchase Complete Mail
+            $mail = new Sendmail;
+            $trans_array = array(
+                "{SITENAME}" => SITENAME,
+                "{USERNAME}" => $gig_booking->bookUser->username,
+                "{GIG}" => $gig_booking->gig->gig_title,
+                "{PURCHASE_DATE}" => date('Y-m-d', strtotime($gig_booking->book_date)),
+            );
+            $message = $mail->getMessage('gig_purchase_confirmation', $trans_array);
+            $Subject = $mail->translate("{SITENAME}: Your Gig Purchase Confirmation");
+            $attachment = '';
+            if ($gig_booking->book_is_extra == 'Y') {
+                $attachment = UPLOAD_DIR . '/users/' . $gig_booking->gig->tutor_id . $gig_booking->gig->gigExtras->extra_file;
+            }
+            $mail->send($gig_booking->bookUser->email, $Subject, $message, '', '', $attachment);
+
             //Tutor Transaction - Revenue
             //Tutor Revenue only the user gig price / extra price, Not include the user procession / service fees.
             $book_total_price_tutor = $gig_booking->beforetaxamount;

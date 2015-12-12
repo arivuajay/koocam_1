@@ -182,21 +182,22 @@ class DefaultController extends Controller {
     }
 
     public function actionTest() {
-        echo 'hi';
-        exit;
+        $gig_booking = GigBooking::model()->findByPk(74);
+        //Learner Purchase Complete Mail
         $mail = new Sendmail;
-        $loginlink = $this->homeAbsoluteUrl;
         $trans_array = array(
             "{SITENAME}" => SITENAME,
-            "{USERNAME}" => '$user->username',
-            "{EMAIL_ID}" => '$user->email',
-            "{NEXTSTEPURL}" => '$loginlink',
+            "{USERNAME}" => $gig_booking->bookUser->username,
+            "{GIG}" => $gig_booking->gig->gig_title,
+            "{PURCHASE_DATE}" => date('Y-m-d', strtotime($gig_booking->book_date)),
         );
-        $message = $mail->getMessage('activation', $trans_array);
-        $Subject = $mail->translate('{SITENAME}: Email Verified');
-        echo '<pre>';
-        var_dump($mail->send('prakash.paramanandam@arkinfotec.com', $Subject, $message));
-        exit;
+        $message = $mail->getMessage('gig_purchase_confirmation', $trans_array);
+        $Subject = $mail->translate("{SITENAME}: Your Gig Purchase Confirmation");
+        $attachment = '';
+        if ($gig_booking->book_is_extra == 'Y') {
+            $attachment = UPLOAD_DIR . '/users/' . $gig_booking->gig->tutor_id . $gig_booking->gig->gigExtras->extra_file;
+        }
+        $mail->send($gig_booking->bookUser->email, $Subject, $message, '', '', $attachment);
         exit;
     }
 
@@ -227,13 +228,24 @@ class DefaultController extends Controller {
             $model->attributes = Yii::app()->request->getPost('ReportAbuse');
             if ($model->save()) {
                 $token = $model->book->gigTokens;
-                $token->saveAttributes(array('status' => '1'));
-                User::switchStatus($model->book->book_user_id, 'A');
-                User::switchStatus($model->book->gig->tutor_id, 'A');
-
+                if ($model->abuser_role == 'learner') {
+                    $attr = array(
+                        'status' => '1',
+                        'tutor_end_call' => '1',
+                        'tutor_end_time' => date('Y-m-d H:i:s'),
+                    );
+                    User::switchStatus($model->book->gig->tutor_id, 'A');
+                } else if ($model->abuser_role == 'tutor') {
+                    $attr = array(
+                        'status' => '1',
+                        'learner_end_call' => '1',
+                        'learner_end_time' => date('Y-m-d H:i:s'),
+                    );
+                    User::switchStatus($model->book->book_user_id, 'A');
+                }
+                $token->saveAttributes($attr);
                 Yii::app()->user->setFlash('success', "Your Report sent to admin successfully & Your Chat closed !!!");
                 $this->redirect(array('/site/purchase/mypurchase'));
-//                $this->redirect(array('/site/default/chat', 'guid' => $model->book->book_guid));
             }
         }
     }

@@ -9,8 +9,13 @@
             <?php foreach ($gigs as $key => $gig): ?>
                 <div class="courses-thumb-cont">
                     <div class="course-thumbimg">
-                        <?php echo $gig->tutorstatusicon; ?>
-                        <?php echo CHtml::link($gig->gigthumb, array('/site/gig/view', 'slug' => $gig->slug));?>
+                        <?php
+                        echo $gig->tutorstatusicon;
+                        if (!empty($gig->tutor->languages)) {
+                            echo "<div class='languages' data-toggle='tooltip' data-placement='top' title='{$gig->tutor->languages}'> Languages </div>";
+                        }
+                        echo CHtml::link($gig->gigthumb, array('/site/gig/view', 'slug' => $gig->slug));
+                        ?>
                     </div>
                     <div class="course-thumbdetails">
                         <h2><?php echo CHtml::link($gig->gig_title, array('/site/gig/view', 'slug' => $gig->slug)); ?></h2>

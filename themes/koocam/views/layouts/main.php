@@ -76,7 +76,7 @@
                     }
                 });
                 
-                $("input").not(".allow_foriegn").keypress(function() {
+                $("input, textarea").not(".allow_foriegn").keypress(function() {
                     onlyEnglish($(this));
                 }).focusout(function() {
                     onlyEnglish($(this));

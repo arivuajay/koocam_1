@@ -5,48 +5,54 @@
  */
 
 class Sendmail {
-    function send($to, $subject, $body, $fromName = '', $from = '', $attachment = null) {
-        if (MAILSENDBY == 'phpmail'):
-            $this->sendPhpmail($to, $subject, $body, $attachment);
-        elseif (MAILSENDBY == 'smtp'):
-            Yii::import('application.extensions.phpmailer.JPhpMailer');
-            if (empty($from))
-                $from = NOREPLYMAIL;
-            if (empty($fromName))
-                $fromName = SITENAME;
 
-            $mailer = new JPhpMailer;
+    function send($to, $subject, $body, $fromName = '', $from = '', $attachment = null) {
+        Yii::import('application.extensions.phpmailer.JPhpMailer');
+        if (empty($from))
+            $from = NOREPLYMAIL;
+        if (empty($fromName))
+            $fromName = SITENAME;
+
+        $mailer = new JPhpMailer;
+        $mailer->IsHTML(true);
+
+        if (MAILSENDBY == 'smtp'):
             $mailer->IsSMTP();
-            $mailer->IsHTML(true);
             $mailer->SMTPAuth = SMTPAUTH;
             $mailer->SMTPSecure = SMTPSECURE;
             $mailer->Host = SMTPHOST;
             $mailer->Port = SMTPPORT;
             $mailer->Username = SMTPUSERNAME;
             $mailer->Password = SMTPPASS;
-            $mailer->From = $from;
-            $mailer->FromName = $fromName;
-            $mailer->AddAddress($to);
-            // $mailer->
-
-            $mailer->Subject = $subject;
-
-            $mailer->MsgHTML($body);
-
-            try {
-                $mailer->Send();
-            } catch (Exception $exc) {
-                return $exc->getTraceAsString();
-            }
         endif;
+
+        $mailer->From = $from;
+        $mailer->FromName = $fromName;
+        $mailer->AddAddress($to);
+        if(!empty($attachment))
+            $mailer->AddAttachment($attachment);
+
+        $mailer->Subject = $subject;
+
+        $mailer->MsgHTML($body);
+
+        try {
+            $mailer->Send();
+        } catch (phpmailerException $e) {
+            echo $e->errorMessage(); //Pretty error messages from PHPMailer 
+            exit;
+        } catch (Exception $e) {
+            echo $e->getMessage(); //Boring error messages from anything else!
+            exit;
+        }
     }
 
     public function getMessage($body, &$translate) {
-       
+
         if (EMAILLAYOUT == 'file'):
-         
+
             $msg_header = file_get_contents(SITEURL . EMAILTEMPLATE . 'header.html');
-            $msg_footer = file_get_contents(SITEURL . EMAILTEMPLATE . 'footer.html');  
+            $msg_footer = file_get_contents(SITEURL . EMAILTEMPLATE . 'footer.html');
             $msg_body = file_get_contents(SITEURL . EMAILTEMPLATE . $body . '.html');
 
             $message_dub = $msg_header . $msg_body . $msg_footer;
@@ -55,7 +61,7 @@ class Sendmail {
 //            $msg_body = Mailtemplate::model()->find('id="' . $body . '"');
 //
 //            $message_dub = $msg_body->template_content;
-         endif;
+        endif;
 
         $message = $this->translate($message_dub, $translate);
         return $message;
@@ -73,16 +79,6 @@ class Sendmail {
         $message = strtr($msg_dub, $translation);
 
         return $message;
-    }
-
-    function sendPhpmail($to, $subject, $body, $attachment = null) {
-        $headers = 'MIME-Version: 1.0' . "\r\n";
-        $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
-
-        // Additional headers
-        $headers .= 'From: ' . SITENAME . ' <' . NOREPLYMAIL . '>' . "\r\n";
-
-        mail($to, $subject, $body, $headers);
     }
 
 }
