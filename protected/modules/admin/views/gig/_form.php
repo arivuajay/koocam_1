@@ -49,12 +49,28 @@ $themeUrl = $this->themeUrl;
             </div>
 
             <div class = "form-group">
+                <?php echo $form->labelEx($model, 'is_video'); ?>
+                <?php echo $form->dropDownList($model, 'is_video', array('Y' => 'Video', 'N' => 'Photo'), array('class' => 'selectpicker')); ?> 
+                <?php // echo $form->error($model, 'is_video'); ?> 
+            </div>
+            <?php
+            $url_hide = $model->is_video == 'Y' ? '' : 'hide';
+            $media_hide = $model->is_video == 'N' ? '' : 'hide';
+            ?>
+
+            <div id="image_div" class = "form-group form-control-material static <?php echo $media_hide?>">
                 <?php echo $form->labelEx($model, 'gig_media'); ?>
                 <?php echo $form->fileField($model, 'gig_media'); ?>
                 <?php // echo $form->error($model, 'gig_media'); ?> 
             </div>
 
-            <div class = "form-group form-control-material static">
+            <div id="youtube_div" class = "form-group form-control-material static <?php echo $url_hide?>">
+                <?php echo $form->textField($model, 'gig_youtube_url', array('class' => 'form-control', 'placeholder' => 'Example: XGSy3_Czz8k', 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "Youtube Video Id. Ex:(Video link: http://www.youtube.com/watch?v=XGSy3_Czz8k) (Video Id: XGSy3_Czz8k)")); ?> 
+                <?php echo $form->labelEx($model, 'gig_youtube_url'); ?>
+                <?php // echo $form->error($model, 'gig_youtube_url'); ?> 
+            </div>
+
+            <div  class = "form-group form-control-material static">
                 <?php echo $form->textField($model, 'gig_tag', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
                 <?php echo $form->labelEx($model, 'gig_tag'); ?>
                 <?php // echo $form->error($model, 'gig_tag'); ?>
@@ -138,6 +154,7 @@ $cs_pos_end = CClientScript::POS_END;
 $durationId = CHTML::activeId($model, 'gig_duration');
 $price_limit_url = Yii::app()->createAbsoluteUrl('/site/gig/changepricepertime');
 $priceId = CHTML::activeId($model, 'gig_price');
+$isVideoId = CHTML::activeId($model, 'is_video');
 
 $js = <<< EOD
     jQuery(document).ready(function ($) {
@@ -163,6 +180,16 @@ $js = <<< EOD
         
         $('#{$durationId}').on('change', function(){
             priceLimit();
+        });
+        
+        $('#{$isVideoId}').on('change', function(){
+            if($(this).val() == 'Y'){
+                $('#youtube_div').removeClass('hide');
+                $('#image_div').addClass('hide');
+            }else if($(this).val() == 'N'){
+                $('#youtube_div').addClass('hide');
+                $('#image_div').removeClass('hide');
+            }
         });
     });
         

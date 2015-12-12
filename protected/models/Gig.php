@@ -75,7 +75,7 @@ class Gig extends RActiveRecord {
             $this->gig_price = Gig::GIG_MIN_AMT;
             $this->extra_price = Gig::EXTRA_MIN_AMT;
 
-            $this->gig_avail_visual = 'N';
+            $this->gig_avail_visual = 'Y';
             $this->is_video = 'N';
         }
 
@@ -138,9 +138,7 @@ class Gig extends RActiveRecord {
             array('gig_price', 'numerical', 'integerOnly' => false, 'min' => self::GIG_MIN_AMT, 'max' => self::GIG_MAX_AMT),
             array('gig_avail_visual, status', 'length', 'max' => 1),
             array('gig_title, slug', 'unique'),
-//            array('gig_media', 'file', 'types' => self::GIG_ALLOW_FILE_TYPES, 'maxSize' => 1024 * 1024 * self::GIG_ALLOW_FILE_SIZE, 'tooLarge' => 'File has to be smaller than ' . self::GIG_ALLOW_FILE_SIZE . 'MB', 'allowEmpty' => $this->is_video == 'Y', 'on' => 'create'),
             array('gig_media', 'file', 'types' => self::GIG_ALLOW_FILE_TYPES, 'maxSize' => 1024 * 1024 * self::GIG_ALLOW_FILE_SIZE, 'tooLarge' => 'File has to be smaller than ' . self::GIG_ALLOW_FILE_SIZE . 'MB', 'allowEmpty' => true, 'on' => 'update'),
-            array('gig_media', 'file', 'types' => self::GIG_ALLOW_FILE_TYPES, 'maxSize' => 1024 * 1024 * self::GIG_ALLOW_FILE_SIZE, 'tooLarge' => 'File has to be smaller than ' . self::GIG_ALLOW_FILE_SIZE . 'MB', 'allowEmpty' => false, 'on' => 'admin_create'),
             array('gig_media', 'file', 'types' => self::GIG_ALLOW_FILE_TYPES, 'maxSize' => 1024 * 1024 * self::GIG_ALLOW_FILE_SIZE, 'tooLarge' => 'File has to be smaller than ' . self::GIG_ALLOW_FILE_SIZE . 'MB', 'allowEmpty' => true, 'on' => 'admin_update'),
             array('extra_file', 'file', 'types' => self::EXTRA_ALLOW_FILE_TYPES, 'maxSize' => 1024 * 1024 * self::EXTRA_ALLOW_FILE_SIZE, 'tooLarge' => 'File has to be smaller than ' . self::GIG_ALLOW_FILE_SIZE . 'MB', 'allowEmpty' => true),
             array('gig_price', 'priceValidate'),
@@ -217,15 +215,6 @@ class Gig extends RActiveRecord {
     }
 
     /**
-     * 
-     * @param type $attribute
-     * @param type $params
-     */
-    public function mediaValidate($attribute, $params) {
-        
-    }
-
-    /**
      * @return array relational rules.
      */
     public function relations() {
@@ -254,7 +243,7 @@ class Gig extends RActiveRecord {
             'gig_description' => 'Description',
             'gig_duration' => 'Time (Minutes)',
             'gig_price' => 'Price ($)',
-            'gig_avail_visual' => 'Will not be available on visual chat',
+            'gig_avail_visual' => 'Will be available on visual chat',
             'is_extra' => 'Extras',
             'extra_price' => 'Extra File Price ($)',
             'extra_description' => 'About Extra File',
@@ -420,6 +409,7 @@ class Gig extends RActiveRecord {
             $this->validatorList->add(CValidator::createValidator('isEmbeddableYoutubeURL', $this, 'gig_youtube_url'));
         } else {
             $this->validatorList->add(CValidator::createValidator('file', $this, 'gig_media', array('types' => self::GIG_ALLOW_FILE_TYPES, 'maxSize' => 1024 * 1024 * self::GIG_ALLOW_FILE_SIZE, 'tooLarge' => 'File has to be smaller than ' . self::GIG_ALLOW_FILE_SIZE . 'MB', 'allowEmpty' => $this->is_video == 'Y', 'on' => 'create')));
+            $this->validatorList->add(CValidator::createValidator('file', $this, 'gig_media', array('types' => self::GIG_ALLOW_FILE_TYPES, 'maxSize' => 1024 * 1024 * self::GIG_ALLOW_FILE_SIZE, 'tooLarge' => 'File has to be smaller than ' . self::GIG_ALLOW_FILE_SIZE . 'MB', 'allowEmpty' => $this->is_video == 'Y', 'on' => 'admin_create')));
         }
 
         return parent::beforeValidate();

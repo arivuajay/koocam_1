@@ -65,11 +65,11 @@ class GigController extends Controller {
      */
     public function actionView($id) {
         $model = $this->loadModel($id);
-        
+
         $booking_model = new GigBooking('search');
         $booking_model->unsetAttributes();
         $booking_model->gig_id = $id;
-        
+
         $this->render('view', compact('model', 'booking_model'));
     }
 
@@ -85,8 +85,10 @@ class GigController extends Controller {
             $model->attributes = $_POST['Gig'];
             $model->setAttribute('gig_media', isset($_FILES['Gig']['name']['gig_media']) ? $_FILES['Gig']['name']['gig_media'] : '');
             if ($model->validate()) {
-                $model->setUploadDirectory(UPLOAD_DIR . '/users/' . $model->tutor_id);
-                $model->uploadFile();
+                if ($model->is_video == 'N') {
+                    $model->setUploadDirectory(UPLOAD_DIR . '/users/' . $model->tutor_id);
+                    $model->uploadFile();
+                }
                 if ($model->save(false)) {
                     if ($model->is_extra == 'Y') {
                         $extra_model = new GigExtra;
@@ -134,8 +136,10 @@ class GigController extends Controller {
             $model->setAttribute('gig_media', isset($_FILES['Gig']['name']['gig_media']) ? $_FILES['Gig']['name']['gig_media'] : '');
             if ($model->validate()) {
                 if ($model->gig_media) {
-                    $model->setUploadDirectory(UPLOAD_DIR . '/users/' . $model->tutor_id);
-                    $model->uploadFile();
+                    if ($model->is_video == 'N') {
+                        $model->setUploadDirectory(UPLOAD_DIR . '/users/' . $model->tutor_id);
+                        $model->uploadFile();
+                    }
                 } else {
                     unset($model->gig_media);
                 }
@@ -147,7 +151,7 @@ class GigController extends Controller {
                             'extra_description' => $model->extra_description,
                             'gig_id' => $model->gig_id,
                         );
-                        if(isset($_FILES['Gig']['name']['extra_file']) && !empty($_FILES['Gig']['name']['extra_file'])){
+                        if (isset($_FILES['Gig']['name']['extra_file']) && !empty($_FILES['Gig']['name']['extra_file'])) {
                             $extra_model->setAttribute('extra_file', $_FILES['Gig']['name']['extra_file']);
                         }
                         if ($extra_model->validate()) {

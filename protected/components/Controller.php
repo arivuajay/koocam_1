@@ -57,7 +57,7 @@ class Controller extends CController {
 
     public function deniedCallback() {
         Yii::app()->user->setFlash('danger', "You must Login to Access !!!");
-        echo Yii::app()->session['refer_url'] = Yii::app()->request->hostInfo . Yii::app()->request->url;
+        Yii::app()->session['refer_url'] = Yii::app()->request->hostInfo . Yii::app()->request->url;
         $this->goHome();
     }
 

@@ -76,18 +76,24 @@
                     }
                 });
                 
-                $("input").not(".allow_foriegn").keydown(function() {
-                    var patt = /[^\u0000-\u007F ]+/;
-                    var value = $(this).val();
-                    var patt_value = value.replace(patt,'');
-                    if (patt_value != value)
-                    {
-                        alert("only english please.");
-                        $(this).val('');
-                    }
+                $("input").not(".allow_foriegn").keypress(function() {
+                    onlyEnglish($(this));
+                }).focusout(function() {
+                    onlyEnglish($(this));
                 });
 
             });
+                
+            function onlyEnglish(_this){
+                var patt = /[^\u0000-\u007F ]+/;
+                var value = _this.val();
+                var patt_value = value.replace(patt,'');
+                if (patt_value != value)
+                {
+                    alert("only english please.");
+                    _this.val('');
+                }
+            }
                 
             $(window).load(function(){
                 $('[data-toggle="popover"]').popover();

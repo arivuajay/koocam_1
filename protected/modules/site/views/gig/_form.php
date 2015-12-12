@@ -2,7 +2,6 @@
 /* @var $this GigController */
 /* @var $model Gig */
 /* @var $form CActiveForm */
-
 $form = $this->beginWidget('CActiveForm', array(
     'id' => 'gig-create-form',
     'htmlOptions' => array('role' => 'form', 'class' => '', 'enctype' => "multipart/form-data"),
@@ -43,12 +42,12 @@ $categories = GigCategory::getCategoryList();
                 $url_hide = $model->is_video == 'Y' ? '' : 'hide';
                 $media_hide = $model->is_video == 'N' ? '' : 'hide';
                 ?>
-                <div id="youtube_div" class="col-xs-12 col-sm-6 col-md-6 col-lg-6 <?php echo $url_hide?>">
+                <div id="youtube_div" class="col-xs-12 col-sm-6 col-md-6 col-lg-6 <?php echo $url_hide ?>">
                     <?php echo $form->labelEx($model, 'gig_youtube_url'); ?>
                     <?php echo $form->textField($model, 'gig_youtube_url', array('class' => 'form-control', 'placeholder' => 'Example: XGSy3_Czz8k', 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "Youtube Video Id. Ex:(Video link: http://www.youtube.com/watch?v=XGSy3_Czz8k) (Video Id: XGSy3_Czz8k)")); ?> 
                     <?php // echo $form->error($model, 'gig_youtube_url'); ?> 
                 </div>
-                <div id="image_div" class="col-xs-12 col-sm-6 col-md-6 col-lg-6 <?php echo $media_hide?>">
+                <div id="image_div" class="col-xs-12 col-sm-6 col-md-6 col-lg-6 <?php echo $media_hide ?>">
                     <?php echo $form->labelEx($model, 'gig_media'); ?>
                     <span class="required">*</span>
                     <span class="btn btn-default btn-file">
@@ -66,14 +65,13 @@ $categories = GigCategory::getCategoryList();
                     <?php echo $form->error($model, 'gig_tag'); ?> 
                 </div>
             </div>
-            <?php if(!$model->isNewRecord){ ?>
-            <div class="form-group">
-                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-12 ">
-                    <?php echo $model->getGigimage(array('style' => 'height: 150px;')); ?>
+            <?php if (!$model->isNewRecord) { ?>
+                <div class="form-group">
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-12 ">
+                        <?php echo $model->getGigimage(array('style' => 'height: 150px;')); ?>
+                    </div>
                 </div>
-            </div>
             <?php } ?>
-
             <div class="form-group">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 ">  
                     <?php echo $form->labelEx($model, 'gig_description'); ?>
@@ -81,15 +79,12 @@ $categories = GigCategory::getCategoryList();
                     <?php echo $form->error($model, 'gig_description'); ?> 
                 </div>
             </div>
-
             <div class="form-group"> 
-
                 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
                     <?php echo $form->labelEx($model, 'gig_important'); ?>
                     <?php echo $form->textField($model, 'gig_important', array('class' => 'form-control', 'placeholder' => 'Important', 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "Important")); ?> 
                     <?php echo $form->error($model, 'gig_important'); ?> 
                 </div>
-
                 <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 ">
                     <?php echo $form->labelEx($model, 'gig_duration'); ?>
                     <div class="input-group" data-max="<?php echo Gig::GIG_MAX_DURATION ?>" data-min="<?php echo Gig::GIG_MIN_DURATION ?>" data-start-incr="0">
@@ -99,7 +94,6 @@ $categories = GigCategory::getCategoryList();
                     </div>
                     <?php echo $form->error($model, 'gig_duration'); ?> 
                 </div>
-
                 <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 ">
                     <?php echo $form->labelEx($model, 'gig_price'); ?>
                     <div class="input-group" data-max="<?php echo Gig::GIG_MAX_AMT ?>" data-min="<?php echo Gig::GIG_MIN_AMT ?>" data-start-incr="4">
@@ -110,7 +104,6 @@ $categories = GigCategory::getCategoryList();
                     <?php echo $form->error($model, 'gig_price'); ?> 
                 </div>
             </div>
-
             <div class="form-group">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <?php echo $form->checkBox($model, 'is_extra', array('value' => 'Y', 'uncheckValue' => 'N')); ?>&nbsp;&nbsp;<?php echo $form->labelEx($model, 'is_extra', array('data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => " Share more information with the user!")); ?>
@@ -141,8 +134,13 @@ $categories = GigCategory::getCategoryList();
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 ">
-                    <?php echo $form->checkBox($model, 'gig_avail_visual', array('value' => 'N', 'uncheckValue' => 'Y')); ?>&nbsp;&nbsp; <?php echo $form->labelEx($model, 'gig_avail_visual'); ?>
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 age-verify ">
+                    <?php echo $form->radioButton($model, 'gig_avail_visual', array('value' => 'Y', 'uncheckValue' => 'N')); ?>
+                    <?php echo CHtml::image($themeUrl.'/images/chat-icon.png', '', array('width' => "26", 'height' => "22")); ?> Will be available on visual chat 
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 age-verify ">
+                    <?php echo $form->radioButton($model, 'gig_avail_visual', array('value' => 'N', 'uncheckValue' => 'Y')); ?>
+                    <?php echo CHtml::image($themeUrl.'/images/chat-icon2.png', '', array('width' => "26", 'height' => "22")); ?> Will be not available on visual chat 
                 </div>
             </div>
             <div class="form-group">
@@ -150,12 +148,10 @@ $categories = GigCategory::getCategoryList();
                     <?php echo CHtml::submitButton($model->isNewRecord ? ' Create Your Gig' : ' Update Your Gig', array('class' => 'btn btn-default  btn-lg explorebtn form-btn')); ?>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
 <?php $this->endWidget(); ?>
-
 <?php
 $cs = Yii::app()->getClientScript();
 $cs_pos_end = CClientScript::POS_END;
@@ -165,10 +161,7 @@ $extraFileId = CHTML::activeId($model, 'extra_file');
 $isExtraId = CHTML::activeId($model, 'is_extra');
 $priceId = CHTML::activeId($model, 'gig_price');
 $isVideoId = CHTML::activeId($model, 'is_video');
-
-
 $price_limit_url = Yii::app()->createAbsoluteUrl('/site/gig/changepricepertime');
-
 $js = <<< EOD
     jQuery(document).ready(function ($) {
         $('#{$isExtraId}').on('ifChecked', function(event){
@@ -212,7 +205,6 @@ $js = <<< EOD
             }
             input_group.find("input").val(newVal).trigger('change');
         });
-
         $('#{$isVideoId}').on('change', function(){
             if($(this).val() == 'Y'){
                 $('#youtube_div').removeClass('hide');
@@ -247,9 +239,6 @@ $js = <<< EOD
         });
         
     });
-
-
 EOD;
-
 Yii::app()->clientScript->registerScript('_form', $js);
 ?>
