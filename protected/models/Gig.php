@@ -19,6 +19,7 @@
  * @property string $slug
  * @property string $created_at
  * @property string $modified_at
+ * @property string $gig_youtube_url
  * @property integer $created_by
  * @property integer $modified_by
  * @property integer $gig_important
@@ -38,6 +39,7 @@ class Gig extends RActiveRecord {
     public $extra_file;
     public $tutorUserName;
     public $gigCategory;
+    public $is_video;
 
     const GIG_MIN_DURATION = 5;
     const GIG_MAX_DURATION = 60;
@@ -74,6 +76,7 @@ class Gig extends RActiveRecord {
             $this->extra_price = Gig::EXTRA_MIN_AMT;
 
             $this->gig_avail_visual = 'N';
+            $this->is_video = 'N';
         }
 
         parent::init();
@@ -127,7 +130,7 @@ class Gig extends RActiveRecord {
             array('tutor_id', 'required', 'on' => 'admin_create'),
             array('tutor_id', 'required', 'on' => 'admin_update'),
             array('tutor_id, cat_id, created_by, modified_by', 'numerical', 'integerOnly' => true),
-            array('gig_title', 'length', 'max' => 100),
+            array('gig_title, gig_youtube_url', 'length', 'max' => 100),
             array('gig_media', 'length', 'max' => 500),
             array('gig_tag', 'length', 'max' => 255),
             array('gig_price, extra_price', 'length', 'max' => 10),
@@ -135,22 +138,23 @@ class Gig extends RActiveRecord {
             array('gig_price', 'numerical', 'integerOnly' => false, 'min' => self::GIG_MIN_AMT, 'max' => self::GIG_MAX_AMT),
             array('gig_avail_visual, status', 'length', 'max' => 1),
             array('gig_title, slug', 'unique'),
-            array('gig_media', 'file', 'types' => self::GIG_ALLOW_FILE_TYPES, 'maxSize' => 1024 * 1024 * self::GIG_ALLOW_FILE_SIZE, 'tooLarge' => 'File has to be smaller than ' . self::GIG_ALLOW_FILE_SIZE . 'MB', 'allowEmpty' => false, 'on' => 'create'), array('gig_media', 'file', 'types' => self::GIG_ALLOW_FILE_TYPES, 'maxSize' => 1024 * 1024 * self::GIG_ALLOW_FILE_SIZE, 'tooLarge' => 'File has to be smaller than ' . self::GIG_ALLOW_FILE_SIZE . 'MB', 'allowEmpty' => true, 'on' => 'update'),
+//            array('gig_media', 'file', 'types' => self::GIG_ALLOW_FILE_TYPES, 'maxSize' => 1024 * 1024 * self::GIG_ALLOW_FILE_SIZE, 'tooLarge' => 'File has to be smaller than ' . self::GIG_ALLOW_FILE_SIZE . 'MB', 'allowEmpty' => $this->is_video == 'Y', 'on' => 'create'),
+            array('gig_media', 'file', 'types' => self::GIG_ALLOW_FILE_TYPES, 'maxSize' => 1024 * 1024 * self::GIG_ALLOW_FILE_SIZE, 'tooLarge' => 'File has to be smaller than ' . self::GIG_ALLOW_FILE_SIZE . 'MB', 'allowEmpty' => true, 'on' => 'update'),
             array('gig_media', 'file', 'types' => self::GIG_ALLOW_FILE_TYPES, 'maxSize' => 1024 * 1024 * self::GIG_ALLOW_FILE_SIZE, 'tooLarge' => 'File has to be smaller than ' . self::GIG_ALLOW_FILE_SIZE . 'MB', 'allowEmpty' => false, 'on' => 'admin_create'),
             array('gig_media', 'file', 'types' => self::GIG_ALLOW_FILE_TYPES, 'maxSize' => 1024 * 1024 * self::GIG_ALLOW_FILE_SIZE, 'tooLarge' => 'File has to be smaller than ' . self::GIG_ALLOW_FILE_SIZE . 'MB', 'allowEmpty' => true, 'on' => 'admin_update'),
             array('extra_file', 'file', 'types' => self::EXTRA_ALLOW_FILE_TYPES, 'maxSize' => 1024 * 1024 * self::EXTRA_ALLOW_FILE_SIZE, 'tooLarge' => 'File has to be smaller than ' . self::GIG_ALLOW_FILE_SIZE . 'MB', 'allowEmpty' => true),
             array('gig_price', 'priceValidate'),
 //            array('modified_at', 'date', 'format' => Yii::app()->localtime->getLocalDateTimeFormat('short', 'short')),
-            array('gig_description, gig_duration, created_at, modified_at, is_extra, extra_price, extra_description, tutorUserName, gigCategory, extra_file, gig_important, gig_rating', 'safe'),
+            array('gig_description, gig_duration, created_at, modified_at, is_extra, extra_price, extra_description, tutorUserName, gigCategory, extra_file, gig_important, gig_rating, is_video, gig_youtube_url', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('gig_id, tutor_id, gig_title, cat_id, gig_media, gig_tag, gig_description, gig_duration, gig_price, gig_avail_visual, status, created_at, modified_at, created_by, modified_by', 'safe', 'on' => 'search'),
+            array('gig_id, tutor_id, gig_title, cat_id, gig_media, gig_tag, gig_description, gig_duration, gig_price, gig_avail_visual, status, created_at, modified_at, created_by, modified_by, gig_youtube_url', 'safe', 'on' => 'search'),
         );
     }
 
     public static function ajaxValidationFields() {
         // validate all except "file_field"
-        return array('gig_title', 'cat_id', 'gig_tag', 'gig_description', 'gig_duration', 'gig_price', 'is_extra', 'extra_price', 'extra_description');
+        return array('gig_title', 'cat_id', 'gig_tag', 'gig_description', 'gig_duration', 'gig_price', 'is_extra', 'extra_price', 'extra_description', 'gig_youtube_url');
     }
 
     /**
@@ -245,7 +249,7 @@ class Gig extends RActiveRecord {
             'tutor_id' => 'User Id',
             'gig_title' => 'Title',
             'cat_id' => 'Category',
-            'gig_media' => 'Video or Photo',
+            'gig_media' => 'Photo',
             'gig_tag' => 'Tag (separate tags with commas)',
             'gig_description' => 'Description',
             'gig_duration' => 'Time (Minutes)',
@@ -260,6 +264,8 @@ class Gig extends RActiveRecord {
             'modified_at' => 'Modified At',
             'created_by' => 'Created By',
             'modified_by' => 'Modified By',
+            'is_video' => 'Video or Photo',
+            'gig_youtube_url' => 'Video Id',
         );
     }
 
@@ -301,7 +307,7 @@ class Gig extends RActiveRecord {
         $criteria->addSearchCondition('cat.cat_name', $this->gigCategory);
 
         $criteria->order = "{$alias}.created_at DESC";
-        
+
         $criteria->with = array('tutor', 'cat');
 
         return new CActiveDataProvider($this, array(
@@ -331,10 +337,10 @@ class Gig extends RActiveRecord {
     }
 
     public static function topInstructors($tutor_id = '') {
-        if($tutor_id){
-          return Gig::model()->active()->findAll(array("condition" => "tutor_id = $tutor_id", 'limit' => 10));
+        if ($tutor_id) {
+            return Gig::model()->active()->findAll(array("condition" => "tutor_id = $tutor_id", 'limit' => 10));
         } else {
-          return Gig::model()->active()->findAll(array('limit' => 10));
+            return Gig::model()->active()->findAll(array('limit' => 10));
         }
     }
 
@@ -357,6 +363,13 @@ class Gig extends RActiveRecord {
 
         $this->gig_price = $this->gig_price + 0;
         $this->extra_price = $this->extra_price + 0;
+
+        if (!empty($this->gig_media) && empty($this->gig_youtube_url)) {
+            $this->is_video = 'N';
+        } else if (empty($this->gig_media) && !empty($this->gig_youtube_url)) {
+            $this->is_video = 'Y';
+        }
+
         return parent::afterFind();
     }
 
@@ -399,27 +412,44 @@ class Gig extends RActiveRecord {
 
     public function beforeValidate() {
         if ($this->is_extra == 'Y') {
-            $this->validatorList->add(CValidator::createValidator('required', $this, 'extra_price, extra_description', array()));
+            $this->validatorList->add(CValidator::createValidator('required', $this, 'extra_price, extra_description'));
             $this->validatorList->add(CValidator::createValidator('numerical', $this, 'extra_price', array('min' => self::EXTRA_MIN_AMT, 'max' => self::EXTRA_MAX_AMT, 'integerOnly' => false)));
+        }
+        if ($this->is_video == 'Y') {
+            $this->validatorList->add(CValidator::createValidator('required', $this, 'gig_youtube_url'));
+            $this->validatorList->add(CValidator::createValidator('isEmbeddableYoutubeURL', $this, 'gig_youtube_url'));
+        } else {
+            $this->validatorList->add(CValidator::createValidator('file', $this, 'gig_media', array('types' => self::GIG_ALLOW_FILE_TYPES, 'maxSize' => 1024 * 1024 * self::GIG_ALLOW_FILE_SIZE, 'tooLarge' => 'File has to be smaller than ' . self::GIG_ALLOW_FILE_SIZE . 'MB', 'allowEmpty' => $this->is_video == 'Y', 'on' => 'create')));
         }
 
         return parent::beforeValidate();
     }
 
     public function getGigimage($htmlOptions = array()) {
-        if (!empty($this->gig_media))
-            $path = UPLOAD_DIR . '/users/' . $this->tutor_id . $this->gig_media;
-        if (!isset($path) || !is_file($path))
-            $path = 'themes/koocam/images/gig-img.jpg';
-        return CHtml::image(Yii::app()->createAbsoluteUrl($path), '', $htmlOptions);
+        if ($this->is_video == 'N' && empty($this->gig_youtube_url)) {
+            if (!empty($this->gig_media))
+                $path = UPLOAD_DIR . '/users/' . $this->tutor_id . $this->gig_media;
+            if (!isset($path) || !is_file($path))
+                $path = 'themes/koocam/images/gig-img.jpg';
+            $url = Yii::app()->createAbsoluteUrl($path);
+        }else if ($this->is_video == 'Y' && !empty($this->gig_youtube_url)) {
+            $url = "http://img.youtube.com/vi/{$this->gig_youtube_url}/default.jpg";
+        }
+        return CHtml::image($url, '', $htmlOptions);
     }
 
     public function getGigthumb($htmlOptions = array()) {
-        if (!empty($this->gig_media))
-            $path = UPLOAD_DIR . '/users/' . $this->tutor_id . '/thumb' . $this->gig_media;
-        if (!isset($path) || !is_file($path))
-            $path = 'themes/koocam/images/gig-img.jpg';
-        return CHtml::image(Yii::app()->createAbsoluteUrl($path), '', $htmlOptions);
+        if ($this->is_video == 'N' && empty($this->gig_youtube_url)) {
+            if (!empty($this->gig_media))
+                $path = UPLOAD_DIR . '/users/' . $this->tutor_id . '/thumb' . $this->gig_media;
+            if (!isset($path) || !is_file($path))
+                $path = 'themes/koocam/images/gig-img.jpg';
+            $url = Yii::app()->createAbsoluteUrl($path);
+        }else if ($this->is_video == 'Y' && !empty($this->gig_youtube_url)) {
+            $url = "http://img.youtube.com/vi/{$this->gig_youtube_url}/sddefault.jpg";
+            $htmlOptions = array_merge($htmlOptions, array('style' => 'height: 231px;'));
+        }
+        return CHtml::image($url, '', $htmlOptions);
     }
 
     public function getStartnowButton($text = '<i class="fa fa-video-camera"></i> Start Now !', $class = 'big-btn btn btn-default', $data_target = 'startnow') {
@@ -427,7 +457,7 @@ class Gig extends RActiveRecord {
         $button = NULL;
         if (!$this->_is_tutor) :
             if ($this->_logged_user) {
-                if($this->tutor->live_status == 'A')
+                if ($this->tutor->live_status == 'A')
                     $button = CHtml::link($text, '#', array('class' => $class, 'data-toggle' => "modal", 'data-target' => "#$data_target"));
             } else {
                 $button = CHtml::link($text, '#', array('class' => $class, 'data-toggle' => "modal", 'data-target' => ".bs-example-modal-sm1", 'data-dismiss' => ".bs-example-modal-sm"));
@@ -482,4 +512,29 @@ class Gig extends RActiveRecord {
         }
         return "<div title='{$title}' data-placement='bottom' data-toggle='tooltip' class='{$class}' data-original-title='{$title}'> </div>";
     }
+
+    public function isEmbeddableYoutubeURL($attribute, $params) {
+        $url = "http://www.youtube.com/watch?v={$this->gig_youtube_url}";
+        // Let's check the host first
+        $parse = parse_url($url);
+        $host = $parse['host'];
+        if (!in_array($host, array('youtube.com', 'www.youtube.com'))) {
+            return false;
+        }
+
+        $ch = curl_init();
+        $oembedURL = 'www.youtube.com/oembed?url=' . urlencode($url) . '&format=json';
+        curl_setopt($ch, CURLOPT_URL, $oembedURL);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $output = curl_exec($ch);
+        curl_close($ch);
+
+        $data = json_decode($output);
+
+        if (!$data)
+            $this->addError($attribute, "Youtube Video Id must be valid id. (Unauthorized Video Id)");
+        if (!$data->{'html'})
+            $this->addError($attribute, "Youtube Video Id must be valid id. (Not Embeddable Video Id)");  
+    }
+
 }

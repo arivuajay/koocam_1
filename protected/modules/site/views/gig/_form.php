@@ -35,16 +35,32 @@ $categories = GigCategory::getCategoryList();
             </div>
             <div class="form-group">
                 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
+                    <?php echo $form->labelEx($model, 'is_video'); ?>
+                    <?php echo $form->dropDownList($model, 'is_video', array('Y' => 'Video', 'N' => 'Photo'), array('class' => 'selectpicker')); ?> 
+                    <?php echo $form->error($model, 'is_video'); ?> 
+                </div>
+                <?php
+                $url_hide = $model->is_video == 'Y' ? '' : 'hide';
+                $media_hide = $model->is_video == 'N' ? '' : 'hide';
+                ?>
+                <div id="youtube_div" class="col-xs-12 col-sm-6 col-md-6 col-lg-6 <?php echo $url_hide?>">
+                    <?php echo $form->labelEx($model, 'gig_youtube_url'); ?>
+                    <?php echo $form->textField($model, 'gig_youtube_url', array('class' => 'form-control', 'placeholder' => 'Example: XGSy3_Czz8k', 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "Youtube Video Id. Ex:(Video link: http://www.youtube.com/watch?v=XGSy3_Czz8k) (Video Id: XGSy3_Czz8k)")); ?> 
+                    <?php // echo $form->error($model, 'gig_youtube_url'); ?> 
+                </div>
+                <div id="image_div" class="col-xs-12 col-sm-6 col-md-6 col-lg-6 <?php echo $media_hide?>">
                     <?php echo $form->labelEx($model, 'gig_media'); ?>
                     <span class="required">*</span>
                     <span class="btn btn-default btn-file">
                         <i class="fa fa-upload"></i>  
-                        <span id="Gig_gig_media_value">Upload Video (or)  Photo (Recommended Video) </span>
+                        <span id="Gig_gig_media_value">Upload Photo </span>
                         <?php echo $form->fileField($model, 'gig_media'); ?>
                     </span>
                     <?php // echo $form->error($model, 'gig_media'); ?> 
                 </div>
-                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
+            </div>
+            <div class="form-group">
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-12 ">
                     <?php echo $form->labelEx($model, 'gig_tag'); ?>
                     <?php echo $form->textField($model, 'gig_tag', array('class' => 'form-control', 'placeholder' => $model->getAttributeLabel('gig_tag'), 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "Tags (separate tags with commas)")); ?> 
                     <?php echo $form->error($model, 'gig_tag'); ?> 
@@ -97,7 +113,7 @@ $categories = GigCategory::getCategoryList();
 
             <div class="form-group">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                    <?php echo $form->checkBox($model, 'is_extra', array('value' => 'Y', 'uncheckValue' => 'N')); ?>&nbsp;&nbsp;<?php echo $form->labelEx($model, 'is_extra', array('data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => " Are you want to add Extra Price ?")); ?>
+                    <?php echo $form->checkBox($model, 'is_extra', array('value' => 'Y', 'uncheckValue' => 'N')); ?>&nbsp;&nbsp;<?php echo $form->labelEx($model, 'is_extra', array('data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => " Share more information with the user!")); ?>
                 </div>
             </div>
             <?php
@@ -148,6 +164,7 @@ $mediaId = CHTML::activeId($model, 'gig_media');
 $extraFileId = CHTML::activeId($model, 'extra_file');
 $isExtraId = CHTML::activeId($model, 'is_extra');
 $priceId = CHTML::activeId($model, 'gig_price');
+$isVideoId = CHTML::activeId($model, 'is_video');
 
 
 $price_limit_url = Yii::app()->createAbsoluteUrl('/site/gig/changepricepertime');
@@ -196,6 +213,16 @@ $js = <<< EOD
             input_group.find("input").val(newVal).trigger('change');
         });
 
+        $('#{$isVideoId}').on('change', function(){
+            if($(this).val() == 'Y'){
+                $('#youtube_div').removeClass('hide');
+                $('#image_div').addClass('hide');
+            }else if($(this).val() == 'N'){
+                $('#youtube_div').addClass('hide');
+                $('#image_div').removeClass('hide');
+            }
+        });
+        
         $('#{$durationId}').on('change', function(){
             var data=$("#gig-create-form").serialize();
             $.ajax({

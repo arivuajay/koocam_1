@@ -61,8 +61,10 @@ class GigController extends Controller {
             $model->setAttribute('gig_media', isset($_FILES['Gig']['name']['gig_media']) ? $_FILES['Gig']['name']['gig_media'] : '');
 
             if ($model->validate()) {
-                $model->setUploadDirectory(UPLOAD_DIR . '/users/' . Yii::app()->user->id);
-                $model->uploadFile();
+                if ($model->is_video == 'N') {
+                    $model->setUploadDirectory(UPLOAD_DIR . '/users/' . Yii::app()->user->id);
+                    $model->uploadFile();
+                }
                 if ($model->save()) {
                     if ($model->is_extra == 'Y') {
                         $extra_model = new GigExtra;
@@ -100,8 +102,10 @@ class GigController extends Controller {
 
             if ($model->validate()) {
                 if ($model->gig_media) {
-                    $model->setUploadDirectory(UPLOAD_DIR . '/users/' . Yii::app()->user->id);
-                    $model->uploadFile();
+                    if ($model->is_video == 'N') {
+                        $model->setUploadDirectory(UPLOAD_DIR . '/users/' . Yii::app()->user->id);
+                        $model->uploadFile();
+                    }
                 } else {
                     unset($model->gig_media);
                 }
@@ -255,7 +259,7 @@ class GigController extends Controller {
         $sort_by = $page_size = $category_id = '';
         $cat_ids = array();
         $search_text = isset($_REQUEST['s']) ? $_REQUEST['s'] : '';
-        
+
         $model = new Gig('search');
         $this->performAjaxValidation($model);
         $alias = $model->getTableAlias(false, false);
@@ -264,20 +268,20 @@ class GigController extends Controller {
         $criteria->with = array('tutor');
 
         $criteria->compare($alias . '.gig_title', $search_text, true);
-        
+
         if (isset($_REQUEST['cat_id'])) {
             $cat_ids = $_REQUEST['cat_id'];
             $criteria->addInCondition('cat_id', $cat_ids);
         }
-        
+
         if (isset($_REQUEST['category_id']) && $_REQUEST['category_id'] != 0) {
             $category_id = $_REQUEST['category_id'];
             $criteria->compare($alias . '.cat_id', $category_id);
         }
-        
+
         if (isset($_REQUEST['sort_by']) && !empty($_REQUEST['sort_by'])) {
             $criteria->order = $sort_by = $_REQUEST['sort_by'];
-        }else{
+        } else {
             $criteria->order = 'tutor.live_status ASC';
         }
 
@@ -295,10 +299,10 @@ class GigController extends Controller {
 
         if (Yii::app()->request->isAjaxRequest) {
             $result = $this->renderPartial('_search_results', compact('results', 'pages'), true);
-            if($_REQUEST['custom_search'] == 1){
+            if ($_REQUEST['custom_search'] == 1) {
                 $return = array('item_count' => "({$pages->itemCount} Results Found)", 'result' => $result);
                 echo json_encode($return);
-            }else{
+            } else {
                 echo $result;
             }
             Yii::app()->end();

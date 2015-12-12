@@ -39,13 +39,7 @@ $logged_user = !$is_tutor && !Yii::app()->user->isGuest;
     <div class="container">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                <div class="course-img">
-                    <div class="price-bg"> <?php echo $model->gig_duration; ?> min<br/>
-                        <b class="gig_price_txt"> $ <?php echo $gig_price = (int) $model->gig_price; ?> </b>
-                    </div>
-                    <?php echo $model->tutorstatusicon; ?>
-                    <?php echo $model->gigimage; ?>
-                </div>
+                <?php $this->renderPartial('_view_image', compact('model')); ?>
                 <div class="row">
                     <?php
                     $model->setButtonOptions();
