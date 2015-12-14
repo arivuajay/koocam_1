@@ -16,8 +16,7 @@ class AdminModule extends CWebModule {
         $this->layoutPath = Yii::getPathOfAlias('webroot.themes.' . Yii::app()->theme->name . '.views.layouts');
         
         Yii::app()->getComponent("booster");
-
-        $this->setComponents(array(
+        Yii::app()->setComponents(array(
             'errorHandler' => array(
                 'errorAction' => '/admin/default/error'),
             'user' => array(

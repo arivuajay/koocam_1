@@ -93,6 +93,7 @@ class User extends RActiveRecord {
             'deleted' => array('condition' => "$alias.status = '2'"),
             'deactivated' => array('condition' => "$alias.status = '3'"),
             'all' => array('condition' => "$alias.status is not null"),
+            'current' => array('condition' => "$alias.status IN ('1', '0')"),
         );
     }
 

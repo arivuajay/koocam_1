@@ -65,8 +65,8 @@ class GigCategory extends RActiveRecord {
             array('cat_name', 'length', 'max' => 100),
             array('cat_image, cat_cover_image', 'length', 'max' => 500),
             array('status', 'length', 'max' => 1),
-            array('cat_image, cat_cover_image', 'file', 'allowEmpty' => true, 'on' => 'create'),
-            array('cat_image, cat_cover_image', 'file', 'allowEmpty' => false, 'on' => 'update'),
+            array('cat_image, cat_cover_image', 'file', 'allowEmpty' => false, 'on' => 'create'),
+            array('cat_image, cat_cover_image', 'file', 'allowEmpty' => true, 'on' => 'update'),
             array('cat_description, modified_at, cat_cover_image', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.

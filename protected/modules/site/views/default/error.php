@@ -25,7 +25,7 @@ $themeUrl = $this->themeUrl;
                 <p>  
                     <?php echo CHtml::image($themeUrl . "/images/notfound.jpg");?>
                 </p>
-                <p> Sorry, an error has occured, Requested page not found!  </p>
+                <p> Sorry, an error has occured, <?php echo $error['message']; ?>!  </p>
                 <div class="explore-btn"> 
                     <?php echo CHtml::link('<i class="fa fa-home"></i> Take Me Home', array('/site/default/index'), array('class' => 'btn btn-default  btn-lg explorebtn')); ?>
                 </div>

@@ -10,7 +10,7 @@ $themeUrl = $this->themeUrl;
 $cover_image = '';
 if($category_id){
     $gig_category = GigCategory::model()->findByPk($category_id);
-    $cover_image =  'background: #222 url(' . $gig_category->coverimageurl . ')';
+    $cover_image =  'background: #222 url(' . $gig_category->coverimageurl . ') no-repeat;';
 }
 
 ?>

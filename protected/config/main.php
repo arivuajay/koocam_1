@@ -31,6 +31,9 @@ return array(
     ),
     // application components
     'components' => array(
+        'errorHandler' => array(
+            'errorAction' => '/site/default/error'
+        ),
         'clientScript' => array(
             'packages' => array(
                 'jquery' => array(
