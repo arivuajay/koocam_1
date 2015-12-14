@@ -24,7 +24,7 @@ class LoginForm extends CFormModel {
             array('username, password', 'required'),
             array('email', 'required', 'on' => 'forgotpass'),
             array('email', 'email'),
-            array('email', 'emailAuthenticate'),
+            array('email', 'emailAuthenticate', 'on' => 'forgotpass'),
             //array('admin_username', 'email'),
             // rememberMe needs to be a boolean
             array('rememberMe', 'boolean'),
