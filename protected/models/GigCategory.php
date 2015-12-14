@@ -20,6 +20,11 @@
  */
 class GigCategory extends RActiveRecord {
 
+    const IMG_WIDTH = 500;
+    const IMG_HEIGHT = 440;
+    const COVER_IMG_WIDTH = 1604;
+    const COVER_IMG_HEIGHT = 610;
+
     /**
      * @return string the associated database table name
      */
@@ -67,11 +72,22 @@ class GigCategory extends RActiveRecord {
             array('status', 'length', 'max' => 1),
             array('cat_image, cat_cover_image', 'file', 'allowEmpty' => false, 'on' => 'create'),
             array('cat_image, cat_cover_image', 'file', 'allowEmpty' => true, 'on' => 'update'),
+            array('cat_cover_image', 'dimensionValidation'),
             array('cat_description, modified_at, cat_cover_image', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('cat_id, cat_name, cat_description, cat_image, status, created_at, modified_at, created_by, modified_by, cat_cover_image', 'safe', 'on' => 'search'),
         );
+    }
+
+    public function dimensionValidation($attribute, $param) {
+        if (isset($_FILES['GigCategory']['tmp_name']['cat_cover_image']) && !empty($_FILES['GigCategory']['tmp_name']['cat_cover_image'])) {
+            list($width, $height) = getimagesize($_FILES['GigCategory']['tmp_name']['cat_cover_image']);
+
+            if ($width != self::COVER_IMG_WIDTH || $height != self::COVER_IMG_HEIGHT){
+                $this->addError('cat_cover_image', 'Cover image size should be ' . self::COVER_IMG_WIDTH . '*' . self::COVER_IMG_HEIGHT . ' dimension');
+            }
+        }
     }
 
     /**
@@ -184,13 +200,28 @@ class GigCategory extends RActiveRecord {
             $path = 'themes/koocam/images/inner-banner.jpg';
         return CHtml::image(Yii::app()->createAbsoluteUrl($path), '', $htmlOptions);
     }
-    
+
     public function getCoverimageurl($htmlOptions = array()) {
         if (!empty($this->cat_cover_image))
             $path = UPLOAD_DIR . $this->cat_cover_image;
         if (!isset($path) || !is_file($path))
             $path = 'themes/koocam/images/inner-banner.jpg';
         return Yii::app()->createAbsoluteUrl($path);
+    }
+
+    protected function afterSave() {
+        if ($this->cat_image && isset($_FILES['GigCategory']['name']['cat_image']) && !empty($_FILES['GigCategory']['name']['cat_image'])) {
+            $gigcategory_path = UPLOAD_DIR;
+            $source = UPLOAD_DIR . $this->cat_image;
+
+            $width1 = self::IMG_WIDTH;
+            $height1 = self::IMG_HEIGHT;
+
+            $img = new Img;
+            $img->resampleGD($source, $gigcategory_path, $this->cat_image, $width1, $height1, 1, 0);
+        }
+
+        return parent::afterSave();
     }
 
 }

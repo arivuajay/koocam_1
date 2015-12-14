@@ -33,34 +33,23 @@ $user_paypals = $model->userPaypals;
                         </div>
                     </div>
                     <div class="form-group">
-                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 age-verify ">
-                            <?php
-                            $cancel_email = "";
-                            if ($user_profile->receive_email_notify)
-                                $cancel_email = 'checked';
-                            ?>
-                            <input name="" type="checkbox" value="" <?php echo $cancel_email; ?> disabled>  
-                            Receive notifications to email
-                        </div>
                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
                             <label>  Address </label>
                             <p> <?php echo ($user_profile->prof_address) ? $user_profile->prof_address : '-'; ?> </p>
                         </div>
-                    </div>
-                    <div class="form-group">
                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
                             <label>  Phone Number </label>
                             <p> <?php echo ($user_profile->prof_phone) ? $user_profile->prof_phone : '-'; ?> </p>
-                        </div>
-                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
-                            <label>  Website Link </label>
-                            <p> <?php echo ($user_profile->prof_website) ? $user_profile->prof_website : '-'; ?> </p>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
                             <label>  Default Country </label>
                             <p> <?php echo $model->userCountry->country_name; ?> </p>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
+                            <label>  Website Link </label>
+                            <p> <?php echo ($user_profile->prof_website) ? $user_profile->prof_website : '-'; ?> </p>
                         </div>
                     </div>
 
@@ -74,8 +63,17 @@ $user_paypals = $model->userPaypals;
                             </span>
                         </div>
                         <div class="form-group">  
-                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 age-verify ">
+                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 age-verify ">
                                 <?php echo $model->email; ?>
+                            </div>
+                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 age-verify ">
+                                <?php
+                                $receive_email = "";
+                                if ($model->receive_email_notify)
+                                    $receive_email = 'checked';
+                                ?>
+                                <input name="" type="checkbox" value="" <?php echo $receive_email; ?> disabled>  
+                                Receive notifications to email
                             </div>
                         </div>
                         <p>&nbsp;</p>
@@ -117,20 +115,20 @@ $user_paypals = $model->userPaypals;
                             Paypal Setting 
                         </div>
 
-                        
+
                         <div class="form-group">  
-                            <?php if(!empty($user_paypals)){ ?>
-                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 age-verify ">
-                                <?php foreach($user_paypals as $user_paypal){ ?>
-                                <p>  
-                                    <?php echo $user_paypal->paypal_address; ?>  
-                                    <?php echo CHtml::link('<i class="fa fa-trash"></i>', array('/site/user/paypaldelete', 'paypal_id' => $user_paypal->paypal_id), array('confirm' => 'Are you sure?'))?>
-                                </p>
-                                <?php } ?>
-                            </div>
+                            <?php if (!empty($user_paypals)) { ?>
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 age-verify ">
+                                    <?php foreach ($user_paypals as $user_paypal) { ?>
+                                        <p>  
+                                            <?php echo $user_paypal->paypal_address; ?>  
+                                            <?php echo CHtml::link('<i class="fa fa-trash"></i>', array('/site/user/paypaldelete', 'paypal_id' => $user_paypal->paypal_id), array('confirm' => 'Are you sure?')) ?>
+                                        </p>
+                                    <?php } ?>
+                                </div>
                             <?php } ?>
                             <p>&nbsp;</p>
-                            
+
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-heading"> 
                                 <?php echo CHtml::link('<i class="fa fa-user-times"></i> Deactivate My Account', array('/site/user/accountdeactivate'), array('confirm' => 'Are you sure to deactivate your account?')); ?>
                             </div>
@@ -144,7 +142,7 @@ $user_paypals = $model->userPaypals;
 </div>
 
 <?php
-if(empty($user_profile))
+if (empty($user_profile))
     $user_profile = new UserProfile;
 
 $this->renderPartial('_personal_information_form', compact('model', 'user_profile'));

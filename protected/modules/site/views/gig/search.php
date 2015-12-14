@@ -32,6 +32,7 @@ if($category_id){
 <?php
 $form = $this->beginWidget('CActiveForm', array(
     'id' => 'gig-advanced-search-form',
+    'method' => 'GET',
     'htmlOptions' => array('role' => 'form', 'class' => ''),
     'clientOptions' => array(
         'validateOnSubmit' => false,

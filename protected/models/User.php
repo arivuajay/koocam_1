@@ -23,6 +23,7 @@
  * @property integer $user_timezone_id
  * @property integer $user_rating
  * @property integer $country_id
+ * @property integer $receive_email_notify
  * 
  * The followings are the available model relations:
  * @property UserProfile $userProfGig[] $gigs
@@ -119,12 +120,12 @@ class User extends RActiveRecord {
             array('status, live_status', 'length', 'max' => 1),
             array('email, username, slug', 'unique'),
             array('email', 'email'),
-            array('password_hash', 'compare', 'compareAttribute' => 'confirm_password', 'on' => 'register'),
+            array('confirm_password', 'compare', 'compareAttribute' => 'password_hash', 'on' => 'register'),
             array('old_password, new_password, repeat_password', 'required', 'on' => 'changePwd'),
             array('old_password', 'findPasswords', 'on' => 'changePwd'),
             array('repeat_password', 'compare', 'compareAttribute' => 'new_password', 'on' => 'changePwd'),
             array('security_question_id, answer', 'required', 'on' => 'account_setting_security'),
-            array('created_at, modified_at, user_activation_key, user_login_ip, user_last_login, is_auto_timezone, user_locale_id, user_timezone_id, i_agree, user_rating, country_id, old_password, new_password, repeat_password, security_question_id, answer', 'safe'),
+            array('created_at, modified_at, user_activation_key, user_login_ip, user_last_login, is_auto_timezone, user_locale_id, user_timezone_id, i_agree, user_rating, country_id, old_password, new_password, repeat_password, security_question_id, answer, receive_email_notify', 'safe'),
             array('i_agree', 'compare', 'compareValue' => true, 'message' => 'You must agree to the terms and conditions', 'on' => 'register'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
@@ -183,6 +184,7 @@ class User extends RActiveRecord {
             'created_at' => 'Created At',
             'modified_at' => 'Updated At',
             'confirm_password' => 'Confirm Password',
+            'receive_email_notify' => 'Receive notification to email',
         );
     }
 

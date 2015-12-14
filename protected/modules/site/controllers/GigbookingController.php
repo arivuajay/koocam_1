@@ -138,19 +138,39 @@ class GigbookingController extends Controller {
     public function actionMyjobs() {
         $this->layout = '//layouts/user_dashboard';
 
-        $tutor_id = Yii::app()->user->id;
+        $my_job_filter = 'all';
 
+        $tutor_id = Yii::app()->user->id;
         $criteria = new CDbCriteria;
         $criteria->with = array('gig');
         $criteria->compare('gig.tutor_id', $tutor_id);
 
+        if (isset($_REQUEST['my_job_filter']) && $_REQUEST['my_job_filter'] != 'all') {
+            $my_job_filter = $_REQUEST['my_job_filter'];
+            $local_now = Yii::app()->localtime->getLocalNow("Y-m-d H:i:s");
+            if ($_REQUEST['my_job_filter'] == 'upcoming') {
+                $criteria->addCondition('book_start_time >= "' . $local_now . '" ');
+            } elseif ($_REQUEST['my_job_filter'] == 'completed') {
+                $criteria->addCondition('book_start_time < "' . $local_now . '" ');
+            }
+        }
+        
+        $criteria->order = 'book_start_time ASC';
+
+        //Pagination
+        if (isset($_REQUEST['page_size']) && !empty($_REQUEST['page_size'])) {
+            $page_size = $_REQUEST['page_size'];
+        } else {
+            $page_size = 10;
+        }
+        
         $pages = new CPagination(GigBooking::model()->active()->count($criteria));
-        $pages->pageSize = 10;
+        $pages->pageSize = $page_size;
         $pages->applyLimit($criteria);
 
         $results = GigBooking::model()->active()->findAll($criteria);
 
-        $this->render('myjobs', compact('results', 'pages'));
+        $this->render('myjobs', compact('results', 'pages', 'my_job_filter'));
     }
 
     public function actionPrebooking($book_guid) {
@@ -166,7 +186,7 @@ class GigbookingController extends Controller {
 
             if ($current_time <= $book_expiry_time) {
                 $booking_temp = new BookingTemp;
-                $this->render('prebooking', compact('booking', 'booking_temp')); 
+                $this->render('prebooking', compact('booking', 'booking_temp'));
             } else {
                 Yii::app()->user->setFlash('danger', "Sorry your booking time is expired");
                 $this->goHome();

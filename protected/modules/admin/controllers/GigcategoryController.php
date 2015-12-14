@@ -76,7 +76,7 @@ class GigcategoryController extends Controller {
             if ($model->validate()) {
                 $model->setUploadDirectory(UPLOAD_DIR);
                 $model->uploadFile();
-                if ($model->save()) {
+                if ($model->save(false)) {
                     Yii::app()->user->setFlash('success', 'GigCategory Created Successfully!!!');
                     $this->redirect(array('/admin/gigcategory/index'));
                 }
@@ -102,11 +102,10 @@ class GigcategoryController extends Controller {
 
         if (isset($_POST['GigCategory'])) {
             $model->attributes = $_POST['GigCategory'];
-            
             if ($model->validate()) {
                 $model->setUploadDirectory(UPLOAD_DIR);
                 $model->uploadFile();
-                if ($model->save()) {
+                if ($model->save(false)) {
                     Yii::app()->user->setFlash('success', 'GigCategory Updated Successfully!!!');
                     $this->redirect(array('/admin/gigcategory/index'));
                 }

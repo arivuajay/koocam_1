@@ -55,14 +55,6 @@
                         </div>
                     </div>
                     
-                    <div class = "form-group form-control-material static">
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            <?php echo $form->checkBox($user_profile, 'receive_email_notify'); ?>
-                            <?php echo $form->labelEx($user_profile, 'receive_email_notify'); ?>
-                            <?php echo $form->error($user_profile, 'receive_email_notify'); ?>
-                        </div>
-                    </div>
-                    
                     <div class="form-group">
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 ">
                             <?php echo CHtml::submitButton('Edit', array('class' => 'btn btn-default btn-lg explorebtn form-btn')); ?>

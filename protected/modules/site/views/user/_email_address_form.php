@@ -30,6 +30,13 @@
                     </div>
                     <div class = "form-group form-control-material static">
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <?php echo $form->checkBox($model, 'receive_email_notify'); ?>
+                            <?php echo $form->labelEx($model, 'receive_email_notify'); ?>
+                            <?php echo $form->error($model, 'receive_email_notify'); ?>
+                        </div>
+                    </div>
+                    <div class = "form-group form-control-material static">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <?php echo $form->labelEx($model, 'confirm_password'); ?>
                             <?php echo $form->passwordField($model, 'confirm_password', array('class' => 'form-control', 'size' => 50, 'maxlength' => 50)); ?>
                             <?php echo $form->error($model, 'confirm_password'); ?>

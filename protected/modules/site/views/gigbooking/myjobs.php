@@ -9,10 +9,40 @@
 
 $this->title = 'My Jobs';
 $themeUrl = $this->themeUrl;
-
 ?>
 
 <div class="col-xs-12 col-sm-8 col-md-9 col-lg-9">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div class="in-search-cont">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-4 col-md-4 col-lg-3">
+                        <?php
+                        $form = $this->beginWidget('CActiveForm', array(
+                            'id' => 'gig-myjobs-search-form',
+                            'method' => 'GET',
+                            'action' => array('/site/gigbooking/myjobs'),
+                            'htmlOptions' => array('role' => 'form', 'class' => ''),
+                            'clientOptions' => array(
+                                'validateOnSubmit' => false,
+                            ),
+                            'enableAjaxValidation' => false,
+                        ));
+                        ?>
+                        <?php
+                        $options = array(
+                            'all' => 'All',
+                            'upcoming' => 'Upcoming',
+                            'completed' => 'Completed',
+                        );
+                        echo CHtml::dropDownList('my_job_filter', $my_job_filter, $options, array('class' => 'selectpicker sort_by ajaxcall', 'id' => "first-disabled"));
+                        ?>
+                        <?php $this->endWidget(); ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="myprofile-inner">
         <?php if (!empty($results)): ?>
             <?php foreach ($results as $key => $myjob): ?>
@@ -34,8 +64,14 @@ $themeUrl = $this->themeUrl;
                             <p> <span> <?php echo CHtml::link($user->fullname, array('/site/user/profile', 'slug' => $user->slug)); ?> </span> </p>
                         </div>
                         <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4 purchase-gig">
-                            <p> <b> Date : </b>  <?php echo date(PHP_SHORT_DATE_FORMAT, strtotime($book->book_date)); ?>  </p>
-                            <p> <b>Time : </b>  <?php echo date('H:i', strtotime($book->book_start_time)) . ' - ' . date('H:i', strtotime($book->book_end_time)); ?> </p>
+                            <p> 
+                                <b> Date : </b>  
+                                <?php echo date(PHP_SHORT_DATE_FORMAT, strtotime($book->book_start_time)); ?>  
+                            </p>
+                            <p> 
+                                <b>Time : </b>  
+                                <?php echo date('H:i', strtotime($book->book_start_time)) . ' - ' . date('H:i', strtotime($book->book_end_time)); ?> 
+                            </p>
                             <p> <b>Sessions :</b>  <?php echo $book->book_session; ?> </p> 
                             <p> <b>Extras :</b>  <?php echo $book->book_is_extra == 'Y' ? 'Yes' : 'No'; ?> </p>
                         </div>
@@ -74,3 +110,21 @@ $themeUrl = $this->themeUrl;
         </div>
     </div>
 </div>
+
+<?php
+$cs = Yii::app()->getClientScript();
+$cs_pos_end = CClientScript::POS_END;
+$search_url = Yii::app()->createAbsoluteUrl('/site/gig/search');
+$cs->registerCssFile($themeUrl . '/css/loader/jquery.loader.min.css');
+$cs->registerScriptFile($themeUrl . '/js/loader/jquery.loader.min.js', $cs_pos_end);
+
+$js = <<< EOD
+    jQuery(document).ready(function ($) {
+        $('.ajaxcall').on('change', function(){
+            $("#gig-myjobs-search-form").submit();
+        });
+
+    });
+EOD;
+Yii::app()->clientScript->registerScript('search', $js);
+?>

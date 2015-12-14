@@ -15,7 +15,7 @@
                     'validateOnSubmit' => true,
                     'hideErrorMessage' => true,
                 ),
-                'enableAjaxValidation' => true,
+                'enableAjaxValidation' => false,
             ));
             ?>
             <?php echo $form->errorSummary($model); ?>
@@ -23,31 +23,31 @@
             <div class="form-group form-control-material static">
                 <?php echo $form->textField($model, 'cat_name', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100, 'placeholder' => 'Category Name')); ?>
                 <?php echo $form->labelEx($model, 'cat_name'); ?>
-                <?php echo $form->error($model, 'cat_name'); ?>
+                <?php // echo $form->error($model, 'cat_name'); ?>
             </div>
 
             <div class="form-group form-control-material static">
                 <?php echo $form->textArea($model, 'cat_description', array('class' => 'form-control', 'rows' => 6, 'cols' => 50)); ?>
                 <?php echo $form->labelEx($model, 'cat_description'); ?>
-                <?php echo $form->error($model, 'cat_description'); ?>
+                <?php // echo $form->error($model, 'cat_description'); ?>
             </div>
 
             <div class="form-group form-control-material static">
                 <?php echo $model->getAttributeLabel('cat_image') ?>
                 <?php echo $form->fileField($model, 'cat_image'); ?>
-                <?php echo $form->error($model, 'cat_image'); ?>
+                <?php // echo $form->error($model, 'cat_image'); ?>
             </div>
 
             <div class="form-group form-control-material static">
                 <?php echo $model->getAttributeLabel('cat_cover_image') ?>
                 <?php echo $form->fileField($model, 'cat_cover_image'); ?>
-                <?php echo $form->error($model, 'cat_cover_image'); ?>
+                <?php // echo $form->error($model, 'cat_cover_image'); ?>
             </div>
 
             <div class="form-group checkbox checkbox-primary">
                 <?php echo $form->checkBox($model, 'status'); ?>  
                 <?php echo $form->labelEx($model, 'status'); ?>
-                <?php echo $form->error($model, 'status'); ?>
+                <?php // echo $form->error($model, 'status'); ?>
             </div>
 
             <div class="form-group">

@@ -24,7 +24,6 @@
  * @property integer $created_by
  * @property integer $modified_by
  * @property integer $country_id
- * @property integer $receive_email_notify
  *
  * The followings are the available model relations:
  * @property User $user
@@ -69,7 +68,7 @@ class UserProfile extends RActiveRecord {
             array('prof_phone', 'length', 'max' => 30),
             array('prof_picture, prof_cover_photo', 'length', 'max' => 500),
             array('prof_website', 'url'),
-            array('prof_address, prof_about, prof_interests, created_at, modified_at, country_id, receive_email_notify', 'safe'),
+            array('prof_address, prof_about, prof_interests, created_at, modified_at, country_id', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('prof_id, user_id, prof_firstname, prof_lastname, prof_tag, prof_address, prof_phone, prof_skype, prof_website, prof_about, prof_languages, prof_interests, prof_rating, prof_picture, prof_cover_photo, created_at, modified_at, created_by, modified_by', 'safe', 'on' => 'search'),
@@ -113,7 +112,6 @@ class UserProfile extends RActiveRecord {
             'created_by' => 'Created By',
             'modified_by' => 'Modified By',
             'country_id' => 'Country',
-            'receive_email_notify' => 'Receive notification to email',
         );
     }
 
