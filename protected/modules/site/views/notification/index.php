@@ -56,7 +56,7 @@ $this->breadcrumbs = array(
                                             </span> 
                                         </div>
                                         <?php
-                                    } else {
+                                    } elseif (!empty($notification->gigBooking) && strtotime($notification->gigBooking->book_date) >= strtotime(date('Y-m-d')))  {
                                         $booking = $notification->gigBooking;
 
                                         $book_details = "<div class='form-group'>

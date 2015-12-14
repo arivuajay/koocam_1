@@ -40,6 +40,7 @@ class Gig extends RActiveRecord {
     public $tutorUserName;
     public $gigCategory;
     public $is_video;
+    public $video_id;
 
     const GIG_MIN_DURATION = 5;
     const GIG_MAX_DURATION = 60;
@@ -140,7 +141,7 @@ class Gig extends RActiveRecord {
             array('gig_title, slug', 'unique'),
             array('gig_media', 'file', 'types' => self::GIG_ALLOW_FILE_TYPES, 'maxSize' => 1024 * 1024 * self::GIG_ALLOW_FILE_SIZE, 'tooLarge' => 'File has to be smaller than ' . self::GIG_ALLOW_FILE_SIZE . 'MB', 'allowEmpty' => true, 'on' => 'update'),
             array('gig_media', 'file', 'types' => self::GIG_ALLOW_FILE_TYPES, 'maxSize' => 1024 * 1024 * self::GIG_ALLOW_FILE_SIZE, 'tooLarge' => 'File has to be smaller than ' . self::GIG_ALLOW_FILE_SIZE . 'MB', 'allowEmpty' => true, 'on' => 'admin_update'),
-            array('extra_file', 'file', 'types' => self::EXTRA_ALLOW_FILE_TYPES, 'maxSize' => 1024 * 1024 * self::EXTRA_ALLOW_FILE_SIZE, 'tooLarge' => 'File has to be smaller than ' . self::GIG_ALLOW_FILE_SIZE . 'MB', 'allowEmpty' => true),
+            array('extra_file', 'file', 'maxSize' => 1024 * 1024 * self::EXTRA_ALLOW_FILE_SIZE, 'tooLarge' => 'File has to be smaller than ' . self::GIG_ALLOW_FILE_SIZE . 'MB', 'allowEmpty' => true),
             array('gig_price', 'priceValidate'),
 //            array('modified_at', 'date', 'format' => Yii::app()->localtime->getLocalDateTimeFormat('short', 'short')),
             array('gig_description, gig_duration, created_at, modified_at, is_extra, extra_price, extra_description, tutorUserName, gigCategory, extra_file, gig_important, gig_rating, is_video, gig_youtube_url', 'safe'),
@@ -254,7 +255,7 @@ class Gig extends RActiveRecord {
             'created_by' => 'Created By',
             'modified_by' => 'Modified By',
             'is_video' => 'Video or Photo',
-            'gig_youtube_url' => 'Video Id',
+            'gig_youtube_url' => 'Video URL',
         );
     }
 
@@ -359,6 +360,9 @@ class Gig extends RActiveRecord {
             $this->is_video = 'Y';
         }
 
+        parse_str(parse_url($this->gig_youtube_url, PHP_URL_QUERY), $my_array_of_vars);
+        $this->video_id = $my_array_of_vars['v'];
+        
         return parent::afterFind();
     }
 
@@ -396,6 +400,12 @@ class Gig extends RActiveRecord {
 
     protected function beforeSave() {
         $this->gig_duration = date('H:i', mktime(0, $this->gig_duration));
+
+        if ($this->is_video == 'N') {
+            $this->gig_youtube_url = '';
+        } else if ($this->is_video == 'Y') {
+            $this->gig_media = '';
+        }
         return parent::beforeSave();
     }
 
@@ -423,7 +433,7 @@ class Gig extends RActiveRecord {
                 $path = 'themes/koocam/images/gig-img.jpg';
             $url = Yii::app()->createAbsoluteUrl($path);
         }else if ($this->is_video == 'Y' && !empty($this->gig_youtube_url)) {
-            $url = "http://img.youtube.com/vi/{$this->gig_youtube_url}/default.jpg";
+            $url = "http://img.youtube.com/vi/{$this->video_id}/default.jpg";
         }
         return CHtml::image($url, '', $htmlOptions);
     }
@@ -436,7 +446,7 @@ class Gig extends RActiveRecord {
                 $path = 'themes/koocam/images/gig-img.jpg';
             $url = Yii::app()->createAbsoluteUrl($path);
         }else if ($this->is_video == 'Y' && !empty($this->gig_youtube_url)) {
-            $url = "http://img.youtube.com/vi/{$this->gig_youtube_url}/sddefault.jpg";
+            $url = "http://img.youtube.com/vi/{$this->video_id}/default.jpg";
             $htmlOptions = array_merge($htmlOptions, array('style' => 'height: 231px;'));
         }
         return CHtml::image($url, '', $htmlOptions);
@@ -504,7 +514,7 @@ class Gig extends RActiveRecord {
     }
 
     public function isEmbeddableYoutubeURL($attribute, $params) {
-        $url = "http://www.youtube.com/watch?v={$this->gig_youtube_url}";
+        $url = $this->gig_youtube_url;
         // Let's check the host first
         $parse = parse_url($url);
         $host = $parse['host'];
@@ -524,7 +534,7 @@ class Gig extends RActiveRecord {
         if (!$data)
             $this->addError($attribute, "Youtube Video Id must be valid id. (Unauthorized Video Id)");
         if (!$data->{'html'})
-            $this->addError($attribute, "Youtube Video Id must be valid id. (Not Embeddable Video Id)");  
+            $this->addError($attribute, "Youtube Video Id must be valid id. (Not Embeddable Video Id)");
     }
 
 }

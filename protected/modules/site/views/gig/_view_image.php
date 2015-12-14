@@ -37,8 +37,8 @@ if ($model->is_video == 'Y') {
             player = new YT.Player('player', {
                 height: '440',
                 width: '553',
-                videoId: '<?php echo $model->gig_youtube_url?>',
-                playerVars: {'autoplay': 1, 'controls': 0, 'rel': 0, 'showinfo': 0},
+                videoId: '<?php echo $model->video_id?>',
+                playerVars: {'modestbranding': 1, 'autoplay': 1, 'controls': 0, 'rel': 0, 'showinfo': 0},
                 events: {
                     'onReady': onPlayerReady,
 //                    'onStateChange': onPlayerStateChange,
