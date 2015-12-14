@@ -50,9 +50,9 @@ class PurchaseController extends Controller {
         $pages->applyLimit($criteria);
         $results = Purchase::model()->mine()->findAll($criteria);
         
-        $gig_comments = new GigComments();
+        $cam_comments = new CamComments();
         
-        $this->render('mypurchase', compact('results', 'gig_comments'));
+        $this->render('mypurchase', compact('results', 'cam_comments'));
     }
 
 

@@ -567,7 +567,7 @@ a:hover {
 .forgot-password a:hover {
 	text-decoration:underline;
 }
-/*create gig*/
+/*create cam*/
 
 
 .header-cont {
@@ -1019,14 +1019,14 @@ a:hover {
 	height: 50px;
 	width: 50px;
 }
-.gig-extras {
+.cam-extras {
 	width:100%;
 	float:left;
 	margin-top:25px;
 	padding:10px;
 	border:#f0f0f0 solid 1px;
 }
-.gig-extras img {
+.cam-extras img {
 	border:#f0f0f0 solid 5px;
 }
 .extras-txt {
@@ -1041,7 +1041,7 @@ a:hover {
 	padding-left:20px;
 	padding-bottom:10px;
 }
-.gig-extras h2 {
+.cam-extras h2 {
 	margin:0px;
 	margin-bottom:10px;
 	border-bottom:#f0f0f0 solid 1px;
@@ -1524,7 +1524,7 @@ label {
 .myprofile-inner {
 	margin-top:0px;
 }
-.gig-delete {
+.cam-delete {
 	width:30px;
 	height:30px;
 	background:#ffffff;
@@ -1548,7 +1548,7 @@ label {
 	-moz-box-shadow:    5px 0px 5px 0px rgba(0, 0, 0, 0.4);
 	box-shadow:         5px 0px 5px 0px rgba(0, 0, 0, 0.4);
 }
-.gig-delete a {
+.cam-delete a {
 	color:#2e2e2e;
 	padding:2px 6px;
 	display:block;
@@ -1587,7 +1587,7 @@ label {
 .message-from a {
 	color:#b41b20
 }
-.message-gig {
+.message-cam {
 	text-align:left;
 }
 .mesage-details-right {
@@ -1924,22 +1924,22 @@ width:100% !important;
 	border:#f0f0f0 solid 1px;
 	margin-bottom:10px;
 }
-.purchase-gig {
+.purchase-cam {
 	font-size:13px;
 }
-.purchase-gig h2 {
+.purchase-cam h2 {
 	font-size:19px;
 	margin:0px 0px 10px 0px;
 	padding:0px;
 }
-.purchase-gig a {
+.purchase-cam a {
 	color:#2e2e2e
 }
-.purchase-gig span {
+.purchase-cam span {
 	font-size:14px;
 	color:#0672b1;
 }
-.purchase-gig span a {
+.purchase-cam span a {
 	font-size:14px;
 	color:#0672b1;
 }
@@ -1957,7 +1957,7 @@ width:100% !important;
 .purchase-price h2 {
 	margin:0px 0px 5px 0px;
 }
-.purchase-gig p {
+.purchase-cam p {
 	margin-bottom:2px;
 }
 .total-expense {

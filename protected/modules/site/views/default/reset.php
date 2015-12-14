@@ -1,6 +1,6 @@
 <?php
-/* @var $this GigController */
-/* @var $model Gig */
+/* @var $this CamController */
+/* @var $model Cam */
 /* @var $form CActiveForm */
 
 $this->title = 'Reset Password';
@@ -18,8 +18,8 @@ $themeUrl = $this->themeUrl;
 <div class="innerpage-cont">
     <div class="container">
         <?php
-        /* @var $this GigController */
-        /* @var $model Gig */
+        /* @var $this CamController */
+        /* @var $model Cam */
         /* @var $form CActiveForm */
         $form = $this->beginWidget('CActiveForm', array(
             'id' => 'reset-password-form',

@@ -146,7 +146,7 @@ class Myclass extends CController {
     public static function guid($opt = true) {
         $new_guid = Myclass::create_guid($opt);
         do {
-            $exist_count = GigBooking::model()->countByAttributes(array('book_guid' => $new_guid));
+            $exist_count = CamBooking::model()->countByAttributes(array('book_guid' => $new_guid));
             $exist_count += BookingTemp::model()->countByAttributes(array('temp_guid' => $new_guid));
             if ($exist_count > 0) {
                 $old_guid = $new_guid;
@@ -237,16 +237,16 @@ class Myclass extends CController {
         
         $tot_users = User::model()->current()->count();
         $new_users_per_day = User::model()->current()->count($criteria);
-        $sql = "SELECT a.gig_id, b.gig_title, COUNT(a.gig_id) AS most_gig
-                FROM {{gig_booking}} a
-                JOIN {{gig}} b
-                ON b.gig_id = a.gig_id
+        $sql = "SELECT a.cam_id, b.cam_title, COUNT(a.cam_id) AS most_cam
+                FROM {{cam_booking}} a
+                JOIN {{cam}} b
+                ON b.cam_id = a.cam_id
                 WHERE a.book_payment_status = 'C'
                 AND a.book_approve = '1'
-                GROUP BY a.gig_id
-                ORDER BY most_gig DESC
+                GROUP BY a.cam_id
+                ORDER BY most_cam DESC
                 LIMIT 0,1";
-        $most_gig = Yii::app()->db->createCommand($sql)->queryAll();
+        $most_cam = Yii::app()->db->createCommand($sql)->queryAll();
         
         $sql = "SELECT b.country_name, COUNT(b.country_Id) AS user_count
                 FROM {{user}} a
@@ -256,15 +256,15 @@ class Myclass extends CController {
                 GROUP BY b.country_Id";
         $user_country = CHtml::listData(Yii::app()->db->createCommand($sql)->queryAll(), 'country_name', 'user_count');
         
-        $new_gigs_per_day = Gig::model()->exceptDelete()->count($criteria);
-        $deleted_gigs_per_day = Gig::model()->deleted()->count($criteria);
-        $gigs_sold_per_day = Purchase::model()->count($criteria);
-        $gig_categories = GigCategory::model()->findAll();
+        $new_cams_per_day = Cam::model()->exceptDelete()->count($criteria);
+        $deleted_cams_per_day = Cam::model()->deleted()->count($criteria);
+        $cams_sold_per_day = Purchase::model()->count($criteria);
+        $cam_categories = CamCategory::model()->findAll();
         
         //All Booking
         $admin_process = Yii::app()->db->createCommand()
                 ->select('SUM(book_processing_fees) as total_process_amt')
-                ->from('{{gig_booking}}')
+                ->from('{{cam_booking}}')
                 ->andWhere(' book_approve = "1" And book_payment_status = "C"')
                 ->queryRow();
         $admin_process = (!empty($admin_process['total_process_amt'])) ? $admin_process['total_process_amt'] : 0;
@@ -272,7 +272,7 @@ class Myclass extends CController {
         //Booking Today
         $admin_process_per_day = Yii::app()->db->createCommand()
                 ->select('SUM(book_processing_fees) as total_process_amt')
-                ->from('{{gig_booking}}')
+                ->from('{{cam_booking}}')
                 ->andWhere(' book_approve = "1" And book_payment_status = "C" And date(book_date) = "'.$date.'"')
                 ->queryRow();
         $admin_process_per_day = (!empty($admin_process_per_day['total_process_amt'])) ? $admin_process_per_day['total_process_amt'] : 0;
@@ -280,7 +280,7 @@ class Myclass extends CController {
         //All Service
         $admin_service = Yii::app()->db->createCommand()
                 ->select('SUM(book_service_tax) as total_service_amt')
-                ->from('{{gig_booking}}')
+                ->from('{{cam_booking}}')
                 ->andWhere(' book_approve = "1" And book_payment_status = "C"')
                 ->queryRow();
         $admin_service = (!empty($admin_service['total_service_amt'])) ? (float) $admin_service['total_service_amt'] : 0;
@@ -288,7 +288,7 @@ class Myclass extends CController {
         //Service Today
         $admin_service_per_day = Yii::app()->db->createCommand()
                 ->select('SUM(book_service_tax) as total_service_amt')
-                ->from('{{gig_booking}}')
+                ->from('{{cam_booking}}')
                 ->andWhere(' book_approve = "1" And book_payment_status = "C" And date(book_date) = "'.$date.'"')
                 ->queryRow();
         $admin_service_per_day = (!empty($admin_service_per_day['total_service_amt'])) ? (float) $admin_service_per_day['total_service_amt'] : 0;
@@ -315,14 +315,14 @@ class Myclass extends CController {
 
         $return['tot_users'] = $tot_users;
         $return['new_users_per_day'] = $new_users_per_day;
-        $return['most_gig'] = !empty($most_gig) ? $most_gig[0]['gig_title'] : '';
-        $return['most_gig_id'] = !empty($most_gig) ? $most_gig[0]['gig_id'] : '';
-        $return['most_gig_count'] = !empty($most_gig) ? $most_gig[0]['most_gig'] : '';
-        $return['new_gigs_per_day'] = $new_gigs_per_day;
-        $return['deleted_gigs_per_day'] = $deleted_gigs_per_day;
-        $return['gig_categories'] = $gig_categories;
+        $return['most_cam'] = !empty($most_cam) ? $most_cam[0]['cam_title'] : '';
+        $return['most_cam_id'] = !empty($most_cam) ? $most_cam[0]['cam_id'] : '';
+        $return['most_cam_count'] = !empty($most_cam) ? $most_cam[0]['most_cam'] : '';
+        $return['new_cams_per_day'] = $new_cams_per_day;
+        $return['deleted_cams_per_day'] = $deleted_cams_per_day;
+        $return['cam_categories'] = $cam_categories;
         $return['user_country'] = $user_country;
-        $return['gigs_sold_per_day'] = $gigs_sold_per_day;
+        $return['cams_sold_per_day'] = $cams_sold_per_day;
         $return['total_earnings'] = $admin_earnings;
         $return['total_service'] = $admin_service;
         $return['total_earning_per_day'] = $admin_earnings_today;

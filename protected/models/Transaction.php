@@ -71,7 +71,7 @@ class Transaction extends RActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'user' => array(self::BELONGS_TO, 'User', 'user_id'),
-            'booking' => array(self::BELONGS_TO, 'GigBooking', 'book_id'),
+            'booking' => array(self::BELONGS_TO, 'CamBooking', 'book_id'),
         );
     }
 
@@ -164,40 +164,40 @@ class Transaction extends RActiveRecord {
 
     //booking Transaction for both Tutor and Learner
     public static function bookingTransaction($book_id) {
-        $gig_booking = GigBooking::model()->findByPk($book_id);
+        $cam_booking = CamBooking::model()->findByPk($book_id);
 
-        if (!empty($gig_booking)) {
+        if (!empty($cam_booking)) {
             //Learner Transaction - Expense
             $learner_transaction = new Transaction;
-            $learner_transaction->user_id = $gig_booking->book_user_id;
+            $learner_transaction->user_id = $cam_booking->book_user_id;
             $learner_transaction->trans_type = self::TYPE_EXPENSE;
             $learner_transaction->book_id = $book_id;
             $learner_transaction->trans_admin_amount = 0;
-            $learner_transaction->trans_user_amount = $gig_booking->book_total_price;
+            $learner_transaction->trans_user_amount = $cam_booking->book_total_price;
             $learner_transaction->save(false);
 
             //Learner Purchase Complete Mail
             $mail = new Sendmail;
             $trans_array = array(
                 "{SITENAME}" => SITENAME,
-                "{USERNAME}" => $gig_booking->bookUser->username,
-                "{GIG}" => $gig_booking->gig->gig_title,
-                "{PURCHASE_DATE}" => date('Y-m-d', strtotime($gig_booking->book_date)),
+                "{USERNAME}" => $cam_booking->bookUser->username,
+                "{CAM}" => $cam_booking->cam->cam_title,
+                "{PURCHASE_DATE}" => date('Y-m-d', strtotime($cam_booking->book_date)),
             );
-            $message = $mail->getMessage('gig_purchase_confirmation', $trans_array);
-            $Subject = $mail->translate("{SITENAME}: Your Gig Purchase Confirmation");
+            $message = $mail->getMessage('cam_purchase_confirmation', $trans_array);
+            $Subject = $mail->translate("{SITENAME}: Your Cam Purchase Confirmation");
             $attachment = '';
-            if ($gig_booking->book_is_extra == 'Y') {
-                $attachment = UPLOAD_DIR . '/users/' . $gig_booking->gig->tutor_id . $gig_booking->gig->gigExtras->extra_file;
+            if ($cam_booking->book_is_extra == 'Y') {
+                $attachment = UPLOAD_DIR . '/users/' . $cam_booking->cam->tutor_id . $cam_booking->cam->camExtras->extra_file;
             }
-            $mail->send($gig_booking->bookUser->email, $Subject, $message, '', '', $attachment);
+            $mail->send($cam_booking->bookUser->email, $Subject, $message, '', '', $attachment);
 
             //Tutor Transaction - Revenue
-            //Tutor Revenue only the user gig price / extra price, Not include the user procession / service fees.
-            $book_total_price_tutor = $gig_booking->beforetaxamount;
+            //Tutor Revenue only the user cam price / extra price, Not include the user procession / service fees.
+            $book_total_price_tutor = $cam_booking->beforetaxamount;
             $calculation_price = self::adminCommissionCalculation($book_total_price_tutor);
             $tutor_transaction = new Transaction;
-            $tutor_transaction->user_id = $gig_booking->gig->tutor_id;
+            $tutor_transaction->user_id = $cam_booking->cam->tutor_id;
             $tutor_transaction->trans_type = self::TYPE_REVENUE;
             $tutor_transaction->book_id = $book_id;
             $tutor_transaction->trans_admin_amount = $calculation_price['admin_amount'];

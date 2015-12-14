@@ -13,7 +13,7 @@
  * @property string $abuser_role
  *
  * The followings are the available model relations:
- * @property GigBooking $book
+ * @property CamBooking $book
  */
 class ReportAbuse extends RActiveRecord {
 
@@ -47,7 +47,7 @@ class ReportAbuse extends RActiveRecord {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'book' => array(self::BELONGS_TO, 'GigBooking', 'book_id'),
+            'book' => array(self::BELONGS_TO, 'CamBooking', 'book_id'),
         );
     }
 
@@ -119,8 +119,8 @@ class ReportAbuse extends RActiveRecord {
             $mail = new Sendmail;
             
             $learner = $this->book->bookUser;
-            $tutor = $this->book->gig->tutor;
-            $gig = $this->book->gig;
+            $tutor = $this->book->cam->tutor;
+            $cam = $this->book->cam;
 
             $abuse_types = CJSON::decode($this->abuse_type);
             $message = '<p style="color: #545454; font-size: 13px; line-height: 20px;">Report: ';
@@ -158,7 +158,7 @@ class ReportAbuse extends RActiveRecord {
                 "{EMAIL_ID}" => $sender_email,
                 "{ABUSER}" => $abuser_name,
                 "{ABUSER_EMAIL}" => $abuser_email,
-                "{GIG}" => $gig->gig_title,
+                "{CAM}" => $cam->cam_title,
                 "{ABUSE_MESSAGE}" => $message,
             );
             $message = $mail->getMessage('report_abuse', $trans_array);
@@ -193,7 +193,7 @@ class ReportAbuse extends RActiveRecord {
             $this->abuse_type = CJSON::encode($this->abuse_type);
         }
 
-        $is_tutor = $this->book->gig->tutor_id == Yii::app()->user->id;
+        $is_tutor = $this->book->cam->tutor_id == Yii::app()->user->id;
         $is_learner = $this->book->book_user_id == Yii::app()->user->id;
 
         if ($is_tutor) {

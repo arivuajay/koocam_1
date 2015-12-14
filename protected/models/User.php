@@ -26,16 +26,16 @@
  * @property integer $receive_email_notify
  * 
  * The followings are the available model relations:
- * @property UserProfile $userProfGig[] $gigs
- * @property GigBooking[] $gigBookings
- * @property GigComments[] $gigComments
+ * @property UserProfile $userProfCam[] $cams
+ * @property CamBooking[] $camBookings
+ * @property CamComments[] $camComments
  * @property Timezone $userTimezone
  * @property Locales $userLocales
  * @property UserProfile $userProf
  * @property Message[] $user1Messages
  * @property Message[] $user2Messages
- * @property Gig[] $gigs
- * @property Purchase $gigPurchase
+ * @property Cam[] $cams
+ * @property Purchase $camPurchase
  * @property UserPaypal[] $userPaypals
  * @property Country $userCountry
  * @property SecurityQuestion $security_question
@@ -53,7 +53,7 @@ class User extends RActiveRecord {
         parent::init();
     }
 
-    const GIG_PER_USER = 20;
+    const CAM_PER_USER = 20;
 
     public function getFullname() {
         if ($this->userProf->prof_firstname == '' && $this->userProf->prof_lastname == '') {
@@ -162,10 +162,10 @@ class User extends RActiveRecord {
             'user2Messages' => array(self::HAS_MANY, 'Message', 'user2'),
             'locales' => array(self::BELONGS_TO, 'Locales', 'user_locale_id'),
             'userTimezone' => array(self::BELONGS_TO, 'Timezone', 'user_timezone_id'),
-            'gigs' => array(self::HAS_MANY, 'Gig', 'tutor_id'),
-            'gigBookings' => array(self::HAS_MANY, 'GigBooking', 'book_user_id'),
-            'gigComments' => array(self::HAS_MANY, 'GigComments', 'user_id'),
-            'gigPurchase' => array(self::HAS_MANY, 'Purchase', 'user_id'),
+            'cams' => array(self::HAS_MANY, 'Cam', 'tutor_id'),
+            'camBookings' => array(self::HAS_MANY, 'CamBooking', 'book_user_id'),
+            'camComments' => array(self::HAS_MANY, 'CamComments', 'user_id'),
+            'camPurchase' => array(self::HAS_MANY, 'Purchase', 'user_id'),
             'userPaypals' => array(self::HAS_MANY, 'UserPaypal', 'user_id'),
             'userCountry' => array(self::BELONGS_TO, 'Country', 'country_id'),
             'security_question' => array(self::BELONGS_TO, 'SecurityQuestion', 'security_question_id'),
@@ -332,12 +332,12 @@ class User extends RActiveRecord {
         return CHtml::image(Yii::app()->createAbsoluteUrl($path), '', $htmlOptions);
     }
 
-    public function getGigcount() {
-        return Gig::model()->mine()->exceptDelete()->count();
+    public function getCamcount() {
+        return Cam::model()->mine()->exceptDelete()->count();
     }
 
     public function getPurchasecount() {
-        return count($this->gigPurchase);
+        return count($this->camPurchase);
     }
 
     public static function switchStatus($user_id, $live_status) {

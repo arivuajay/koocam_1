@@ -14,7 +14,7 @@
  * 
  * The followings are the available model relations:
  * @property User $notifnUser
- * @property GigBooking $gigBooking
+ * @property CamBooking $camBooking
  */
 class Notification extends RActiveRecord {
 
@@ -53,7 +53,7 @@ class Notification extends RActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'notifnUser' => array(self::BELONGS_TO, 'User', 'user_id'),
-            'gigBooking' => array(self::BELONGS_TO, 'GigBooking', 'notifn_rel_id'),
+            'camBooking' => array(self::BELONGS_TO, 'CamBooking', 'notifn_rel_id'),
         );
     }
 

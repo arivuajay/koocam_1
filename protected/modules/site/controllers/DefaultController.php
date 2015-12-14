@@ -52,7 +52,7 @@ class DefaultController extends Controller {
     }
 
     public function actionIndex() {
-        $model = new Gig('search');
+        $model = new Cam('search');
         $this->performAjaxValidation($model);
         $this->render('index', compact('model'));
     }
@@ -259,44 +259,44 @@ class DefaultController extends Controller {
     }
 
     public function actionTest() {
-        $gig_booking = GigBooking::model()->findByPk(74);
+        $cam_booking = CamBooking::model()->findByPk(74);
         //Learner Purchase Complete Mail
         $mail = new Sendmail;
         $trans_array = array(
             "{SITENAME}" => SITENAME,
-            "{USERNAME}" => $gig_booking->bookUser->username,
-            "{GIG}" => $gig_booking->gig->gig_title,
-            "{PURCHASE_DATE}" => date('Y-m-d', strtotime($gig_booking->book_date)),
+            "{USERNAME}" => $cam_booking->bookUser->username,
+            "{CAM}" => $cam_booking->cam->cam_title,
+            "{PURCHASE_DATE}" => date('Y-m-d', strtotime($cam_booking->book_date)),
         );
-        $message = $mail->getMessage('gig_purchase_confirmation', $trans_array);
-        $Subject = $mail->translate("{SITENAME}: Your Gig Purchase Confirmation");
+        $message = $mail->getMessage('cam_purchase_confirmation', $trans_array);
+        $Subject = $mail->translate("{SITENAME}: Your Cam Purchase Confirmation");
         $attachment = '';
-        if ($gig_booking->book_is_extra == 'Y') {
-            $attachment = UPLOAD_DIR . '/users/' . $gig_booking->gig->tutor_id . $gig_booking->gig->gigExtras->extra_file;
+        if ($cam_booking->book_is_extra == 'Y') {
+            $attachment = UPLOAD_DIR . '/users/' . $cam_booking->cam->tutor_id . $cam_booking->cam->camExtras->extra_file;
         }
-        $mail->send($gig_booking->bookUser->email, $Subject, $message, '', '', $attachment);
+        $mail->send($cam_booking->bookUser->email, $Subject, $message, '', '', $attachment);
         exit;
     }
 
     public function actionChat($guid) {
-        $info = GigTokens::getConnectInfo($guid);
+        $info = CamTokens::getConnectInfo($guid);
         if (empty($info)) {
             Yii::app()->user->setFlash('danger', "Invalid Access !!!");
             $this->goHome();
         }
         $abuse_model = new ReportAbuse();
-        $gig_comments = new GigComments();
+        $cam_comments = new CamComments();
         $token = $info['token'];
 
         if ($info['my_role'] == 'tutor' && $token->tutor_attendance == 0) {
-            GigTokens::saveAttendance($token->token_id, 1, $token->learner_attendance);
+            CamTokens::saveAttendance($token->token_id, 1, $token->learner_attendance);
         }
         if ($info['my_role'] == 'learner' && $token->learner_attendance == 0) {
-            GigTokens::saveAttendance($token->token_id, $token->tutor_attendance, 1);
+            CamTokens::saveAttendance($token->token_id, $token->tutor_attendance, 1);
         }
         TempSession::insertSession(Yii::app()->user->id, $token->book->book_end_time);
 
-        $this->render('chat', compact('token', 'abuse_model', 'info', 'gig_comments'));
+        $this->render('chat', compact('token', 'abuse_model', 'info', 'cam_comments'));
     }
 
     public function actionReportabuse() {
@@ -305,14 +305,14 @@ class DefaultController extends Controller {
         if (Yii::app()->request->isPostRequest && Yii::app()->request->getPost('ReportAbuse')) {
             $model->attributes = Yii::app()->request->getPost('ReportAbuse');
             if ($model->save()) {
-                $token = $model->book->gigTokens;
+                $token = $model->book->camTokens;
                 if ($model->abuser_role == 'learner') {
                     $attr = array(
                         'status' => '1',
                         'tutor_end_call' => '1',
                         'tutor_end_time' => date('Y-m-d H:i:s'),
                     );
-                    User::switchStatus($model->book->gig->tutor_id, 'A');
+                    User::switchStatus($model->book->cam->tutor_id, 'A');
                 } else if ($model->abuser_role == 'tutor') {
                     $attr = array(
                         'status' => '1',
@@ -361,7 +361,7 @@ class DefaultController extends Controller {
     }
 
     public function actionTesttoken() {
-        $role = GigTokens::TOKEN_ROLE;
+        $role = CamTokens::TOKEN_ROLE;
         $expire = time() + (7 * 24 * 60 * 60);
         echo $session_key = Yii::app()->tok->createSession()->id;
         echo '<br />';
@@ -370,7 +370,7 @@ class DefaultController extends Controller {
     }
 
     public function actionFiledownload($df, $guid) {
-        $token = GigTokens::getAuthData($guid);
+        $token = CamTokens::getAuthData($guid);
         if (empty($token)) {
             Yii::app()->user->setFlash('danger', "Invalid Access !!!");
             $this->goHome();
@@ -458,10 +458,10 @@ class DefaultController extends Controller {
                     $booking_data = unserialize($tutorstartnowalert->temp_value);
                     $return['tutor_before_paypal_alert'] = 1;
                     $user = User::model()->findByPk($tutorstartnowalert->user_id);
-                    $gig = Gig::model()->findByPk($booking_data['temp_gig_id']);
+                    $cam = Cam::model()->findByPk($booking_data['temp_cam_id']);
                     $return['tutor_before_paypal_user_name'] = $user->username;
                     $return['tutor_before_paypal_user_thumb'] = $user->profilethumb;
-                    $return['tutor_before_paypal_gig_name'] = $gig->gig_title;
+                    $return['tutor_before_paypal_cam_name'] = $cam->cam_title;
 
                     $created_at = $tutorstartnowalert->created_at;
                     $created_at_time = strtotime($created_at);
@@ -492,14 +492,14 @@ class DefaultController extends Controller {
         $current_time = Yii::app()->localtime->getUTCNow('Y-m-d H:i:s');
         $user_id = Yii::app()->user->id;
 
-        $alias = GigBooking::model()->getTableAlias(false, false);
+        $alias = CamBooking::model()->getTableAlias(false, false);
         $condition = "$alias.book_start_time <= :currentTime AND $alias.book_end_time >= :currentTime";
-        $condition .= " AND gig.tutor_id = :my_user_id";
+        $condition .= " AND cam.tutor_id = :my_user_id";
         $condition .= " AND tutor.live_status = 'A'";
-        $condition .= " AND gigTokens.tutor_attendance = '0'";
-        $condition .= " AND gigTokens.status = '0'";
+        $condition .= " AND camTokens.tutor_attendance = '0'";
+        $condition .= " AND camTokens.status = '0'";
 
-        return GigBooking::model()->with('gig', 'gigTokens', 'gig.tutor')->active()->completed()->find(array(
+        return CamBooking::model()->with('cam', 'camTokens', 'cam.tutor')->active()->completed()->find(array(
                     'condition' => $condition,
                     'params' => array(':currentTime' => $current_time, ':my_user_id' => $user_id)
         ));
@@ -509,15 +509,15 @@ class DefaultController extends Controller {
         $current_time = Yii::app()->localtime->getUTCNow('Y-m-d H:i:s');
         $user_id = Yii::app()->user->id;
 
-        $alias = GigBooking::model()->getTableAlias(false, false);
+        $alias = CamBooking::model()->getTableAlias(false, false);
         $condition = "$alias.book_start_time <= :currentTime AND $alias.book_end_time >= :currentTime";
-        $condition .= " AND gig.tutor_id = :my_user_id";
+        $condition .= " AND cam.tutor_id = :my_user_id";
         $condition .= " AND tutor.live_status = 'B'";
-        $condition .= " AND gigTokens.learner_end_call = '1'";
-        $condition .= " AND gigTokens.tutor_end_call = '0'";
-        $condition .= " AND gigTokens.status = '1'";
+        $condition .= " AND camTokens.learner_end_call = '1'";
+        $condition .= " AND camTokens.tutor_end_call = '0'";
+        $condition .= " AND camTokens.status = '1'";
 
-        return GigBooking::model()->with('gig', 'gigTokens', 'gig.tutor')->active()->completed()->find(array(
+        return CamBooking::model()->with('cam', 'camTokens', 'cam.tutor')->active()->completed()->find(array(
                     'condition' => $condition,
                     'params' => array(':currentTime' => $current_time, ':my_user_id' => $user_id)
         ));
@@ -527,15 +527,15 @@ class DefaultController extends Controller {
         $current_time = Yii::app()->localtime->getUTCNow('Y-m-d H:i:s');
         $user_id = Yii::app()->user->id;
 
-        $alias = GigBooking::model()->getTableAlias(false, false);
+        $alias = CamBooking::model()->getTableAlias(false, false);
         $condition = "$alias.book_start_time <= :currentTime AND $alias.book_end_time >= :currentTime";
         $condition .= " AND $alias.book_user_id = :my_user_id";
         $condition .= " AND bookUser.live_status = 'B'";
-        $condition .= " AND gigTokens.tutor_end_call = '1'";
-        $condition .= " AND gigTokens.learner_end_call = '0'";
-        $condition .= " AND gigTokens.status = '1'";
+        $condition .= " AND camTokens.tutor_end_call = '1'";
+        $condition .= " AND camTokens.learner_end_call = '0'";
+        $condition .= " AND camTokens.status = '1'";
 
-        return GigBooking::model()->with('gig', 'gigTokens', 'gig.tutor', 'bookUser')->active()->completed()->find(array(
+        return CamBooking::model()->with('cam', 'camTokens', 'cam.tutor', 'bookUser')->active()->completed()->find(array(
                     'condition' => $condition,
                     'params' => array(':currentTime' => $current_time, ':my_user_id' => $user_id)
         ));
@@ -590,14 +590,14 @@ class DefaultController extends Controller {
 
     public function actionDisconnect() {
         if (isset($_POST['token_id']) && Yii::app()->request->isAjaxRequest) {
-            $model = GigTokens::model()->findByPk($_POST['token_id']);
+            $model = CamTokens::model()->findByPk($_POST['token_id']);
             if ($_POST['role'] == 'tutor') {
                 $attr = array(
                     'status' => '1',
                     'tutor_end_call' => '1',
                     'tutor_end_time' => date('Y-m-d H:i:s'),
                 );
-                User::switchStatus($model->book->gig->tutor_id, 'A');
+                User::switchStatus($model->book->cam->tutor_id, 'A');
             } else if ($_POST['role'] == 'learner') {
                 $attr = array(
                     'status' => '1',

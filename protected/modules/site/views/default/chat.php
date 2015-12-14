@@ -1,14 +1,14 @@
 <?php
-/* @var $this GigController */
-/* @var $model Gig */
-/* @var $token GigTokens */
+/* @var $this CamController */
+/* @var $model Cam */
+/* @var $token CamTokens */
 /* @var $form CActiveForm */
 $this->title = 'Chat';
 $themeUrl = $this->themeUrl;
-$show_video = $token->book->gig->gig_avail_visual == 'Y' ? 'true' : 'false';
+$show_video = $token->book->cam->cam_avail_visual == 'Y' ? 'true' : 'false';
 $this->renderPartial('_report_abuse', compact('token', 'abuse_model', 'info'));
 if($info['my_role'] == 'learner')
-    $this->renderPartial('/gig/_comments_form', array('model' => $token->book->gig, 'gig_comments' => $gig_comments, 'gig_booking_id' => $token->book_id));
+    $this->renderPartial('/cam/_comments_form', array('model' => $token->book->cam, 'cam_comments' => $cam_comments, 'cam_booking_id' => $token->book_id));
 ?>
 <div id="inner-banner" class="tt-fullHeight3 chat-banner">
     <div class="container homepage-txt">

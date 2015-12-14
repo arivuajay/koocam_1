@@ -105,7 +105,7 @@ if ($balance > 0)
                                         <td><?php echo $my_payment->created_at ?></td>
                                         <td>
                                             <p>
-                                                <?php echo CHtml::link($my_payment->booking->gig->gig_title, array('/site/gig/view', 'slug' => $my_payment->booking->gig->slug)); ?>
+                                                <?php echo CHtml::link($my_payment->booking->cam->cam_title, array('/site/cam/view', 'slug' => $my_payment->booking->cam->slug)); ?>
                                             </p>
                                             <p class="paid">
                                                 User Paid : <?php echo $my_payment->booking->book_total_price ?> $ 

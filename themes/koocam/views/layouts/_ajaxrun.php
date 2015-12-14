@@ -39,7 +39,7 @@ $js = <<< EOD
                     if(data.tutor_before_paypal_alert == 1){
                         $('#tutor_before_paypal_user_name').html(data.tutor_before_paypal_user_name);
                         $('#tutor_before_paypal_user_thumb').html(data.tutor_before_paypal_user_thumb);
-                        $('#tutor_before_paypal_gig_name').html(data.tutor_before_paypal_gig_name);
+                        $('#tutor_before_paypal_cam_name').html(data.tutor_before_paypal_cam_name);
                         $('#tutor_before_paypal_approve').html(data.tutor_before_paypal_approve);
                         $('#tutor_before_paypal_reject').html(data.tutor_before_paypal_reject);
                         $('#li_notifn_alert').html(data.tutor_alert);
@@ -163,7 +163,7 @@ Yii::app()->clientScript->registerScript('_ajaxrun', $js);
                     <div class="clearfix"></div>
                     <p id="tutor_before_paypal_user_thumb"> </p>
                     <p> <h2 id="tutor_before_paypal_user_name"></h2> </p>
-                    <p> <h4><b>  Gig Name :  </b> <span id="tutor_before_paypal_gig_name"></span> </h4> </p>
+                    <p> <h4><b>  Cam Name :  </b> <span id="tutor_before_paypal_cam_name"></span> </h4> </p>
                     <div class="form-group">
                         <div class="row"> 
                             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" id="tutor_before_paypal_approve"></div> 

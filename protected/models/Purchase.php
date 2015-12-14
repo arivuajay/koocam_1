@@ -12,7 +12,7 @@
  *
  * The followings are the available model relations:
  * @property User $user
- * @property GigBooking $book
+ * @property CamBooking $book
  */
 class Purchase extends RActiveRecord {
 
@@ -58,7 +58,7 @@ class Purchase extends RActiveRecord {
         // class name for the relations automatically generated below.
         return array(
             'user' => array(self::BELONGS_TO, 'User', 'user_id'),
-            'book' => array(self::BELONGS_TO, 'GigBooking', 'book_id'),
+            'book' => array(self::BELONGS_TO, 'CamBooking', 'book_id'),
         );
     }
 
@@ -125,12 +125,12 @@ class Purchase extends RActiveRecord {
     }
 
     public static function insertPurchase($book_id) {
-        $gig_booking = GigBooking::model()->findByPk($book_id);
-        if (!empty($gig_booking)) {
-            $purchase = Purchase::model()->findByAttributes(array('book_id' => $book_id, 'user_id' => $gig_booking->book_user_id));
+        $cam_booking = CamBooking::model()->findByPk($book_id);
+        if (!empty($cam_booking)) {
+            $purchase = Purchase::model()->findByAttributes(array('book_id' => $book_id, 'user_id' => $cam_booking->book_user_id));
             if (empty($purchase)) {
                 $model = new Purchase;
-                $model->attributes = array('book_id' => $book_id, 'user_id' => $gig_booking->book_user_id);
+                $model->attributes = array('book_id' => $book_id, 'user_id' => $cam_booking->book_user_id);
                 $model->save(false);
             }
         }

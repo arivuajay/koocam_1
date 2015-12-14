@@ -13,7 +13,7 @@
  * @property integer $timestamp
  * @property string $user1read
  * @property string $user2read
- * @property integer $gig_id
+ * @property integer $cam_id
  * @property string $created_at
  * @property string $modified_at
  * @property string $userSlug
@@ -46,12 +46,12 @@ class Message extends RActiveRecord {
         // will receive user inputs.
         return array(
             array('message', 'required'),
-            array('id1, id2, user1, user2, timestamp, gig_id', 'numerical', 'integerOnly' => true),
+            array('id1, id2, user1, user2, timestamp, cam_id', 'numerical', 'integerOnly' => true),
             array('user1read, user2read', 'length', 'max' => 1),
             array('modified_at, maxColumn, userSlug', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('message_id, id1, id2, user1, user2, message, timestamp, user1read, user2read, gig_id, created_at, modified_at', 'safe', 'on' => 'search'),
+            array('message_id, id1, id2, user1, user2, message, timestamp, user1read, user2read, cam_id, created_at, modified_at', 'safe', 'on' => 'search'),
         );
     }
 
@@ -81,7 +81,7 @@ class Message extends RActiveRecord {
             'timestamp' => 'Timestamp',
             'user1read' => 'User1read',
             'user2read' => 'User2read',
-            'gig_id' => 'Gig',
+            'cam_id' => 'Cam',
             'created_at' => 'Created At',
             'modified_at' => 'Modified At',
         );
@@ -113,7 +113,7 @@ class Message extends RActiveRecord {
         $criteria->compare('timestamp', $this->timestamp);
         $criteria->compare('user1read', $this->user1read, true);
         $criteria->compare('user2read', $this->user2read, true);
-        $criteria->compare('gig_id', $this->gig_id);
+        $criteria->compare('cam_id', $this->cam_id);
         $criteria->compare('created_at', $this->created_at, true);
         $criteria->compare('modified_at', $this->modified_at, true);
 
@@ -175,7 +175,7 @@ class Message extends RActiveRecord {
         return $total_items;
     }
 
-    public static function insertMessage($msg, $user1, $user2, $gig_id = NULL) {
+    public static function insertMessage($msg, $user1, $user2, $cam_id = NULL) {
         $message = new Message;
         // Genreate the conversation id
         $criteria = new CDbCriteria;
@@ -192,7 +192,7 @@ class Message extends RActiveRecord {
         $message->timestamp = time();
         $message->user1read = self::USER_READ_YES;
         $message->user2read = self::USER_READ_NO;
-        $message->gig_id = $gig_id;
+        $message->cam_id = $cam_id;
         $message->message = $msg;
         $message->save(false);
     }

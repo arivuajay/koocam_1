@@ -1,5 +1,5 @@
 <?php
-/* @var $this GigController */
+/* @var $this CamController */
 /* @var $model ContactForm */
 /* @var $form CActiveForm */
 
@@ -9,7 +9,7 @@ $themeUrl = $this->themeUrl;
 $categories = array(
     "Technical Support" => "Technical Support",
     "Payment related Enquiry" => "Payment related Enquiry",
-    "Gig related Enquiry" => "Gig related Enquiry"
+    "Cam related Enquiry" => "Cam related Enquiry"
 );
 ?>
 <div id="inner-banner" class="tt-fullHeight3">
@@ -30,7 +30,7 @@ $categories = array(
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-heading"> Send Message </div>
                     <?php
                     $form = $this->beginWidget('CActiveForm', array(
-                        'id' => 'gig-contactus-form',
+                        'id' => 'cam-contactus-form',
                         'htmlOptions' => array('role' => 'form', 'class' => ''),
                         'clientOptions' => array(
                             'validateOnSubmit' => true,

@@ -56,7 +56,7 @@ endif
                     <div class="profiles-list">
                         <?php
                         $msg_count = Message::getMyUnReadMsgCount();
-                        $msg_badge = $purchase_badge = $gig_badge = $balance_badge = $myjobs = '';
+                        $msg_badge = $purchase_badge = $cam_badge = $balance_badge = $myjobs = '';
                         $balance = Transaction::myCurrentBalance();
                         $notifn_count = Notification::getNotificationCountByUserId(Yii::app()->user->id);
 
@@ -69,8 +69,8 @@ endif
                         if ($user->purchasecount > 0)
                             $purchase_badge = '<span class="badge">' . $user->purchasecount . '</span>';
 
-                        if ($user->gigcount > 0)
-                            $gig_badge = '<span class="badge">' . $user->gigcount . '</span>';
+                        if ($user->camcount > 0)
+                            $cam_badge = '<span class="badge">' . $user->camcount . '</span>';
 
                         if ($balance > 0)
                             $balance_badge = '<span class="badge"> $ ' . (int) $balance . '</span>';
@@ -83,12 +83,12 @@ endif
                             'activeCssClass' => 'myprofile-active',
                             'items' => array(
                                 array('label' => '<i class="fa fa-user"></i> My Profile', 'url' => '#'),
-                                array('label' => '<i class="fa fa-graduation-cap"></i> My Gigs ' . $gig_badge, 'url' => array('/site/gig/mygigs')),
+                                array('label' => '<i class="fa fa-graduation-cap"></i> My Cams ' . $cam_badge, 'url' => array('/site/cam/mycams')),
                                 array('label' => '<i class="fa fa-cart-plus"></i> My Purchase ' . $purchase_badge, 'url' => array('/site/purchase/mypurchase')),
                                 array('label' => '<i class="fa fa-money"></i> My Payments ' . $balance_badge, 'url' => array('/site/transaction/mypayments')),
                                 array('label' => '<i class="fa fa-envelope"></i> Messages ' . $msg_badge, 'url' => array('/site/message/index')),
                                 array('label' => '<i class="fa fa-bell"></i> Notifications '.$notifn_badge, 'url' => array('/site/notification/index')),
-                                array('label' => '<i class="fa fa-calendar-check-o"></i> Jobs '.$myjobs, 'url' => array('/site/gigbooking/myjobs')),
+                                array('label' => '<i class="fa fa-calendar-check-o"></i> Jobs '.$myjobs, 'url' => array('/site/cambooking/myjobs')),
                                 array('label' => '<i class="fa fa-gear"></i> Account Setting ', 'url' => '#'),
                                 array('label' => '<i class="fa fa-power-off"></i> Logout', 'url' => array('/site/default/logout')),
                             ),

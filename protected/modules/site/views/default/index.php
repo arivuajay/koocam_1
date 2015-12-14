@@ -1,6 +1,6 @@
 <?php
 /* @var $this DefaultController */
-/* @var $category GigCategory */
+/* @var $category CamCategory */
 /* @var $form CActiveForm */
 
 $this->title = 'Koocam - Home';
@@ -17,7 +17,7 @@ $themeUrl = $this->themeUrl;
                         learning new skills</h2>
                     <div class="search-bg">
                         <div class="row">
-                            <?php $this->renderPartial('/gig/_search', compact('model')); ?>
+                            <?php $this->renderPartial('/cam/_search', compact('model')); ?>
                         </div>
                         <!-- /.row --> 
                     </div>
@@ -36,7 +36,7 @@ $themeUrl = $this->themeUrl;
                     <span> Lorem ipsum dolor sit amet, consectetur adipiscing elit. </span></h2>
             </div>
             <?php
-            $categories = GigCategory::popularCategory();
+            $categories = CamCategory::popularCategory();
             $col = array(
                 0 => array(
                     'xs' => 12,
@@ -80,14 +80,14 @@ $themeUrl = $this->themeUrl;
                 <div class="col-xs-<?php echo $col[$key]['xs'] ?> col-sm-<?php echo $col[$key]['sm'] ?> col-md-<?php echo $col[$key]['md'] ?> col-lg-<?php echo $col[$key]['lg'] ?> cate-cont">
                     <div class="cate-img">
                         <div class="cate-bg"> 
-                            <?php echo CHtml::link($category->cat_name, array('/site/gig/search', 'category_id' => $category->cat_id)); ?>
+                            <?php echo CHtml::link($category->cat_name, array('/site/cam/search', 'category_id' => $category->cat_id)); ?>
                         </div>
                         <?php echo $category->getCategoryimage(array('width' => "640", 'height' => "540")); ?>
                     </div>
                 </div>
             <?php endforeach; ?>
             <div class="explore-btn"> 
-                <?php echo CHtml::link('Browse All Categories', array('/site/gig/search', 'category_id' => 0), array('class' => 'btn btn-default  btn-lg explorebtn')); ?>
+                <?php echo CHtml::link('Browse All Categories', array('/site/cam/search', 'category_id' => 0), array('class' => 'btn btn-default  btn-lg explorebtn')); ?>
             </div>
         </div>
     </div>
@@ -102,8 +102,8 @@ $themeUrl = $this->themeUrl;
                     <span> Lorem ipsum dolor sit amet, consectetur adipiscing elit. </span></h2>
             </div>
             <?php
-            $gigs = Gig::topInstructors();
-            $this->renderPartial('/gig/_gig_carousal', compact('gigs', 'themeUrl'));
+            $cams = Cam::topInstructors();
+            $this->renderPartial('/cam/_cam_carousal', compact('cams', 'themeUrl'));
             ?>
         </div>
     </div>

@@ -12,8 +12,8 @@ return array(
     'faq' => array('site/default/faq', 'urlSuffix' => '.html'),
     'howitworks' => array('site/default/howitworks', 'urlSuffix' => '.html'),
     'chat/<guid:[-\w]+>' => 'site/default/chat',
-    'gig/<slug:[-\w]+>' => array('site/gig/view', 'urlSuffix' => '.html'),
-    'category/<slug:[-\w]+>' => array('site/gigcategory/view', 'urlSuffix' => '.html'),
+    'cam/<slug:[-\w]+>' => array('site/cam/view', 'urlSuffix' => '.html'),
+    'category/<slug:[-\w]+>' => array('site/camcategory/view', 'urlSuffix' => '.html'),
     'page/<slug:[-\w]+>' => array('site/cms/view', 'urlSuffix' => '.html'),
     'profile/<slug:[-\w]+>' => array('site/user/profile', 'urlSuffix' => '.html'),
 );

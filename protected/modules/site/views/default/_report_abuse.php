@@ -1,14 +1,14 @@
 <?php
 /* @var $this DefaultController */
-/* @var $model Gig */
+/* @var $model Cam */
 /* @var $abuse_model ReportAbuse */
 /* @var $form CActiveForm */
-/* @var $token GigTokens */
+/* @var $token CamTokens */
 
 if ($info['my_role'] == 'tutor') {
     $abuser = $token->book->bookUser->fullname;
 } else if ($info['my_role'] == 'learner') {
-    $abuser = $token->book->gig->tutor->fullname;
+    $abuser = $token->book->cam->tutor->fullname;
 }
 
 $themeUrl = $this->themeUrl;

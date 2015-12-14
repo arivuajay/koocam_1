@@ -50,24 +50,24 @@ class BookingtempController extends Controller {
                 $extra_price = 0;
 
                 $post_data = Yii::app()->request->getPost('BookingTemp');
-                $gig = Gig::model()->findByPk($post_data['temp_gig_id']);
+                $cam = Cam::model()->findByPk($post_data['temp_cam_id']);
 
                 $data = array();
                 $data = $post_data;
                 $data['temp_book_user_id'] = Yii::app()->user->id;
-                $data['temp_book_gig_price'] = $gig->gig_price;
-                $data['temp_book_duration'] = $gig->gig_duration;
+                $data['temp_book_cam_price'] = $cam->cam_price;
+                $data['temp_book_duration'] = $cam->cam_duration;
 
                 if ($post_data['temp_book_session'] == 2) {
-                    $data['temp_book_gig_price'] = 2 * $gig->gig_price;
+                    $data['temp_book_cam_price'] = 2 * $cam->cam_price;
                 }
 
                 if ($post_data['temp_book_is_extra'] == "Y") {
-                    $extra_price = $gig->gigExtras->extra_price;
+                    $extra_price = $cam->camExtras->extra_price;
                     $data['temp_book_extra_price'] = $extra_price;
                 }
 
-                $price_calculation = GigBooking::price_calculation(Yii::app()->user->country_id, $data['temp_book_gig_price'], $extra_price);
+                $price_calculation = CamBooking::price_calculation(Yii::app()->user->country_id, $data['temp_book_cam_price'], $extra_price);
 
                 $data['temp_book_processing_fees'] = $price_calculation['processing_fees'];
                 $data['temp_book_service_tax'] = $price_calculation['service_tax'];
@@ -75,7 +75,7 @@ class BookingtempController extends Controller {
 
                 $booking_temp->temp_value = serialize($data);
                 $booking_temp->user_id = Yii::app()->user->id;
-                $booking_temp->tutor_id = $gig->tutor_id;
+                $booking_temp->tutor_id = $cam->tutor_id;
                 $booking_temp->save(false);
 
                 $created_at = Yii::app()->localtime->fromUTC($booking_temp->created_at);
@@ -100,21 +100,21 @@ class BookingtempController extends Controller {
 
     public function actionProcesspaypal($temp_guid, $book_id = '') {
         if($book_id){
-            GigBooking::model()->findByPk($book_id)->delete();
+            CamBooking::model()->findByPk($book_id)->delete();
         }
         
         $booking_temp = BookingTemp::model()->findByAttributes(array('temp_guid' => $temp_guid, "status" => "1"));
 
         if (!empty($booking_temp)) {
             $booking_data = unserialize($booking_temp->temp_value);
-            $gig = Gig::model()->findByPk($booking_data['temp_gig_id']);
+            $cam = Cam::model()->findByPk($booking_data['temp_cam_id']);
 
             $paypalManager = new Paypal;
-            $returnUrl = Yii::app()->createAbsoluteUrl('/site/bookingtemp/paypalreturn', array('slug' => $gig->slug));
-            $cancelUrl = Yii::app()->createAbsoluteUrl('/site/bookingtemp/paypalcancel', array('slug' => $gig->slug));
+            $returnUrl = Yii::app()->createAbsoluteUrl('/site/bookingtemp/paypalreturn', array('slug' => $cam->slug));
+            $cancelUrl = Yii::app()->createAbsoluteUrl('/site/bookingtemp/paypalcancel', array('slug' => $cam->slug));
             $notifyUrl = Yii::app()->createAbsoluteUrl('/site/bookingtemp/paypalnotify');
 
-            $paypalManager->addField('item_name', $gig->gig_title . '-' . BookingTemp::TEMP_BOOKING_KEY);
+            $paypalManager->addField('item_name', $cam->cam_title . '-' . BookingTemp::TEMP_BOOKING_KEY);
             $paypalManager->addField('amount', $booking_data['temp_book_total_price']);
             $paypalManager->addField('custom', $booking_temp->temp_guid);
             $paypalManager->addField('return', $returnUrl);
@@ -127,7 +127,7 @@ class BookingtempController extends Controller {
 
     public function actionPaypalcancel($slug) {
         Yii::app()->user->setFlash('danger', 'Your booking has been cancelled. Please try again.');
-        $this->redirect(array('/site/gig/view', 'slug' => $slug));
+        $this->redirect(array('/site/cam/view', 'slug' => $slug));
     }
 
     public function actionPaypalreturn($slug) {
@@ -148,7 +148,7 @@ class BookingtempController extends Controller {
         } else {
             Yii::app()->user->setFlash('danger', 'Your booking payment is failed. Please try again later or contact admin.');
         }
-        $this->redirect(array('/site/gig/view', 'slug' => $slug));
+        $this->redirect(array('/site/cam/view', 'slug' => $slug));
     }
 
     public function actionPaypalnotify() {
@@ -164,7 +164,7 @@ class BookingtempController extends Controller {
         $booking_temp = BookingTemp::model()->findByAttributes(array('temp_guid' => $temp_guid));
         if (!empty($booking_temp)) {
             $booking_data = unserialize($booking_temp->temp_value);
-            $booking_model = new GigBooking();
+            $booking_model = new CamBooking();
 
             foreach ($booking_data as $key => $value) {
                 $attr_name = str_replace('temp_', '', $key);
@@ -181,7 +181,7 @@ class BookingtempController extends Controller {
                 $booking_data['book_guid'] = $booking_model->book_guid;
                 $booking_temp->temp_value = serialize($booking_data);
                 $booking_temp->save(false);
-                GigTokens::generateToken($booking_model->book_guid);
+                CamTokens::generateToken($booking_model->book_guid);
                 Transaction::bookingTransaction($booking_model->book_id);
                 Purchase::insertPurchase($booking_model->book_id);
             }

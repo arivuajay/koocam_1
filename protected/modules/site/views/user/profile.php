@@ -85,8 +85,8 @@ $is_not_my_profile = !Yii::app()->user->isGuest && Yii::app()->user->id != $mode
     <div class="container">
         <div class="row">
             <?php
-            $gigs = Gig::topInstructors($model->user_id);
-            $this->renderPartial('/gig/_gig_carousal', compact('gigs', 'themeUrl'));
+            $cams = Cam::topInstructors($model->user_id);
+            $this->renderPartial('/cam/_cam_carousal', compact('cams', 'themeUrl'));
             ?>
         </div>
     </div>

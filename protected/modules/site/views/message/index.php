@@ -38,12 +38,12 @@ $this->breadcrumbs = array(
                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 message-txt"> 
                                             <?php echo $mdisplay; ?>
                                         </div>
-                                        <?php if ($messages['gig_id']) { ?>
-                                        <?php $gig = Gig::model()->findByPk($messages['gig_id']);?>
-                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 message-from message-gig"> 
-                                                <b> Gig: </b> 
+                                        <?php if ($messages['cam_id']) { ?>
+                                        <?php $cam = Cam::model()->findByPk($messages['cam_id']);?>
+                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 message-from message-cam"> 
+                                                <b> Cam: </b> 
                                                 <?php 
-                                                echo CHtml::link($gig->gig_title, array('/site/gig/view', 'slug' => $gig->slug))
+                                                echo CHtml::link($cam->cam_title, array('/site/cam/view', 'slug' => $cam->slug))
                                                 ?>
                                             </div>
                                         <?php } ?>

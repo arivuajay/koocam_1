@@ -76,15 +76,15 @@ class NotificationController extends Controller {
     public function actionApprove($id) {
         $model = $this->loadModel($id);
         
-        if($model->user_id != Yii::app()->user->id || empty($model->gigBooking)){
+        if($model->user_id != Yii::app()->user->id || empty($model->camBooking)){
             Yii::app()->user->setFlash('danger', "Invalid Access !!!");
             $this->goHome();
         }
         
-        $booking = $model->gigBooking;
+        $booking = $model->camBooking;
         $start_time = Yii::app()->localtime->toUTC($booking->book_start_time);
         $end_time = Yii::app()->localtime->toUTC($booking->book_end_time);
-        $booking_exists = GigBooking::checkBooking($start_time, $end_time);
+        $booking_exists = CamBooking::checkBooking($start_time, $end_time);
         
         if(empty($booking_exists)){
             $booking->saveAttributes(array('book_approve' => '1', 'book_approved_time' => Yii::app()->localtime->UTCNow));
@@ -98,12 +98,12 @@ class NotificationController extends Controller {
     public function actionDecline($id) {
         $model = $this->loadModel($id);
         
-        if($model->user_id != Yii::app()->user->id || empty($model->gigBooking)){
+        if($model->user_id != Yii::app()->user->id || empty($model->camBooking)){
             Yii::app()->user->setFlash('danger', "Invalid Access !!!");
             $this->goHome();
         }
         
-        $booking = $model->gigBooking;
+        $booking = $model->camBooking;
         $booking->saveAttributes(array('book_approve' => '2', 'book_declined_time' => Yii::app()->localtime->UTCNow));
         Yii::app()->user->setFlash('success', "Booking Rejected successfully");
         $this->redirect(array('/site/notification'));

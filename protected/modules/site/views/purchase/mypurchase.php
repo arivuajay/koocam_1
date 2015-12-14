@@ -4,8 +4,8 @@
 /* @var $results Purchase[] */
 /* @var $purchase Purchase */
 /* @var $form CActiveForm */
-/* @var $book GigBooking */
-/* @var $gig Gig */
+/* @var $book CamBooking */
+/* @var $cam Cam */
 
 $this->title = 'My Purchase';
 $themeUrl = $this->themeUrl;
@@ -18,37 +18,37 @@ $themeUrl = $this->themeUrl;
                 <div class="purchase-cont"> 
                     <?php
                     $book = $purchase->book;
-                    $gig = $book->gig;
+                    $cam = $book->cam;
                     ?>
                     <div class="row"> 
                         <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2 purchase-img">
                             <?php
-                            $image = $gig->gigthumb;
-                            echo CHtml::link($image, array('/site/gig/view', 'slug' => $gig->slug));
+                            $image = $cam->camthumb;
+                            echo CHtml::link($image, array('/site/cam/view', 'slug' => $cam->slug));
                             ?>                
                         </div>
-                        <div class="col-xs-12 col-sm-5 col-md-4 col-lg-4 purchase-gig">
-                            <h2> <?php echo CHtml::link($gig->gig_title, array('/site/gig/view', 'slug' => $gig->slug)); ?></h2>
-                            <p> <span> <?php echo CHtml::link($gig->tutor->fullname, array('/site/user/profile', 'slug' => $gig->tutor->slug)); ?> </span> </p>
-                            <?php if (!empty($purchase->book->gigComment)) { ?>
+                        <div class="col-xs-12 col-sm-5 col-md-4 col-lg-4 purchase-cam">
+                            <h2> <?php echo CHtml::link($cam->cam_title, array('/site/cam/view', 'slug' => $cam->slug)); ?></h2>
+                            <p> <span> <?php echo CHtml::link($cam->tutor->fullname, array('/site/user/profile', 'slug' => $cam->tutor->slug)); ?> </span> </p>
+                            <?php if (!empty($purchase->book->camComment)) { ?>
                                 <p>
                                     <?php
-                                    echo CHtml::link('View Comment', 'javascript:void(0)', array('data-comment-id' => $purchase->book->gigComment->com_id, 'class' => 'btn btn-primary view-comment btn-xs'));
+                                    echo CHtml::link('View Comment', 'javascript:void(0)', array('data-comment-id' => $purchase->book->camComment->com_id, 'class' => 'btn btn-primary view-comment btn-xs'));
                                     ?>
                                 </p>
                                 <?php
-                                $comment = $purchase->book->gigComment;
+                                $comment = $purchase->book->camComment;
                                 $this->renderPartial("_view_comment", array("com_id" => $comment->com_id, "rating" => $comment->com_rating, "comment" => $comment->com_comment));
                                 ?> 
                             <?php } else { ?>
                                 <p>
                                     <?php
-                                    echo CHtml::link('Write Comment', 'javascript:void(0)', array('data-gig-id' => $gig->gig_id, 'data-gig-booking-id' => $purchase->book_id, 'class' => 'btn btn-primary write-comment btn-xs'));
+                                    echo CHtml::link('Write Comment', 'javascript:void(0)', array('data-cam-id' => $cam->cam_id, 'data-cam-booking-id' => $purchase->book_id, 'class' => 'btn btn-primary write-comment btn-xs'));
                                     ?>
                                 </p>
                             <?php } ?>
                         </div>
-                        <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4 purchase-gig">
+                        <div class="col-xs-6 col-sm-4 col-md-4 col-lg-4 purchase-cam">
                             <p> <b> Date : </b>  <?php echo date(PHP_SHORT_DATE_FORMAT, strtotime($book->book_date)); ?>  </p>
                             <p> <b>Time : </b>  <?php echo date('H:i', strtotime($book->book_start_time)) . ' - ' . date('H:i', strtotime($book->book_end_time)); ?> </p>
                             <p> <b>Sessions :</b>  <?php echo $book->book_session; ?> </p> 
@@ -107,7 +107,7 @@ $themeUrl = $this->themeUrl;
 </div>
 
 <?php
-$this->renderPartial('/gig/_comments_form', array('model' => new Gig, 'gig_comments' => $gig_comments));
+$this->renderPartial('/cam/_comments_form', array('model' => new Cam, 'cam_comments' => $cam_comments));
 
 $cs = Yii::app()->getClientScript();
 $cs_pos_end = CClientScript::POS_END;
@@ -121,10 +121,10 @@ $js = <<< EOD
         });
         
         $('.write-comment').on('click', function(){
-            gig_id = $(this).data('gig-id');
-            gig_book_id = $(this).data('gig-booking-id');
-            $('#GigComments_gig_id').val(gig_id);
-            $('#GigComments_gig_booking_id').val(gig_book_id);
+            cam_id = $(this).data('cam-id');
+            cam_book_id = $(this).data('cam-booking-id');
+            $('#CamComments_cam_id').val(cam_id);
+            $('#CamComments_cam_booking_id').val(cam_book_id);
             $('#comments').modal('show');
         });
     });

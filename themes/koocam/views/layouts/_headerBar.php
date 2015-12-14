@@ -32,7 +32,7 @@ $themeUrl = $this->themeUrl;
 //                                'encodeLabel' => false,
 //                                'activateItems' => true,
 //                                'items' => array(
-//                                    array('label' => 'Sell your time', 'url' => array('/site/gig/create')),
+//                                    array('label' => 'Sell your time', 'url' => array('/site/cam/create')),
 //                                    array('label' => 'How it works', 'url' => array('/site/cms/view', 'slug' => 'how-it-works')),
 //                                    array('label' => 'LOG OUT', 'url' => array('/site/default/logout'), 'visible' => !Yii::app()->user->isGuest),
 //                                    array('label' => 'LOGIN', 'url' => '#', 'linkOptions' => array('data-toggle' => "modal", 'data-target' => ".bs-example-modal-sm1"), 'visible' => Yii::app()->user->isGuest),
@@ -42,7 +42,7 @@ $themeUrl = $this->themeUrl;
 //                            ));
                             ?>
                             <ul class="nav navbar-nav">
-                                <li><?php echo CHtml::link(' Sell your time ', array('/site/gig/create')); ?></li>
+                                <li><?php echo CHtml::link(' Sell your time ', array('/site/cam/create')); ?></li>
                                 <li><?php echo CHtml::link(' How its works ', array('/site/default/howitworks')); ?></li>
                                 <?php
                                 if (!Yii::app()->user->isGuest) {
@@ -67,7 +67,7 @@ $themeUrl = $this->themeUrl;
                                         <ul class="dropdown-menu dropdown-menu2 pull-right bullet" >
                                             <?php $slug = User::model()->findByPk(Yii::app()->user->id)->slug; ?>
                                             <li><?php echo CHtml::link(' My Profile ', array('/site/user/profile', 'slug' => $slug)); ?></li>
-                                            <li><?php echo CHtml::link(' My Gigs ', array('/site/gig/mygigs')); ?></li>
+                                            <li><?php echo CHtml::link(' My Cams ', array('/site/cam/mycams')); ?></li>
                                             <li><?php echo CHtml::link(' My Purchase ', array('/site/purchase/mypurchase')); ?></li>
                                             <li><?php echo CHtml::link(' My Payments ', array('/site/transaction/mypayments')); ?></li>
                                             <li class="divider" role="separator"></li>

@@ -1,5 +1,5 @@
 <?php
-/* @var $this GigController */
+/* @var $this CamController */
 /* @var $model ContactForm */
 /* @var $form CActiveForm */
 

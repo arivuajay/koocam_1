@@ -52,7 +52,7 @@ $result = Myclass::dashBoardResults(); ?>
                     <li class="list-group-item media v-middle">
                         <div class="media-body">
                             <h4 class="text-subhead margin-none">
-                                Numbers of new gigs today
+                                Numbers of new cams today
                             </h4>
                             <!--                            <div class="caption">
                                                             <span class="text-light">Course:</span>
@@ -60,29 +60,29 @@ $result = Myclass::dashBoardResults(); ?>
                                                         </div>-->
                         </div>
                         <div class="media-right text-center">
-                            <div class="text-display-1 text-deep-orange-300"><?php echo $result['new_gigs_per_day']; ?></div>
+                            <div class="text-display-1 text-deep-orange-300"><?php echo $result['new_cams_per_day']; ?></div>
                             <!--<span class="caption text-light">Good</span>-->
                         </div>
                     </li>
                     <li class="list-group-item media v-middle">
                         <div class="media-body">
                             <h4 class="text-subhead margin-none">
-                                Most gig sold
+                                Most cam sold
                             </h4>
                             <div class="caption">
-                                <span class="text-light">Gig Title:</span>
-                                <?php echo CHtml::link($result['most_gig'], array('/admin/gig/view', 'id' => $result['most_gig_id'])); ?>
+                                <span class="text-light">Cam Title:</span>
+                                <?php echo CHtml::link($result['most_cam'], array('/admin/cam/view', 'id' => $result['most_cam_id'])); ?>
                             </div>
                         </div>
                         <div class="media-right text-center">
-                            <div class="text-display-1 text-red-300"><?php echo $result['most_gig_count']; ?></div>
+                            <div class="text-display-1 text-red-300"><?php echo $result['most_cam_count']; ?></div>
                             <!--<span class="caption text-light">Failed</span>-->
                         </div>
                     </li>
                     <li class="list-group-item media v-middle">
                         <div class="media-body">
                             <h4 class="text-subhead margin-none">
-                                Numbers of deleted gigs today
+                                Numbers of deleted cams today
                             </h4>
                             <!--                            <div class="caption">
                                                             <span class="text-light">Course:</span>
@@ -90,7 +90,7 @@ $result = Myclass::dashBoardResults(); ?>
                                                         </div>-->
                         </div>
                         <div class="media-right text-center">
-                            <div class="text-display-1 text-indigo-300"><?php echo $result['deleted_gigs_per_day']; ?></div>
+                            <div class="text-display-1 text-indigo-300"><?php echo $result['deleted_cams_per_day']; ?></div>
                             <!--<span class="caption text-light">Great</span>-->
                         </div>
                     </li>
@@ -111,11 +111,11 @@ $result = Myclass::dashBoardResults(); ?>
                     <li class="list-group-item media v-middle">
                         <div class="media-body">
                             <h4 class="text-subhead margin-none">
-                                Number Gigs sold today
+                                Number Cams sold today
                             </h4>
                         </div>
                         <div class="media-right text-center">
-                            <div class="text-display-1 text-amber-900"><?php echo $result['gigs_sold_per_day']; ?></div>
+                            <div class="text-display-1 text-amber-900"><?php echo $result['cams_sold_per_day']; ?></div>
                             <!--<span class="caption text-light">Failed</span>-->
                         </div>
                     </li>
@@ -171,8 +171,8 @@ $result = Myclass::dashBoardResults(); ?>
                 <div class="panel-heading">
                     <div class="media v-middle">
                         <div class="media-body">
-                            <h4 class="text-headline margin-none">Gigs in Categories</h4>
-                            <p class="text-subhead text-light">Number of gigs in each category</p>
+                            <h4 class="text-headline margin-none">Cams in Categories</h4>
+                            <p class="text-subhead text-light">Number of cams in each category</p>
                         </div>
                         <!--                        <div class="media-right">
                                                     <a class="btn btn-white btn-flat" href="website-instructor-statement.html">Statement</a>
@@ -182,11 +182,11 @@ $result = Myclass::dashBoardResults(); ?>
                 <div class="table-responsive">
                     <table class="table text-subhead v-middle">
                         <tbody>
-                            <?php foreach ($result['gig_categories'] as $gig_category): ?>
+                            <?php foreach ($result['cam_categories'] as $cam_category): ?>
                                 <tr>
-                                    <td><?php echo $gig_category->cat_name; ?></td>
+                                    <td><?php echo $cam_category->cat_name; ?></td>
                                     <td class="width-80 text-center">&nbsp;</td>
-                                    <td class="width-50 text-center"><?php echo count($gig_category->gigs); ?></td>
+                                    <td class="width-50 text-center"><?php echo count($cam_category->cams); ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>

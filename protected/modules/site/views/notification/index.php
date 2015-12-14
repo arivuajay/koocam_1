@@ -1,7 +1,7 @@
 <?php
 /* @var $this NotificationController */
 /* @var $notification Notification */
-/* @var $booking GigBooking */
+/* @var $booking CamBooking */
 /* @var $form CActiveForm */
 
 $this->title = 'Notifications';
@@ -39,7 +39,7 @@ $this->breadcrumbs = array(
                                                 <span> <?php echo date("d M, Y", strtotime($message_date)); ?></span> , <i class="fa fa-clock-o"></i> <?php echo date("H:i", strtotime($message_date)); ?> 
                                                 &nbsp; </div>
                                         </div>
-                                        <?php if (!empty($notification->gigBooking)) { ?>
+                                        <?php if (!empty($notification->camBooking)) { ?>
                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                             <?php
                                             echo CHtml::link('View Booking', 'javascript:void(0)', array('data-notifn' => $notification->notifn_id, 'class' => 'btn btn-primary view-notifn btn-xs'));
@@ -49,15 +49,15 @@ $this->breadcrumbs = array(
                                     </div>
                                 </div>
                                 <div class="col-xs-2 col-sm-2 col-md-2 col-lg-4 mesage-details-right">
-                                    <?php if (empty($notification->gigBooking)) { ?>
+                                    <?php if (empty($notification->camBooking)) { ?>
                                         <div class="mesage-details-row1"> 
                                             <span  data-toggle="tooltip" data-placement="bottom" title="Delete"> 
                                                 <?php echo CHtml::link('<i class="fa fa-trash-o"></i>', array('/site/notification/delete', 'id' => $notification->notifn_id), array('onclick' => 'return confirm("Are you sure to Delete ?")')); ?>
                                             </span> 
                                         </div>
                                         <?php
-                                    } elseif (!empty($notification->gigBooking) && strtotime($notification->gigBooking->book_date) >= strtotime(date('Y-m-d')))  {
-                                        $booking = $notification->gigBooking;
+                                    } elseif (!empty($notification->camBooking) && strtotime($notification->camBooking->book_date) >= strtotime(date('Y-m-d')))  {
+                                        $booking = $notification->camBooking;
 
                                         $book_details = "<div class='form-group'>
                                             <div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>
@@ -87,7 +87,7 @@ $this->breadcrumbs = array(
 //                                        $content .= '&nbsp;&nbsp;|';
                                         $reject_button = CHtml::link('Reject', array('/site/notification/decline', 'id' => $notification->notifn_id), array('onclick' => 'return confirm("Are you sure to Reject ?")', 'class' => 'btn btn-danger'));
                                         $content .= '&nbsp;&nbsp;';
-                                        switch ($notification->gigBooking->book_approve) {
+                                        switch ($notification->camBooking->book_approve) {
                                             case 0:
                                                 $content .= '<span class="text-warning">Pending</span>&nbsp;&nbsp;|&nbsp;&nbsp;';
                                                 $content .= CHtml::link('Approve', array('/site/notification/approve', 'id' => $notification->notifn_id), array('onclick' => 'return confirm("Are you sure to approve ?")'));

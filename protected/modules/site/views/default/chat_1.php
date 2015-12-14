@@ -1,11 +1,11 @@
 <?php
-/* @var $this GigController */
-/* @var $model Gig */
+/* @var $this CamController */
+/* @var $model Cam */
 /* @var $form CActiveForm */
 
 $this->title = 'Chat';
 $this->breadcrumbs = array(
-    'Gig' => array('/site/gig'),
+    'Cam' => array('/site/cam'),
     'Create',
 );
 $themeUrl = $this->themeUrl;

@@ -1,6 +1,6 @@
 <?php
 /* @var $this DefaultController */
-/* @var $category GigCategory */
+/* @var $category CamCategory */
 /* @var $form CActiveForm */
 
 $this->title = 'Koocam - Home';
@@ -18,7 +18,7 @@ $themeUrl = $this->themeUrl;
                         learning new skills</h2>
                     <div class="search-bg">
                         <div class="row">
-                            <?php $this->renderPartial('/gig/_search', compact('model')); ?>
+                            <?php $this->renderPartial('/cam/_search', compact('model')); ?>
                         </div>
                         <!-- /.row --> 
                     </div>
@@ -37,7 +37,7 @@ $themeUrl = $this->themeUrl;
                     <span> Lorem ipsum dolor sit amet, consectetur adipiscing elit. </span></h2>
             </div>
             <?php
-            $categories = GigCategory::popularCategory();
+            $categories = CamCategory::popularCategory();
             $col = array(
                 0 => array(
                     'xs' => 12,
@@ -99,8 +99,8 @@ $themeUrl = $this->themeUrl;
                     <span> Lorem ipsum dolor sit amet, consectetur adipiscing elit. </span></h2>
             </div>
             <?php
-            $gigs = Gig::topInstructors();
-            $this->renderPartial('/gig/_gig_carousal', compact('gigs', 'themeUrl'));
+            $cams = Cam::topInstructors();
+            $this->renderPartial('/cam/_cam_carousal', compact('cams', 'themeUrl'));
             ?>
         </div>
     </div>

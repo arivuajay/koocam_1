@@ -27,7 +27,7 @@ $this->title = 'How it Works';
             <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3"> 
                 <div class="stepimg">  <?php echo CHtml::image("{$themeUrl}/images/step2.png", ''); ?> </div>
                 <div class="step-txt">
-                    <h2>  Create a Gig</h2>
+                    <h2>  Create a Cam</h2>
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque nec vestibulum neque. In ac est sed enim tincidunt 
                     feugiat. Vivamus ornare vel eros quis commodo.
                 </div>
