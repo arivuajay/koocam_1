@@ -163,9 +163,9 @@ class GigCategory extends RActiveRecord {
 
     public static function popularCategory($limit = 6) {
         return GigCategory::model()->active()->findAll(array(
-                    'select' => '*, rand() as rand',
+//                    'select' => '*, rand() as rand',
                     'limit' => $limit,
-                    'order' => 'rand'
+//                    'order' => 'rand'
         ));
     }
 
