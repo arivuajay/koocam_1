@@ -8,7 +8,7 @@ $defaultImage = $model->camimage;
     <div class="price-bg"> <?php echo $model->cam_duration; ?> min<br/>
         <b class="cam_price_txt"> $ <?php echo $cam_price = (int) $model->cam_price; ?> </b>
     </div>
-    <?php echo $model->tutorstatusicon; ?>
+    <?php echo $model->tutor->userstatusicon; ?>
     <?php
     if ($model->is_video == 'N') {
         echo $defaultImage;

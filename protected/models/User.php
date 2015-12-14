@@ -42,7 +42,7 @@
  */
 class User extends RActiveRecord {
 
-    const USER_MAX_IDLE_MIN = 1;
+    const USER_MAX_IDLE_MIN = 3;
 
     public function init() {
         if ($this->isNewRecord) {
@@ -366,4 +366,21 @@ class User extends RActiveRecord {
         return CHtml::link('<i class="fa fa-power-off"></i>', 'javascript:void(0)', array('class' => "{$btn_class}", 'data-toggle' => "tooltip", 'data-placement' => "bottom", 'title' => "{$btn_title}", 'id' => 'switch_status', 'data-mode' => $btn_mode));
     }
 
+    public function getUserstatusicon() {
+        switch ($this->live_status) {
+            case 'A':
+                $class = 'online';
+                $title = 'Online';
+                break;
+            case 'B':
+                $class = 'online ideal';
+                $title = 'Busy';
+                break;
+            case 'O':
+                $class = 'online offline';
+                $title = 'Offline';
+                break;
+        }
+        return "<div title='{$title}' data-placement='bottom' data-toggle='tooltip' class='{$class}' data-original-title='{$title}'> </div>";
+    }
 }

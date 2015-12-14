@@ -112,14 +112,14 @@ class TempSession extends CActiveRecord {
     }
 
     public static function insertSession($user_id, $timestamp = null) {
-//        $model = TempSession::model()->findByAttributes(array('user_id' => $user_id));
-//        if(empty($model))
-//            $model = new TempSession;
-//        
-//        $model->user_id = $user_id;
-//        $timestamp = (is_null($timestamp)) ? date('Y-m-d H:i:s') : $timestamp;
-//        $model->last_activity_time = $timestamp;
-//        $model->save(false);
-//        Yii::app()->user->setState("last_activity", $timestamp);
+        $model = TempSession::model()->findByAttributes(array('user_id' => $user_id));
+        if(empty($model))
+            $model = new TempSession;
+        
+        $model->user_id = $user_id;
+        $timestamp = (is_null($timestamp)) ? date('Y-m-d H:i:s') : $timestamp;
+        $model->last_activity_time = $timestamp;
+        $model->save(false);
+        Yii::app()->user->setState("last_activity", $timestamp);
     }
 }

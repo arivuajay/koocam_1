@@ -12,7 +12,7 @@ $themeUrl = $this->themeUrl;
                         <div class="courses-thumb-cont">
                             <div class="course-thumbimg">
                                 <?php
-                                echo $cam->tutorstatusicon;
+                                echo $cam->tutor->userstatusicon;
                                 if (!empty($cam->tutor->languages)) {
                                     echo "<div class='languages' data-toggle='tooltip' data-placement='top' title='{$cam->tutor->languages}'> Languages </div>";
                                 }

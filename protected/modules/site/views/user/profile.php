@@ -46,7 +46,7 @@ $is_not_my_profile = !Yii::app()->user->isGuest && Yii::app()->user->id != $mode
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
                 <div class="course-img">
-                    <div class="online" data-toggle="tooltip" data-placement="bottom" title="online"> </div>
+                    <?php echo $model->userstatusicon; ?>
                     <?php echo $model->profileimage; ?>
                 </div>
                 <div class="row">
