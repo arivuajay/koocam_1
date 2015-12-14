@@ -29,8 +29,10 @@
         <?php
         $loginModel = new LoginForm;
         $userModel = new User;
+        $forgotModel = new LoginForm("forgotpass");
         $this->renderPartial('//layouts/_login', array('model' => $loginModel));
         $this->renderPartial('//layouts/_signup', array('model' => $userModel));
+        $this->renderPartial('//layouts/_forgot_password', array('model' => $forgotModel));
         ?>
 
         <?php
@@ -57,11 +59,21 @@
                     e.preventDefault();
                     return false;
                 });
+                
                 $('#login-button').on('click', function(){
                     $('.bs-example-modal-sm').modal('toggle');
                 });
+                
                 $('#signup-button').on('click', function(){
                     $('.bs-example-modal-sm1').modal('toggle');
+                });
+                
+                $('#forgot-button').on('click', function(){
+                    $('.bs-example-modal-sm1').modal('toggle');
+                });
+                
+                $('#forgot-login-button').on('click', function(){
+                    $('.bs-example-modal-sm2').modal('toggle');
                 });
                 
                 $('input:checkbox:not(.simple),input:radio').iCheck({

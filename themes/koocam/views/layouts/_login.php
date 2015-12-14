@@ -34,8 +34,7 @@
                     <?php echo ' Remember Me'; ?>
                 </div>
                 <div class="form-group forgot-password"> 
-                    <a href="#" data-toggle="modal" data-target=".bs-example-modal-sm2" data-dismiss=".bs-example-modal-sm1" id="login-button"> Forgot Password ? </a> 
-                    <a href="#"></a>
+                    <a href="#" data-toggle="modal" data-target=".bs-example-modal-sm2" data-dismiss=".bs-example-modal-sm1" id="forgot-button"> Forgot Password ? </a> 
                 </div>
                 <div class="form-group"> 
                     <?php echo CHtml::submitButton('Login', array('class' => 'btn btn-default btn-lg explorebtn form-btn', 'name' => 'sign_in')) ?>

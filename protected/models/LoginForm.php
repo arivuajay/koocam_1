@@ -24,6 +24,7 @@ class LoginForm extends CFormModel {
             array('username, password', 'required'),
             array('email', 'required', 'on' => 'forgotpass'),
             array('email', 'email'),
+            array('email', 'emailAuthenticate'),
             //array('admin_username', 'email'),
             // rememberMe needs to be a boolean
             array('rememberMe', 'boolean'),
@@ -40,6 +41,7 @@ class LoginForm extends CFormModel {
             'username' => Yii::t('admin', 'Username'),
             'password' => Yii::t('admin', 'Password'),
             'rememberMe' => Yii::t('admin', 'Remember me'),
+            'email' => "Email",
         );
     }
 
@@ -56,6 +58,17 @@ class LoginForm extends CFormModel {
                     $this->addError('password', Myclass::t('Incorrect User Name or Password. Please try again.'));
             endif;
         endif;
+    }
+
+    /**
+     * Authenticates the password.
+     * This is the 'authenticate' validator as declared in rules().
+     */
+    public function emailAuthenticate($attribute, $params) {
+        $user = User::model()->findByAttributes(array('email' => $this->email));
+        if (empty($user)) {
+            $this->addError('email', 'This Email Address Not Exists!!!');
+        }
     }
 
     /**
