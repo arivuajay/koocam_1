@@ -42,6 +42,8 @@
  */
 class User extends RActiveRecord {
 
+    const USER_MAX_IDLE_MIN = 1;
+
     public function init() {
         if ($this->isNewRecord) {
             $this->user_timezone_id = DEFAULT_TIMEZONE;

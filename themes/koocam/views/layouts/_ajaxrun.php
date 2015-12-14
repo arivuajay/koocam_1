@@ -70,6 +70,14 @@ $js = <<< EOD
                             $('#hidden_disconnect').trigger('click');
                         }
                     }
+        
+                    if(data.idle_warning == 1){
+                        if ($("#idle-warning").data('bs.modal') && $("#idle-warning").data('bs.modal').isShown){
+                            return;
+                        }else{
+                            $('#idle-warning').modal('show');
+                        }
+                    }
                 },
                 error: function(data) {
                 },
@@ -84,6 +92,35 @@ Yii::app()->clientScript->registerScript('_ajaxrun', $js);
 ?>
 
 <div id="li_notifn_alert" class="hide"></div>
+
+<div class="modal fade approve" id="idle-warning" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">  Your Session Going to Expire !!!  </h4>
+            </div>
+            <div class="modal-body">
+                <div class="approve-img">  
+                    <p class="row"> 
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 pull-right approve-time ">   
+                        <p> <a href="#" class="btn btn-default"> <b id="logout_clock"></b></a> </p> 
+                    </div>
+                    <div class="clearfix"></div>
+                    <p> <h2 id="tutor_before_paypal_user_name">Kindly Refresh the below link.. Otherwise you will be logged out.</h2> </p>
+                    <div class="form-group">
+                        <div class="row"> 
+                            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-12">                
+                                <?php echo CHtml::link('Refresh', '', array('class' => 'btn btn-danger')); ?>
+                            </div> 
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="modal fade approve" id="learner-wait" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
     <div class="modal-dialog modal-sm">
