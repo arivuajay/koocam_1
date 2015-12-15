@@ -330,4 +330,20 @@ class Myclass extends CController {
         
         return $return;
     }
+    
+    public static function getSystemAlert($tone = 1) {
+        switch ($tone) {
+            case 1:
+                $audio = $themeUrl . '/sounds/Bell_Notification.wav';
+                break;
+            case 2:
+                $audio = $themeUrl . '/sounds/Incoming_Message.wav';
+                break;
+        }
+        return '<audio controls="controls" autoplay>
+        <source src="' . $audio . '" type="audio/wav">
+            <embed src="' . $audio . '">
+            Your browser is not supporting audio
+        </audio>';
+    }
 }

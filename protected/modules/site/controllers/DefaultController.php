@@ -32,7 +32,7 @@ class DefaultController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('logout', 'test', 'chat', 'reportabuse', 'upload', 'testtoken', 'filedownload', 'disconnect'),
+                'actions' => array('logout', 'test', 'chat', 'reportabuse', 'upload', 'testtoken', 'filedownload', 'disconnect', 'stayloggedin'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -103,6 +103,8 @@ class DefaultController extends Controller {
     public function actionLogout() {
         User::switchStatus(Yii::app()->user->id, 'O');
         Yii::app()->user->logout(false);
+        if(Yii::app()->request->isAjaxRequest)
+            Yii::app ()->end ();
         Yii::app()->user->setFlash('success', "You were logged out successfully");
         $this->goHome();
     }
@@ -385,6 +387,7 @@ class DefaultController extends Controller {
 
     public function actionAjaxrun() {
         if (Yii::app()->request->isAjaxRequest) {
+            $return['logged_in'] = 0;
             $return['learner_waiting'] = 0;
             $return['update_notification_count'] = 0;
             $return['update_message_count'] = 0;
@@ -392,11 +395,11 @@ class DefaultController extends Controller {
             $return['end_learner_chat'] = 0;
             $return['end_tutor_chat'] = 0;
             $return['idle_warning'] = 0;
+            $return['system_alert'] = 0;
 
             $themeUrl = $this->themeUrl;
             if (!Yii::app()->user->isGuest) {
-                $audio_1 = $themeUrl . '/sounds/Bell_Notification.wav';
-                $audio_2 = $themeUrl . '/sounds/Incoming_Message.wav';
+                $return['logged_in'] = 1;
                 
                 //Learner Waiting
                 $bookings = $this->learnerWaiting();
@@ -405,24 +408,21 @@ class DefaultController extends Controller {
                     $return['learner_name'] = $bookings->bookUser->fullname;
                     $return['learner_thumb'] = $bookings->bookUser->profilethumb;
                     $return['learner_link'] = CHtml::link('Start Chat', array('/site/default/chat', 'guid' => $bookings->book_guid), array('class' => "btn btn-default explorebtn"));
-                    
-                    $return['learner_alert'] = '<audio controls="controls" autoplay>
-                    <source src="' . $audio_1 . '" type="audio/wav">
-                        <embed src="' . $audio_1 . '">
-                        Your browser is not supporting audio
-                    </audio>';
+                    $return['system_alert'] = Myclass::getSystemAlert(1);
                 }
 
                 //End Leaner Chat Screen
                 $tutorEnded = $this->tutorEnded();
                 if (!empty($tutorEnded)) {
                     $return['end_learner_chat'] = 1;
+                    $return['system_alert'] = Myclass::getSystemAlert(1);
                 }
 
                 //End Tutor Chat Screen
                 $learnerEnded = $this->learnerEnded();
                 if (!empty($learnerEnded)) {
                     $return['end_tutor_chat'] = 1;
+                    $return['system_alert'] = Myclass::getSystemAlert(1);
                 }
 
                 //Notification Count
@@ -430,12 +430,7 @@ class DefaultController extends Controller {
                 if ($notifn_count > 0 && $notifn_count != $_POST['old_notifn_count']) {
                     $return['update_notification_count'] = 1;
                     $return['notification_update'] = $this->renderPartial('//layouts/_notification_box', compact('themeUrl'), true, false);
-                    
-                    $return['notification_alert'] = '<audio controls="controls" autoplay>
-                    <source src="' . $audio_1 . '" type="audio/wav">
-                        <embed src="' . $audio_1 . '">
-                        Your browser is not supporting audio
-                    </audio>';
+                    $return['system_alert'] = Myclass::getSystemAlert(1);
                 }
 
                 //Message Count
@@ -443,11 +438,7 @@ class DefaultController extends Controller {
                 if ($msg_count > 0 && $msg_count != $_POST['old_msg_count']) {
                     $return['update_message_count'] = 1;
                     $return['message_update'] = $this->renderPartial('//layouts/_message_box', compact('themeUrl'), true, false);
-                    $return['message_alert'] = '<audio controls="controls" autoplay>
-                    <source src="' . $audio_2 . '" type="audio/wav">
-                        <embed src="' . $audio_2 . '">
-                        Your browser is not supporting audio
-                    </audio>';
+                    $return['system_alert'] = Myclass::getSystemAlert(2);
                 }
 
                 //Tutor before paypal confirmation
@@ -469,16 +460,17 @@ class DefaultController extends Controller {
 
                     $return['tutor_before_paypal_approve'] = CHtml::link('<i class="fa fa-check-square-o"></i> Approve', array('/site/bookingtemp/approve', 'temp_guid' => $tutorstartnowalert->temp_guid), array('class' => "btn btn-default  explorebtn form-btn"));
                     $return['tutor_before_paypal_reject'] = CHtml::link('<i class="fa fa-remove"></i> Reject', array('/site/bookingtemp/reject', 'temp_guid' => $tutorstartnowalert->temp_guid), array('class' => "btn btn-default  explorebtn form-btn deactiveate-btn"));
-                    $return['tutor_alert'] = '<audio controls="controls" autoplay>
-                    <source src="' . $audio_2 . '" type="audio/wav">
-                        <embed src="' . $audio_2 . '">
-                        Your browser is not supporting audio
-                    </audio>';
+                    $return['system_alert'] = Myclass::getSystemAlert(1);
                 }
                 
                 //Idle Warning
-                if($this->idleWarning()){
+                if($this->idleWarning() && $_POST['idle_open'] == 0){
                     $return['idle_warning'] = 1;
+                    $created_at_time = strtotime(Yii::app()->localtime->getLocalNow("Y/m/d H:i:s"));
+                    $end_time = $created_at_time + (15); // 15 seconds greater from created
+                    $end_time_format = date("Y/m/d H:i:s", $end_time);
+                    $return['idle_warning_countdown'] = $end_time_format;
+                    $return['system_alert'] = Myclass::getSystemAlert(2);
                 }
             }
             echo CJSON::encode($return);
@@ -652,5 +644,12 @@ class DefaultController extends Controller {
             $temp_session->delete();
         }
         Yii::app()->end();
+    }
+    
+    public function actionStayloggedin() {
+        if (Yii::app()->request->isPostRequest && Yii::app()->request->getPost('user_id')) {
+            TempSession::insertSession(Yii::app()->request->getPost('user_id'));
+            Yii::app()->end();
+        }
     }
 }

@@ -1,24 +1,27 @@
 <?php
 $ajaxRun = Yii::app()->createAbsoluteUrl('/site/default/ajaxrun');
 $clock_html = '<span> %M </span> : <span>  %S </span>';
+$logout_url = Yii::app()->createAbsoluteUrl('/site/default/logout');
+$stay_url = Yii::app()->createAbsoluteUrl('/site/default/stayloggedin');
+$user_id = (!Yii::app()->user->isGuest) ? Yii::app()->user->id : '0';
 
 $js = <<< EOD
     jQuery(document).ready(function ($) {
         window.setInterval(function(){
             msg_count = $('#li_message_top').find('#top_msg_count').data('count');
             notifn_count = $('#li_notifn_top').find('#top_notifn_count').data('count');
+            idle_open = $("#idle-warning").is(":visible") ? 1 : 0;
         
             $.ajax({
                 type: 'POST',
                 dataType: 'json',
-                data: {'old_msg_count': msg_count, 'old_notifn_count' : notifn_count},
+                data: {'old_msg_count': msg_count, 'old_notifn_count' : notifn_count, 'idle_open' : idle_open},
                 url: '$ajaxRun',
                 success:function(data){
                     if(data.learner_waiting == 1){
                         $('#learner-wait-thumb').html(data.learner_thumb);
                         $('#learner-wait-name').html(data.learner_name);
                         $('#learner-wait-link').html(data.learner_link);
-                        $('#li_notifn_alert').html(data.learner_alert);
                         if ($("#learner-wait").data('bs.modal') && $("#learner-wait").data('bs.modal').isShown){
                             return;
                         }else{
@@ -28,12 +31,14 @@ $js = <<< EOD
         
                     if(data.update_notification_count == 1){
                         $('#li_notifn_top').html(data.notification_update);
-                        $('#li_notifn_alert').html(data.notification_alert);
                     }
         
                     if(data.update_message_count == 1){
                         $('#li_message_top').html(data.message_update);
-                        $('#li_notifn_alert').html(data.message_alert);
+                    }
+        
+                    if(data.system_alert != 0){
+                        $('#li_notifn_alert').html(data.system_alert);
                     }
         
                     if(data.tutor_before_paypal_alert == 1){
@@ -42,7 +47,6 @@ $js = <<< EOD
                         $('#tutor_before_paypal_cam_name').html(data.tutor_before_paypal_cam_name);
                         $('#tutor_before_paypal_approve').html(data.tutor_before_paypal_approve);
                         $('#tutor_before_paypal_reject').html(data.tutor_before_paypal_reject);
-                        $('#li_notifn_alert').html(data.tutor_alert);
         
                         var clock_html = '$clock_html';
                         var end_time = data.tutor_before_paypal_countdown;
@@ -72,6 +76,26 @@ $js = <<< EOD
                     }
         
                     if(data.idle_warning == 1){
+                        $('#idle-warning').modal({backdrop: 'static', keyboard: false})
+                        var t_clock_html = '$clock_html';
+                        var t_end_time = data.idle_warning_countdown;
+                        $('#logout_clock').countdown(t_end_time, function (event) {
+                            $(this).html(event.strftime(t_clock_html));
+                        }).on('finish.countdown', function(event){
+                            $('#idle-warning-message').html('Session Time Expired.. You are logged out.');
+                            $.ajax({
+                                type: 'POST',
+                                url: '$logout_url',
+                                data:data,
+                                success:function(data){
+                                    $('#stay_loggedin').addClass('hide');
+                                    $('#login_again').removeClass('hide');
+                                },
+                                error: function(data) {
+                                },
+                            });
+                        });
+        
                         if ($("#idle-warning").data('bs.modal') && $("#idle-warning").data('bs.modal').isShown){
                             return;
                         }else{
@@ -83,6 +107,24 @@ $js = <<< EOD
                 },
             });
         }, 5000);
+        
+        $('#login_again').on('click', function(){
+            $('#idle-warning').modal('toggle');
+        });
+        
+        $('#stay_loggedin').on('click', function(){
+            $('#logout_clock').countdown('stop');
+            $.ajax({
+                type: 'POST',
+                url: '$stay_url',
+                data:{'user_id' : $user_id},
+                success:function(data){
+                    $('#idle-warning').modal('toggle');
+                },
+                error: function(data) {
+                },
+            });
+        });
     });
 
 
@@ -94,10 +136,10 @@ Yii::app()->clientScript->registerScript('_ajaxrun', $js);
 <div id="li_notifn_alert" class="hide"></div>
 
 <div class="modal fade approve" id="idle-warning" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
-    <div class="modal-dialog modal-sm">
+    <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close" data-backdrop="static" data-keyboard="false"><span aria-hidden="true">&times;</span></button>-->
                 <h4 class="modal-title" id="myModalLabel">  Your Session Going to Expire !!!  </h4>
             </div>
             <div class="modal-body">
@@ -107,11 +149,12 @@ Yii::app()->clientScript->registerScript('_ajaxrun', $js);
                         <p> <a href="#" class="btn btn-default"> <b id="logout_clock"></b></a> </p> 
                     </div>
                     <div class="clearfix"></div>
-                    <p> <h2 id="tutor_before_paypal_user_name">Kindly Refresh the below link.. Otherwise you will be logged out.</h2> </p>
+                    <p> <h4 id="idle-warning-message">Kindly Click the below link and Stay Logged in.. Otherwise you will be logged out within 15 seconds.</h4> </p>
                     <div class="form-group">
                         <div class="row"> 
                             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-12">                
-                                <?php echo CHtml::link('Refresh', '', array('class' => 'btn btn-danger')); ?>
+                                <?php echo CHtml::link('Stay Logged in', '', array('class' => 'btn btn-danger', 'id' => 'stay_loggedin')); ?>
+                                <?php echo CHtml::link('Login', '#', array('data-toggle' => "modal", 'data-target' => ".bs-example-modal-sm1", 'data-dismiss' => "#idle-warning", 'id' => 'login_again', 'class' => 'hide btn btn-danger')); ?>
                             </div> 
                             
                         </div>

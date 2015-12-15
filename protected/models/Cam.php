@@ -367,7 +367,7 @@ class Cam extends RActiveRecord {
     }
 
     public static function userCamsCount($user_id, $status = 'active') {
-        return Cam::model()->$status()->count();
+        return Cam::model()->$status()->count('tutor_id = :user_id', array(':user_id' => $user_id));
     }
 
     protected function afterSave() {
@@ -493,24 +493,6 @@ class Cam extends RActiveRecord {
     public function setButtonOptions() {
         $this->_is_tutor = !Yii::app()->user->isGuest && Yii::app()->user->id == $this->tutor_id;
         $this->_logged_user = !$this->_is_tutor && !Yii::app()->user->isGuest;
-    }
-
-    public function getTutorstatusicon() {
-        switch ($this->tutor->live_status) {
-            case 'A':
-                $class = 'online';
-                $title = 'Online';
-                break;
-            case 'B':
-                $class = 'online ideal';
-                $title = 'Busy';
-                break;
-            case 'O':
-                $class = 'online offline';
-                $title = 'Offline';
-                break;
-        }
-        return "<div title='{$title}' data-placement='bottom' data-toggle='tooltip' class='{$class}' data-original-title='{$title}'> </div>";
     }
 
     public function isEmbeddableYoutubeURL($attribute, $params) {

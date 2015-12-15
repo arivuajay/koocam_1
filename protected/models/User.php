@@ -42,7 +42,7 @@
  */
 class User extends RActiveRecord {
 
-    const USER_MAX_IDLE_MIN = 3;
+    const USER_MAX_IDLE_MIN = 1;
 
     public function init() {
         if ($this->isNewRecord) {

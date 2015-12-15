@@ -47,7 +47,7 @@ class CamController extends Controller {
      * 
      */
     public function actionCreate() {
-        $totCams = Cam::userCamsCount(Yii::app()->user->id);
+        $totCams = Cam::userCamsCount(Yii::app()->user->id, 'exceptDelete');
         if ($totCams >= User::CAM_PER_USER) {
             Yii::app()->user->setFlash('danger', "You reached your maximum Cam limit. Maximum Cams : " . User::CAM_PER_USER);
             $this->goHome();
