@@ -76,7 +76,7 @@ $js = <<< EOD
                     }
         
                     if(data.idle_warning == 1){
-                        $('#idle-warning').modal({backdrop: 'static', keyboard: false})
+                        $('#idle-warning').modal({backdrop: 'static', keyboard: false});
                         var t_clock_html = '$clock_html';
                         var t_end_time = data.idle_warning_countdown;
                         $('#logout_clock').countdown(t_end_time, function (event) {
