@@ -92,7 +92,7 @@ $logged_user = !$is_tutor && !Yii::app()->user->isGuest;
                 <h4> Interests </h4>
                 <p><?php echo $tutor->userProf->prof_interests; ?></p>
             </div>
-            <?php if ($model->is_extra == 'Y') { ?>
+            <?php if ($model->is_extra == 'Y' && !empty($model->camExtras)) { ?>
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <div class="cam-extras">
                         <div class="row">
@@ -103,7 +103,7 @@ $logged_user = !$is_tutor && !Yii::app()->user->isGuest;
                                 <input type="checkbox" class="book_extra_check" id="book_extra_main" > <?php echo $model->camExtras->extra_description; ?>
                             </div>
                             <div class="col-xs-12 col-sm-2 col-md-1 col-lg-1 ">
-                                <div class="extras-prices-bg" data-cam_price="<?php echo $cam_price; ?>" data-extra_price="<?php echo $extra_price = (int) $model->camExtras->extra_price; ?>">
+                                <div class="extras-prices-bg" data-cam_price="<?php echo (int) $model->cam_price; ?>" data-extra_price="<?php echo $extra_price = (int) $model->camExtras->extra_price; ?>">
                                     <?php echo $extra_price; ?> $
                                 </div>
                             </div>

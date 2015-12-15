@@ -301,7 +301,8 @@ class CamBooking extends RActiveRecord {
             if ($this->is_message == 'Y' && !empty($this->book_message)) {
                 Message::insertMessage($this->book_message, $this->book_user_id, $this->cam->tutor_id, $this->cam_id);
             }
-            $message = "You have a new booking from {$this->bookUser->fullname}";
+            $user_profile_link = CHtml::link($this->bookUser->fullname, array("/site/user/profile", "slug" => $this->bookUser->slug));
+            $message = "You have a new booking from " . $user_profile_link;
             Notification::insertNotification($this->cam->tutor_id, $message, 'book', $this->book_id);
         }
         return parent::afterSave();

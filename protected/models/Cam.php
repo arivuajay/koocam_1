@@ -132,6 +132,7 @@ class Cam extends RActiveRecord {
             array('tutor_id', 'required', 'on' => 'admin_update'),
             array('tutor_id, cat_id, created_by, modified_by', 'numerical', 'integerOnly' => true),
             array('cam_title, cam_youtube_url', 'length', 'max' => 100),
+            array('cam_youtube_url', 'url'),
             array('cam_media', 'length', 'max' => 500),
             array('cam_tag', 'length', 'max' => 255),
             array('cam_price, extra_price', 'length', 'max' => 10),

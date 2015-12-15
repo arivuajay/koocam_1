@@ -585,7 +585,7 @@ a:hover {
 }
 #inner-banner:before {
 	content: "";
-	background-color: rgba(0, 0, 0, 0.7);
+	background-color: rgba(0, 0, 0, 0.6);
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -704,8 +704,9 @@ a:hover {
 	border-color: #ffffff;
 }
 .user-details {
-	font-size:15px;
-	margin-top: 150px;
+	font-size: 15px;
+	margin-bottom: 25px;
+	margin-top: 100px;
 }
 .user-details h2 {
 	font-size:25px;
@@ -2003,9 +2004,9 @@ input[type=button] {
 .payment-table {
 	margin-top:40px;
 }
-.payment-table a {
+/*.payment-table a {
 	color:#2e2e2e;
-}
+}*/
 .paid {
 	color:#04a61b;
 }
@@ -2141,7 +2142,6 @@ input[type=button] {
 	color:#ffffff;
 	text-align:center;
 	font-size:13px;
-	position:absolute;
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
 	border-radius: 5px;
@@ -2151,7 +2151,105 @@ input[type=button] {
 	-webkit-border-radius:5px;
 	-moz-border-radius:5px;
 	border-radius:5px;
-	right:10px;
-	bottom:10px;
 	margin:0px auto !important;
+	float:right;
+}
+
+.contactus-banner {
+	background: url(../images/contact.jpg) no-repeat center center !important;
+}
+
+.video-chat {
+	width:auto;
+	background:#2e2e2e;
+	color:#ffffff;
+	text-align:center;
+	font-size:15px;
+	position:absolute;
+	width:25px;
+	height:25px;
+	left:10px;
+	top:10px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	z-index:9;
+	border:#ffffff solid 2px;
+	font-weight:700;
+	-webkit-border-radius: 50%;
+	-moz-border-radius: 50%;
+	border-radius: 50%;
+	-webkit-box-shadow: 5px 0px 5px 0px rgba(0, 0, 0, 0.4);
+	-moz-box-shadow:    5px 0px 5px 0px rgba(0, 0, 0, 0.4);
+	box-shadow:         5px 0px 5px 0px rgba(0, 0, 0, 0.4);
+	padding:0px 2px;
+}
+
+.video-chat img
+{
+	margin-top:-5px;
+}
+
+.viual-chattxt {
+	width:auto;
+	background:#2e2e2e;
+	color:#ffffff;
+	text-align:center;
+	font-size:15px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	z-index:9;
+	padding:2px 10px 4px 10px;
+	border:#ffffff solid 2px;
+	-webkit-border-radius:5px;
+	-moz-border-radius:5px;
+	border-radius:5px;
+	margin:0px auto !important;
+	float:right;
+	position:absolute;
+	bottom:10px;
+	left:10px;
+}
+
+.prebooking-cont
+{
+	text-align:center;
+}
+
+
+.prebooking-cont h2
+{
+	text-transform:uppercase;
+	color:#4e4e4e;
+}
+
+.prebooking-cont .hour
+{
+	width:100%;
+	float:left;
+	margin:15px 0px;
+	color:#ffffff;
+	line-height:28px;
+}
+
+.prebooking-cont .hour span
+{
+	font-size:40px;
+}
+
+
+.prebooking-details
+{
+	width:100%;
+	float:left;
+	margin-top:40px;
+	font-size:20px;
+}
+
+.prebooking-date h2
+{
+	font-size:22px;
+	margin-top:45px;
+	text-transform:none;
 }

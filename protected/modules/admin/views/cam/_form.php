@@ -65,7 +65,7 @@ $themeUrl = $this->themeUrl;
             </div>
 
             <div id="youtube_div" class = "form-group form-control-material static <?php echo $url_hide?>">
-                <?php echo $form->textField($model, 'cam_youtube_url', array('class' => 'form-control', 'placeholder' => 'Example: XGSy3_Czz8k', 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "Youtube Video Id. Ex:(Video link: http://www.youtube.com/watch?v=XGSy3_Czz8k) (Video Id: XGSy3_Czz8k)")); ?> 
+                <?php echo $form->textField($model, 'cam_youtube_url', array('class' => 'form-control', 'placeholder' => 'Ex:(Video link: http://www.youtube.com/watch?v=XGSy3_Czz8k)', 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "Ex:(Video link: http://www.youtube.com/watch?v=XGSy3_Czz8k)")); ?> 
                 <?php echo $form->labelEx($model, 'cam_youtube_url'); ?>
                 <?php // echo $form->error($model, 'cam_youtube_url'); ?> 
             </div>
