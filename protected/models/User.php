@@ -127,7 +127,10 @@ class User extends RActiveRecord {
             array('old_password', 'findPasswords', 'on' => 'changePwd'),
             array('repeat_password', 'compare', 'compareAttribute' => 'new_password', 'on' => 'changePwd'),
             array('security_question_id, answer', 'required', 'on' => 'account_setting_security'),
+            
             array('new_password, repeat_password', 'required', 'on' => 'reset'),
+            array('repeat_password', 'compare', 'compareAttribute' => 'new_password', 'on' => 'reset'),
+            
             array('created_at, modified_at, user_activation_key, user_login_ip, user_last_login, is_auto_timezone, user_locale_id, user_timezone_id, i_agree, user_rating, country_id, old_password, new_password, repeat_password, security_question_id, answer, receive_email_notify', 'safe'),
             array('i_agree', 'compare', 'compareValue' => true, 'message' => 'You must agree to the terms and conditions', 'on' => 'register'),
             // The following rule is used by search().

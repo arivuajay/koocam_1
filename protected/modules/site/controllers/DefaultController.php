@@ -121,7 +121,7 @@ class DefaultController extends Controller {
             } else {
                 $reset_link = Myclass::getRandomString(25);
                 $user->setAttribute('password_reset_token', $reset_link);
-                $user->setAttribute('modified_at', strtotime(date('Y-m-d H:i:s')));
+                $user->setAttribute('modified_at', date('Y-m-d H:i:s'));
                 $user->save(false);
 
                 ///////////////////////
@@ -145,8 +145,6 @@ class DefaultController extends Controller {
                 $this->redirect(array('/site/default/index'));
             }
         }
-
-        $this->render('forgot', array('model' => $model));
     }
 
     public function actionReset($str, $id) {

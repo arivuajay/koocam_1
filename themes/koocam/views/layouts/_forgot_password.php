@@ -19,7 +19,6 @@
                             'enableAjaxValidation' => true,
                         ));
                 ?>
-
                 <div class="form-group"> 
                     <?php echo $form->textField($model, 'email', array('autofocus', 'class' => 'form-control', 'placeholder' => "Email Address")); ?> 
                     <?php echo $form->error($model, 'email'); ?> 
