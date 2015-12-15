@@ -337,37 +337,6 @@ class CamBooking extends RActiveRecord {
         endif;
     }
 
-    public function insertNotification() {
-        $notifn_model = new Notification();
-        $notifn_model->user_id = $this->cam->tutor_id;
-        $notifn_model->notifn_type = 'book';
-        $notifn_model->notifn_rel_id = $this->book_id;
-        $message = "You have a new booking from {$this->bookUser->fullname}";
-        $notifn_model->notifn_message = $message;
-        $notifn_model->save(false);
-    }
-
-    public function insertMessage($msg, $user1, $user2) {
-        $message = new Message;
-        // Genreate the conversation id
-        $criteria = new CDbCriteria;
-        $criteria->select = 'max(id1) AS maxColumn';
-        $row = Message::model()->find($criteria);
-
-        $npm_count = $row['maxColumn'];
-        $id1 = $npm_count + 1;
-
-        $message->id1 = $id1; // conversation id
-        $message->id2 = Message::NEW_CONVERSATION_START; //New conversation start
-        $message->user1 = $user1; // Sender
-        $message->user2 = $user2; // Receiver
-        $message->timestamp = time();
-        $message->user1read = Message::USER_READ_YES;
-        $message->user2read = Message::USER_READ_NO;
-        $message->message = $msg;
-        $message->save(false);
-    }
-
     public function sendMailtoTutor() {
         $tutor = $this->cam->tutor;
         $learner = $this->bookUser;
