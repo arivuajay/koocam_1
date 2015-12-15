@@ -59,7 +59,7 @@ class UserProfile extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('prof_firstname', 'required'),
+//            array('prof_firstname', 'required'),
             array('user_id, created_by, modified_by', 'numerical', 'integerOnly' => true),
             array('prof_rating', 'numerical'),
             array('prof_phone', 'numerical'),

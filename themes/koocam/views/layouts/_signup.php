@@ -13,11 +13,13 @@
                             'htmlOptions' => array('role' => 'form', 'class' => ''),
                             'clientOptions' => array(
                                 'validateOnSubmit' => true,
+                                'hideErrorMessage' => true,
                             ),
                             'enableAjaxValidation' => true,
                         ));
                 ?>
 
+                <?php echo $form->errorSummary($model); ?>
                 <div class="form-group"> 
                     <?php echo $form->textField($model, 'username', array('autofocus', 'class' => 'form-control', 'placeholder' => "User Name")); ?> 
                     <?php echo $form->error($model, 'username'); ?>

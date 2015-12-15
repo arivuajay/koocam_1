@@ -73,7 +73,7 @@
                 });
                 
                 $('#forgot-login-button').on('click', function(){
-                    $('.bs-example-modal-sm2').modal('toggle');
+                    $('.bs-example-modal-fg2').modal('toggle');
                 });
                 
                 $('input:checkbox:not(.simple),input:radio').iCheck({
