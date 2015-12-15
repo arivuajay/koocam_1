@@ -6,13 +6,57 @@
 $this->title = 'Pre Booking';
 $themeUrl = $this->themeUrl;
 ?>
-<div id="inner-banner" class="tt-fullHeight3 chat-banner">
+<div id="inner-banner" class="tt-fullHeight3">
     <div class="container homepage-txt">
         <div class="row">
 
         </div>
     </div>
 </div>
+
+<div class="innerpage-cont">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-md-offset-3  col-lg-offset-3 prebooking-cont ">
+                <h2> Your Booking wil open on </h2>
+                <div class="chat-count" id="clock">
+                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"> 
+                        <div class="hour">  Hour  <br/>  <span>01</span></div>
+                    </div> 
+                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"> 
+                        <div class="hour">  Min  <br/>  <span>40</span></div>
+                    </div> 
+                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"> 
+                        <div class="hour">  Sec  <br/>  <span>20</span></div>
+                    </div> 
+                </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8 col-md-offset-1  col-lg-offset-2 prebooking-cont ">
+                <div class="prebooking-details">
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-5">  
+                        <b> Tutor Name  : </b>  <a href="#">Lorem ipsum</a>
+                    </div>
+
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-7">  
+                        <b> Gig  Name  : </b>  <a href="#">Do You speak english?</a>
+                    </div>
+
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 prebooking-date">   
+                        <h2> Your Booking Date &  Time : 15.00  , Nov 15  </h2>
+                    </div>
+
+                    <div class="explore-btn"> 
+                        <a class="btn btn-default  btn-lg explorebtn " href="#"> 
+                            <i class="fa fa-money"></i> Pay Now
+                        </a> 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="innerpage-cont">
     <div class="container">
         <div class="row" id="after_chat">

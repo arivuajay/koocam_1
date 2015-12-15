@@ -230,11 +230,11 @@ $js = <<< EOD
             });
         });
         
-        $('#{$mediaId}').live('change', function(){ 
+        $('#{$mediaId}').on('change', function(){ 
             $("#Cam_cam_media_value").html(this.value);
         });
         
-        $('#{$extraFileId}').live('change', function(){ 
+        $('#{$extraFileId}').on('change', function(){ 
             $("#Cam_extra_file_value").html(this.value);
         });
         
