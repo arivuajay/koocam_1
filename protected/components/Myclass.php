@@ -334,10 +334,10 @@ class Myclass extends CController {
     public static function getSystemAlert($tone = 1) {
         switch ($tone) {
             case 1:
-                $audio = $themeUrl . '/sounds/Bell_Notification.wav';
+                $audio = Yii::app()->themeUrl . '/sounds/Bell_Notification.wav';
                 break;
             case 2:
-                $audio = $themeUrl . '/sounds/Incoming_Message.wav';
+                $audio = Yii::app()->themeUrl . '/sounds/Incoming_Message.wav';
                 break;
         }
         return '<audio controls="controls" autoplay>
