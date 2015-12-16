@@ -727,6 +727,7 @@ class DefaultController extends Controller {
             }
             $booking = CamBooking::model()->findByAttributes(array('book_guid' => Yii::app()->request->getPost('book_guid')));
             $return['et_time'] = date('Y/m/d H:i:s', strtotime(Yii::app()->localtime->toUTC($booking->book_end_time)));
+//            $return['et_time'] = date('Y/m/d H:i:s', strtotime($booking->book_end_time));
         }
         echo json_encode($return, JSON_UNESCAPED_SLASHES);
         Yii::app()->end();
