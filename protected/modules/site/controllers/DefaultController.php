@@ -297,10 +297,10 @@ class DefaultController extends Controller {
             CamTokens::saveAttendance($token->token_id, $token->tutor_attendance, 1);
             $participant = $token->tutor_attendance == 1;
         }
-        
+
         TempSession::insertSession(Yii::app()->user->id, $token->book->book_end_time);
 
-        $this->render('chat', compact('token', 'abuse_model', 'info', 'cam_comments','participant'));
+        $this->render('chat', compact('token', 'abuse_model', 'info', 'cam_comments', 'participant'));
     }
 
     public function actionReportabuse() {
@@ -415,7 +415,6 @@ class DefaultController extends Controller {
 //                    $return['learner_link'] = CHtml::link('Start Chat', array('/site/default/chat', 'guid' => $bookings->book_guid), array('class' => "btn btn-default explorebtn"));
 //                    $return['system_alert'] = Myclass::getSystemAlert(1);
 //                }
-
                 //End Leaner Chat Screen
                 $tutorEnded = $this->tutorEnded();
                 if (!empty($tutorEnded)) {
@@ -674,7 +673,16 @@ class DefaultController extends Controller {
 
     public function actionPrechat($temp_guid) {
         $temp_booking = BookingTemp::model()->findByAttributes(array('temp_guid' => $temp_guid));
-        $this->render('prechat', compact('temp_booking'));
+        $booking_data = unserialize($temp_booking->temp_value);
+
+        $cam = Cam::model()->find('cam_id = :cam_id', array(':cam_id' => $booking_data['temp_cam_id']));
+        $book_user = User::model()->find('user_id = :user_id', array(':user_id' => $booking_data['temp_book_user_id']));
+
+        if (!in_array(Yii::app()->user->id, array($cam->tutor_id, $booking_data['temp_book_user_id']))) {
+            Yii::app()->user->setFlash('danger', "Invalid Access.");
+            $this->goHome();
+        }
+        $this->render('prechat', compact('temp_booking', 'cam', 'book_user', 'booking_data'));
     }
 
     public function actionIpncheck() {
@@ -684,11 +692,23 @@ class DefaultController extends Controller {
             if (!empty($temp_booking)) {
                 $return['status'] = $temp_booking->progress_status;
                 $return['status_txt'] = $temp_booking->progress;
-                
-                if($temp_booking->progress_status == 2 && $temp_booking->user_return_status == '1'){
+
+                if ($temp_booking->progress_status == 2 && $temp_booking->user_return_status == '1') {
                     $booking_data = unserialize($temp_booking->temp_value);
-                    $return['chat_url'] = Yii::app()->createAbsoluteUrl('/site/default/chat', array('guid' => $booking_data['book_guid']));
-                    $return['status'] = 'C';
+                    $booking = CamBooking::model()->find('book_guid = :book_guid', array(':book_guid' => $booking_data['book_guid']));
+                    if ($temp_booking->tutor_id == Yii::app()->user->id) {
+                        if ($booking->camTokens->learner_attendance == 1) {
+                            $return['chat_url'] = Yii::app()->createAbsoluteUrl('/site/default/chat', array('guid' => $booking_data['book_guid']));
+                            $return['status'] = 'C';
+                            $return['status_txt'] = 'Chat Going to Start. Please Wait..';
+                        }else{
+                             $return['status'] = 'W';
+                             $return['status_txt'] = 'Waiting for Learner';
+                        }
+                    } else {
+                        $return['chat_url'] = Yii::app()->createAbsoluteUrl('/site/default/chat', array('guid' => $booking_data['book_guid']));
+                        $return['status'] = 'C';
+                    }
                 }
             }
         }
@@ -700,7 +720,7 @@ class DefaultController extends Controller {
         $return = array();
         if (Yii::app()->request->isAjaxRequest && Yii::app()->request->getPost('book_guid')) {
             $booking = CamBooking::model()->findByAttributes(array('book_guid' => Yii::app()->request->getPost('book_guid')));
-            if(Yii::app()->request->getPost('participant') == 'true'){
+            if (Yii::app()->request->getPost('participant') == 'true') {
                 $booking->book_start_time = date("Y-m-d H:i:s");
                 $booking->setEndtime();
                 $booking->save(false);
@@ -711,4 +731,5 @@ class DefaultController extends Controller {
         echo json_encode($return, JSON_UNESCAPED_SLASHES);
         Yii::app()->end();
     }
+
 }

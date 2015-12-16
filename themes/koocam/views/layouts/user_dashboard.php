@@ -37,8 +37,8 @@ endif
                 </div>
                 <div class="profile-img2">
                     <div class="profile-details">
-                        <h2> PETER PARKER </h2>
-                        <p> Expert in 3D Graphics </p>
+                        <h2> <?php echo $user->fullname; ?> </h2>
+                        <p> <?php echo $user->userProf->prof_tag; ?> </p>
                         <?php
                         $this->widget('ext.DzRaty.DzRaty', array(
                             'name' => 'user_dashboard_rating',

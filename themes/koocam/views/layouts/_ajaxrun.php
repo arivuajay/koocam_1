@@ -6,7 +6,9 @@ $stay_url = Yii::app()->createAbsoluteUrl('/site/default/stayloggedin');
 $user_id = (!Yii::app()->user->isGuest) ? Yii::app()->user->id : '0';
 
 $js = <<< EOD
-    jQuery(document).ready(function ($) {
+        
+        
+    $(window).load(function() {
         
         window.setInterval(function(){
             msg_count = $('#li_message_top').find('#top_msg_count').data('count');

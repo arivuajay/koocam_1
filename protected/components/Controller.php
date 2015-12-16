@@ -50,7 +50,10 @@ class Controller extends CController {
             Yii::app()->localtime->TimeZone = Yii::app()->user->userTimezone;
         }
         
-        if(Yii::app()->controller->module->id == 'site' && !Yii::app()->user->isGuest && !Yii::app()->request->isAjaxRequest && Yii::app()->urlManager->parseUrl(Yii::app()->request) != 'site/default/cron'){
+        if(Yii::app()->controller->module->id == 'site' 
+                && !Yii::app()->user->isGuest && !Yii::app()->request->isAjaxRequest 
+                && Yii::app()->urlManager->parseUrl(Yii::app()->request) != 'site/default/cron'
+                ){
             TempSession::insertSession(Yii::app()->user->id);
         }
     }

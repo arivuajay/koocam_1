@@ -205,7 +205,8 @@ class BookingtempController extends Controller {
         if (!empty($booking_temp)) {
             $booking_temp->status = 1;
             if ($booking_temp->save(false)) {
-                User::switchStatus(Yii::app()->user->id, 'B');
+//                User::switchStatus(Yii::app()->user->id, 'B');
+                TempSession::insertSession(Yii::app()->user->id, date('Y-m-d H:i:s', strtotime('+5 minutes', time())));
                 Yii::app()->user->setFlash("success", "You approved one booking.");
                 $this->redirect(array('/site/default/prechat', 'temp_guid' => $booking_temp->temp_guid));
             } else {
