@@ -75,6 +75,7 @@ class CamBooking extends RActiveRecord {
             'all' => array('condition' => "$alias.book_approve is not null"),
             'notdeleted' => array('condition' => "$alias.book_approve != '2'"),
             'completed' => array('condition' => "$alias.book_payment_status = 'C'"),
+            'pending' => array('condition' => "$alias.book_payment_status = 'P'"),
             'notExpired' => array('condition' => "$alias.book_end_time >= '{$now}'"),
         );
     }

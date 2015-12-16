@@ -401,6 +401,7 @@ class DefaultController extends Controller {
             $return['idle_warning'] = 0;
             $return['system_alert'] = 0;
             $return['new_live_status'] = 0;
+            $return['user_have_booking_now'] = 0;
 
             $themeUrl = $this->themeUrl;
             if (!Yii::app()->user->isGuest) {
@@ -482,10 +483,33 @@ class DefaultController extends Controller {
                 if ($chk_sts) {
                     $return['new_live_status'] = $chk_sts;
                 }
+
+                //User have booking now
+                $check_user_have_booking = $this->checkUserHaveBookingNow();
+                if (!empty($check_user_have_booking)) {
+                    $return['user_have_booking_now'] = 1;
+                    $return['user_have_booking_url'] = CHtml::link('<i class="fa fa-check-square-o"></i> Go to booking page', array('/site/cambooking/prebooking', 'book_guid' => $check_user_have_booking->book_guid), array('class' => "btn btn-default  explorebtn form-btn"));
+                }
             }
             echo CJSON::encode($return);
             Yii::app()->end();
         }
+    }
+
+    protected function checkUserHaveBookingNow() {
+        $user_id = Yii::app()->user->id;
+        $created_at_time = strtotime(Yii::app()->localtime->getLocalNow("Y/m/d H:i:s"));
+        $end_time = $created_at_time + (5 * 60);
+        $end_time_format = date("Y-m-d H:i:s", $end_time);
+
+        $booking = CamBooking::model()->active()->pending()->find('book_user_id = :user_id AND book_start_time <= :time AND book_end_time >= :time', array(":user_id" => $user_id, ":time" => $end_time_format));
+        $booking_start_time = $booking->book_start_time + (5 * 60);
+
+        if($booking_start_time < $end_time_format){
+            return null;
+        }
+        
+        return $booking;
     }
 
     protected function learnerWaiting() {

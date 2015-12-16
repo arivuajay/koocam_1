@@ -5,6 +5,8 @@ $logout_url = Yii::app()->createAbsoluteUrl('/site/default/logout');
 $stay_url = Yii::app()->createAbsoluteUrl('/site/default/stayloggedin');
 $user_id = (!Yii::app()->user->isGuest) ? Yii::app()->user->id : '0';
 
+$check_pre_booking = Yii::app()->controller->id == "cambooking" && Yii::app()->controller->action->id == "prebooking";
+
 $js = <<< EOD
         
         
@@ -108,6 +110,15 @@ $js = <<< EOD
                             return;
                         }else{
                             $('#idle-warning').modal('show');
+                        }
+                    }
+        
+                    if(data.user_have_booking_now == 1){
+                        $('#user-have-booking-now-url').html(data.user_have_booking_url);
+                        if ($("#user-have-booking-now").data('bs.modal') && $("#user-have-booking-now").data('bs.modal').isShown){
+                            return;
+                        }else{
+                            $('#user-have-booking-now').modal('show');
                         }
                     }
                 },
@@ -244,6 +255,34 @@ Yii::app()->clientScript->registerScript('_ajaxrun', $js);
         </div>
     </div>
 </div>
+
+<?php if(!$check_pre_booking){?>
+<div class="modal fade approve" id="user-have-booking-now" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">  Your booking going to start !!!  </h4>
+            </div>
+            <div class="modal-body">
+                <div class="approve-img">  
+                    <p class="row"> 
+                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 pull-right approve-time ">   
+                        <p> <a href="#" class="btn btn-default"> <b id="logout_clock"></b></a> </p> 
+                    </div>
+                    <div class="clearfix"></div>
+                    <p> <h4 id="idle-warning-message">Kindly Click the below link to go to booking page</h4> </p>
+                    <div class="form-group">
+                        <div class="row"> 
+                            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-12" id="user-have-booking-now-url">                
+                            </div> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<?php } ?>
 <?php
 $themeUrl = $this->themeUrl;
 $cs = Yii::app()->getClientScript();

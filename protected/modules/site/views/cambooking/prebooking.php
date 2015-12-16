@@ -21,7 +21,7 @@ $themeUrl = $this->themeUrl;
     <div class="container">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-md-offset-3  col-lg-offset-3 prebooking-cont ">
-                <h2> Your Booking wil open on </h2>
+                <h2> Your Booking will open on </h2>
                 <div class="chat-count" id="clock"></div>
             </div>
 
@@ -41,7 +41,16 @@ $themeUrl = $this->themeUrl;
                             <?php echo date('Y-m-d H:i:s', strtotime($booking->book_start_time)); ?>
                         </h2>
                     </div>
-                    <div class="explore-btn hide" id="display_startnow"> 
+
+                    <?php
+                    $current_time = Yii::app()->localtime->getLocalNow("Y-m-d H:i:s");
+                    $book_expiry_time = date('Y-m-d H:i:s', strtotime($booking->book_start_time));
+                    $hide_class = 'hide';
+                    if ($current_time > $book_expiry_time) {
+                        $hide_class = '';
+                    }
+                    ?>
+                    <div class="explore-btn <?php echo $hide_class; ?>" id="display_startnow"> 
                         <a class="btn btn-default  btn-lg explorebtn " href="#" data-target="#prebookingstartnow" data-toggle="modal"> 
                             <i class="fa fa-money"></i> Pay Now
                         </a> 
@@ -97,11 +106,11 @@ $price_calculation = CamBooking::price_calculation($user_country_id, $cam_price,
                         <div class="form-group">
                             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
                                 <?php echo $form->labelEx($booking_temp, 'temp_book_session'); ?>
-                                <?php echo $booking->book_session; ?>
+<?php echo $booking->book_session; ?>
                             </div>
                         </div>
 
-                        <?php if ($booking->book_is_extra == "Y") { ?>
+<?php if ($booking->book_is_extra == "Y") { ?>
                             <div class="form-group">
                                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                     <div class="cam-extras">
@@ -111,24 +120,25 @@ $price_calculation = CamBooking::price_calculation($user_country_id, $cam_price,
                                             </div>
                                         </div>
                                         <div class="col-xs-12 col-sm-10 col-md-10 col-lg-10 extras-txt">
-                                            <?php echo $model->camExtras->extra_description; ?>
+    <?php echo $model->camExtras->extra_description; ?>
                                         </div>
                                         <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2 ">
                                             <div id="extras-prices" class="temp_extras-prices-bg">
-                                                <?php echo $extra_price; ?> $
+    <?php echo $extra_price; ?> $
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        <?php } ?>
+<?php } ?>
 
                         <div class="form-group">
                             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
                                 <h4 class="temp-total-price"> Price : $ <span id="price"><?php echo $price_calculation['total_price']; ?></span></h4>
                                 <span>Incl. Processing Fee: $ <span id="processing_fee"><?php echo $price_calculation['processing_fees']; ?></span></span>
-                                <?php if ($price_calculation['service_tax'] > 0)  ?>
-                                <br><span>Incl. Service Tax: $ <span id="service_tax"><?php echo $price_calculation['service_tax']; ?></span></span>
+                                <?php if ($price_calculation['service_tax'] > 0) { ?>
+                                    <br><span>Incl. Service Tax: $ <span id="service_tax"><?php echo $price_calculation['service_tax']; ?></span></span>
+<?php } ?>
                             </div>
                         </div>
                     </div>
@@ -159,11 +169,9 @@ $cs_pos_end = CClientScript::POS_END;
 $cs->registerScriptFile($themeUrl . '/js/jquery.countdown.min.js', $cs_pos_end);
 
 $end_time = date('Y/m/d H:i:s', strtotime($booking->book_start_time));
-
 $clock_html = '<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"><div class="hour">Days<br/><span>%D</span></div></div><div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"><div class="hour">Hour<br/><span>%H</span></div></div><div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"><div class="hour">Min<br/><span>%M</span></div></div><div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"><div class="hour">Sec<br/><span>%S</span></div></div>';
 
 $new_clock_html = '<span> %M </span> : <span>  %S </span>';
-
 $cancel_booking = Yii::app()->createAbsoluteUrl('/site/bookingtemp/cancelbooking/temp_guid/');
 $ajaxRun_user = Yii::app()->createAbsoluteUrl('/site/default/ajaxrunuser');
 $paypal_process = Yii::app()->createAbsoluteUrl('/site/bookingtemp/processpaypal/temp_guid/');
@@ -176,10 +184,6 @@ $js = <<< EOD
         
         $('#clock').countdown(end_time, function (event) {
             $(this).html(event.strftime(clock_html));
-        }).on('update.countdown', function(event) {
-//            if(alert_min > event.offset.minutes && event.offset.hours == 0){
-//                $('#time-alert').removeClass('hide');
-//            }
         }).on('finish.countdown', function(event){
             $('#display_startnow').removeClass('hide');
         });
