@@ -503,9 +503,9 @@ class DefaultController extends Controller {
         $end_time_format = date("Y-m-d H:i:s", $end_time);
 
         $booking = CamBooking::model()->active()->pending()->find('book_user_id = :user_id AND book_start_time <= :time AND book_end_time >= :time', array(":user_id" => $user_id, ":time" => $end_time_format));
-        $booking_start_time = $booking->book_start_time + (5 * 60);
 
-        if($booking_start_time < $end_time_format){
+        $current_time = Yii::app()->localtime->getLocalNow("Y-m-d H:i:s");
+        if($booking->book_start_time < $current_time){
             return null;
         }
         
