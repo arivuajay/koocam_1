@@ -172,10 +172,6 @@ class CambookingController extends Controller {
 
         $this->render('myjobs', compact('results', 'pages', 'my_job_filter'));
     }
-    
-    public function actionPrechat(){
-        
-    }
 
     public function actionPrebooking($book_guid) {
         $user_id = Yii::app()->user->id;
