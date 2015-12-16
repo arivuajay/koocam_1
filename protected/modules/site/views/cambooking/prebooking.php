@@ -9,7 +9,10 @@ $themeUrl = $this->themeUrl;
 <div id="inner-banner" class="tt-fullHeight3">
     <div class="container homepage-txt">
         <div class="row">
-
+            <div class="col-xs-12 col-sm-12 col-md-8 col-lg-8 col-md-offset-2  col-lg-offset-2 page-details">
+                <h2>PRE BOOKING</h2>
+                <p>&nbsp;</p>
+            </div>
         </div>
     </div>
 </div>
@@ -19,35 +22,27 @@ $themeUrl = $this->themeUrl;
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-md-offset-3  col-lg-offset-3 prebooking-cont ">
                 <h2> Your Booking wil open on </h2>
-                <div class="chat-count" id="clock">
-                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"> 
-                        <div class="hour">  Hour  <br/>  <span>01</span></div>
-                    </div> 
-                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"> 
-                        <div class="hour">  Min  <br/>  <span>40</span></div>
-                    </div> 
-                    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4"> 
-                        <div class="hour">  Sec  <br/>  <span>20</span></div>
-                    </div> 
-                </div>
+                <div class="chat-count" id="clock"></div>
             </div>
 
             <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8 col-md-offset-1  col-lg-offset-2 prebooking-cont ">
                 <div class="prebooking-details">
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-5">  
-                        <b> Tutor Name  : </b>  <a href="#">Lorem ipsum</a>
+                        <b> Tutor Name  : </b>  
+                        <?php echo CHtml::link($booking->cam->tutor->username, array("/site/user/profile", "slug" => $booking->cam->tutor->slug)); ?>
                     </div>
-
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-7">  
-                        <b> Gig  Name  : </b>  <a href="#">Do You speak english?</a>
+                        <b> Cam  Name  : </b>
+                        <?php echo CHtml::link($booking->cam->cam_title, array("/site/cam/view", "slug" => $booking->cam->slug)); ?>
                     </div>
-
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 prebooking-date">   
-                        <h2> Your Booking Date &  Time : 15.00  , Nov 15  </h2>
+                        <h2> 
+                            Your Booking Date &  Time : 
+                            <?php echo date('Y-m-d H:i:s', strtotime($booking->book_start_time)); ?>
+                        </h2>
                     </div>
-
-                    <div class="explore-btn"> 
-                        <a class="btn btn-default  btn-lg explorebtn " href="#"> 
+                    <div class="explore-btn hide" id="display_startnow"> 
+                        <a class="btn btn-default  btn-lg explorebtn " href="#" data-target="#prebookingstartnow" data-toggle="modal"> 
                             <i class="fa fa-money"></i> Pay Now
                         </a> 
                     </div>
@@ -56,28 +51,6 @@ $themeUrl = $this->themeUrl;
         </div>
     </div>
 </div>
-
-<div class="innerpage-cont">
-    <div class="container">
-        <div class="row" id="after_chat">
-            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-12 text-center">
-                <p>Welcome</p>
-                <br />
-                <div>
-                    Your booking will open <br> <span id="clock"></span>
-                </div>
-            </div>
-
-            <div class="col-xs-12 col-sm-4 col-md-4 col-lg-12 text-center hide" id="display_startnow">
-                <a href="#" data-target="#prebookingstartnow" data-toggle="modal" class="big-btn btn btn-default">
-                    <i class="fa fa-video-camera"></i> Start Now !
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
-
-
 
 <?php
 $model = $booking->cam;
@@ -96,10 +69,10 @@ echo $form->hiddenField($booking_temp, 'temp_cam_id', array('value' => $model->c
 echo $form->hiddenField($booking_temp, 'temp_book_session', array('value' => $booking->book_session));
 echo $form->hiddenField($booking_temp, 'temp_book_is_extra', array('value' => $booking->book_is_extra));
 
-$cam_price = (int) $model->cam_price;
+$cam_price = $model->cam_price;
 
 if ($booking->book_is_extra == "Y") {
-    $extra_price = isset($model->camExtras->extra_price) ? (int) $model->camExtras->extra_price : 0;
+    $extra_price = isset($model->camExtras->extra_price) ? $model->camExtras->extra_price : 0;
 } else {
     $extra_price = 0;
 }
@@ -187,7 +160,7 @@ $cs->registerScriptFile($themeUrl . '/js/jquery.countdown.min.js', $cs_pos_end);
 
 $end_time = date('Y/m/d H:i:s', strtotime($booking->book_start_time));
 
-$clock_html = '<div class="hour">  Hour  <br/>  <span>%H</span></div></div><div class="hour">  Min  <br/>  <span>%M</span></div><div class="hour"> Sec  <br/> <span>  %S</span></div>';
+$clock_html = '<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"><div class="hour">Days<br/><span>%D</span></div></div><div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"><div class="hour">Hour<br/><span>%H</span></div></div><div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"><div class="hour">Min<br/><span>%M</span></div></div><div class="col-xs-3 col-sm-3 col-md-3 col-lg-3"><div class="hour">Sec<br/><span>%S</span></div></div>';
 
 $new_clock_html = '<span> %M </span> : <span>  %S </span>';
 
