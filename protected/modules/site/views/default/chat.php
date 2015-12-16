@@ -112,6 +112,7 @@ if($info['my_role'] == 'learner')
                     <div class="panel panel-primary">
                         <div class="panel-heading">
                             Chat
+                            <?php echo CHtml::image($themeUrl.'/images/chat_loader.GIF', '', array('class' => 'hide', 'id' => 'chat_loader')); ?>
                             <div class="btn-group pull-right">
                                 <button type="button" class="btn btn-default btn-xs " data-toggle="dropdown" id="send-file-button">
                                     <i class="fa fa-send"></i> Send File
