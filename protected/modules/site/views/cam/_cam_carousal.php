@@ -11,9 +11,6 @@
                     <div class="course-thumbimg">
                         <?php
                         echo $cam->tutor->userstatusicon;
-                        if (!empty($cam->tutor->languages)) {
-                            echo "<div class='languages' data-toggle='tooltip' data-placement='top' title='{$cam->tutor->languages}'> Languages </div>";
-                        }
                         echo CHtml::link($cam->camthumb, array('/site/cam/view', 'slug' => $cam->slug));
                         ?>
                     </div>
@@ -21,19 +18,33 @@
                         <h2><?php echo CHtml::link($cam->cam_title, array('/site/cam/view', 'slug' => $cam->slug)); ?></h2>
                         <p> <span> <?php echo CHtml::link($cam->tutor->fullname, array('/site/user/profile', 'slug' => $cam->tutor->slug)); ?> </span> </p>
                         <!--<p> <span> <?php echo $cam->tutor->languages ?> </span> </p>-->
-                        <?php
-                        $this->widget('ext.DzRaty.DzRaty', array(
-                            'name' => 'cam_rating_carousal' . $key,
-                            'value' => $cam->cam_rating,
-                            'options' => array(
-                                'readOnly' => TRUE,
-                                'half' => TRUE,
-                            ),
-                            'htmlOptions' => array(
-                                'class' => 'new-half-class'
-                            ),
-                        ));
-                        ?>
+                        <div class="row">  
+                            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">  
+                                <p>
+                                    <?php
+                                    $this->widget('ext.DzRaty.DzRaty', array(
+                                        'name' => 'cam_rating_carousal' . $key,
+                                        'value' => $cam->cam_rating,
+                                        'options' => array(
+                                            'readOnly' => TRUE,
+                                            'half' => TRUE,
+                                        ),
+                                        'htmlOptions' => array(
+                                            'class' => 'new-half-class'
+                                        ),
+                                    ));
+                                    ?>
+                                </p>
+                            </div> 
+                            <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                                <?php
+                                if (!empty($cam->tutor->languages)) {
+                                    echo "<div class='languages' data-toggle='tooltip' data-placement='top' title='{$cam->tutor->languages}'> Languages </div>";
+                                }
+                                ?>
+                            </div>  
+                        </div>
+
                     </div>
                     <div class="coures-pricedetails">
                         <div class="course-price"> <i class="fa fa-clock-o"></i> <b><?php echo $cam->cam_duration; ?></b> <span> min </span> </div>
@@ -41,7 +52,7 @@
                         <div class="course-price letcame"> <?php echo CHtml::link("Let's Cam <i class='fa fa-video-camera'></i>", array('/site/cam/view', 'slug' => $cam->slug)); ?> </div>
                     </div>
                 </div>
-            <?php endforeach; ?>
+<?php endforeach; ?>
         </div>
     </div>
 </div>

@@ -439,7 +439,7 @@ class Cam extends RActiveRecord {
         return CHtml::image($url, '', $htmlOptions);
     }
 
-    public function getCamthumb($htmlOptions = array()) {
+    public function getCamthumb($htmlOptions = array(), $extraOptions = array()) {
         if ($this->is_video == 'N' && empty($this->cam_youtube_url)) {
             if (!empty($this->cam_media))
                 $path = UPLOAD_DIR . '/users/' . $this->tutor_id . '/thumb' . $this->cam_media;
@@ -448,7 +448,7 @@ class Cam extends RActiveRecord {
             $url = Yii::app()->createAbsoluteUrl($path);
         }else if ($this->is_video == 'Y' && !empty($this->cam_youtube_url)) {
             $url = "http://img.youtube.com/vi/{$this->video_id}/default.jpg";
-            $htmlOptions = array_merge($htmlOptions, array('style' => 'height: 231px;'));
+            $htmlOptions = array_merge($htmlOptions, $extraOptions);
         }
         return CHtml::image($url, '', $htmlOptions);
     }

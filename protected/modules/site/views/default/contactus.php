@@ -12,7 +12,7 @@ $categories = array(
     "Cam related Enquiry" => "Cam related Enquiry"
 );
 ?>
-<div id="inner-banner" class="tt-fullHeight3">
+<div id="inner-banner" class="tt-fullHeight3 contactus-banner">
     <div class="container homepage-txt">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8 col-md-offset-1  col-lg-offset-2 page-details">
@@ -39,7 +39,12 @@ $categories = array(
                         'enableAjaxValidation' => true,
                     ));
                     ?>
-                    <?php echo $form->errorSummary($model); ?>
+                    
+                    <div class="form-group">
+                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-12 ">
+                        <?php echo $form->errorSummary($model); ?>
+                        </div>
+                    </div>
                     <div class="form-group">
                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
                             <?php echo $form->textField($model, 'fullname', array('class' => 'form-control', 'placeholder' => 'Fullname', 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "Fullname")); ?> 
@@ -51,12 +56,12 @@ $categories = array(
                         </div>
                     </div>
 
-                    <?php if(!Yii::app()->user->isGuest){ ?>
-                    <div class="form-group">
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 ">
-                            <?php echo $form->dropDownList($model, 'category', $categories, array('class' => 'selectpicker', 'prompt' => 'Choose Category', 'data-title' => "Choose Category")); ?> 
+                    <?php if (!Yii::app()->user->isGuest) { ?>
+                        <div class="form-group">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 ">
+                                <?php echo $form->dropDownList($model, 'category', $categories, array('class' => 'selectpicker', 'prompt' => 'Choose Category', 'data-title' => "Choose Category")); ?> 
+                            </div>
                         </div>
-                    </div>
                     <?php } ?>
 
                     <div class="form-group">

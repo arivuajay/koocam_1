@@ -6,6 +6,8 @@
 $this->title = 'Chat';
 $themeUrl = $this->themeUrl;
 $show_video = $token->book->cam->cam_avail_visual == 'Y' ? 'true' : 'false';
+$v_participant = $participant ? 'true' : 'false';
+
 $this->renderPartial('_report_abuse', compact('token', 'abuse_model', 'info'));
 if($info['my_role'] == 'learner')
     $this->renderPartial('/cam/_comments_form', array('model' => $token->book->cam, 'cam_comments' => $cam_comments, 'cam_booking_id' => $token->book_id));
@@ -70,6 +72,8 @@ if($info['my_role'] == 'learner')
             'their_thumb' => $info['their_thumb'],
             'token_id' => $token->token_id,
             'role' => $info['my_role'],
+            'participant' => $v_participant,
+            'book_guid' => $token->book->book_guid,
         ));
         ?>
         <div class="row" id="chat_row">
@@ -158,28 +162,7 @@ $cs->registerScriptFile($themeUrl . '/js/moment-timezone.js', $cs_pos_end);
 $cs->registerScriptFile($themeUrl . '/js/jquery.countdown.min.js', $cs_pos_end);
 $cs->registerScriptFile($themeUrl . '/js/jquery-blink.js', $cs_pos_end);
 
-$end_time = date('Y/m/d H:i:s', strtotime(Yii::app()->localtime->toUTC($token->book->book_end_time)));
-$time_zone = Yii::app()->localtime->getTimeZone();
-$alert_minute = 2;
-$clock_html = '<div class="hour">  Hour  <br/>  <span>%H</span></div></div><div class="hour">  Min  <br/>  <span>%M</span></div><div class="hour"> Sec  <br/> <span>  %S</span></div>';
-
 $js = <<< EOD
-    jQuery(document).ready(function ($) {
-        var alert_min = '$alert_minute';
-        var clock_html = '$clock_html';
-        var end_time = moment.tz("{$end_time}", "{$time_zone}");
-        $('#clock').countdown(end_time.toDate(), function (event) {
-            $(this).html(event.strftime(clock_html));
-        }).on('update.countdown', function(event) {
-            if(alert_min > event.offset.minutes && event.offset.hours == 0){
-                $('#time-alert').removeClass('hide');
-            }
-        }).on('finish.countdown', function(event){
-            $('#hidden_disconnect').trigger('click');
-        });
-        $('.blink').blink({delay:300});
-    });
-
     $('#send-file-button').on('click', function(){
         $('#uploadFile :input').trigger('click');
     });

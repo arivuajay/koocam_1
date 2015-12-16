@@ -4,9 +4,14 @@
 
 $this->title = "View - {$model->cms_title}";
 $themeUrl = $this->themeUrl;
+
+$cover_image = '';
+if(!empty($model->cover_photo)){
+    $cover_image =  'background: #222 url(' . $model->getFilePath() . ') no-repeat scroll center center / cover;';
+}
 ?>
 
-<div class="tt-fullHeight3" id="inner-banner">
+<div class="tt-fullHeight3" id="inner-banner" style = "<?php echo $cover_image; ?>">
     <div class="container homepage-txt">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8 col-md-offset-1  col-lg-offset-2 page-details ">

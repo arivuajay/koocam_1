@@ -72,9 +72,13 @@ class CmsController extends Controller {
 
         if (Yii::app()->request->isPostRequest && Yii::app()->request->getPost('Cms')) {
             $model->attributes = Yii::app()->request->getPost('Cms');
-            if ($model->save()) {
-                Yii::app()->user->setFlash('success', 'Cms Created Successfully!!!');
-                $this->redirect(array('/admin/cms/index'));
+            if ($model->validate()) {
+                $model->setUploadDirectory(UPLOAD_DIR);
+                $model->uploadFile();
+                if ($model->save(false)) {
+                    Yii::app()->user->setFlash('success', 'Cms Created Successfully!!!');
+                    $this->redirect(array('/admin/cms/index'));
+                }
             }
         }
 
@@ -96,9 +100,13 @@ class CmsController extends Controller {
 
         if (Yii::app()->request->isPostRequest && Yii::app()->request->getPost('Cms')) {
             $model->attributes = Yii::app()->request->getPost('Cms');
-            if ($model->save()) {
-                Yii::app()->user->setFlash('success', 'Cms Updated Successfully!!!');
-                $this->redirect(array('/admin/cms/index'));
+            if ($model->validate()) {
+                $model->setUploadDirectory(UPLOAD_DIR);
+                $model->uploadFile();
+                if ($model->save(false)) {
+                    Yii::app()->user->setFlash('success', 'Cms Updated Successfully!!!');
+                    $this->redirect(array('/admin/cms/index'));
+                }
             }
         }
 

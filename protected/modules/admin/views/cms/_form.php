@@ -10,7 +10,7 @@
             <?php
             $form = $this->beginWidget('CActiveForm', array(
                 'id' => 'cms-form',
-                'htmlOptions' => array('role' => 'form', 'class' => ''),
+                'htmlOptions' => array('role' => 'form', 'class' => '', 'enctype' => "multipart/form-data"),
                 'clientOptions' => array(
                     'validateOnSubmit' => true,
                 ),
@@ -54,6 +54,11 @@
                 <?php echo $form->textArea($model, 'cms_meta_description', array('class' => 'form-control')); ?>
                 <?php echo $form->labelEx($model, 'cms_meta_description'); ?>
                 <?php echo $form->error($model, 'cms_meta_description'); ?>
+            </div>
+            <div class="form-group form-control-material static">
+                <?php echo $model->getAttributeLabel('cover_photo') ?>
+                <?php echo $form->fileField($model, 'cover_photo'); ?>
+                <?php // echo $form->error($model, 'cat_image'); ?>
             </div>
             <div class = "form-group checkbox checkbox-primary">
                 <?php echo $form->checkBox($model, 'status', array('class' => 'form-control')); ?>

@@ -11,6 +11,7 @@
  * @property string $cms_meta_keywords
  * @property string $cms_meta_description
  * @property string $cms_tag
+ * @property string $cover_photo
  * @property string $status
  * @property string $created_at
  * @property string $modified_at
@@ -26,6 +27,10 @@ class Cms extends RActiveRecord {
     
     public function behaviors() {
         return array(
+            'NUploadFile' => array(
+                'class' => 'ext.nuploadfile.NUploadFile',
+                'fileField' => 'cover_photo',
+            ),
             'SlugBehavior' => array(
                 'class' => 'application.models.behaviors.SlugBehavior',
                 'slug_col' => 'slug',
@@ -45,11 +50,12 @@ class Cms extends RActiveRecord {
             array('cms_title, cms_description', 'required'),
             array('cms_description', 'compare', 'compareValue' => '<br>', 'operator' => '!=', 'message' => 'Description cannot be blank'),
             array('slug, cms_title, cms_tag', 'length', 'max' => 255),
+            array('cover_photo', 'length', 'max' => 500),
             array('status', 'length', 'max' => 1),
-            array('cms_meta_keywords, cms_meta_description, modified_at', 'safe'),
+            array('cms_meta_keywords, cms_meta_description, modified_at, cover_photo', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('cms_id, slug, cms_title, cms_description, cms_meta_keywords, cms_meta_description, status, created_at, modified_at', 'safe', 'on' => 'search'),
+            array('cms_id, slug, cms_title, cms_description, cms_meta_keywords, cms_meta_description, status, created_at, modified_at, cover_photo', 'safe', 'on' => 'search'),
         );
     }
 

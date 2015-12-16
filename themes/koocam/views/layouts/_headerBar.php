@@ -103,7 +103,7 @@ if (!Yii::app()->user->isGuest) {
 
     $js = <<< EOD
     jQuery(document).ready(function ($) {
-        $('#switch_status').on('click', function(){
+        $('#switch_status').live('click', function(){
             _that = $(this);
             
             var mode = _that.data('mode');

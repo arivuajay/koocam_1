@@ -28,11 +28,11 @@ class DefaultController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('index', 'sociallogin', 'signupsocial', 'login', 'register', 'activation', 'filecrypt', 'download', 'ajaxrun', 'ajaxrunuser', 'howitworks', 'faq', 'contactus', 'error', 'cron', 'forgotpassword', 'reset'),
+                'actions' => array('index', 'sociallogin', 'signupsocial', 'login', 'register', 'activation', 'filecrypt', 'download', 'ajaxrun', 'ajaxrunuser', 'howitworks', 'faq', 'contactus', 'error', 'cron', 'forgotpassword', 'reset', 'ipncheck'),
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('logout', 'test', 'chat', 'reportabuse', 'upload', 'testtoken', 'filedownload', 'disconnect', 'stayloggedin'),
+                'actions' => array('logout', 'test', 'chat', 'reportabuse', 'upload', 'testtoken', 'filedownload', 'disconnect', 'stayloggedin', 'prechat', 'getbooktime'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -103,8 +103,8 @@ class DefaultController extends Controller {
     public function actionLogout() {
         User::switchStatus(Yii::app()->user->id, 'O');
         Yii::app()->user->logout(false);
-        if(Yii::app()->request->isAjaxRequest)
-            Yii::app ()->end ();
+        if (Yii::app()->request->isAjaxRequest)
+            Yii::app()->end();
         Yii::app()->user->setFlash('success', "You were logged out successfully");
         $this->goHome();
     }
@@ -287,16 +287,20 @@ class DefaultController extends Controller {
         $abuse_model = new ReportAbuse();
         $cam_comments = new CamComments();
         $token = $info['token'];
+        $participant = false;
 
         if ($info['my_role'] == 'tutor' && $token->tutor_attendance == 0) {
             CamTokens::saveAttendance($token->token_id, 1, $token->learner_attendance);
+            $participant = $token->learner_attendance == 1;
         }
         if ($info['my_role'] == 'learner' && $token->learner_attendance == 0) {
             CamTokens::saveAttendance($token->token_id, $token->tutor_attendance, 1);
+            $participant = $token->tutor_attendance == 1;
         }
+        
         TempSession::insertSession(Yii::app()->user->id, $token->book->book_end_time);
 
-        $this->render('chat', compact('token', 'abuse_model', 'info', 'cam_comments'));
+        $this->render('chat', compact('token', 'abuse_model', 'info', 'cam_comments','participant'));
     }
 
     public function actionReportabuse() {
@@ -396,20 +400,21 @@ class DefaultController extends Controller {
             $return['end_tutor_chat'] = 0;
             $return['idle_warning'] = 0;
             $return['system_alert'] = 0;
+            $return['new_live_status'] = 0;
 
             $themeUrl = $this->themeUrl;
             if (!Yii::app()->user->isGuest) {
                 $return['logged_in'] = 1;
-                
+
                 //Learner Waiting
-                $bookings = $this->learnerWaiting();
-                if (!empty($bookings)) {
-                    $return['learner_waiting'] = 1;
-                    $return['learner_name'] = $bookings->bookUser->fullname;
-                    $return['learner_thumb'] = $bookings->bookUser->profilethumb;
-                    $return['learner_link'] = CHtml::link('Start Chat', array('/site/default/chat', 'guid' => $bookings->book_guid), array('class' => "btn btn-default explorebtn"));
-                    $return['system_alert'] = Myclass::getSystemAlert(1);
-                }
+//                $bookings = $this->learnerWaiting();
+//                if (!empty($bookings)) {
+//                    $return['learner_waiting'] = 1;
+//                    $return['learner_name'] = $bookings->bookUser->fullname;
+//                    $return['learner_thumb'] = $bookings->bookUser->profilethumb;
+//                    $return['learner_link'] = CHtml::link('Start Chat', array('/site/default/chat', 'guid' => $bookings->book_guid), array('class' => "btn btn-default explorebtn"));
+//                    $return['system_alert'] = Myclass::getSystemAlert(1);
+//                }
 
                 //End Leaner Chat Screen
                 $tutorEnded = $this->tutorEnded();
@@ -462,15 +467,21 @@ class DefaultController extends Controller {
                     $return['tutor_before_paypal_reject'] = CHtml::link('<i class="fa fa-remove"></i> Reject', array('/site/bookingtemp/reject', 'temp_guid' => $tutorstartnowalert->temp_guid), array('class' => "btn btn-default  explorebtn form-btn deactiveate-btn"));
                     $return['system_alert'] = Myclass::getSystemAlert(1);
                 }
-                
+
                 //Idle Warning
-                if($this->idleWarning() && $_POST['idle_open'] == 0){
+                if ($this->idleWarning() && $_POST['idle_open'] == 0) {
                     $return['idle_warning'] = 1;
                     $created_at_time = strtotime(Yii::app()->localtime->getLocalNow("Y/m/d H:i:s"));
                     $end_time = $created_at_time + (15); // 15 seconds greater from created
                     $end_time_format = date("Y/m/d H:i:s", $end_time);
                     $return['idle_warning_countdown'] = $end_time_format;
                     $return['system_alert'] = Myclass::getSystemAlert(2);
+                }
+
+                //Status Icon
+                $chk_sts = $this->statusChecking($_POST['old_live_status']);
+                if ($chk_sts) {
+                    $return['new_live_status'] = $chk_sts;
                 }
             }
             echo CJSON::encode($return);
@@ -541,10 +552,18 @@ class DefaultController extends Controller {
     }
 
     protected function idleWarning() {
-        if(strtotime(Yii::app()->user->getState("last_activity")) <= strtotime(date('Y-m-d H:i:s', strtotime('-'.User::USER_MAX_IDLE_MIN.' minutes')))){
+        if (strtotime(Yii::app()->user->getState("last_activity")) <= strtotime(date('Y-m-d H:i:s', strtotime('-' . User::USER_MAX_IDLE_MIN . ' minutes')))) {
             return true;
         }
         return false;
+    }
+
+    protected function statusChecking($old_sts) {
+        $user = User::model()->mine()->find();
+        if ($user->live_status != $old_sts)
+            return $user->statusbutton;
+        else
+            return false;
     }
 
     protected function tutorBeforePaypalAlert() {
@@ -638,18 +657,58 @@ class DefaultController extends Controller {
     }
 
     public function actionCron() {
-        $idle_users = TempSession::model()->findAll('last_activity_time < :lastTime', array(':lastTime' => date('Y-m-d H:i:s', strtotime('-'.User::USER_MAX_IDLE_MIN.' minutes'))));
+        $idle_users = TempSession::model()->findAll('last_activity_time < :lastTime', array(':lastTime' => date('Y-m-d H:i:s', strtotime('-' . User::USER_MAX_IDLE_MIN . ' minutes'))));
         foreach ($idle_users as $temp_session) {
             User::switchStatus($temp_session->user->user_id, 'O');
             $temp_session->delete();
         }
         Yii::app()->end();
     }
-    
+
     public function actionStayloggedin() {
         if (Yii::app()->request->isPostRequest && Yii::app()->request->getPost('user_id')) {
             TempSession::insertSession(Yii::app()->request->getPost('user_id'));
             Yii::app()->end();
         }
+    }
+
+    public function actionPrechat($temp_guid) {
+        $temp_booking = BookingTemp::model()->findByAttributes(array('temp_guid' => $temp_guid));
+        $this->render('prechat', compact('temp_booking'));
+    }
+
+    public function actionIpncheck() {
+        $return = array();
+        if (Yii::app()->request->isAjaxRequest && Yii::app()->request->getPost('temp_guid')) {
+            $temp_booking = BookingTemp::model()->findByAttributes(array('temp_guid' => Yii::app()->request->getPost('temp_guid')));
+            if (!empty($temp_booking)) {
+                $return['status'] = $temp_booking->progress_status;
+                $return['status_txt'] = $temp_booking->progress;
+                
+                if($temp_booking->progress_status == 2 && $temp_booking->user_return_status == '1'){
+                    $booking_data = unserialize($temp_booking->temp_value);
+                    $return['chat_url'] = Yii::app()->createAbsoluteUrl('/site/default/chat', array('guid' => $booking_data['book_guid']));
+                    $return['status'] = 'C';
+                }
+            }
+        }
+        echo CJSON::encode($return);
+        Yii::app()->end();
+    }
+
+    public function actionGetbooktime() {
+        $return = array();
+        if (Yii::app()->request->isAjaxRequest && Yii::app()->request->getPost('book_guid')) {
+            $booking = CamBooking::model()->findByAttributes(array('book_guid' => Yii::app()->request->getPost('book_guid')));
+            if(Yii::app()->request->getPost('participant') == 'true'){
+                $booking->book_start_time = date("Y-m-d H:i:s");
+                $booking->setEndtime();
+                $booking->save(false);
+            }
+            $booking = CamBooking::model()->findByAttributes(array('book_guid' => Yii::app()->request->getPost('book_guid')));
+            $return['et_time'] = date('Y/m/d H:i:s', strtotime(Yii::app()->localtime->toUTC($booking->book_end_time)));
+        }
+        echo json_encode($return, JSON_UNESCAPED_SLASHES);
+        Yii::app()->end();
     }
 }

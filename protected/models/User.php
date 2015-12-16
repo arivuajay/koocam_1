@@ -42,7 +42,14 @@
  */
 class User extends RActiveRecord {
 
+    public $old_password;
+    public $new_password;
+    public $repeat_password;
+    public $confirm_password;
+    public $i_agree;
+    
     const USER_MAX_IDLE_MIN = 5;
+    const CAM_PER_USER = 20;
 
     public function init() {
         if ($this->isNewRecord) {
@@ -53,7 +60,6 @@ class User extends RActiveRecord {
         parent::init();
     }
 
-    const CAM_PER_USER = 20;
 
     public function getFullname() {
         if ($this->userProf->prof_firstname == '' && $this->userProf->prof_lastname == '') {
@@ -63,12 +69,6 @@ class User extends RActiveRecord {
         }
         return $fullname;
     }
-
-    public $old_password;
-    public $new_password;
-    public $repeat_password;
-    public $confirm_password;
-    public $i_agree;
 
     /**
      * @return string the associated database table name
@@ -90,6 +90,8 @@ class User extends RActiveRecord {
 
     public function scopes() {
         $alias = $this->getTableAlias(false, false);
+        $user_id = Yii::app()->user->id;
+        
         return array(
             'active' => array('condition' => "$alias.status = '1'"),
             'inactive' => array('condition' => "$alias.status = '0'"),
@@ -97,6 +99,7 @@ class User extends RActiveRecord {
             'deactivated' => array('condition' => "$alias.status = '3'"),
             'all' => array('condition' => "$alias.status is not null"),
             'current' => array('condition' => "$alias.status IN ('1', '0')"),
+            'mine' => array('condition' => "$alias.user_id = $user_id"),
         );
     }
 

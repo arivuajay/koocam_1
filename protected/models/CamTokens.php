@@ -177,7 +177,7 @@ class CamTokens extends RActiveRecord {
             if (empty($token_exists)) {
                 $token_model = new CamTokens;
                 $role = self::TOKEN_ROLE;
-                $expire = time() + ($booking_model->book_duration * 60);
+                $expire = time() + (($booking_model->book_duration + 15) * 60);
                 $session_data = array(
                     'expire' => $expire,
                     'role' => $role,
@@ -234,6 +234,7 @@ class CamTokens extends RActiveRecord {
     public static function saveAttendance($token_id, $tutor_attendance, $learner_attendance) {
         $model = self::model()->findByPk($token_id);
         $model->attributes = array('tutor_attendance' => $tutor_attendance, 'learner_attendance' => $learner_attendance);
+        
         if ($tutor_attendance == 1) {
             $model->tutor_attend_time = date('Y-m-d H:i:s');
         }

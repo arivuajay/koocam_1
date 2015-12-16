@@ -134,16 +134,24 @@ class BookingtempController extends Controller {
         if (isset($_POST["txn_id"]) && isset($_POST["payment_status"])) {
             if ($_POST["payment_status"] == "Pending" || $_POST["payment_status"] == "Completed") {
                 $booking_temp = BookingTemp::model()->findByAttributes(array('temp_guid' => $_POST['custom']));
-                $booking_data = unserialize($booking_temp->temp_value);
-
-                $book_guid = isset($booking_data['book_guid']) ? $booking_data['book_guid'] : '';
-                if ($book_guid) {
-                    $booking_temp->delete();
-                    Yii::app()->user->setFlash('success', 'Thanks for your booking!');
-                    $this->redirect(array('/site/default/chat', 'guid' => $book_guid));
-                } else {
-                    Yii::app()->user->setFlash('danger', 'Failed to generate token.');
+                if($booking_temp->progress_status != 2){
+                    $booking_temp->progress_status = 1;
                 }
+                $booking_temp->user_return_status = '1';
+                $booking_temp->save(false);
+                $this->redirect(array('/site/default/prechat', 'temp_guid' => $booking_temp->temp_guid));
+                
+//                $booking_temp = BookingTemp::model()->findByAttributes(array('temp_guid' => $_POST['custom']));
+//                $booking_data = unserialize($booking_temp->temp_value);
+
+//                $book_guid = isset($booking_data['book_guid']) ? $booking_data['book_guid'] : '';
+//                if ($book_guid) {
+//                    $booking_temp->delete();
+//                    Yii::app()->user->setFlash('success', 'Thanks for your booking!');
+//                    $this->redirect(array('/site/default/chat', 'guid' => $book_guid));
+//                } else {
+//                    Yii::app()->user->setFlash('danger', 'Failed to generate token.');
+//                }
             }
         } else {
             Yii::app()->user->setFlash('danger', 'Your booking payment is failed. Please try again later or contact admin.');
@@ -179,11 +187,15 @@ class BookingtempController extends Controller {
 
             if ($booking_model->save(false)) {
                 $booking_data['book_guid'] = $booking_model->book_guid;
-                $booking_temp->temp_value = serialize($booking_data);
-                $booking_temp->save(false);
-                CamTokens::generateToken($booking_model->book_guid);
                 Transaction::bookingTransaction($booking_model->book_id);
                 Purchase::insertPurchase($booking_model->book_id);
+                
+                CamTokens::generateToken($booking_model->book_guid);
+                
+                $booking_temp->temp_value = serialize($booking_data);
+                $booking_temp->progress_status = 2;
+                
+                $booking_temp->save(false);
             }
         }
     }
@@ -193,7 +205,9 @@ class BookingtempController extends Controller {
         if (!empty($booking_temp)) {
             $booking_temp->status = 1;
             if ($booking_temp->save(false)) {
+                User::switchStatus(Yii::app()->user->id, 'B');
                 Yii::app()->user->setFlash("success", "You approved one booking.");
+                $this->redirect(array('/site/default/prechat', 'temp_guid' => $booking_temp->temp_guid));
             } else {
                 Yii::app()->user->setFlash("danger", "Sorry some problem occured.");
             }

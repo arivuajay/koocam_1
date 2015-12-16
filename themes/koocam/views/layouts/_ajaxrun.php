@@ -7,15 +7,17 @@ $user_id = (!Yii::app()->user->isGuest) ? Yii::app()->user->id : '0';
 
 $js = <<< EOD
     jQuery(document).ready(function ($) {
+        
         window.setInterval(function(){
             msg_count = $('#li_message_top').find('#top_msg_count').data('count');
             notifn_count = $('#li_notifn_top').find('#top_notifn_count').data('count');
             idle_open = $("#idle-warning").is(":visible") ? 1 : 0;
+            user_sts = $('#switch_status').data('mode');
         
             $.ajax({
                 type: 'POST',
                 dataType: 'json',
-                data: {'old_msg_count': msg_count, 'old_notifn_count' : notifn_count, 'idle_open' : idle_open},
+                data: {'old_msg_count': msg_count, 'old_notifn_count' : notifn_count, 'idle_open' : idle_open, 'old_live_status' : user_sts},
                 url: '$ajaxRun',
                 success:function(data){
                     if(data.learner_waiting == 1){
@@ -39,6 +41,11 @@ $js = <<< EOD
         
                     if(data.system_alert != 0){
                         $('#li_notifn_alert').html(data.system_alert);
+                    }
+        
+                    if(data.new_live_status != 0){
+                        $('#user_status_li').html(data.new_live_status);
+                        $('[data-toggle="tooltip"]').tooltip();
                     }
         
                     if(data.tutor_before_paypal_alert == 1){
@@ -76,7 +83,6 @@ $js = <<< EOD
                     }
         
                     if(data.idle_warning == 1){
-                        $('#idle-warning').modal({backdrop: 'static', keyboard: false});
                         var t_clock_html = '$clock_html';
                         var t_end_time = data.idle_warning_countdown;
                         $('#logout_clock').countdown(t_end_time, function (event) {
@@ -89,7 +95,7 @@ $js = <<< EOD
                                 data:data,
                                 success:function(data){
                                     $('#stay_loggedin').addClass('hide');
-                                    $('#login_again').removeClass('hide');
+                                    $('.after_logout').removeClass('hide');
                                 },
                                 error: function(data) {
                                 },
@@ -125,8 +131,25 @@ $js = <<< EOD
                 },
             });
         });
+        
+        $("#idle-warning").on('show.bs.modal', function () {
+            titleBlink("Your Session Going to Expire");
+        });
+        $("#learner-wait").on('show.bs.modal', function () {
+            titleBlink("Your Learner Comes to Online !!!");
+        });
+        $("#tutor-before-paypal-wait").on('show.bs.modal', function () {
+            titleBlink("Payment Approve !!!");
+        });
     });
 
+    function titleBlink(txt){
+        $.titleAlert(txt, {
+            requireBlur:false,
+            stopOnFocus:true,
+            interval:700,
+        });
+    }
 
 EOD;
 
@@ -135,7 +158,7 @@ Yii::app()->clientScript->registerScript('_ajaxrun', $js);
 
 <div id="li_notifn_alert" class="hide"></div>
 
-<div class="modal fade approve" id="idle-warning" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+<div class="modal fade approve" id="idle-warning" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-md">
         <div class="modal-content">
             <div class="modal-header">
@@ -154,7 +177,8 @@ Yii::app()->clientScript->registerScript('_ajaxrun', $js);
                         <div class="row"> 
                             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-12">                
                                 <?php echo CHtml::link('Stay Logged in', '', array('class' => 'btn btn-danger', 'id' => 'stay_loggedin')); ?>
-                                <?php echo CHtml::link('Login', '#', array('data-toggle' => "modal", 'data-target' => ".bs-example-modal-sm1", 'data-dismiss' => "#idle-warning", 'id' => 'login_again', 'class' => 'hide btn btn-danger')); ?>
+                                <?php echo CHtml::link('Login', '#', array('data-toggle' => "modal", 'data-target' => ".bs-example-modal-sm1", 'data-dismiss' => "#idle-warning", 'id' => 'login_again', 'class' => 'hide btn btn-primary after_logout')); ?>
+                                <?php echo CHtml::link('Refresh', Yii::app()->controller->homeUrl, array('data-toggle' => "modal", 'class' => 'hide btn btn-success after_logout')); ?>
                             </div> 
                             
                         </div>
@@ -165,7 +189,7 @@ Yii::app()->clientScript->registerScript('_ajaxrun', $js);
     </div>
 </div>
 
-<div class="modal fade approve" id="learner-wait" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+<div class="modal fade approve" id="learner-wait" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
@@ -189,7 +213,7 @@ Yii::app()->clientScript->registerScript('_ajaxrun', $js);
     </div>
 </div>
 
-<div class="modal fade approve" id="tutor-before-paypal-wait" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+<div class="modal fade approve" id="tutor-before-paypal-wait" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
