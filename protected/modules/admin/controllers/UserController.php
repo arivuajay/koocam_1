@@ -68,6 +68,10 @@ class UserController extends Controller {
         $purchase_model->unsetAttributes();
         $purchase_model->user_id = $id;
         
+        $job_model = new CamBooking('search');
+        $job_model->unsetAttributes();
+        $job_model->cam->tutor_id = $id;
+        
         $this->performAjaxValidation($notifn_model);
         
         if (Yii::app()->request->isPostRequest && Yii::app()->request->getPost('Notification')) {
@@ -88,7 +92,7 @@ class UserController extends Controller {
              }
         }
         
-        $this->render('view', compact('model','notifn_model','cam_model', 'purchase_model'));
+        $this->render('view', compact('model','notifn_model','cam_model', 'purchase_model', 'job_model'));
     }
 
     /**

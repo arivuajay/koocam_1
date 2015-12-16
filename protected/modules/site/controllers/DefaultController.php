@@ -735,7 +735,7 @@ class DefaultController extends Controller {
             $interval = date_diff($date_a, $date_b);
 
             $return['et_hour'] = $interval->format('%h');
-            $return['et_minutes'] = $interval->format('%i');
+            $return['et_minutes'] = $interval->format('%i')+1;
             $return['et_seconds'] = $interval->format('%s');
             
 //            $return['et_time'] = date('Y/m/d H:i:s', strtotime(Yii::app()->localtime->toUTC($booking->book_end_time)));
