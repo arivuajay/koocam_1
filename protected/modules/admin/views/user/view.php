@@ -15,36 +15,108 @@ $this->rightCornerLink = CHtml::link('<i class="fa fa-reply"></i> Back', array('
 <div class="container-fluid">
     <?php echo CHtml::link('<i class="fa fa-mail-forward"></i> Send Message', 'javascript:void(0)', array("class" => "btn btn-info", 'data-toggle' => "modal", 'data-target' => "#modal-approve-withdraw", 'data-dismiss' => ".bs-example-modal-sm")); ?>
     <div class="page-section third">
-        <?php
-        $this->widget('zii.widgets.CDetailView', array(
-            'data' => $model,
-            'htmlOptions' => array('class' => 'table table-striped table-bordered'),
-            'nullDisplay' => '-',
-            'attributes' => array(
-                'username',
-                'email',
-                array(
-                    'name' => 'Profile Picture',
-                    'type' => 'raw',
-                    'value' => $model->getProfilethumb(array('class' => '', 'style' => 'height: 80px;'))
-                ),
-                array(
-                    'name' => 'status',
-                    'type' => 'raw',
-                    'value' => $model->status == 1 ? '<i class="fa fa-circle text-green-500"></i>' : '<i class="fa fa-circle text-red-500"></i>'
-                ),
-                'userProf.prof_firstname',
-                'userProf.prof_lastname',
-                'userProf.prof_tag',
-                'userProf.prof_address',
-                'userProf.prof_phone',
-                'userProf.prof_skype',
-                'userProf.prof_website',
-                'userProf.prof_about',
-                'created_at',
-            ),
-        ));
-        ?>
+        <div class="tabbable">
+            <!-- Tabs -->
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#user" data-toggle="tab"><i class="fa fa-fw fa-user"></i> User Details</a></li>
+                <li><a href="#cams" data-toggle="tab"><i class="fa fa-fw fa-wechat"></i> Cams</a></li>
+                <li><a href="#cam_purchase" data-toggle="tab"><i class="fa fa-fw fa-cart-plus"></i> Purchase</a></li>
+            </ul>
+            <!-- Panes -->
+            <div class="tab-content">
+                <div id="user" class="tab-pane active">
+                    <?php
+                    $this->widget('zii.widgets.CDetailView', array(
+                        'data' => $model,
+                        'htmlOptions' => array('class' => 'table table-striped table-bordered'),
+                        'nullDisplay' => '-',
+                        'attributes' => array(
+                            'username',
+                            'email',
+                            array(
+                                'name' => 'Profile Picture',
+                                'type' => 'raw',
+                                'value' => $model->getProfilethumb(array('class' => '', 'style' => 'height: 80px;'))
+                            ),
+                            array(
+                                'name' => 'status',
+                                'type' => 'raw',
+                                'value' => $model->status == 1 ? '<i class="fa fa-circle text-green-500"></i>' : '<i class="fa fa-circle text-red-500"></i>'
+                            ),
+                            'userProf.prof_firstname',
+                            'userProf.prof_lastname',
+                            'userProf.prof_tag',
+                            'userProf.prof_address',
+                            'userProf.prof_phone',
+                            'userProf.prof_skype',
+                            'userProf.prof_website',
+                            'userProf.prof_about',
+                            'created_at',
+                        ),
+                    ));
+                    ?>
+
+                </div>
+                <div id="cams" class="tab-pane">
+                    <?php
+                    $gridColumns = array(
+                        array(
+                            'class' => 'IndexColumn',
+                            'header' => '',
+                        ),
+                        'cam_title',
+                        array(
+                            'name' => 'cat.cat_name',
+                            'filter' => CHtml::activeTextField($cam_model, 'camCategory', array('class' => 'form-control')),
+                            'value' => '$data->cat->cat_name'
+                        ),
+                        'cam_duration',
+                        'cam_price',
+                        array(
+                            'name' => 'created_at',
+                            'filter' => false
+                        ),
+                    );
+
+                    $this->widget('application.components.MyExtendedGridView', array(
+                        'filter' => $cam_model,
+                        'type' => 'striped bordered',
+                        'dataProvider' => $cam_model->search(),
+                        'responsiveTable' => true,
+                        "itemsCssClass" => "table v-middle",
+                        'template' => '<div class="panel panel-default"><div class="table-responsive">{items}{pager}</div></div>',
+                        'columns' => $gridColumns
+                            )
+                    );
+                    ?>
+                </div>
+                <div id="cam_purchase" class="tab-pane">
+                    <?php
+                    $gridColumns = array(
+                        array(
+                            'class' => 'IndexColumn',
+                            'header' => '',
+                        ),
+                        'book_id',
+                        'user_id',
+                        'created_at',
+                    );
+
+                    $this->widget('application.components.MyExtendedGridView', array(
+                        'filter' => $purchase_model,
+                        'type' => 'striped bordered',
+                        'dataProvider' => $purchase_model->search(),
+                        'responsiveTable' => true,
+                        "itemsCssClass" => "table v-middle",
+                        'template' => '<div class="panel panel-default"><div class="table-responsive">{items}{pager}</div></div>',
+                        'columns' => $gridColumns
+                            )
+                    );
+                    ?>
+                </div>
+            </div>
+            <!-- // END Panes -->
+        </div>
 
     </div>
 </div>
@@ -78,7 +150,7 @@ $this->rightCornerLink = CHtml::link('<i class="fa fa-reply"></i> Back', array('
                         <?php echo $form->labelEx($notifn_model, 'notifn_message'); ?>
                         <?php echo $form->error($notifn_model, 'notifn_message'); ?>
                     </div>
- 
+
                     <div class="form-group">
                         <?php echo CHtml::submitButton('Send Message', array('class' => 'btn btn-primary')); ?>
                     </div>

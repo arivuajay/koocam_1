@@ -157,15 +157,18 @@ if($info['my_role'] == 'learner')
 $cs = Yii::app()->getClientScript();
 $cs_pos_end = CClientScript::POS_END;
 $cs->registerScriptFile("https://static.opentok.com/v2/js/opentok.min.js");
-$cs->registerScriptFile($themeUrl . '/js/moment.js', $cs_pos_end);
-$cs->registerScriptFile($themeUrl . '/js/moment-timezone.js', $cs_pos_end);
-$cs->registerScriptFile($themeUrl . '/js/jquery.countdown.min.js', $cs_pos_end);
+$cs->registerScriptFile($themeUrl . '/js/jquery.countdownTimer.js', $cs_pos_end);
+//$cs->registerScriptFile($themeUrl . '/js/moment.js', $cs_pos_end);
+//$cs->registerScriptFile($themeUrl . '/js/moment-timezone.js', $cs_pos_end);
+//$cs->registerScriptFile($themeUrl . '/js/jquery.countdown.min.js', $cs_pos_end);
 $cs->registerScriptFile($themeUrl . '/js/jquery-blink.js', $cs_pos_end);
 
 $js = <<< EOD
     $('#send-file-button').on('click', function(){
         $('#uploadFile :input').trigger('click');
     });
+    $('.blink').blink({delay:300});
+    
     
 EOD;
 Yii::app()->clientScript->registerScript('chat', $js);

@@ -56,7 +56,18 @@ class UserController extends Controller {
      * @param integer $id the ID of the model to be displayed
      */
     public function actionView($id) {
+        $model = $this->loadModel($id);
+        
         $notifn_model = new Notification;
+        
+        $cam_model = new Cam('search');
+        $cam_model->unsetAttributes();
+        $cam_model->tutor_id = $id;
+        
+        $purchase_model = new Purchase('search');
+        $purchase_model->unsetAttributes();
+        $purchase_model->user_id = $id;
+        
         $this->performAjaxValidation($notifn_model);
         
         if (Yii::app()->request->isPostRequest && Yii::app()->request->getPost('Notification')) {
@@ -76,10 +87,8 @@ class UserController extends Controller {
                 $this->redirect(array('/admin/user/view', 'id' => $id));
              }
         }
-        $this->render('view', array(
-            'model' => $this->loadModel($id),
-            'notifn_model' => $notifn_model
-        ));
+        
+        $this->render('view', compact('model','notifn_model','cam_model', 'purchase_model'));
     }
 
     /**

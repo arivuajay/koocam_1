@@ -701,9 +701,9 @@ class DefaultController extends Controller {
                             $return['chat_url'] = Yii::app()->createAbsoluteUrl('/site/default/chat', array('guid' => $booking_data['book_guid']));
                             $return['status'] = 'C';
                             $return['status_txt'] = 'Chat Going to Start. Please Wait..';
-                        }else{
-                             $return['status'] = 'W';
-                             $return['status_txt'] = 'Waiting for Learner';
+                        } else {
+                            $return['status'] = 'W';
+                            $return['status_txt'] = 'Waiting for Learner';
                         }
                     } else {
                         $return['chat_url'] = Yii::app()->createAbsoluteUrl('/site/default/chat', array('guid' => $booking_data['book_guid']));
@@ -726,7 +726,19 @@ class DefaultController extends Controller {
                 $booking->save(false);
             }
             $booking = CamBooking::model()->findByAttributes(array('book_guid' => Yii::app()->request->getPost('book_guid')));
-            $return['et_time'] = date('Y/m/d H:i:s', strtotime(Yii::app()->localtime->toUTC($booking->book_end_time)));
+
+            $start_time = Yii::app()->localtime->getUTCNow('Y-m-d H:i:s');
+            $end_time = Yii::app()->localtime->toUTC($booking->book_end_time);
+
+            $date_a = new DateTime($start_time);
+            $date_b = new DateTime($end_time);
+            $interval = date_diff($date_a, $date_b);
+
+            $return['et_hour'] = $interval->format('%h');
+            $return['et_minutes'] = $interval->format('%i');
+            $return['et_seconds'] = $interval->format('%s');
+            
+//            $return['et_time'] = date('Y/m/d H:i:s', strtotime(Yii::app()->localtime->toUTC($booking->book_end_time)));
 //            $return['et_time'] = date('Y/m/d H:i:s', strtotime($booking->book_end_time));
         }
         echo json_encode($return, JSON_UNESCAPED_SLASHES);
