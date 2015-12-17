@@ -75,7 +75,7 @@ class UserController extends Controller {
         $payments_model = new Transaction('search');
         $payments_model->unsetAttributes();
         $payments_model->user_id = $id;
-//        $payments_model->userPayments = true;
+        $payments_model->userPayments = true;
         
         $this->performAjaxValidation($notifn_model);
         
