@@ -11,7 +11,7 @@
                     <div class="course-thumbimg">
                         <?php
                         echo $cam->tutor->userstatusicon;
-                        echo CHtml::link($cam->camthumb, array('/site/cam/view', 'slug' => $cam->slug));
+                        echo CHtml::link($cam->getCamthumb(array(), array('style' => 'height: 231px;')), array('/site/cam/view', 'slug' => $cam->slug));
                         ?>
                     </div>
                     <div class="course-thumbdetails">

@@ -114,3 +114,9 @@ a.view-comment, a.write-comment{
   min-height: 275px !important;
 }
 
+.course-thumbdetails > h2 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+

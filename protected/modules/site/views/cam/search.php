@@ -104,7 +104,9 @@ echo CHtml::hiddenField('s', $search_text);
                     <?php foreach ($featured as $key => $cam): ?>
                         <div class="featuerd-course-cont"> 
                             <div class="row"> 
-                                <div class="col-xs-4 col-sm-5 col-md-5 col-lg-5"><?php echo CHtml::link($cam->camthumb, array('/site/cam/view', 'slug' => $cam->slug)); ?> </div> 
+                                <div class="col-xs-4 col-sm-5 col-md-5 col-lg-5">
+                                    <?php echo CHtml::link($cam->getCamthumb(array(), array('style' => 'height: 77px;')), array('/site/cam/view', 'slug' => $cam->slug)); ?> 
+                                </div> 
                                 <div class="col-xs-8 col-sm-7 col-md-7 col-lg-7">
                                     <p> <?php echo CHtml::link($cam->cam_title, array('/site/cam/view', 'slug' => $cam->slug)); ?> </p>
                                     <p>  <span> <?php echo CHtml::link($cam->tutor->fullname, array('/site/user/profile', 'slug' => $cam->tutor->slug)); ?> </span> </p>
