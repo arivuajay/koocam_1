@@ -63,7 +63,7 @@
                     <span id="question-name"></span>
                 </div>
                 <div class="form-group"> 
-                    <?php echo $form->textField($model, 'answer_check', array('autofocus', 'class' => 'form-control', 'placeholder' => "Your security question")); ?> 
+                    <?php echo $form->textField($model, 'answer_check', array('autofocus', 'class' => 'form-control', 'placeholder' => "Your answer")); ?> 
                     <?php echo $form->error($model, 'answer_check'); ?> 
                 </div>
                 <div class="form-group"> 
@@ -96,12 +96,12 @@ $cs_pos_end = CClientScript::POS_END;
 
 $js = <<< EOD
         
-        $(document).ready(function(){
-            $("#no-answer").click(function(){
-                $("#answer-know").val("N");
-                $("#forgot-password-form").submit();
-            });
+    $(document).ready(function(){
+        $("#no-answer").click(function(){
+            $("#answer-know").val("N");
+            $("#forgot-password-form").submit();
         });
+    });
                 
     function process_forgot_form(data){
         if(data.status=="success"){

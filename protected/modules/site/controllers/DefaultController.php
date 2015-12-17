@@ -68,7 +68,7 @@ class DefaultController extends Controller {
             $this->goHome();
         }
 
-        $model = new LoginForm;
+        $model = new LoginForm("login");
         $this->performAjaxValidation($model);
 
         if (isset($_POST['LoginForm'])) {
@@ -114,6 +114,32 @@ class DefaultController extends Controller {
         Yii::app()->user->setFlash('success', "You were logged out successfully");
         $this->goHome();
     }
+    
+    public function sendForgotPasswordMail() {
+        $user = User::model()->findByAttributes(array('email' => $_POST['LoginForm']['email']));
+        $reset_link = Myclass::getRandomString(25);
+        $user->setAttribute('password_reset_token', $reset_link);
+        $user->setAttribute('modified_at', date('Y-m-d H:i:s'));
+        $user->save(false);
+
+        ///////////////////////
+        $time_valid = Yii::app()->localtime->getLocalNow('Y-m-d H:i:s');
+        $resetlink = Yii::app()->createAbsoluteUrl('/site/default/reset?str=' . $user->password_reset_token . '&id=' . $user->user_id);
+        if (!empty($user->email)):
+            $mail = new Sendmail;
+            $trans_array = array(
+                "{SITENAME}" => SITENAME,
+                "{USERNAME}" => $user->username,
+                "{EMAIL_ID}" => $user->email,
+                "{NEXTSTEPURL}" => $resetlink,
+                "{TIMEVALID}" => $time_valid,
+            );
+            $message = $mail->getMessage('forgot_password', $trans_array);
+            $Subject = $mail->translate('{SITENAME}: Reset Password');
+            $mail->send($user->email, $Subject, $message);
+        endif;
+        return true;
+    }
 
     public function actionForgotpassword() {
         if (!Yii::app()->user->isGuest)
@@ -155,36 +181,6 @@ class DefaultController extends Controller {
                 Yii::app()->end();
             }
         }
-    }
-
-    public function sendForgotPasswordMail() {
-        $user = User::model()->findByAttributes(array('email' => $_POST['LoginForm']['email']));
-        $reset_link = Myclass::getRandomString(25);
-        $user->setAttribute('password_reset_token', $reset_link);
-        $user->setAttribute('modified_at', date('Y-m-d H:i:s'));
-        $user->save(false);
-
-        ///////////////////////
-        $time_valid = Yii::app()->localtime->getLocalNow('Y-m-d H:i:s');
-        $resetlink = Yii::app()->createAbsoluteUrl('/site/default/reset?str=' . $user->password_reset_token . '&id=' . $user->user_id);
-        if (!empty($user->email)):
-            $mail = new Sendmail;
-            $trans_array = array(
-                "{SITENAME}" => SITENAME,
-                "{USERNAME}" => $user->username,
-                "{EMAIL_ID}" => $user->email,
-                "{NEXTSTEPURL}" => $resetlink,
-                "{TIMEVALID}" => $time_valid,
-            );
-            $message = $mail->getMessage('forgot_password', $trans_array);
-            $Subject = $mail->translate('{SITENAME}: Reset Password');
-            $mail->send($user->email, $Subject, $message);
-        endif;
-        
-        return true;
-
-//        Yii::app()->user->setFlash('success', "Your Password Reset Link sent to your email address.");
-//        $this->redirect(array('/site/default/index'));
     }
 
     public function actionForgotpasswordsecurity() {
