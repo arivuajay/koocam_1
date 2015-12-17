@@ -68,7 +68,8 @@ class DefaultController extends Controller {
 
     public function actionLogout() {
         Yii::app()->user->logout(false);
-        $this->redirect(Yii::app()->getModule('admin')->user->loginUrl);
+        $this->redirect('/admin/default/login');
+//        $this->redirect(Yii::app()->getModule('admin')->user->loginUrl);
     }
 
     public function actionProfile() {

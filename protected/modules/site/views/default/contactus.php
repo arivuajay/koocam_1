@@ -25,14 +25,26 @@ $categories = $model->getCategoryList();
                 <div class="forms-cont account-settingform">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-heading"> Send Message </div>
                     <?php
+                    // Snippet that reloads the captcha image after validation
+                    $updateCaptcha = <<<EOD
+                   function(form,attribute,data,hasError) {
+                       var i=form.find('.captcha img').first(),
+                                   h=/^.*\/v\//.exec(i.attr('src'));  // will cut off the number part at the end of image src URL (".../v/123456")
+                       i.attr('src',h+Math.floor(100000*Math.random()));  // creates a new random number to prevent image caching
+                       return true;
+                   }
+EOD;
+
                     $form = $this->beginWidget('CActiveForm', array(
                         'id' => 'cam-contactus-form',
                         'htmlOptions' => array('role' => 'form', 'class' => ''),
                         'clientOptions' => array(
                             'validateOnSubmit' => true,
                             'hideErrorMessage' => true,
+                            'afterValidateAttribute' => 'js:' . $updateCaptcha,
+                            'afterValidate' => 'js:' . $updateCaptcha,
                         ),
-                        'enableAjaxValidation' => false,
+                        'enableAjaxValidation' => true,
                     ));
                     ?>
 
@@ -68,13 +80,15 @@ $categories = $model->getCategoryList();
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 "> 
-                            <?php $this->widget('CCaptcha', array('captchaAction'=>'/site/default/captcha')); ?>
-                            <?php echo $form->textField($model, 'verifyCode', array('class' => 'form-control', 'placeholder' => 'Captcha')); ?>
-                            <?php echo $form->error($model, 'verifyCode'); ?>
+                    <?php if (extension_loaded('gd')): ?>
+                        <div class="form-group">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 captcha"> 
+                                <?php $this->widget('CCaptcha', array('captchaAction' => '/site/default/captcha')); ?>
+                                <?php echo $form->textField($model, 'verifyCode', array('class' => 'form-control', 'placeholder' => 'Captcha')); ?>
+                                <?php echo $form->error($model, 'verifyCode'); ?>
+                            </div>
                         </div>
-                    </div>
+                    <?php endif ?>
 
                     <div class="form-group">
                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
@@ -87,3 +101,11 @@ $categories = $model->getCategoryList();
         </div>
     </div>
 </div>
+
+<?php
+/* simulate a click on "refresh captcha" for GET requests */
+if (!Yii::app()->request->isPostRequest)
+    Yii::app()->clientScript->registerScript(
+            'initCaptcha', '$(".captcha a").trigger("click");', CClientScript::POS_READY
+    );
+?>

@@ -63,6 +63,7 @@ $themeUrl = $this->themeUrl;
                     </div>
                 </div>
             <?php endforeach; ?>
+        <p class="text-right">(Inc. Processing & Service Tax)</p>
         <?php else: ?>
             <h4 class="text-center">No Purchase Found</h4>
         <?php endif; ?>

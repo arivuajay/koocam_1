@@ -6,10 +6,15 @@ $defaultImage = $model->camimage;
 ?>
 <div class="course-img">
     <div class="price-bg"> <?php echo $model->cam_duration; ?> min<br/>
-        <b class="cam_price_txt"> $ <?php echo $cam_price = (float) $model->cam_price; ?> </b>
+        <b class="cam_price_txt_xxx"> $ <?php echo $cam_price = (float) $model->cam_price; ?> </b>
     </div>
-    <?php echo $model->tutor->userstatusicon; ?>
-    <?php
+    <?php 
+    echo $model->tutor->userstatusicon;
+    if($model->cam_avail_visual == 'N'){
+        echo '<div title="" data-placement="right" data-toggle="tooltip" class="viual-chattxt" data-original-title="Will not be available on visual chat">';
+        echo CHtml::image($themeUrl.'/images/video-chat2.png', 'Visual Chat Not Available');
+        echo '</div>';
+    }
     if ($model->is_video == 'N') {
         echo $defaultImage;
     } else {

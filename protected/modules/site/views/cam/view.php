@@ -39,7 +39,7 @@ $logged_user = !$is_tutor && !Yii::app()->user->isGuest;
     <div class="container">
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-                <?php $this->renderPartial('_view_image', compact('model')); ?>
+                <?php $this->renderPartial('_view_image', compact('model', 'themeUrl')); ?>
                 <div class="row">
                     <?php
                     $model->setButtonOptions();
@@ -71,22 +71,11 @@ $logged_user = !$is_tutor && !Yii::app()->user->isGuest;
                     <button class="btn btn-default edit-btn" data-toggle="modal" data-target=".bs-example-modal-sm2" data-dismiss=".bs-example-modal-sm2" onclick="location.href = '<?php echo Yii::app()->createAbsoluteUrl('/site/cam/update', array('id' => $model->cam_id)) ?>'"> <i class="fa fa-pencil"></i> </button>
                 <?php } ?>
                 <p class="date"> Created Date : <?php echo date(PHP_SHORT_DATE_FORMAT, strtotime($model->created_at)); ?></p>
-                <p>
-                    <?php
-                    if($model->cam_avail_visual == 'Y'){
-                        $chat_icon = 'chat-icon.png';
-                        $txt = 'Will be available on visual chat';                    
-                    }else if($model->cam_avail_visual == 'N'){
-                        $chat_icon = 'chat-icon2.png';
-                        $txt = 'Will be not available on visual chat';                    
-                    }
-                    echo CHtml::image("{$themeUrl}/images/{$chat_icon}", '', array('width' => "26", 'height' => "22")).' '.$txt; ?>
-                </p>
                 <p><?php echo $model->cam_description; ?></p>
                 <h4 class="importants-heading"> Importants </h4>
                 <p> <?php echo $model->cam_important; ?> </p>
                 <h4> Country </h4>
-                <p> <?php echo $tutor->userProf->country->country_name; ?></p>
+                <p> <?php echo $tutor->userCountry->country_name; ?></p>
                 <h4> Languages </h4>
                 <p> <?php echo $tutor->languages; ?></p>
                 <h4> Interests </h4>

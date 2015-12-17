@@ -9,6 +9,11 @@ if (strpos($_SERVER['SERVER_NAME'], 'localhost') !== false) {
     $db_user = 'rajencba_koocam';
     $db_pass = 'N=W+.vs=7}+F';
     $db_name = 'rajencba_koocam';
+} elseif (strpos($_SERVER['SERVER_NAME'], 'koocam.com') !== false) {
+    $host = 'localhost';
+    $db_user = 'koocam_koouser';
+    $db_pass = '}d_0%G2q~f6T';
+    $db_name = 'koocam_koocam';
 }
 return array(
     'connectionString' => "mysql:host=$host;dbname=$db_name",

@@ -26,6 +26,7 @@ $this->widget('zii.widgets.CDetailView', array(
         'userProf.prof_skype',
         'userProf.prof_website',
         'userProf.prof_about',
+        'userCountry.country_name',
         array(
             'name' => 'Expenses ($)',
             'type' => 'raw',

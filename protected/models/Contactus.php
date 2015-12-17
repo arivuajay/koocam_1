@@ -68,7 +68,7 @@ class Contactus extends RActiveRecord {
             array('contact_name, contact_email', 'length', 'max' => 255),
             array('contact_category', 'length', 'max' => 2),
             array('created_at, modified_at, verifyCode, status, contact_reply', 'safe'),
-            array('verifyCode', 'captcha', 'allowEmpty' => !CCaptcha::checkRequirements(), 'on' => 'user'),
+            array('verifyCode', 'captcha', 'allowEmpty' => !CCaptcha::checkRequirements(), 'captchaAction'=>'/site/default/captcha', 'skipOnError'=>true, 'on' => 'user'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('contact_id, contact_name, contact_email, contact_message, user_id, contact_category, created_at, modified_at, verifyCode, status, contact_reply', 'safe', 'on' => 'search'),

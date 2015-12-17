@@ -273,9 +273,17 @@ class CamController extends Controller {
         $alias = $model->getTableAlias(false, false);
 
         $criteria = new CDbCriteria;
-        $criteria->with = array('tutor');
+        $criteria->with = array('tutor.userProf');
 
-        $criteria->compare($alias . '.cam_title', $search_text, true);
+        $criteria->compare($alias . '.cam_title', $search_text, true, 'OR');
+        $criteria->compare($alias . '.cam_tag', $search_text, true, 'OR');
+        $criteria->compare($alias . '.cam_description', $search_text, true, 'OR');
+//        $criteria->compare($alias . '.cam_price', $search_text, true, 'OR');
+//        $criteria->compare($alias . '.cam_important', $search_text, true, 'OR');
+        $criteria->compare('tutor.username', $search_text, true, 'OR');
+        $criteria->compare('tutor.email', $search_text, true, 'OR');
+        $criteria->compare('userProf.prof_firstname', $search_text, true, 'OR');
+        $criteria->compare('userProf.prof_lastname', $search_text, true, 'OR');
 
         if (isset($_REQUEST['cat_id'])) {
             $cat_ids = $_REQUEST['cat_id'];

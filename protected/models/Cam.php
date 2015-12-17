@@ -44,7 +44,7 @@ class Cam extends RActiveRecord {
 
     const CAM_MIN_DURATION = 5;
     const CAM_MAX_DURATION = 60;
-    const CAM_ALLOW_FILE_TYPES = 'jpg, gif, png';
+    const CAM_ALLOW_FILE_TYPES = 'jpg, gif, png, jpeg';
     const CAM_ALLOW_FILE_SIZE = 5; //In MB
     const EXTRA_ALLOW_FILE_TYPES = 'jpg, gif, png, pdf, doc';
     const EXTRA_ALLOW_FILE_SIZE = 5; //In MB
@@ -434,7 +434,7 @@ class Cam extends RActiveRecord {
                 $path = 'themes/koocam/images/cam-img.jpg';
             $url = Yii::app()->createAbsoluteUrl($path);
         }else if ($this->is_video == 'Y' && !empty($this->cam_youtube_url)) {
-            $url = "http://img.youtube.com/vi/{$this->video_id}/default.jpg";
+            $url = "https://img.youtube.com/vi/{$this->video_id}/default.jpg";
         }
         return CHtml::image($url, '', $htmlOptions);
     }
@@ -447,7 +447,7 @@ class Cam extends RActiveRecord {
                 $path = 'themes/koocam/images/cam-img.jpg';
             $url = Yii::app()->createAbsoluteUrl($path);
         }else if ($this->is_video == 'Y' && !empty($this->cam_youtube_url)) {
-            $url = "http://img.youtube.com/vi/{$this->video_id}/default.jpg";
+            $url = "https://img.youtube.com/vi/{$this->video_id}/mqdefault.jpg";
             $htmlOptions = array_merge($htmlOptions, $extraOptions);
         }
         return CHtml::image($url, '', $htmlOptions);

@@ -17,10 +17,12 @@ $user_paypals = $model->userPaypals;
                 <div class="forms-cont account-settingform">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-heading"> Personal information  
                         <span>
-                            <a href="#" data-target="#edit_personal_information" data-toggle="modal" data-dismiss="#edit_personal_information"> 
+                            <a href="#" data-target="#edit_personal_information" data-toggle="modal" data-dismiss="#edit_personal_information" class="label label-danger edit-pro"> 
                                 <i class="fa fa-pencil"></i> edit 
                             </a>
                         </span>
+                        <br/>
+                        <i class="fa fa-lock" data-toggle="tooltip" data-placement="right" title=""></i>  <b> Private to user</b>
                     </div>
                     <div class="form-group">
                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
@@ -34,11 +36,11 @@ $user_paypals = $model->userPaypals;
                     </div>
                     <div class="form-group">
                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
-                            <label>  Address </label>
+                            <label>  Address </label> <i class="fa fa-lock" data-toggle="tooltip" data-placement="right" title="Private to user"></i>
                             <p> <?php echo ($user_profile->prof_address) ? $user_profile->prof_address : '-'; ?> </p>
                         </div>
                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
-                            <label>  Phone Number </label>
+                            <label>  Phone Number </label> <i class="fa fa-lock" data-toggle="tooltip" data-placement="right" title="Private to user"></i>
                             <p> <?php echo ($user_profile->prof_phone) ? $user_profile->prof_phone : '-'; ?> </p>
                         </div>
                     </div>
@@ -48,7 +50,7 @@ $user_paypals = $model->userPaypals;
                             <p> <?php echo $model->userCountry->country_name; ?> </p>
                         </div>
                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
-                            <label>  Website Link </label>
+                            <label>  Website Link </label> <i class="fa fa-lock" data-toggle="tooltip" data-placement="right" title="Private to user"></i>
                             <p> <?php echo ($user_profile->prof_website) ? $user_profile->prof_website : '-'; ?> </p>
                         </div>
                     </div>
@@ -57,7 +59,7 @@ $user_paypals = $model->userPaypals;
                         <!--Email Address Section-->
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-heading"> Email Address
                             <span>
-                                <a href="#" data-target="#edit_email_address" data-toggle="modal" data-dismiss="#edit_email_address"> 
+                                <a href="#" data-target="#edit_email_address" data-toggle="modal" data-dismiss="#edit_email_address" class="label label-danger edit-pro"> 
                                     <i class="fa fa-pencil"></i> edit 
                                 </a>
                             </span>
@@ -68,11 +70,11 @@ $user_paypals = $model->userPaypals;
                             </div>
                             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 age-verify ">
                                 <?php
-                                $receive_email = "";
+                                $receive_email = "email-notification2.png";
                                 if ($model->receive_email_notify)
-                                    $receive_email = 'checked';
+                                    $receive_email = 'email-notification.png';
+                                echo CHtml::image($themeUrl."/images/{$receive_email}", '')
                                 ?>
-                                <input name="" type="checkbox" value="" <?php echo $receive_email; ?> disabled>  
                                 Receive notifications to email
                             </div>
                         </div>
@@ -82,7 +84,7 @@ $user_paypals = $model->userPaypals;
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-heading">
                             Change password  
                             <span>
-                                <a href="#" data-target="#edit_change_password" data-toggle="modal" data-dismiss="#edit_change_password"> 
+                                <a href="#" data-target="#edit_change_password" data-toggle="modal" data-dismiss="#edit_change_password" class="label label-danger edit-pro"> 
                                     <i class="fa fa-pencil"></i> edit 
                                 </a>
                             </span>
@@ -93,7 +95,7 @@ $user_paypals = $model->userPaypals;
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-heading">
                             Security Question  
                             <span>
-                                <a href="#" data-target="#edit_security_question" data-toggle="modal" data-dismiss="#edit_security_question"> 
+                                <a href="#" data-target="#edit_security_question" data-toggle="modal" data-dismiss="#edit_security_question" class="label label-danger edit-pro"> 
                                     <i class="fa fa-pencil"></i> edit 
                                 </a>
                             </span>

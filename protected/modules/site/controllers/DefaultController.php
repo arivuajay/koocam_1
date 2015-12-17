@@ -21,6 +21,7 @@ class DefaultController extends Controller {
             'captcha' => array(
                 'class' => 'CCaptchaAction',
                 'backColor' => 0xFFFFFF,
+                'testLimit'=>0
             ),
         );
     }
@@ -373,8 +374,6 @@ class DefaultController extends Controller {
             CamTokens::saveAttendance($token->token_id, $token->tutor_attendance, 1);
             $participant = $token->tutor_attendance == 1;
         }
-
-        TempSession::insertSession(Yii::app()->user->id, $token->book->book_end_time);
 
         $this->render('chat', compact('token', 'abuse_model', 'info', 'cam_comments', 'participant'));
     }
@@ -827,6 +826,7 @@ class DefaultController extends Controller {
             $start_time = Yii::app()->localtime->getUTCNow('Y-m-d H:i:s');
             $end_time = Yii::app()->localtime->toUTC($booking->book_end_time);
 
+            TempSession::insertSession(Yii::app()->user->id, $booking->book_end_time);
             $date_a = new DateTime($start_time);
             $date_b = new DateTime($end_time);
             $interval = date_diff($date_a, $date_b);
