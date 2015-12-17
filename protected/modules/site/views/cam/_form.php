@@ -14,7 +14,7 @@ $form = $this->beginWidget('CActiveForm', array(
 $categories = CamCategory::getCategoryList();
 ?>            
 <div class="row">
-    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 sub-heading"> <?php echo $model->isNewRecord ? 'ONLY 1 STEP AND YOUR CAM IS UP :)' : $model->cam_title; ?> </div>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 sub-heading"> <?php echo $model->isNewRecord ? 'ONLY 1 STEP AND YOUR CAM IS UP' : $model->cam_title; ?> </div>
     <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8 col-md-offset-1  col-lg-offset-2 ">
         <?php echo $form->errorSummary($model); ?>
         <div class="forms-cont">
@@ -82,7 +82,7 @@ $categories = CamCategory::getCategoryList();
             <div class="form-group"> 
                 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
                     <?php echo $form->labelEx($model, 'cam_important'); ?>
-                    <?php echo $form->textField($model, 'cam_important', array('class' => 'form-control', 'placeholder' => 'Important', 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "Important")); ?> 
+                    <?php echo $form->textField($model, 'cam_important', array('class' => 'form-control', 'placeholder' => 'What the buyer must have/do for this cam Example: your cam is backing; the buyer must have 1/2 cup rice, 100-gram butter and etc.', 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "What the buyer must have/do for this cam Example: your cam is backing; the buyer must have 1/2 cup rice, 100-gram butter and etc.")); ?> 
                     <?php echo $form->error($model, 'cam_important'); ?> 
                 </div>
                 <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 ">

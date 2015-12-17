@@ -22,7 +22,7 @@ $user_paypals = $model->userPaypals;
                             </a>
                         </span>
                         <br/>
-                        <i class="fa fa-lock" data-toggle="tooltip" data-placement="right" title=""></i>  <b> Private to user</b>
+<!--                        <i class="fa fa-lock" data-toggle="tooltip" data-placement="right" title=""></i>  <b> Private to user</b>-->
                     </div>
                     <div class="form-group">
                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">

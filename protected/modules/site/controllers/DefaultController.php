@@ -178,6 +178,7 @@ class DefaultController extends Controller {
                 "{TIMEVALID}" => $time_valid,
             );
             $message = $mail->getMessage('forgot_password', $trans_array);
+            echo $message; exit;
             $Subject = $mail->translate('{SITENAME}: Reset Password');
             $mail->send($user->email, $Subject, $message);
         endif;
