@@ -248,7 +248,7 @@ class Cam extends RActiveRecord {
             'cam_avail_visual' => 'Will be available on visual chat',
             'is_extra' => 'Extras',
             'extra_price' => 'Extra File Price ($)',
-            'extra_description' => 'About Extra File',
+            'extra_description' => 'About Extra',
             'status' => 'Status',
             'cam_important' => 'Important',
             'created_at' => 'Created At',
