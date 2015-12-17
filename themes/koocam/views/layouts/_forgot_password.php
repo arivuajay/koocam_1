@@ -67,7 +67,7 @@
                     <?php echo $form->error($model, 'answer_check'); ?> 
                 </div>
                 <div class="form-group"> 
-                    If don't know the answer, <a href="javascript:void(0)" id="no-answer">click</a> to send the reset password link to mail
+                    If don't know the answer, <?php echo CHtml::link("Contact us", array("/site/default/contactus")); ?>
                 </div>
 
                 <div class="form-group"> 
