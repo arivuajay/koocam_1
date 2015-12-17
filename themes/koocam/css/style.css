@@ -593,7 +593,7 @@ a:hover {
 	height: 100%;
 }
 .tt-fullHeight3 {
-	min-height:250px
+	min-height:275px
 }
 .page-details {
 	color:#ffffff;
@@ -2057,6 +2057,7 @@ input[type=button] {
 	text-transform:none;
 	font-weight:normal;
 	margin-left:15px;
+	float:right;
 }
 .form-heading span a {
 	color:#4e4e4e;
@@ -2252,4 +2253,56 @@ input[type=button] {
 	font-size:22px;
 	margin-top:45px;
 	text-transform:none;
+}
+
+
+.spe-line
+{
+	width:100%;
+	float:left;
+	border-bottom:#f0f0f0 solid 1px;
+	margin-top:25px;
+	margin-bottom:25px;
+}
+
+.edit-pro
+{
+	font-size:14px;
+	color:#ffffff !important;
+}
+
+.edit-pro span a
+{
+	color:#ffffff;
+}
+
+.edit-pro:hover
+{
+	text-decoration:none;
+}
+
+.account-settingform a
+{
+	color:#2e2e2e;
+}
+
+
+.form-heading .label
+{
+	color:#ffffff !important;
+	font-size:14px;
+}
+
+
+.form-heading b
+{
+	font-size:12px;
+	text-transform:none;
+	font-weight:normal;
+	color:#4e4e4e
+}
+
+.form-heading i
+{
+	font-size:16px;
 }
