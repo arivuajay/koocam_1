@@ -68,7 +68,7 @@ class DefaultController extends Controller {
             $this->goHome();
         }
 
-        $model = new LoginForm("login");
+        $model = new LoginForm('login');
         $this->performAjaxValidation($model);
 
         if (isset($_POST['LoginForm'])) {
@@ -181,6 +181,36 @@ class DefaultController extends Controller {
                 Yii::app()->end();
             }
         }
+    }
+
+    public function sendForgotPasswordMail() {
+        $user = User::model()->findByAttributes(array('email' => $_POST['LoginForm']['email']));
+        $reset_link = Myclass::getRandomString(25);
+        $user->setAttribute('password_reset_token', $reset_link);
+        $user->setAttribute('modified_at', date('Y-m-d H:i:s'));
+        $user->save(false);
+
+        ///////////////////////
+        $time_valid = Yii::app()->localtime->getLocalNow('Y-m-d H:i:s');
+        $resetlink = Yii::app()->createAbsoluteUrl('/site/default/reset?str=' . $user->password_reset_token . '&id=' . $user->user_id);
+        if (!empty($user->email)):
+            $mail = new Sendmail;
+            $trans_array = array(
+                "{SITENAME}" => SITENAME,
+                "{USERNAME}" => $user->username,
+                "{EMAIL_ID}" => $user->email,
+                "{NEXTSTEPURL}" => $resetlink,
+                "{TIMEVALID}" => $time_valid,
+            );
+            $message = $mail->getMessage('forgot_password', $trans_array);
+            $Subject = $mail->translate('{SITENAME}: Reset Password');
+            $mail->send($user->email, $Subject, $message);
+        endif;
+        
+        return true;
+
+//        Yii::app()->user->setFlash('success', "Your Password Reset Link sent to your email address.");
+//        $this->redirect(array('/site/default/index'));
     }
 
     public function actionForgotpasswordsecurity() {
@@ -541,13 +571,13 @@ class DefaultController extends Controller {
                 }
 
                 //Idle Warning
-                if ($this->idleWarning() && $_POST['idle_open'] == 0) {
-                    $return['idle_warning'] = 1;
-                    $created_at_time = strtotime(Yii::app()->localtime->getLocalNow("Y/m/d H:i:s"));
-                    $end_time = $created_at_time + (15); // 15 seconds greater from created
-                    $end_time_format = date("Y/m/d H:i:s", $end_time);
-                    $return['idle_warning_countdown'] = $end_time_format;
-                }
+//                if ($this->idleWarning() && $_POST['idle_open'] == 0) {
+//                    $return['idle_warning'] = 1;
+//                    $created_at_time = strtotime(Yii::app()->localtime->getLocalNow("Y/m/d H:i:s"));
+//                    $end_time = $created_at_time + (15); // 15 seconds greater from created
+//                    $end_time_format = date("Y/m/d H:i:s", $end_time);
+//                    $return['idle_warning_countdown'] = $end_time_format;
+//                }
 
                 //Status Icon
                 $chk_sts = $this->statusChecking($_POST['old_live_status']);
@@ -823,11 +853,11 @@ class DefaultController extends Controller {
                 $booking->save(false);
             }
             $booking = CamBooking::model()->findByAttributes(array('book_guid' => Yii::app()->request->getPost('book_guid')));
+            TempSession::insertSession(Yii::app()->user->id, $booking->book_end_time);
 
             $start_time = Yii::app()->localtime->getUTCNow('Y-m-d H:i:s');
             $end_time = Yii::app()->localtime->toUTC($booking->book_end_time);
 
-            TempSession::insertSession(Yii::app()->user->id, $booking->book_end_time);
             $date_a = new DateTime($start_time);
             $date_b = new DateTime($end_time);
             $interval = date_diff($date_a, $date_b);

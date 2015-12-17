@@ -11,7 +11,11 @@ $defaultImage = $model->camimage;
     <?php 
     echo $model->tutor->userstatusicon;
     if($model->cam_avail_visual == 'N'){
-        echo '<div title="" data-placement="right" data-toggle="tooltip" class="viual-chattxt" data-original-title="Will not be available on visual chat">';
+        $custom_css = '';
+        if ($model->is_video == 'Y') {
+            $custom_css = 'bottom: 60px; !important';
+        }
+        echo '<div style="'.$custom_css.'" title="" data-placement="right" data-toggle="tooltip" class="viual-chattxt" data-original-title="Will not be available on visual chat">';
         echo CHtml::image($themeUrl.'/images/video-chat2.png', 'Visual Chat Not Available');
         echo '</div>';
     }
@@ -43,7 +47,7 @@ if ($model->is_video == 'Y') {
                 height: '440',
                 width: '553',
                 videoId: '<?php echo $model->video_id?>',
-                playerVars: {'modestbranding': 1, 'autoplay': 1, 'controls': 0, 'rel': 0, 'showinfo': 0},
+                playerVars: {'modestbranding': 1, 'autoplay': 1, 'controls': 1, 'rel': 0, 'showinfo': 0},
                 events: {
                     'onReady': onPlayerReady,
 //                    'onStateChange': onPlayerStateChange,

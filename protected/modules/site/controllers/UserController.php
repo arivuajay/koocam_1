@@ -32,7 +32,7 @@ class UserController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('profileupdate', 'sendmessage', 'switchstatus', 'accountsetting', 'editpersonalinformaiton', 'editemailaddress', 'changepassword', 'editsecurityquestionanswer', 'paypaldelete', 'accountdeactivate'),
+                'actions' => array('profileupdate', 'sendmessage', 'switchstatus', 'accountsetting', 'editpersonalinformaiton', 'editemailaddress', 'changepassword', 'editsecurityquestionanswer', 'paypaldelete', 'accountdeactivate', 'accountdelete'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -187,6 +187,18 @@ class UserController extends Controller {
             User::switchStatus(Yii::app()->user->id, 'O');
             Yii::app()->user->logout(false);
             Yii::app()->user->setFlash('success', "You were deactivated your account");
+            $this->goHome();
+        }
+    }
+
+    public function actionAccountdelete() {
+        $user_id = Yii::app()->user->id;
+        $user = User::model()->findByPk($user_id);
+        $user->status = "4";
+        if ($user->save(false)) {
+            User::switchStatus(Yii::app()->user->id, 'O');
+            Yii::app()->user->logout(false);
+            Yii::app()->user->setFlash('success', "Your account deleted.");
             $this->goHome();
         }
     }

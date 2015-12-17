@@ -129,10 +129,15 @@ $user_paypals = $model->userPaypals;
                                     <?php } ?>
                                 </div>
                             <?php } ?>
-                            <p>&nbsp;</p>
-
+                            <div class="spe-line"> </div>
+                            
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-heading"> 
-                                <?php echo CHtml::link('<i class="fa fa-user-times"></i> Deactivate My Account', array('/site/user/accountdeactivate'), array('confirm' => 'Are you sure to deactivate your account?')); ?>
+                                <?php echo CHtml::link('<i class="fa fa-user-times"></i> Deactivate My Account', array('/site/user/accountdeactivate'), array('confirm' => 'Are you sure to deactivate your account?', 'class' => 'label label-default')); ?>
+                            </div>
+                            
+                            <div class="spe-line"> </div>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-heading"> 
+                                <?php echo CHtml::link('<i class="fa fa-user-times"></i> Delete My Account', array('/site/user/accountdelete'), array('confirm' => 'Are you sure to delete your account ?', 'class' => 'label label-default')); ?>
                             </div>
                             <p>&nbsp;</p>
                         </div>
