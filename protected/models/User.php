@@ -65,7 +65,7 @@ class User extends RActiveRecord {
         if ($this->userProf->prof_firstname == '' && $this->userProf->prof_lastname == '') {
             $fullname = $this->username;
         } else {
-            $fullname = $this->userProf->prof_firstname . ' ' . $this->userProf->prof_lastname;
+            $fullname = ucfirst($this->userProf->prof_firstname) . ' ' . $this->userProf->prof_lastname;
         }
         return $fullname;
     }

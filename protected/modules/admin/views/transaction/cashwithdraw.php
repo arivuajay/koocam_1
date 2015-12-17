@@ -44,7 +44,7 @@ $this->breadcrumbs = array(
                             'approve' => array(
                                 'label' => 'Approve',
                                 'options' => array(
-                                    'title' => 'Privilages',
+                                    'title' => 'Approve',
                                     'data-toggle' => "modal",
                                     'class' => "btn btn-success btn-flat",
                                     'onclick' => "
@@ -65,7 +65,7 @@ $this->breadcrumbs = array(
                             'reject' => array(
                                 'label' => 'Reject',
                                 'options' => array(
-                                    'title' => 'Privilages',
+                                    'title' => 'Reject',
                                     'data-toggle' => "modal",
                                     'class' => "btn btn-danger btn-flat",
                                     'onclick' => "
@@ -86,7 +86,7 @@ $this->breadcrumbs = array(
                             'approved' => array(
                                 'label' => '<i class="fa fa-check"></i>&nbsp;Approved',
                                 'options' => array(
-                                    'title' => 'Privilages',
+                                    'title' => 'Approved',
                                     'data-toggle' => "modal",
                                     'class' => "btn btn-white btn-flat disabled",
                                 ),
@@ -95,7 +95,7 @@ $this->breadcrumbs = array(
                             'rejected' => array(
                                 'label' => '<i class="fa fa-close"></i>&nbsp;&nbsp;Rejected',
                                 'options' => array(
-                                    'title' => 'Privilages',
+                                    'title' => 'Rejected',
                                     'data-toggle' => "modal",
                                     'class' => "btn btn-white btn-flat disabled",
                                 ),

@@ -64,6 +64,13 @@ $this->rightCornerLink = CHtml::link('<i class="fa fa-plus"></i> Create User', a
                         'filter' => false
                     ),
                     array(
+                        'header' => 'Balance ($)',
+                        'filter' => false,
+                        'value'  => function($data) {
+                            echo (float) Transaction::myCurrentBalance($data->user_id);
+                        },
+                    ),
+                    array(
                         'header' => 'Action',
                         'class' => 'application.components.MyActionButtonColumn',
                         'htmlOptions' => array('class' => 'text-center'),

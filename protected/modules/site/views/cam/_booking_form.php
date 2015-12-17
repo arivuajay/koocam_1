@@ -23,7 +23,7 @@ echo $form->hiddenField($booking_model, 'book_date');
 echo $form->hiddenField($booking_model, 'book_start_time');
 
 $session = CamBooking::camSessionList(Yii::app()->user->id, $model->cam_id, date('Y-m-d'));
-$cam_price = (int) $model->cam_price;
+$cam_price = (float) $model->cam_price;
 //$bookings = array_values(CHtml::listData(CamBooking::model()->uniqueDays()->findAll(), 'dist_date', 'dist_date'));
 ?>
 <script type="text/javascript">
@@ -185,7 +185,7 @@ $cam_price = (int) $model->cam_price;
                                             <?php echo $model->camExtras->extra_description; ?>
                                         </div>
                                         <div class="col-xs-12 col-sm-2 col-md-2 col-lg-2 ">
-                                            <div id="extras-prices" class="extras-prices-bg" data-cam_price="<?php echo $cam_price; ?>" data-extra_price="<?php echo $extra_price = (int) $model->camExtras->extra_price; ?>">
+                                            <div id="extras-prices" class="extras-prices-bg" data-cam_price="<?php echo $cam_price; ?>" data-extra_price="<?php echo $extra_price = (float) $model->camExtras->extra_price; ?>">
                                                 <?php echo $extra_price; ?> $
                                             </div>
                                         </div>

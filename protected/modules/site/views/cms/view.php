@@ -2,12 +2,12 @@
 /* @var $this DefaultController */
 /* @var $model Cms */
 
-$this->title = "View - {$model->cms_title}";
+$this->title = "{$model->cms_title}";
 $themeUrl = $this->themeUrl;
 
 $cover_image = '';
 if(!empty($model->cover_photo)){
-    $cover_image =  'background: #222 url(' . $model->getFilePath() . ') no-repeat scroll center center / cover;';
+    $cover_image =  'background-image: url(' . $model->getFilePath() . ');';
 }
 ?>
 

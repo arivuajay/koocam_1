@@ -22,185 +22,24 @@ $this->rightCornerLink = CHtml::link('<i class="fa fa-reply"></i> Back', array('
                 <li><a href="#cams" data-toggle="tab"><i class="fa fa-fw fa-wechat"></i> Cams</a></li>
                 <li><a href="#cam_purchase" data-toggle="tab"><i class="fa fa-fw fa-cart-plus"></i> Purchase</a></li>
                 <li><a href="#cam_jobs" data-toggle="tab"><i class="fa fa-fw fa-calendar"></i> Jobs</a></li>
+                <li><a href="#payments" data-toggle="tab"><i class="fa fa-fw fa-money"></i> Payments</a></li>
             </ul>
             <!-- Panes -->
             <div class="tab-content">
                 <div id="user" class="tab-pane active">
-                    <?php
-                    $this->widget('zii.widgets.CDetailView', array(
-                        'data' => $model,
-                        'htmlOptions' => array('class' => 'table table-striped table-bordered'),
-                        'nullDisplay' => '-',
-                        'attributes' => array(
-                            'username',
-                            'email',
-                            array(
-                                'name' => 'Profile Picture',
-                                'type' => 'raw',
-                                'value' => $model->getProfilethumb(array('class' => '', 'style' => 'height: 80px;'))
-                            ),
-                            array(
-                                'name' => 'status',
-                                'type' => 'raw',
-                                'value' => $model->status == 1 ? '<i class="fa fa-circle text-green-500"></i>' : '<i class="fa fa-circle text-red-500"></i>'
-                            ),
-                            'userProf.prof_firstname',
-                            'userProf.prof_lastname',
-                            'userProf.prof_tag',
-                            'userProf.prof_address',
-                            'userProf.prof_phone',
-                            'userProf.prof_skype',
-                            'userProf.prof_website',
-                            'userProf.prof_about',
-                            'created_at',
-                        ),
-                    ));
-                    ?>
-
+                    <?php $this->renderPartial('_view', compact('model')); ?>
                 </div>
                 <div id="cams" class="tab-pane">
-                    <?php
-                    $gridColumns = array(
-                        array(
-                            'class' => 'IndexColumn',
-                            'header' => '',
-                        ),
-                        'cam_title',
-                        array(
-                            'name' => 'cat.cat_name',
-                            'filter' => CHtml::activeTextField($cam_model, 'camCategory', array('class' => 'form-control')),
-                            'value' => '$data->cat->cat_name'
-                        ),
-                        'cam_duration',
-                        'cam_price',
-                        array(
-                            'name' => 'created_at',
-                            'filter' => false
-                        ),
-                    );
-
-                    $this->widget('application.components.MyExtendedGridView', array(
-                        'filter' => $cam_model,
-                        'type' => 'striped bordered',
-                        'dataProvider' => $cam_model->search(),
-                        'responsiveTable' => true,
-                        "itemsCssClass" => "table v-middle",
-                        'template' => '<div class="panel panel-default"><div class="table-responsive">{items}{pager}</div></div>',
-                        'columns' => $gridColumns
-                            )
-                    );
-                    ?>
+                    <?php $this->renderPartial('_cam', compact('cam_model')); ?>
                 </div>
                 <div id="cam_purchase" class="tab-pane">
-                    <?php
-                    $gridColumns = array(
-                        array(
-                            'class' => 'IndexColumn',
-                            'header' => '',
-                        ),
-                        'book.cam.cam_title',
-                        array(
-                            'name' => 'book.book_date',
-                            'value' => function($data) {
-                                echo date(PHP_SHORT_DATE_FORMAT, strtotime($data->book->book_date));
-                        }),
-//                        array(
-//                            'name' => 'book.book_start_time',
-//                            'value' => function($data) {
-//                                echo date('H:i', strtotime($data->book->book_start_time));
-//                        }),
-//                        array(
-//                            'name' => 'book.book_end_time',
-//                            'value' => function($data) {
-//                                echo date('H:i', strtotime($data->book->book_end_time));
-//                        }),
-                        'book.book_duration',
-                        'book.book_session',
-                        'book.book_total_price',
-                        array(
-                            'name' => 'book.book_is_extra',
-                            'value' => function($data) {
-                                echo $data->book->book_is_extra == 'Y' ? '<i class="fa fa-circle text-green-500"></i>' : '<i class="fa fa-circle text-red-500"></i>';
-                        }),
-//                          'book_cam_price',
-//                          'book_extra_price',
-//                          'book_message',
-//                          'book_approve',
-//                          'book_approved_time',
-//                          'book_declined_time',
-//                          'book_payment_status',
-//                          'book_payment_info',
-//                          'book_duration',
-//                          'created_at',
-                    );
-
-                    $this->widget('application.components.MyExtendedGridView', array(
-                        'filter' => $purchase_model,
-                        'type' => 'striped bordered',
-                        'dataProvider' => $purchase_model->search(),
-                        'responsiveTable' => true,
-                        "itemsCssClass" => "table v-middle",
-                        'template' => '<div class="panel panel-default"><div class="table-responsive">{items}{pager}</div></div>',
-                        'columns' => $gridColumns
-                            )
-                    );
-                    ?>
+                    <?php $this->renderPartial('_purchase', compact('purchase_model')); ?>
                 </div>
                 <div id="cam_jobs" class="tab-pane">
-                    <?php
-                    $gridColumns = array(
-                        array(
-                            'class' => 'IndexColumn',
-                            'header' => '',
-                        ),
-                        'bookUser.username',
-                        'cam.cam_title',
-                        array(
-                            'name' => 'book_date',
-                            'value' => function($data) {
-                                echo date(PHP_SHORT_DATE_FORMAT, strtotime($data->book_date));
-                        }),
-                        array(
-                            'name' => 'book_start_time',
-                            'value' => function($data) {
-                                echo date('H:i', strtotime($data->book_start_time));
-                        }),
-                        array(
-                            'name' => 'book_end_time',
-                            'value' => function($data) {
-                                echo date('H:i', strtotime($data->book_end_time));
-                        }),
-                        'book_duration',
-                        'book_session',
-                        'book_total_price',
-                        array(
-                            'name' => 'book_is_extra',
-                            'value' => function($data) {
-                                echo $data->book_is_extra == 'Y' ? '<i class="fa fa-circle text-green-500"></i>' : '<i class="fa fa-circle text-red-500"></i>';
-                        }),
-//                          'book_cam_price',
-//                          'book_extra_price',
-//                          'book_message',
-//                          'book_approve',
-//                          'book_approved_time',
-//                          'book_declined_time',
-//                          'book_payment_status',
-//                          'book_payment_info',
-//                          'book_duration',
-//                          'created_at',
-                    );
-
-                    $this->widget('application.components.MyExtendedGridView', array(
-                        'filter' => $job_model,
-                        'type' => 'striped bordered',
-                        'dataProvider' => $job_model->search(),
-                        'responsiveTable' => true,
-                        "itemsCssClass" => "table v-middle",
-                        'template' => '<div class="panel panel-default"><div class="table-responsive">{items}{pager}</div></div>',
-                        'columns' => $gridColumns
-                            )
-                    );
-                    ?>
+                    <?php $this->renderPartial('_jobs', compact('job_model')); ?>
+                </div>
+                <div id="payments" class="tab-pane">
+                    <?php $this->renderPartial('_payments', compact('payments_model')); ?>
                 </div>
             </div>
             <!-- // END Panes -->

@@ -1,16 +1,12 @@
 <?php
 /* @var $this CamController */
-/* @var $model ContactForm */
+/* @var $model Contactus */
 /* @var $form CActiveForm */
 
 $this->title = 'Contact us';
 $themeUrl = $this->themeUrl;
 
-$categories = array(
-    "Technical Support" => "Technical Support",
-    "Payment related Enquiry" => "Payment related Enquiry",
-    "Cam related Enquiry" => "Cam related Enquiry"
-);
+$categories = $model->getCategoryList();
 ?>
 <div id="inner-banner" class="tt-fullHeight3 contactus-banner">
     <div class="container homepage-txt">
@@ -36,38 +32,47 @@ $categories = array(
                             'validateOnSubmit' => true,
                             'hideErrorMessage' => true,
                         ),
-                        'enableAjaxValidation' => true,
+                        'enableAjaxValidation' => false,
                     ));
                     ?>
-                    
+
                     <div class="form-group">
                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-12 ">
-                        <?php echo $form->errorSummary($model); ?>
+                            <?php echo $form->errorSummary($model); ?>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
-                            <?php echo $form->textField($model, 'fullname', array('class' => 'form-control', 'placeholder' => 'Fullname', 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "Fullname")); ?> 
-                            <?php echo $form->error($model, 'fullname'); ?> 
+                            <?php echo $form->textField($model, 'contact_name', array('class' => 'form-control', 'placeholder' => 'Fullname', 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "Fullname")); ?> 
+                            <?php echo $form->error($model, 'contact_name'); ?> 
                         </div>
                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
-                            <?php echo $form->textField($model, 'email', array('class' => 'form-control', 'placeholder' => 'Email', 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "Email")); ?> 
-                            <?php echo $form->error($model, 'email'); ?> 
+                            <?php echo $form->textField($model, 'contact_email', array('class' => 'form-control', 'placeholder' => 'Email', 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "Email")); ?> 
+                            <?php echo $form->error($model, 'contact_email'); ?> 
                         </div>
                     </div>
 
                     <?php if (!Yii::app()->user->isGuest) { ?>
                         <div class="form-group">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 ">
-                                <?php echo $form->dropDownList($model, 'category', $categories, array('class' => 'selectpicker', 'prompt' => 'Choose Category', 'data-title' => "Choose Category")); ?> 
+                                <?php echo $form->hiddenField($model, 'user_id', array('value' => Yii::app()->user->id)); ?> 
+                                <?php echo $form->dropDownList($model, 'contact_category', $categories, array('class' => 'selectpicker', 'prompt' => 'Choose Category', 'data-title' => "Choose Category")); ?> 
                             </div>
                         </div>
                     <?php } ?>
 
                     <div class="form-group">
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 "> 
-                            <?php echo $form->textArea($model, 'message', array('class' => 'form-control', 'placeholder' => 'Message', 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "Message")); ?> 
-                            <?php echo $form->error($model, 'message'); ?> 
+                            <?php echo $form->textArea($model, 'contact_message', array('class' => 'form-control', 'placeholder' => 'Message', 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "Message")); ?> 
+                            <?php echo $form->error($model, 'contact_message'); ?> 
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6 "> 
+                            <?php $this->widget('CCaptcha', array('captchaAction'=>'/site/default/captcha')); ?>
+                            <?php echo $form->textField($model, 'verifyCode', array('class' => 'form-control', 'placeholder' => 'Captcha')); ?>
+                            <?php echo $form->error($model, 'verifyCode'); ?>
                         </div>
                     </div>
 

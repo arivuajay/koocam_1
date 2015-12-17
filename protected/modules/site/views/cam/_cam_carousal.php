@@ -48,7 +48,7 @@
                     </div>
                     <div class="coures-pricedetails">
                         <div class="course-price"> <i class="fa fa-clock-o"></i> <b><?php echo $cam->cam_duration; ?></b> <span> min </span> </div>
-                        <div class="course-price course-hour"> <i class="fa fa-dollar"></i> <b><?php echo (int) $cam->cam_price; ?></b> </div>
+                        <div class="course-price course-hour"> <i class="fa fa-dollar"></i> <b><?php echo (float) $cam->cam_price; ?></b> </div>
                         <div class="course-price letcame"> <?php echo CHtml::link("Let's Cam <i class='fa fa-video-camera'></i>", array('/site/cam/view', 'slug' => $cam->slug)); ?> </div>
                     </div>
                 </div>

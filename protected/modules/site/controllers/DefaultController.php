@@ -17,6 +17,11 @@ class DefaultController extends Controller {
     public function actions() {
         return array(
             'download' => 'application.components.actions.download',
+            // captcha action renders the CAPTCHA image displayed on the contact page
+            'captcha' => array(
+                'class' => 'CCaptchaAction',
+                'backColor' => 0xFFFFFF,
+            ),
         );
     }
 
@@ -28,7 +33,7 @@ class DefaultController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('index', 'sociallogin', 'signupsocial', 'login', 'register', 'activation', 'filecrypt', 'download', 'ajaxrun', 'ajaxrunuser', 'howitworks', 'faq', 'contactus', 'error', 'cron', 'forgotpassword', 'reset', 'ipncheck'),
+                'actions' => array('index', 'sociallogin', 'signupsocial', 'login', 'register', 'activation', 'filecrypt', 'download', 'ajaxrun', 'ajaxrunuser', 'howitworks', 'faq', 'contactus', 'error', 'cron', 'forgotpassword', 'reset', 'ipncheck', 'captcha'),
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -647,29 +652,31 @@ class DefaultController extends Controller {
     }
 
     public function actionContactus() {
-        $model = new ContactForm;
+        $model = new Contactus('user');
         $this->performAjaxValidation($model);
-        if (Yii::app()->request->isPostRequest && Yii::app()->request->getPost('ContactForm')) {
-            $model->attributes = Yii::app()->request->getPost('ContactForm');
+        if (Yii::app()->request->isPostRequest && Yii::app()->request->getPost('Contactus')) {
+            $model->attributes = Yii::app()->request->getPost('Contactus');
             $category = '-';
             if (isset($model->category) && $model->category != '') {
                 $category = $model->category;
             }
-
-            $mail = new Sendmail;
-            $trans_array = array(
-                "{SITENAME}" => SITENAME,
-                "{ADMINNAME}" => "Admin",
-                "{FULLNAME}" => $model->fullname,
-                "{EMAIL}" => $model->email,
-                "{MESSAGE}" => $model->message,
-                "{CATEGORY}" => $category,
-            );
-            $message = $mail->getMessage('contact_us_site', $trans_array);
-            $Subject = $mail->translate(SITENAME . " - Contact Us");
-            $mail->send(ADMIN_EMAIL, $Subject, $message);
-            Yii::app()->user->setFlash('success', "Your message sent successfully!!!");
-            $this->refresh();
+            
+            if ($model->save()) {
+                $mail = new Sendmail;
+                $trans_array = array(
+                    "{SITENAME}" => SITENAME,
+                    "{ADMINNAME}" => "Admin",
+                    "{FULLNAME}" => $model->contact_name,
+                    "{EMAIL}" => $model->contact_email,
+                    "{MESSAGE}" => $model->contact_message,
+                    "{CATEGORY}" => $category,
+                );
+                $message = $mail->getMessage('contact_us_site', $trans_array);
+                $Subject = $mail->translate(SITENAME . " - Contact Us");
+                $mail->send(ADMIN_EMAIL, $Subject, $message);
+                Yii::app()->user->setFlash('success', "Your message sent successfully!!!");
+                $this->redirect(array('/site/default/contactus'));
+            }
         }
         $this->render('contactus', compact('model'));
     }
@@ -754,9 +761,9 @@ class DefaultController extends Controller {
             $interval = date_diff($date_a, $date_b);
 
             $return['et_hour'] = $interval->format('%h');
-            $return['et_minutes'] = $interval->format('%i')+1;
+            $return['et_minutes'] = $interval->format('%i') + 1;
             $return['et_seconds'] = $interval->format('%s');
-            
+
 //            $return['et_time'] = date('Y/m/d H:i:s', strtotime(Yii::app()->localtime->toUTC($booking->book_end_time)));
 //            $return['et_time'] = date('Y/m/d H:i:s', strtotime($booking->book_end_time));
         }

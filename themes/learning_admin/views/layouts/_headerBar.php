@@ -23,7 +23,7 @@
             </ul>
             <ul class="nav navbar-nav navbar-nav-bordered navbar-right">
                 <!-- notifications -->
-                <li class="dropdown notifications updates">
+<!--                <li class="dropdown notifications updates">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-bell-o"></i>
                         <span class="badge badge-primary">4</span>
@@ -74,12 +74,12 @@
                             </div>
                         </li>
                     </ul>
-                </li>
+                </li>-->
                 <!-- // END notifications -->
                 <!-- User -->
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle user" data-toggle="dropdown">
-                        <img src="<?php echo $this->themeUrl ?>/img/people/110/avatar5.png" alt="Bill" class="img-circle" width="40" /> <?php echo Yii::app()->user->name; ?> <span class="caret"></span>
+                        <img src="<?php echo $this->themeUrl ?>/img/people/110/avatar5.png" alt="Bill" class="img-circle" width="40" /> <?php echo ucfirst(Yii::app()->user->name); ?> <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu" role="menu">
                         <li><?php echo CHtml::link('Edit Profile', array('/admin/default/profile')); ?></li>

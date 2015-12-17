@@ -22,8 +22,8 @@ $form = $this->beginWidget('CActiveForm', array(
 echo $form->hiddenField($booking_temp, 'temp_cam_id', array('value' => $model->cam_id));
 
 $session = CamBooking::camSessionList(Yii::app()->user->id, $model->cam_id, date('Y-m-d'));
-$cam_price = (int) $model->cam_price;
-$extra_price = isset($model->camExtras->extra_price) ? (int) $model->camExtras->extra_price : 0;
+$cam_price = (float) $model->cam_price;
+$extra_price = isset($model->camExtras->extra_price) ? (float) $model->camExtras->extra_price : 0;
 $user_country_id = Yii::app()->user->country_id;
 $price_calculation = CamBooking::price_calculation($user_country_id, $cam_price, $extra_price);
 ?>

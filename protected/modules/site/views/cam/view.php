@@ -103,7 +103,7 @@ $logged_user = !$is_tutor && !Yii::app()->user->isGuest;
                                 <input type="checkbox" class="book_extra_check" id="book_extra_main" > <?php echo $model->camExtras->extra_description; ?>
                             </div>
                             <div class="col-xs-12 col-sm-2 col-md-1 col-lg-1 ">
-                                <div class="extras-prices-bg" data-cam_price="<?php echo (int) $model->cam_price; ?>" data-extra_price="<?php echo $extra_price = (int) $model->camExtras->extra_price; ?>">
+                                <div class="extras-prices-bg" data-cam_price="<?php echo (float) $model->cam_price; ?>" data-extra_price="<?php echo $extra_price = (float) $model->camExtras->extra_price; ?>">
                                     <?php echo $extra_price; ?> $
                                 </div>
                             </div>
@@ -139,7 +139,7 @@ if ($logged_user) {
 ?>
 
 <script type="text/javascript">var switchTo5x = true;</script>
-<script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
+<script type="text/javascript" src="https://w.sharethis.com/button/buttons.js"></script>
 <script type="text/javascript">stLight.options({publisher: "b111ba58-0a07-447e-92ed-da6eda1af9b3", doNotHash: false, doNotCopy: false, hashAddressBar: false, servicePopup: true});</script>
 
 <?php

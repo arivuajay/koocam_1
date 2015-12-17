@@ -25,6 +25,7 @@ class Transaction extends RActiveRecord {
 
     public $is_message;
     public $new_paypal;
+    public $userPayments = false;
 
     const TYPE_REVENUE = "R";
     const TYPE_EXPENSE = "E";
@@ -135,6 +136,11 @@ class Transaction extends RActiveRecord {
         $criteria->compare('paypal_address', $this->paypal_address, true);
         $criteria->compare('created_at', $this->created_at, true);
         $criteria->compare('modified_at', $this->modified_at, true);
+        
+        if($this->userPayments){
+            $type_expense = Transaction::TYPE_EXPENSE;
+            $criteria->condition = "trans_type != '$type_expense'";
+        }
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -216,8 +222,8 @@ class Transaction extends RActiveRecord {
         return $return;
     }
 
-    public static function myTotalExpense() {
-        $user_id = Yii::app()->user->id;
+    public static function myTotalExpense($user_id = null) {
+        $user_id = is_null($user_id) ? Yii::app()->user->id : $user_id;
         $type_expense = self::TYPE_EXPENSE;
         $total_expense = Yii::app()->db->createCommand()
                 ->select('SUM(`trans_user_amount`) as total_expense')
@@ -227,8 +233,8 @@ class Transaction extends RActiveRecord {
         return ($total_expense['total_expense']) ? $total_expense['total_expense'] : "0";
     }
 
-    public static function myTotalRevenue() {
-        $user_id = Yii::app()->user->id;
+    public static function myTotalRevenue($user_id = null) {
+        $user_id = is_null($user_id) ? Yii::app()->user->id : $user_id;
         $type_revenue = self::TYPE_REVENUE;
         $total_revenue = Yii::app()->db->createCommand()
                 ->select('SUM(`trans_user_amount`) as total_revenue')
@@ -238,8 +244,8 @@ class Transaction extends RActiveRecord {
         return ($total_revenue['total_revenue']) ? $total_revenue['total_revenue'] : "0.00";
     }
 
-    public static function myTotalWithdraw() {
-        $user_id = Yii::app()->user->id;
+    public static function myTotalWithdraw($user_id = null) {
+        $user_id = is_null($user_id) ? Yii::app()->user->id : $user_id;
         $type_withdraw = self::TYPE_WITHDRAW;
         $total_withdraw = Yii::app()->db->createCommand()
                 ->select('SUM(`trans_user_amount`) as total_withdraw')
@@ -249,10 +255,11 @@ class Transaction extends RActiveRecord {
         return ($total_withdraw['total_withdraw']) ? $total_withdraw['total_withdraw'] : "0.00";
     }
 
-    public static function myCurrentBalance() {
+    public static function myCurrentBalance($user_id = null) {
+        $user_id = is_null($user_id) ? Yii::app()->user->id : $user_id;
         $balance = 0;
-        $total_revenue = self::myTotalRevenue();
-        $total_withdraw = self::myTotalWithdraw();
+        $total_revenue = self::myTotalRevenue($user_id);
+        $total_withdraw = self::myTotalWithdraw($user_id);
         if ($total_revenue > 0) {
             $current_balance = $total_revenue - $total_withdraw;
             $balance = $current_balance > 0 ? number_format($current_balance, "2") : 0;

@@ -71,6 +71,11 @@ class UserController extends Controller {
         $job_model = new CamBooking('search');
         $job_model->unsetAttributes();
         $job_model->cam->tutor_id = $id;
+
+        $payments_model = new Transaction('search');
+        $payments_model->unsetAttributes();
+        $payments_model->user_id = $id;
+//        $payments_model->userPayments = true;
         
         $this->performAjaxValidation($notifn_model);
         
@@ -92,7 +97,7 @@ class UserController extends Controller {
              }
         }
         
-        $this->render('view', compact('model','notifn_model','cam_model', 'purchase_model', 'job_model'));
+        $this->render('view', compact('model','notifn_model','cam_model', 'purchase_model', 'job_model', 'payments_model'));
     }
 
     /**

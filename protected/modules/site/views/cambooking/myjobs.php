@@ -77,7 +77,7 @@ $themeUrl = $this->themeUrl;
                         </div>
                         <div class="col-xs-6 col-sm-3 col-md-2 col-lg-2 "> 
                             <div class="purchase-price"> 
-                                <h2> $ <?php echo (int) $book->book_total_price; ?> </h2>
+                                <h2> $ <?php echo (float) $book->book_total_price; ?> </h2>
                                 <span> <i class="fa fa-clock-o"></i> <?php echo $book->book_duration; ?> min</span>
                             </div>
                         </div>

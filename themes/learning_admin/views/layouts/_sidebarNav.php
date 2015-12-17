@@ -4,7 +4,7 @@
             <a href="#">
                 <?php echo CHtml::image("{$this->themeUrl}/img/people/110/avatar5.png", 'Image', array('class' => 'img-circle width-80')) ?>
             </a>
-            <h4 class="text-display-1 margin-none"><?php echo Yii::app()->user->name; ?></h4>
+            <h4 class="text-display-1 margin-none"><?php echo ucfirst(Yii::app()->user->name); ?></h4>
         </div>
     </div>
     <?php
@@ -38,6 +38,7 @@
                 ),
             ),
             array('label' => '<i class="fa fa-quote-left"></i> <span>Testimonials</span>', 'url' => array('/admin/testimonial/index'), 'visible' => '1'),
+            array('label' => '<i class="fa fa-envelope-o"></i> <span>Contact Messages</span>', 'url' => array('/admin/contactus/index'), 'visible' => '1'),
         ),
         'htmlOptions' => array('class' => 'sidebar-menu')
     ));
