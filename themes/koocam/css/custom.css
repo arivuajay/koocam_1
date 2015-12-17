@@ -105,3 +105,12 @@ a.view-comment, a.write-comment{
 .bootstrap-select.btn-group.show-tick .dropdown-menu li.selected a span.check-mark{
     position: relative !important;
 }
+
+.tt-fullHeight3 {
+  min-height: 340px !important;
+}
+
+.tt-fullHeight3.category_search {
+  min-height: 275px !important;
+}
+
