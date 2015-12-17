@@ -44,7 +44,9 @@ class CamcommentsController extends Controller {
             $model->attributes = Yii::app()->request->getPost('CamComments');
             $model->user_id = Yii::app()->user->id;
             if ($model->save()) {
-                $message = "{$model->user->fullname} Commented on your Cam ({$model->cam->cam_title})";
+                $user_profile_link = CHtml::link($model->user->fullname, array("/site/user/profile", "slug" => $model->user->slug));
+                $cam_link = CHtml::link($model->cam->cam_title, array("/site/cam/view", "slug" => $model->cam->slug));
+                $message = "{$user_profile_link} Commented on your Cam ({$cam_link})";
                 Notification::insertNotification($model->cam->tutor_id, $message);
                 Yii::app()->user->setFlash('success', "Your comment sent successfully!!!.");
             } else {
