@@ -129,18 +129,23 @@ class DefaultController extends Controller {
                     Yii::app()->user->setFlash('danger', 'This Email Address Not Exists!!!');
                     $this->redirect(array('/site/default/index'));
                 } else {
-                    if ($user->security_question_id) {
+                    if ($user->security_question_id && $_POST['LoginForm']['answer_know'] == "Y") {
                         $queston = SecurityQuestion::model()->findByPk($user->security_question_id);
                         echo json_encode(array(
                             'status' => 'success',
                             'question' => $queston->question,
                             'question_id' => $user->security_question_id,
-                            'answer' => $user->answer,
                             'email' => $user->email,
-                        ));
+                        ), JSON_UNESCAPED_SLASHES);
                         Yii::app()->end();
                     } else {
                         $this->sendForgotPasswordMail();
+                        $refreshlink = Yii::app()->createAbsoluteUrl('/site/default/index');
+                        echo json_encode(array(
+                            'status' => 'refresh',
+                            'refresh_url' => $refreshlink,
+                        ), JSON_UNESCAPED_SLASHES);
+                        Yii::app()->end();
                     }
                 }
             } else {
@@ -175,9 +180,11 @@ class DefaultController extends Controller {
             $Subject = $mail->translate('{SITENAME}: Reset Password');
             $mail->send($user->email, $Subject, $message);
         endif;
+        
+        return true;
 
-        Yii::app()->user->setFlash('success', "Your Password Reset Link sent to your email address.");
-        $this->redirect(array('/site/default/index'));
+//        Yii::app()->user->setFlash('success', "Your Password Reset Link sent to your email address.");
+//        $this->redirect(array('/site/default/index'));
     }
 
     public function actionForgotpasswordsecurity() {
@@ -220,10 +227,8 @@ class DefaultController extends Controller {
             'status' => 'success',
             'resetlink' => $resetlink,
         ));
-        
-        Yii::app()->end();
 
-        
+        Yii::app()->end();
     }
 
     public function actionReset($str, $id) {

@@ -21,6 +21,7 @@
                 ?>
                 <div class="form-group"> 
                     <?php echo $form->textField($model, 'email', array('autofocus', 'class' => 'form-control', 'placeholder' => "Email Address")); ?> 
+                    <?php echo $form->hiddenField($model, 'answer_know', array('autofocus', 'class' => 'form-control', 'placeholder' => "Email Address", 'id' => "answer-know")); ?> 
                     <?php echo $form->error($model, 'email'); ?> 
                 </div>
 
@@ -59,15 +60,14 @@
                 <div class="form-group"> 
                     <?php echo $form->hiddenField($model, 'security_question_id', array('autofocus', 'class' => 'form-control', 'placeholder' => "Email Address")); ?> 
                     <?php echo $form->hiddenField($model, 'email', array('autofocus', 'class' => 'form-control', 'placeholder' => "Email Address", "id" => 'security_email')); ?> 
-                    <?php echo $form->hiddenField($model, 'answer', array('autofocus', 'class' => 'form-control', 'placeholder' => "Email Address", "id" => 'security_answer')); ?> 
                     <span id="question-name"></span>
-                    <?php echo $form->error($model, 'security_question_id'); ?> 
-                    <?php echo $form->error($model, 'email'); ?> 
-                    <?php echo $form->error($model, 'answer'); ?> 
                 </div>
                 <div class="form-group"> 
                     <?php echo $form->textField($model, 'answer_check', array('autofocus', 'class' => 'form-control', 'placeholder' => "Your security question")); ?> 
                     <?php echo $form->error($model, 'answer_check'); ?> 
+                </div>
+                <div class="form-group"> 
+                    If don't know the answer, <a href="javascript:void(0)" id="no-answer">click</a> to send the reset password link to mail
                 </div>
 
                 <div class="form-group"> 
@@ -95,6 +95,13 @@ $cs = Yii::app()->getClientScript();
 $cs_pos_end = CClientScript::POS_END;
 
 $js = <<< EOD
+        
+        $(document).ready(function(){
+            $("#no-answer").click(function(){
+                $("#answer-know").val("N");
+                $("#forgot-password-form").submit();
+            });
+        });
                 
     function process_forgot_form(data){
         if(data.status=="success"){
@@ -103,7 +110,8 @@ $js = <<< EOD
             $("#question-name").html(data.question);
             $("#LoginForm_security_question_id").val(data.question_id);
             $("#security_email").val(data.email);
-            $("#security_answer").val(data.answer);
+        } else if(data.status == "refresh"){
+            window.location.href = data.refresh_url;
         } else{
             $.each(data, function(key, val) {
                 $("#forgot-password-form #"+key+"_em_").text(val);                                                    
