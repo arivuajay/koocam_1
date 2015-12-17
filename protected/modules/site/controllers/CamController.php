@@ -79,11 +79,19 @@ class CamController extends Controller {
                         }
                     }
                     Yii::app()->user->setFlash('success', "Cam created. Sent for Approval.");
-                    $this->refresh();
+                    $this->redirect(array("/site/cam/success", "slug" => $model->slug));
                 }
             }
         }
         $this->render('create', compact('model'));
+    }
+    
+    public function actionSuccess($slug){
+        $model = Cam::model()->inactive()->findByAttributes(array('slug' => $slug));
+        if(!empty($model)){
+            $this->render('success', compact('model'));
+        }
+        $this->goHome();
     }
 
     public function actionUpdate($id) {
@@ -291,11 +299,11 @@ class CamController extends Controller {
         } else {
             $page_size = Cam::CAM_SEARCH_LIMIT;
         }
-        $pages = new CPagination(Cam::model()->count($criteria));
+        $pages = new CPagination(Cam::model()->active()->count($criteria));
         $pages->pageSize = $page_size;
         $pages->applyLimit($criteria);
 
-        $results = Cam::model()->findAll($criteria);
+        $results = Cam::model()->active()->findAll($criteria);
 
         if (Yii::app()->request->isAjaxRequest) {
             $result = $this->renderPartial('_search_results', compact('results', 'pages'), true);
