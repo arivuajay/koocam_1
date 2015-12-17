@@ -518,7 +518,7 @@ class DefaultController extends Controller {
                 if ($msg_count > 0 && $msg_count != $_POST['old_msg_count']) {
                     $return['update_message_count'] = 1;
                     $return['message_update'] = $this->renderPartial('//layouts/_message_box', compact('themeUrl'), true, false);
-                    $return['system_alert'] = Myclass::getSystemAlert(2);
+//                    $return['system_alert'] = Myclass::getSystemAlert(2);
                 }
 
                 //Tutor before paypal confirmation
@@ -537,6 +537,7 @@ class DefaultController extends Controller {
                     $end_time = $created_at_time + (60 * 3); // 3 min greater from created
                     $end_time_format = date("Y/m/d H:i:s", $end_time);
                     $return['tutor_before_paypal_countdown'] = $end_time_format;
+                    $return['system_alert'] = Myclass::getSystemAlert(2);
 
                     $return['tutor_before_paypal_approve'] = CHtml::link('<i class="fa fa-check-square-o"></i> Approve', array('/site/bookingtemp/approve', 'temp_guid' => $tutorstartnowalert->temp_guid), array('class' => "btn btn-default  explorebtn form-btn"));
                     $return['tutor_before_paypal_reject'] = CHtml::link('<i class="fa fa-remove"></i> Reject', array('/site/bookingtemp/reject', 'temp_guid' => $tutorstartnowalert->temp_guid), array('class' => "btn btn-default  explorebtn form-btn deactiveate-btn"));
