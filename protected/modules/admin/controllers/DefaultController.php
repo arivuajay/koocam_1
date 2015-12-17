@@ -54,7 +54,7 @@ class DefaultController extends Controller {
             $this->goHome();
         }
 
-        $model = new LoginForm();
+        $model = new LoginForm('login');
 
         if (isset($_POST['sign_in'])) {
             $model->attributes = $_POST['LoginForm'];

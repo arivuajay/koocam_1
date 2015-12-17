@@ -34,8 +34,10 @@ class HybridAuthIdentity extends CUserIdentity {
                 "Google" => array(
                     "enabled" => true,
                     "keys" => array(
-                        "id" => "288594682867-bb3csmegd3ka1b3o84anee98ugstd0db.apps.googleusercontent.com",
-                        "secret" => "4LLWfiAIKSFsBLPr6AxsIFzl",
+                        "id" => "240176297251-7u11aokv24nl4l6jlqr167fj9ls6jk7v.apps.googleusercontent.com",
+                        "secret" => "rtfbeSwyHte_2wOvKtNlc19Q",
+//                        "id" => "288594682867-bb3csmegd3ka1b3o84anee98ugstd0db.apps.googleusercontent.com",
+//                        "secret" => "4LLWfiAIKSFsBLPr6AxsIFzl",
 //                        "id" => GOOGLE_APP_ID,
 //                        "secret" => GOOGLE_SECRET_ID
                     ),

@@ -71,7 +71,7 @@
         $cs->registerScriptFile($themeUrl . '/js/vendor/charts/flot/all.js', $cs_pos_end);
         $cs->registerScriptFile($themeUrl . '/js/vendor/nestable/jquery.nestable.js', $cs_pos_end);
         $cs->registerScriptFile($themeUrl . '/js/vendor/countdown/all.js', $cs_pos_end);
-        $cs->registerScriptFile($themeUrl . '/js/vendor/angular/all.js', $cs_pos_end);
+//        $cs->registerScriptFile($themeUrl . '/js/vendor/angular/all.js', $cs_pos_end);
         
         $cs->registerScriptFile($themeUrl . '/js/app/app.js', $cs_pos_end);
         ?>
