@@ -414,20 +414,17 @@ class DefaultController extends Controller {
 //                    $return['learner_name'] = $bookings->bookUser->fullname;
 //                    $return['learner_thumb'] = $bookings->bookUser->profilethumb;
 //                    $return['learner_link'] = CHtml::link('Start Chat', array('/site/default/chat', 'guid' => $bookings->book_guid), array('class' => "btn btn-default explorebtn"));
-//                    $return['system_alert'] = Myclass::getSystemAlert(1);
 //                }
                 //End Leaner Chat Screen
                 $tutorEnded = $this->tutorEnded();
                 if (!empty($tutorEnded)) {
                     $return['end_learner_chat'] = 1;
-                    $return['system_alert'] = Myclass::getSystemAlert(1);
                 }
 
                 //End Tutor Chat Screen
                 $learnerEnded = $this->learnerEnded();
                 if (!empty($learnerEnded)) {
                     $return['end_tutor_chat'] = 1;
-                    $return['system_alert'] = Myclass::getSystemAlert(1);
                 }
 
                 //Notification Count
@@ -465,7 +462,6 @@ class DefaultController extends Controller {
 
                     $return['tutor_before_paypal_approve'] = CHtml::link('<i class="fa fa-check-square-o"></i> Approve', array('/site/bookingtemp/approve', 'temp_guid' => $tutorstartnowalert->temp_guid), array('class' => "btn btn-default  explorebtn form-btn"));
                     $return['tutor_before_paypal_reject'] = CHtml::link('<i class="fa fa-remove"></i> Reject', array('/site/bookingtemp/reject', 'temp_guid' => $tutorstartnowalert->temp_guid), array('class' => "btn btn-default  explorebtn form-btn deactiveate-btn"));
-                    $return['system_alert'] = Myclass::getSystemAlert(1);
                 }
 
                 //Idle Warning
@@ -475,7 +471,6 @@ class DefaultController extends Controller {
                     $end_time = $created_at_time + (15); // 15 seconds greater from created
                     $end_time_format = date("Y/m/d H:i:s", $end_time);
                     $return['idle_warning_countdown'] = $end_time_format;
-                    $return['system_alert'] = Myclass::getSystemAlert(2);
                 }
 
                 //Status Icon
