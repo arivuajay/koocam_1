@@ -35,7 +35,7 @@ return array(
     'PHP_SHORT_DATE_TIME_FORMAT' => 'd-m-Y H:i:s',
 
     //Product Settings
-    'SITEBASEURL' => 'http://wipocos.byethost16.com',
+    'SITEBASEURL' => 'https://www.koocam.com',
     'UPLOAD_DIR' => 'uploads',
     'EMAILHEADERIMAGE' => '/themes/koocam/images/logo.png',
 

@@ -75,7 +75,7 @@ $is_not_my_profile = !Yii::app()->user->isGuest && Yii::app()->user->id != $mode
                 <p> <?php echo $user_profile->prof_interests; ?></p>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 comentslist-cont relateditems">
-                <h2> Reflection  <?php echo $model->username; ?> Sells</h2>
+                <h2> Reflection  <?php echo $model->username; ?> cams</h2>
                 <div class="row">
                     <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4"> </div>
                 </div>
