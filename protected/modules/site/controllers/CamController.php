@@ -32,7 +32,7 @@ class CamController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('create', 'upload', 'update', 'changepricepertime', 'mycams', 'userdelete', 'sendmessage'),
+                'actions' => array('create', 'upload', 'update', 'changepricepertime', 'mycams', 'userdelete', 'sendmessage', 'success'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users

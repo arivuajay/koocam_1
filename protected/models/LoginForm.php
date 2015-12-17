@@ -10,6 +10,9 @@ class LoginForm extends CFormModel {
     public $email;
     public $username;
     public $password;
+    public $security_question_id;
+    public $answer;
+    public $answer_check;
     public $rememberMe = 0;
     private $_identity;
 
@@ -21,15 +24,18 @@ class LoginForm extends CFormModel {
     public function rules() {
         return array(
             // username and password are required
-            array('username, password', 'required'),
+            array('username, password', 'required', 'on' => 'login'),
             array('email', 'required', 'on' => 'forgotpass'),
             array('email', 'email'),
             array('email', 'emailAuthenticate', 'on' => 'forgotpass'),
+            array('security_question_id, answer, answer_check', 'safe'),
+            array('answer_check', 'compare', 'compareAttribute' => 'answer', 'on' => 'forgotpasssecurity', 'message' => 'Please enter the correct answer'),
+            array('answer_check', 'required', 'on' => 'forgotpasssecurity'),
             //array('admin_username', 'email'),
             // rememberMe needs to be a boolean
             array('rememberMe', 'boolean'),
             // password needs to be authenticated
-            array('password', 'authenticate'),
+            array('password', 'authenticate', 'on' => 'login'),
         );
     }
 
@@ -65,9 +71,11 @@ class LoginForm extends CFormModel {
      * This is the 'authenticate' validator as declared in rules().
      */
     public function emailAuthenticate($attribute, $params) {
-        $user = User::model()->findByAttributes(array('email' => $this->email));
-        if (empty($user)) {
-            $this->addError('email', 'This Email Address Not Exists!!!');
+        if ($this->email) {
+            $user = User::model()->findByAttributes(array('email' => $this->email));
+            if (empty($user)) {
+                $this->addError('email', 'This Email Address Not Exists!!!');
+            }
         }
     }
 

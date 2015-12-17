@@ -33,7 +33,7 @@ class DefaultController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('index', 'sociallogin', 'signupsocial', 'login', 'register', 'activation', 'filecrypt', 'download', 'ajaxrun', 'ajaxrunuser', 'howitworks', 'faq', 'contactus', 'error', 'cron', 'forgotpassword', 'reset', 'ipncheck', 'captcha'),
+                'actions' => array('index', 'sociallogin', 'signupsocial', 'login', 'register', 'activation', 'filecrypt', 'download', 'ajaxrun', 'ajaxrunuser', 'howitworks', 'faq', 'contactus', 'error', 'cron', 'forgotpassword', 'reset', 'ipncheck', 'captcha', 'forgotpasswordsecurity'),
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -121,37 +121,108 @@ class DefaultController extends Controller {
         $model = new LoginForm('forgotpass');
         $this->performAjaxValidation($model);
         if (isset($_POST['LoginForm'])) {
-            $user = User::model()->findByAttributes(array('email' => $_POST['LoginForm']['email']));
-            if (empty($user)) {
-                Yii::app()->user->setFlash('danger', 'This Email Address Not Exists!!!');
-                $this->redirect(array('/site/default/index'));
+            $model->attributes = Yii::app()->request->getPost('LoginForm');
+            if ($model->validate()) {
+                $user = User::model()->findByAttributes(array('email' => $_POST['LoginForm']['email']));
+                if (empty($user)) {
+                    Yii::app()->user->setFlash('danger', 'This Email Address Not Exists!!!');
+                    $this->redirect(array('/site/default/index'));
+                } else {
+                    if ($user->security_question_id) {
+                        $queston = SecurityQuestion::model()->findByPk($user->security_question_id);
+                        echo json_encode(array(
+                            'status' => 'success',
+                            'question' => $queston->question,
+                            'question_id' => $user->security_question_id,
+                            'answer' => $user->answer,
+                            'email' => $user->email,
+                        ));
+                        Yii::app()->end();
+                    } else {
+                        $this->sendForgotPasswordMail();
+                    }
+                }
             } else {
-                $reset_link = Myclass::getRandomString(25);
-                $user->setAttribute('password_reset_token', $reset_link);
-                $user->setAttribute('modified_at', date('Y-m-d H:i:s'));
-                $user->save(false);
-
-                ///////////////////////
-                $time_valid = Yii::app()->localtime->getLocalNow('Y-m-d H:i:s');
-                $resetlink = Yii::app()->createAbsoluteUrl('/site/default/reset?str=' . $user->password_reset_token . '&id=' . $user->user_id);
-                if (!empty($user->email)):
-                    $mail = new Sendmail;
-                    $trans_array = array(
-                        "{SITENAME}" => SITENAME,
-                        "{USERNAME}" => $user->username,
-                        "{EMAIL_ID}" => $user->email,
-                        "{NEXTSTEPURL}" => $resetlink,
-                        "{TIMEVALID}" => $time_valid,
-                    );
-                    $message = $mail->getMessage('forgot_password', $trans_array);
-                    $Subject = $mail->translate('{SITENAME}: Reset Password');
-                    $mail->send($user->email, $Subject, $message);
-                endif;
-
-                Yii::app()->user->setFlash('success', "Your Password Reset Link sent to your email address.");
-                $this->redirect(array('/site/default/index'));
+                $error = CActiveForm::validate($model);
+                if ($error != '[]')
+                    echo $error;
+                Yii::app()->end();
             }
         }
+    }
+
+    public function sendForgotPasswordMail() {
+        $user = User::model()->findByAttributes(array('email' => $_POST['LoginForm']['email']));
+        $reset_link = Myclass::getRandomString(25);
+        $user->setAttribute('password_reset_token', $reset_link);
+        $user->setAttribute('modified_at', date('Y-m-d H:i:s'));
+        $user->save(false);
+
+        ///////////////////////
+        $time_valid = Yii::app()->localtime->getLocalNow('Y-m-d H:i:s');
+        $resetlink = Yii::app()->createAbsoluteUrl('/site/default/reset?str=' . $user->password_reset_token . '&id=' . $user->user_id);
+        if (!empty($user->email)):
+            $mail = new Sendmail;
+            $trans_array = array(
+                "{SITENAME}" => SITENAME,
+                "{USERNAME}" => $user->username,
+                "{EMAIL_ID}" => $user->email,
+                "{NEXTSTEPURL}" => $resetlink,
+                "{TIMEVALID}" => $time_valid,
+            );
+            $message = $mail->getMessage('forgot_password', $trans_array);
+            $Subject = $mail->translate('{SITENAME}: Reset Password');
+            $mail->send($user->email, $Subject, $message);
+        endif;
+
+        Yii::app()->user->setFlash('success', "Your Password Reset Link sent to your email address.");
+        $this->redirect(array('/site/default/index'));
+    }
+
+    public function actionForgotpasswordsecurity() {
+        if (!Yii::app()->user->isGuest)
+            $this->redirect(array('/site/default/index'));
+
+        $model = new LoginForm('forgotpasssecurity');
+        $this->performAjaxValidation($model);
+        if (isset($_POST['LoginForm'])) {
+            $model->attributes = Yii::app()->request->getPost('LoginForm');
+            if ($model->validate()) {
+                $user = User::model()->findByAttributes(array('email' => $_POST['LoginForm']['email']));
+                if (empty($user)) {
+                    Yii::app()->user->setFlash('danger', 'This Email Address Not Exists!!!');
+                    $this->redirect(array('/site/default/index'));
+                } else {
+                    $this->redirecttoResetPassword();
+                }
+            } else {
+                $error = CActiveForm::validate($model);
+                if ($error != '[]')
+                    echo $error;
+                Yii::app()->end();
+            }
+        }
+    }
+
+    public function redirecttoResetPassword() {
+        $user = User::model()->findByAttributes(array('email' => $_POST['LoginForm']['email']));
+        $reset_link = Myclass::getRandomString(25);
+        $user->setAttribute('password_reset_token', $reset_link);
+        $user->setAttribute('modified_at', date('Y-m-d H:i:s'));
+        $user->save(false);
+
+        ///////////////////////
+        $time_valid = Yii::app()->localtime->getLocalNow('Y-m-d H:i:s');
+        $resetlink = Yii::app()->createAbsoluteUrl('/site/default/reset?str=' . $user->password_reset_token . '&id=' . $user->user_id);
+
+        echo json_encode(array(
+            'status' => 'success',
+            'resetlink' => $resetlink,
+        ));
+        
+        Yii::app()->end();
+
+        
     }
 
     public function actionReset($str, $id) {
@@ -163,14 +234,14 @@ class DefaultController extends Controller {
             Yii::app()->user->setFlash('danger', "Not a valid Reset Link");
             $this->redirect(array('/site/default/index'));
         } else {
-            $start = strtotime(date('Y-m-d H:i:s', $model->modified_at));
+            $start = strtotime(date('Y-m-d H:i:s', strtotime($model->modified_at)));
             $end = strtotime(Yii::app()->localtime->getLocalNow('Y-m-d H:i:s'));
             $seconds = $end - $start;
             $days = floor($seconds / 86400);
             $hours = floor(($seconds - ($days * 86400)) / 3600);
-            $minutes = floor(($seconds - ($days * 86400) - ($hours * 3600)) / 60);
+//            $minutes = floor(($seconds - ($days * 86400) - ($hours * 3600)) / 60);
 
-            if ($minutes > 5) {
+            if ($hours > 3) {
                 Yii::app()->user->setFlash('danger', "This Reset Link Expired. Please Try again.");
                 $this->redirect(array('/site/default/index'));
             }
@@ -505,10 +576,10 @@ class DefaultController extends Controller {
         $booking = CamBooking::model()->active()->pending()->find('book_user_id = :user_id AND book_start_time <= :time AND book_end_time >= :time', array(":user_id" => $user_id, ":time" => $end_time_format));
 
         $current_time = Yii::app()->localtime->getLocalNow("Y-m-d H:i:s");
-        if($booking->book_start_time < $current_time){
+        if ($booking->book_start_time < $current_time) {
             return null;
         }
-        
+
         return $booking;
     }
 
@@ -660,7 +731,7 @@ class DefaultController extends Controller {
             if (isset($model->category) && $model->category != '') {
                 $category = $model->category;
             }
-            
+
             if ($model->save()) {
                 $mail = new Sendmail;
                 $trans_array = array(
