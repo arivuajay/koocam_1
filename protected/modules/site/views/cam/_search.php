@@ -18,7 +18,7 @@ $form = $this->beginWidget('CActiveForm', array(
             <div class="ddl-select input-group-btn">
                 <?php 
                 $cat_options = CamCategory::getCategoryList('active');
-                array_unshift($cat_options, 'All');
+                array_unshift($cat_options, 'All categories');
                 echo CHtml::dropDownList('category_id', $category_id, $cat_options, array('class' => "selectpicker form-control", 'data-style' => "btn-default"));
                 ?>
             </div>

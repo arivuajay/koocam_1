@@ -22,8 +22,8 @@ class CamCategory extends RActiveRecord {
 
     const IMG_WIDTH = 500;
     const IMG_HEIGHT = 440;
-    const COVER_IMG_WIDTH = 1604;
-    const COVER_IMG_HEIGHT = 610;
+    const COVER_IMG_WIDTH = 1600;
+    const COVER_IMG_HEIGHT = 600;
 
     /**
      * @return string the associated database table name
@@ -72,7 +72,7 @@ class CamCategory extends RActiveRecord {
             array('status', 'length', 'max' => 1),
             array('cat_image, cat_cover_image', 'file', 'allowEmpty' => false, 'on' => 'create'),
             array('cat_image, cat_cover_image', 'file', 'allowEmpty' => true, 'on' => 'update'),
-            array('cat_cover_image', 'dimensionValidation'),
+//            array('cat_cover_image', 'dimensionValidation'),
             array('cat_description, modified_at, cat_cover_image', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
@@ -80,15 +80,15 @@ class CamCategory extends RActiveRecord {
         );
     }
 
-    public function dimensionValidation($attribute, $param) {
-        if (isset($_FILES['CamCategory']['tmp_name']['cat_cover_image']) && !empty($_FILES['CamCategory']['tmp_name']['cat_cover_image'])) {
-            list($width, $height) = getimagesize($_FILES['CamCategory']['tmp_name']['cat_cover_image']);
-
-            if ($width != self::COVER_IMG_WIDTH || $height != self::COVER_IMG_HEIGHT){
-                $this->addError('cat_cover_image', 'Cover image size should be ' . self::COVER_IMG_WIDTH . '*' . self::COVER_IMG_HEIGHT . ' dimension');
-            }
-        }
-    }
+//    public function dimensionValidation($attribute, $param) {
+//        if (isset($_FILES['CamCategory']['tmp_name']['cat_cover_image']) && !empty($_FILES['CamCategory']['tmp_name']['cat_cover_image'])) {
+//            list($width, $height) = getimagesize($_FILES['CamCategory']['tmp_name']['cat_cover_image']);
+//
+//            if ($width != self::COVER_IMG_WIDTH || $height != self::COVER_IMG_HEIGHT){
+//                $this->addError('cat_cover_image', 'Cover image size should be ' . self::COVER_IMG_WIDTH . '*' . self::COVER_IMG_HEIGHT . ' dimension');
+//            }
+//        }
+//    }
 
     /**
      * @return array relational rules.
@@ -110,7 +110,7 @@ class CamCategory extends RActiveRecord {
             'cat_name' => 'Category Name',
             'cat_description' => 'Category Description',
             'cat_image' => 'Category Image',
-            'cat_cover_image' => 'Cover Image',
+            'cat_cover_image' => 'Cover Image (1600 X 600)',
             'status' => 'Status',
             'created_at' => 'Created At',
             'modified_at' => 'Modified At',

@@ -11,11 +11,12 @@ class RActiveRecord extends CActiveRecord {
 
         if (!$this->isNewRecord) {
             $this->modified_at = $now;
+            $this->created_at = Yii::app()->localtime->toUTC($this->created_at);
 //            $this->convertTime('to');
         } else {
             $this->created_at = $now;
         }
-        
+
         return parent::beforeSave();
     }
 
