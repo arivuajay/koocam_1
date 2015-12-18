@@ -32,7 +32,7 @@ $is_not_my_profile = !Yii::app()->user->isGuest && Yii::app()->user->id != $mode
                         'half' => TRUE,
                     ),
                     'htmlOptions' => array(
-                        'class' => 'new-half-class'
+                        'class' => 'new-half-class hide'
                     ),
                 ));
                 ?>

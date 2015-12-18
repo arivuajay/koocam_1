@@ -40,7 +40,7 @@ $themeUrl = $this->themeUrl;
                                         'half' => TRUE,
                                     ),
                                     'htmlOptions' => array(
-                                        'class' => 'new-half-class'
+                                        'class' => 'new-half-class hide'
                                     ),
                                 ));
                                 ?>

@@ -27,7 +27,7 @@ $logged_user = !$is_tutor && !Yii::app()->user->isGuest;
                         'half' => TRUE,
                     ),
                     'htmlOptions' => array(
-                        'class' => 'new-half-class'
+                        'class' => 'new-half-class hide'
                     ),
                 ));
                 ?>

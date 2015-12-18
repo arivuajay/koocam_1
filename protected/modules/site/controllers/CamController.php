@@ -264,7 +264,7 @@ class CamController extends Controller {
     }
 
     public function actionSearch() {
-        $sort_by = $page_size = $category_id = '';
+        $sort_by = $page_size = $category_id = $category_name = '';
         $cat_ids = array();
         $search_text = isset($_REQUEST['s']) ? $_REQUEST['s'] : '';
 
@@ -293,6 +293,7 @@ class CamController extends Controller {
         if (isset($_REQUEST['category_id']) && $_REQUEST['category_id'] != 0) {
             $category_id = $_REQUEST['category_id'];
             $criteria->compare($alias . '.cat_id', $category_id);
+            $category_name = CamCategory::model()->findByPk($category_id)->cat_name;
         }
 
         if (isset($_REQUEST['sort_by']) && !empty($_REQUEST['sort_by'])) {
@@ -323,7 +324,7 @@ class CamController extends Controller {
             }
             Yii::app()->end();
         } else {
-            $this->render('search', compact('model', 'results', 'search_text', 'pages', 'sort_by', 'page_size', 'cat_ids', 'category_id'));
+            $this->render('search', compact('model', 'results', 'search_text', 'pages', 'sort_by', 'page_size', 'cat_ids', 'category_id', 'category_name'));
         }
     }
 

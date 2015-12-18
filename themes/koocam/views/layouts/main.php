@@ -54,6 +54,8 @@
         
         $js = <<< EOD
             jQuery(document).ready(function ($) {
+                $('.raty-icons').addClass('hide');
+                
                 $('.oAuthLogin').click(function(e) {
                     var _frameUrl = "$login?provider=" + $(this).data('provider');
                     window.open(_frameUrl, "SignIn", "width=580,height=480,toolbar=0,scrollbars=1,status=0,resizable=0,location=0,menuBar=0,left=400,top=150");
@@ -110,6 +112,7 @@
                 
             $(window).load(function(){
                 $('[data-toggle="popover"]').popover();
+                $('.raty-icons').removeClass('hide');
             });
 
 

@@ -10,6 +10,11 @@
                 <div class="courses-thumb-cont">
                     <div class="course-thumbimg">
                         <?php
+                        if($cam->cam_avail_visual == 'N'){
+                            echo '<div data-placement="bottom" data-toggle="tooltip" class="video-chat" data-original-title="Will not be available on visual chat" title="">';
+                            echo CHtml::image($themeUrl.'/images/cam2.png', 'Visual Chat Not Available');
+                            echo '</div>';
+                        }
                         echo $cam->tutor->userstatusicon;
                         echo CHtml::link($cam->getCamthumb(array(), array('style' => 'height: 231px;')), array('/site/cam/view', 'slug' => $cam->slug));
                         ?>
@@ -30,7 +35,7 @@
                                             'half' => TRUE,
                                         ),
                                         'htmlOptions' => array(
-                                            'class' => 'new-half-class'
+                                            'class' => 'new-half-class hide'
                                         ),
                                     ));
                                     ?>

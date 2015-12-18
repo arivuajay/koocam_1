@@ -51,6 +51,9 @@ echo CHtml::hiddenField('s', $search_text);
                         <div class="col-xs-12 col-sm-8 col-md-8 col-lg-7">
                             <h2> Search Results <?php echo !empty($search_text) ? "for \"{$search_text}\"" : ''; ?></h2>
                             <h4 id="itemcount">(<?php echo $pages->itemCount; ?> Results Found)</h4>
+                            <?php if(!empty($category_name)){ ?>
+                            <h5>Category: <?php echo $category_name; ?></h5>
+                            <?php } ?>
                         </div>
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-3">
                             <?php
@@ -119,7 +122,7 @@ echo CHtml::hiddenField('s', $search_text);
                                             'half' => TRUE,
                                         ),
                                         'htmlOptions' => array(
-                                            'class' => 'new-half-class'
+                                            'class' => 'new-half-class hide'
                                         ),
                                     ));
                                     ?>
