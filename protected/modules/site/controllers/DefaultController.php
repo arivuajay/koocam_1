@@ -510,7 +510,7 @@ class DefaultController extends Controller {
                 if ($notifn_count > 0 && $notifn_count != $_POST['old_notifn_count']) {
                     $return['update_notification_count'] = 1;
                     $return['notification_update'] = $this->renderPartial('//layouts/_notification_box', compact('themeUrl'), true, false);
-                    $return['system_alert'] = Myclass::getSystemAlert(1);
+                    $return['system_alert_temp'] = Myclass::getSystemAlert(1);
                 }
 
                 //Message Count

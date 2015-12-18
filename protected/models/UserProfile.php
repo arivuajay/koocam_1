@@ -188,21 +188,18 @@ class UserProfile extends RActiveRecord {
     protected function afterSave() {
         if ($this->prof_picture && isset($_FILES['UserProfile']['name']['prof_picture']) && !empty($_FILES['UserProfile']['name']['prof_picture'])) {
             $user_path = UPLOAD_DIR . '/users/' . $this->user_id;
-            $source = $destination1 = $user_path . $this->prof_picture;
+            $source = $user_path . $this->prof_picture;
 
             $width1 = self::IMG_WIDTH;
             $height1 = self::IMG_HEIGHT;
             $img = new Img;
             $img->resampleGD($source, $user_path, $this->prof_picture, $width1, $height1, 1, 0);
 
-            $this->setUploadDirectory($user_path . '/thumb/userprofile');
-            $destination2 = $user_path . '/thumb' . $this->prof_picture;
+            $destination2 = $user_path . '/thumb';
             $width2 = self::THUMB_WIDTH;
             $height2 = self::THUMB_HEIGHT;
-
-            $image = Yii::app()->image->load($source);
-            $image->resize($width2, $height2, Image::NONE);
-            $image->save($destination2);
+            
+            $img->resampleGD($source, $destination2, $this->prof_picture, $width2, $height2, 1, 0);
         }
 
         return parent::afterSave();

@@ -37,6 +37,9 @@ $js = <<< EOD
         
                     if(data.update_notification_count == 1){
                         $('#li_notifn_top').html(data.notification_update);
+                        console.log($("ul.notifications").find(".notif_alert").length);
+                        if($("ul.notifications").find(".notif_alert").length > 0)
+                             $('#li_notifn_alert').html(data.system_alert_temp);
                     }
         
                     if(data.update_message_count == 1){

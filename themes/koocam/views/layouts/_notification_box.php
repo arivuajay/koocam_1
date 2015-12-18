@@ -19,7 +19,10 @@ $hideCount = $new_count > 0 ? '' : 'hide';
     }
     if (!empty($notifications)) {
         foreach ($notifications as $key => $notification) {
-            echo "<li>{$notification->topnotifymessage}</li>";
+            $li_class = '';
+            if($key == 0 && $notification->notifn_type == "book" && $notification->notifn_read == "N")
+                $li_class = "notif_alert";
+            echo "<li class='{$li_class}'>{$notification->topnotifymessage}</li>";
         }
     } else {
         echo '<li><a href="#">No Notifications Found</a></li>';

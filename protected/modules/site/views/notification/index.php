@@ -40,11 +40,11 @@ $this->breadcrumbs = array(
                                                 &nbsp; </div>
                                         </div>
                                         <?php if (!empty($notification->camBooking)) { ?>
-                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                            <?php
-                                            echo CHtml::link('View Booking', 'javascript:void(0)', array('data-notifn' => $notification->notifn_id, 'class' => 'btn btn-primary view-notifn btn-xs'));
-                                            ?>
-                                        </div>
+                                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                                <?php
+                                                echo CHtml::link('View Booking', 'javascript:void(0)', array('data-notifn' => $notification->notifn_id, 'class' => 'btn btn-primary view-notifn btn-xs'));
+                                                ?>
+                                            </div>
                                         <?php } ?>
                                     </div>
                                 </div>
@@ -56,7 +56,7 @@ $this->breadcrumbs = array(
                                             </span> 
                                         </div>
                                         <?php
-                                    } elseif (!empty($notification->camBooking) && strtotime($notification->camBooking->book_date) >= strtotime(date('Y-m-d H:i:s')))  {
+                                    } elseif (!empty($notification->camBooking)) {
                                         $booking = $notification->camBooking;
 
                                         $book_details = "<div class='form-group'>
@@ -82,27 +82,29 @@ $this->breadcrumbs = array(
 
                                         echo "<div class='hide' id='details{$notification->notifn_id}'>{$book_details}</div>";
 
-                                        $content = '';
+                                        if (strtotime($notification->camBooking->book_date) >= strtotime(Yii::app()->localtime->getLocalNow('Y-m-d H:i:s'))) {
+                                            $content = '';
 //                                        $content .= CHtml::link('View', 'javascript:void(0)', array('data-notifn' => $notification->notifn_id, 'class' => 'btn btn-primary view-notifn'));
 //                                        $content .= '&nbsp;&nbsp;|';
-                                        $reject_button = CHtml::link('Reject', array('/site/notification/decline', 'id' => $notification->notifn_id), array('onclick' => 'return confirm("Are you sure to Reject ?")', 'class' => 'btn btn-danger'));
-                                        $content .= '&nbsp;&nbsp;';
-                                        switch ($notification->camBooking->book_approve) {
-                                            case 0:
-                                                $content .= '<span class="text-warning">Pending</span>&nbsp;&nbsp;|&nbsp;&nbsp;';
-                                                $content .= CHtml::link('Approve', array('/site/notification/approve', 'id' => $notification->notifn_id), array('onclick' => 'return confirm("Are you sure to approve ?")'));
-                                                $content .= '&nbsp;&nbsp;|&nbsp;&nbsp;';
-                                                $content .= $reject_button;
-                                                break;
-                                            case 1:
-                                                $content .= '<span class="label-success label">Approved</span>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;';
-                                                $content .= $reject_button;
-                                                break;
-                                            case 2:
-                                                $content .= '<span class="label-danger label">Rejected</span>';
-                                                break;
+                                            $reject_button = CHtml::link('Reject', array('/site/notification/decline', 'id' => $notification->notifn_id), array('onclick' => 'return confirm("Are you sure to Reject ?")', 'class' => 'btn btn-danger'));
+                                            $content .= '&nbsp;&nbsp;';
+                                            switch ($notification->camBooking->book_approve) {
+                                                case 0:
+                                                    $content .= '<span class="text-warning">Pending</span>&nbsp;&nbsp;|&nbsp;&nbsp;';
+                                                    $content .= CHtml::link('Approve', array('/site/notification/approve', 'id' => $notification->notifn_id), array('onclick' => 'return confirm("Are you sure to approve ?")'));
+                                                    $content .= '&nbsp;&nbsp;|&nbsp;&nbsp;';
+                                                    $content .= $reject_button;
+                                                    break;
+                                                case 1:
+                                                    $content .= '<span class="label-success label">Approved</span>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;';
+                                                    $content .= $reject_button;
+                                                    break;
+                                                case 2:
+                                                    $content .= '<span class="label-danger label">Rejected</span>';
+                                                    break;
+                                            }
+                                            echo $content;
                                         }
-                                        echo $content;
                                     }
                                     ?>
                                 </div>
@@ -110,30 +112,30 @@ $this->breadcrumbs = array(
                             </div>
                         </div>
                     </div>
-                    <?php
-                    $i++;
-                }
-            }
-            ?>
+        <?php
+        $i++;
+    }
+}
+?>
         </div>
         <div class="pagination-cont">
             <nav>
-                <?php
-                $this->widget('CLinkPager', array(
-                    'pages' => $dataProvider->pagination,
-                    "cssFile" => false,
-                    'header' => '',
-                    'htmlOptions' => array('class' => 'pagination'),
-                    'prevPageLabel' => '<span aria-hidden="true">«</span></a>',
-                    'firstPageLabel' => '<span aria-hidden="true">« First</span></a>',
-                    'nextPageLabel' => '<span aria-hidden="true">»</span>',
-                    'lastPageLabel' => '<span aria-hidden="true">Last »</span>',
-                    'selectedPageCssClass' => 'active',
-                    'selectedPageCssClass' => 'active',
-                    'maxButtonCount' => 5,
-                    'id' => 'link_pager',
-                ));
-                ?>
+<?php
+$this->widget('CLinkPager', array(
+    'pages' => $dataProvider->pagination,
+    "cssFile" => false,
+    'header' => '',
+    'htmlOptions' => array('class' => 'pagination'),
+    'prevPageLabel' => '<span aria-hidden="true">«</span></a>',
+    'firstPageLabel' => '<span aria-hidden="true">« First</span></a>',
+    'nextPageLabel' => '<span aria-hidden="true">»</span>',
+    'lastPageLabel' => '<span aria-hidden="true">Last »</span>',
+    'selectedPageCssClass' => 'active',
+    'selectedPageCssClass' => 'active',
+    'maxButtonCount' => 5,
+    'id' => 'link_pager',
+));
+?>
             </nav>
         </div>
     </div>
@@ -146,7 +148,7 @@ $this->breadcrumbs = array(
                 <h4 class="modal-title" id="myModalLabel">View Booking Details</h4>
             </div>
             <div class="modal-body">
-                <?php // echo $form->errorSummary($booking_model);     ?>
+<?php // echo $form->errorSummary($booking_model);      ?>
 
                 <div class="popup-calendaer-cont" id="book-cont-popup">
 
