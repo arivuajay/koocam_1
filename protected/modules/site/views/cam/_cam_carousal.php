@@ -25,7 +25,6 @@
                         <!--<p> <span> <?php echo $cam->tutor->languages ?> </span> </p>-->
                         <div class="row">  
                             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">  
-                                <p>
                                     <?php
                                     $this->widget('ext.DzRaty.DzRaty', array(
                                         'name' => 'cam_rating_carousal' . $key,
@@ -39,7 +38,6 @@
                                         ),
                                     ));
                                     ?>
-                                </p>
                             </div> 
                             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                                 <?php
