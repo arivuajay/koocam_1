@@ -303,7 +303,8 @@ class CamBooking extends RActiveRecord {
                 Message::insertMessage($this->book_message, $this->book_user_id, $this->cam->tutor_id, $this->cam_id);
             }
             $user_profile_link = CHtml::link($this->bookUser->fullname, array("/site/user/profile", "slug" => $this->bookUser->slug));
-            $message = "You have a new booking from " . $user_profile_link;
+            $cam_link = CHtml::link($this->cam->cam_title, array("/site/cam/view", "slug" => $this->cam->slug));
+            $message = "You have a new booking from {$user_profile_link} for your {$cam_link}";
             Notification::insertNotification($this->cam->tutor_id, $message, 'book', $this->book_id);
         }
         return parent::afterSave();
