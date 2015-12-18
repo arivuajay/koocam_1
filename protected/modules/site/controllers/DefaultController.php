@@ -572,10 +572,10 @@ class DefaultController extends Controller {
 
     protected function checkUserHaveBookingNow() {
         $user_id = Yii::app()->user->id;
-        $created_at_time = strtotime(Yii::app()->localtime->getLocalNow("Y/m/d H:i:s"));
-        $end_time = $created_at_time + (5 * 60);
+        $utc_now = Yii::app()->localtime->getUTCNow("Y-m-d H:i:s");
+        $end_time = strtotime($utc_now) + (5 * 60); // 5 min greater record
         $end_time_format = date("Y-m-d H:i:s", $end_time);
-
+        
         $booking = CamBooking::model()->active()->pending()->find('book_user_id = :user_id AND book_start_time <= :time AND book_end_time >= :time', array(":user_id" => $user_id, ":time" => $end_time_format));
 
         $current_time = Yii::app()->localtime->getLocalNow("Y-m-d H:i:s");

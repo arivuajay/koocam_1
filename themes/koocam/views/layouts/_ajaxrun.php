@@ -265,10 +265,9 @@ Yii::app()->clientScript->registerScript('_ajaxrun', $js);
             </div>
             <div class="modal-body">
                 <div class="approve-img">  
-                    <p class="row"> 
-                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 pull-right approve-time ">   
+<!--                    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 pull-right approve-time ">   
                         <p> <a href="#" class="btn btn-default"> <b id="logout_clock"></b></a> </p> 
-                    </div>
+                    </div>-->
                     <div class="clearfix"></div>
                     <p> <h4 id="idle-warning-message">Kindly Click the below link to go to booking page</h4> </p>
                     <div class="form-group">

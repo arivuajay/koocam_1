@@ -120,7 +120,7 @@ $categories = CamCategory::getCategoryList();
                 </div>
                 <div class="col-xs-12 col-sm-3 col-md-3 col-lg-6 ">
                     <?php echo $form->labelEx($model, 'extra_description'); ?>
-                    <?php echo $form->textField($model, 'extra_description', array('class' => 'form-control', 'placeholder' => 'Extra File Details', 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => " About Extra File")); ?> 
+                    <?php echo $form->textField($model, 'extra_description', array('class' => 'form-control', 'placeholder' => 'extra file', 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "Share any additional information with the user")); ?> 
                     <?php echo $form->error($model, 'extra_description'); ?> 
                 </div>
                 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-3 ">
