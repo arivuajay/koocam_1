@@ -353,8 +353,8 @@ class CamBooking extends RActiveRecord {
             "{LEARNER}" => $learner->fullname,
             "{CAM}" => $this->cam->cam_title,
             "{BOOK_DATE}" => $book_date,
-            "{FROM_TIME}" => date('H:i', strtotime($this->book_start_time)),
-            "{TO_TIME}" => date('H:i', strtotime($this->book_end_time)),
+            "{FROM_TIME}" => date('H:i', strtotime(Yii::app()->localtime->fromUTC($this->book_start_time))),
+            "{TO_TIME}" => date('H:i', strtotime(Yii::app()->localtime->fromUTC($this->book_end_time))),
         );
         $message = $mail->getMessage('cam_booking_tutor', $trans_array);
         $Subject = $mail->translate("New Booking For Your CAM ({$this->cam->cam_title})");
