@@ -724,6 +724,7 @@ a:hover {
 	-moz-box-shadow:    1px 1px 5px 0px rgba(0, 0, 0, 0.5);
 	box-shadow:         1px 1px 5px 0px rgba(0, 0, 0, 0.5);
 	border:#ffffff solid 1px;
+	min-height:400px;
 }
 .price-bg {
 	width:100px;
