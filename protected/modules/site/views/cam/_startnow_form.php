@@ -105,6 +105,30 @@ $price_calculation = CamBooking::price_calculation($user_country_id, $cam_price,
 </div>
 <?php $this->endWidget(); ?>
 
+<div class="modal fade" id="reject_alert" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel"></h4>
+            </div>
+            <div class="modal-body">
+                <div class="booking-form-cont">
+                    <div class="row">
+                        Your booking is rejected by Tutor, Please try again        
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" id="reject-okay-buttons">
+                <button type="button" class="btn  btn-cancel" data-dismiss="modal" onclick="window.location.href = '<?php echo Yii::app()->request->url?>'">Okay</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <?php
 $cs = Yii::app()->getClientScript();
 $cs_pos_end = CClientScript::POS_END;
@@ -200,8 +224,8 @@ $js = <<< EOD
                                 window.location = '{$paypal_process}' + '/' + temp_guid;
                             }
                             if(data.user_before_paypal_status == "rejected"){
-                                alert("You booking is rejected by Tutor, Please try again");
-                                location.reload();
+                                $('#reject_alert').modal('show');
+//                                location.reload();
                             }
                         },
                         error: function(data) {
