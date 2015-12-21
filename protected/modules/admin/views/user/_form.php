@@ -19,6 +19,10 @@
             ));
             ?>
             
+            <?php
+            $user_countries = Country::getCountryList();
+            ?>
+            
             <?php echo $form->errorSummary(array($model,$userProfile)); ?>
 
             <div class = "form-group form-control-material static">
@@ -37,6 +41,11 @@
                 <?php echo $form->textField($model, 'email', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255)); ?>
                 <?php echo $form->labelEx($model, 'email'); ?>
                 <?php echo $form->error($model, 'email'); ?>
+            </div>
+            
+            <div class = "form-group form-control-material static">
+                <?php echo $form->labelEx($model, 'country_id'); ?>
+                <?php echo $form->dropDownList($model, 'country_id', $user_countries, array('class' => 'selectpicker', "data-style" => "btn-white", "data-size" => "5")); ?>
             </div>
             
             <div class = "form-group checkbox checkbox-primary">

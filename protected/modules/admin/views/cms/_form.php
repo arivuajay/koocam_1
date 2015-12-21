@@ -28,6 +28,12 @@
                 <?php echo $form->labelEx($model, 'cms_tag'); ?>
                 <?php echo $form->error($model, 'cms_tag'); ?>
             </div>
+            <?php if ($model->cms_variables) { ?>
+                <div class = "form-group form-control-material static">
+                    <?php echo $form->textField($model, 'cms_variables', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255, 'readonly' => 'readonly')); ?>
+                    <?php echo $form->labelEx($model, 'cms_variables'); ?>
+                </div>
+            <?php } ?>
             <div class = "form-group form-control-material static" style="height: 350px">
                 <?php echo $form->labelEx($model, 'cms_description'); ?><br />
                 <?php // echo $form->textArea($model, 'cms_description', array('class' => 'form-control', 'rows' => 6, 'cols' => 50)); ?>

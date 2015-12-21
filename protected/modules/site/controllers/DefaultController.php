@@ -21,7 +21,7 @@ class DefaultController extends Controller {
             'captcha' => array(
                 'class' => 'CCaptchaAction',
                 'backColor' => 0xFFFFFF,
-                'testLimit'=>0
+                'testLimit' => 0
             ),
         );
     }
@@ -114,7 +114,6 @@ class DefaultController extends Controller {
         Yii::app()->user->setFlash('success', "You were logged out successfully");
         $this->goHome();
     }
-    
 
     public function actionForgotpassword() {
         if (!Yii::app()->user->isGuest)
@@ -137,7 +136,7 @@ class DefaultController extends Controller {
                             'question' => $queston->question,
                             'question_id' => $user->security_question_id,
                             'email' => $user->email,
-                        ), JSON_UNESCAPED_SLASHES);
+                                ), JSON_UNESCAPED_SLASHES);
                         Yii::app()->end();
                     } else {
                         $this->sendForgotPasswordMail();
@@ -145,7 +144,7 @@ class DefaultController extends Controller {
                         echo json_encode(array(
                             'status' => 'refresh',
                             'refresh_url' => $refreshlink,
-                        ), JSON_UNESCAPED_SLASHES);
+                                ), JSON_UNESCAPED_SLASHES);
                         Yii::app()->end();
                     }
                 }
@@ -178,13 +177,12 @@ class DefaultController extends Controller {
                 "{TIMEVALID}" => $time_valid,
             );
             $message = $mail->getMessage('forgot_password', $trans_array);
-            echo $message; exit;
             $Subject = $mail->translate('{SITENAME}: Reset Password');
             $mail->send($user->email, $Subject, $message);
         endif;
         return true;
     }
-    
+
     public function actionForgotpasswordsecurity() {
         if (!Yii::app()->user->isGuest)
             $this->redirect(array('/site/default/index'));
@@ -544,13 +542,13 @@ class DefaultController extends Controller {
                 }
 
                 //Idle Warning
-//                if ($this->idleWarning() && $_POST['idle_open'] == 0) {
-//                    $return['idle_warning'] = 1;
-//                    $created_at_time = strtotime(Yii::app()->localtime->getLocalNow("Y/m/d H:i:s"));
-//                    $end_time = $created_at_time + (15); // 15 seconds greater from created
-//                    $end_time_format = date("Y/m/d H:i:s", $end_time);
-//                    $return['idle_warning_countdown'] = $end_time_format;
-//                }
+                if ($this->idleWarning() && $_POST['idle_open'] == 0) {
+                    $return['idle_warning'] = 1;
+                    $created_at_time = strtotime(Yii::app()->localtime->getLocalNow("Y/m/d H:i:s"));
+                    $end_time = $created_at_time + (15); // 15 seconds greater from created
+                    $end_time_format = date("Y/m/d H:i:s", $end_time);
+                    $return['idle_warning_countdown'] = $end_time_format;
+                }
 
                 //Status Icon
                 $chk_sts = $this->statusChecking($_POST['old_live_status']);
@@ -575,7 +573,7 @@ class DefaultController extends Controller {
         $utc_now = Yii::app()->localtime->getUTCNow("Y-m-d H:i:s");
         $end_time = strtotime($utc_now) + (5 * 60); // 5 min greater record
         $end_time_format = date("Y-m-d H:i:s", $end_time);
-        
+
         $booking = CamBooking::model()->active()->pending()->find('book_user_id = :user_id AND book_start_time <= :time AND book_end_time >= :time', array(":user_id" => $user_id, ":time" => $end_time_format));
 
         $current_time = Yii::app()->localtime->getLocalNow("Y-m-d H:i:s");
@@ -716,9 +714,9 @@ class DefaultController extends Controller {
         }
     }
 
-    public function actionHowitworks() {
-        $this->render('howitworks');
-    }
+//    public function actionHowitworks() {
+//        $this->render('howitworks');
+//    }
 
     public function actionFaq() {
         $faqs = Faq::model()->active()->findAll();
@@ -756,6 +754,17 @@ class DefaultController extends Controller {
     }
 
     public function actionCron() {
+//        $latest_finished_bookings = CamBooking::model()->active()->completed()->findAll('DATE(book_end_time) = :CURRENT and book_end_time < :finished_time', array(':CURRENT' => date('Y-m-d'), ':finished_time' => date('Y-m-d H:i:s')));
+//        if (!empty($latest_finished_bookings)) {
+//            foreach ($latest_finished_bookings as $latest_finished_booking) {
+//                if($latest_finished_booking->bookUser->live_status == "B")
+//                    User::switchStatus($latest_finished_booking->book_user_id, 'A');
+//                
+//                if($latest_finished_booking->cam->tutor->live_status == "B")
+//                    User::switchStatus($latest_finished_booking->cam->tutor_id, 'A');
+//            }
+//        }
+
         $idle_users = TempSession::model()->findAll('last_activity_time < :lastTime', array(':lastTime' => date('Y-m-d H:i:s', strtotime('-' . User::USER_MAX_IDLE_MIN . ' minutes'))));
         foreach ($idle_users as $temp_session) {
             User::switchStatus($temp_session->user->user_id, 'O');
@@ -826,7 +835,7 @@ class DefaultController extends Controller {
                 $booking->save(false);
             }
             $booking = CamBooking::model()->findByAttributes(array('book_guid' => Yii::app()->request->getPost('book_guid')));
-            TempSession::insertSession(Yii::app()->user->id, $booking->book_end_time);
+            TempSession::insertSession(Yii::app()->user->id, Yii::app()->localtime->toUTC($booking->book_end_time));
 
             $start_time = Yii::app()->localtime->getUTCNow('Y-m-d H:i:s');
             $end_time = Yii::app()->localtime->toUTC($booking->book_end_time);

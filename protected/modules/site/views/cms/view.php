@@ -22,4 +22,4 @@ if(!empty($model->cover_photo)){
         </div>
     </div>
 </div>
-<?php echo $model->cms_description; ?>
+<?php echo $content; ?>

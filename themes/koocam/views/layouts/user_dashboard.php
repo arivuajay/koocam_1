@@ -82,14 +82,14 @@ endif
                             'activateItems' => true,
                             'activeCssClass' => 'myprofile-active',
                             'items' => array(
-                                array('label' => '<i class="fa fa-user"></i> My Profile', 'url' => '#'),
+                                array('label' => '<i class="fa fa-user"></i> My Profile', 'url' => array("/site/user/profile", "slug" => $user->slug)),
                                 array('label' => '<i class="fa fa-graduation-cap"></i> My Cams ' . $cam_badge, 'url' => array('/site/cam/mycams')),
                                 array('label' => '<i class="fa fa-cart-plus"></i> My Purchase ' . $purchase_badge, 'url' => array('/site/purchase/mypurchase')),
                                 array('label' => '<i class="fa fa-money"></i> My Payments ' . $balance_badge, 'url' => array('/site/transaction/mypayments')),
                                 array('label' => '<i class="fa fa-envelope"></i> Messages ' . $msg_badge, 'url' => array('/site/message/index')),
                                 array('label' => '<i class="fa fa-bell"></i> Notifications '.$notifn_badge, 'url' => array('/site/notification/index')),
                                 array('label' => '<i class="fa fa-calendar-check-o"></i> Jobs '.$myjobs, 'url' => array('/site/cambooking/myjobs')),
-                                array('label' => '<i class="fa fa-gear"></i> Account Setting ', 'url' => '#'),
+                                array('label' => '<i class="fa fa-gear"></i> Account Setting ', 'url' => array('/site/user/accountsetting')),
                                 array('label' => '<i class="fa fa-power-off"></i> Logout', 'url' => array('/site/default/logout')),
                             ),
                             'htmlOptions' => array('class' => 'sidebar-menu')

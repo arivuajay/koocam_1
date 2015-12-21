@@ -48,7 +48,7 @@ class User extends RActiveRecord {
     public $confirm_password;
     public $i_agree;
     
-    const USER_MAX_IDLE_MIN = 5;
+    const USER_MAX_IDLE_MIN = 60;
     const CAM_PER_USER = 20;
 
     public function init() {
@@ -194,6 +194,7 @@ class User extends RActiveRecord {
             'modified_at' => 'Updated At',
             'confirm_password' => 'Confirm Password',
             'receive_email_notify' => 'Receive notification to email',
+            'country_id' => 'User Default Country',
         );
     }
 

@@ -21,6 +21,15 @@
 class Contactus extends RActiveRecord {
 
     public $verifyCode;
+    
+    public function init() {
+        if(!Yii::app()->user->isGuest){
+            $user = User::model()->findByPk(Yii::app()->user->id);
+            $this->contact_email = $user->email;
+            $this->contact_name = $user->username;
+        }
+        parent::init();
+    }
 
     /**
      * @return string the associated database table name

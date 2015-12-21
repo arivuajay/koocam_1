@@ -117,12 +117,14 @@ $price_calculation = CamBooking::price_calculation($user_country_id, $cam_price,
             <div class="modal-body">
                 <div class="booking-form-cont">
                     <div class="row">
-                        Your booking is rejected by Tutor, Please try again        
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 ">
+                            <span class="text-red-300">  Your booking is rejected by Tutor, Please try again        </span>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer" id="reject-okay-buttons">
-                <button type="button" class="btn  btn-cancel" data-dismiss="modal" onclick="window.location.href = '<?php echo Yii::app()->request->url?>'">Okay</button>
+                <button type="button" class="btn  btn-cancel" data-dismiss="modal" onclick="window.location.href = '<?php echo Yii::app()->request->url ?>'">Okay</button>
             </div>
         </div>
     </div>
@@ -224,6 +226,7 @@ $js = <<< EOD
                                 window.location = '{$paypal_process}' + '/' + temp_guid;
                             }
                             if(data.user_before_paypal_status == "rejected"){
+                                $('#startnow').modal('hide');
                                 $('#reject_alert').modal('show');
 //                                location.reload();
                             }

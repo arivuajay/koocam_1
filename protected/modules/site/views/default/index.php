@@ -23,7 +23,7 @@ $themeUrl = $this->themeUrl;
                     </div>
                 </div>
             </div>
-            <div class="explore-btn"> <a href="#" class="btn btn-default explorebtn"> Explore Courses </a> </div>
+<!--            <div class="explore-btn"> <a href="#" class="btn btn-default explorebtn"> Explore Courses </a> </div>-->
         </div>
     </div>
 </div>

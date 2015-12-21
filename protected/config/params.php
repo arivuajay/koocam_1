@@ -27,8 +27,8 @@ return array(
     'SMTPPASS' => 'ninja12345',
     'SMTPAUTH' => true, // Auth : true or false
     'SMTPSECURE' => 'ssl', // Secure :tls or ssl
-    'NOREPLYMAIL' => 'noreply@arkinfotec.com',
-    'CONTACTMAIL' => 'noreply@arkinfotec.com',
+    'NOREPLYMAIL' => 'noreply@koocam.com',
+    'CONTACTMAIL' => 'noreply@koocam.com',
     'JS_SHORT_DATE_FORMAT' => 'dd-MM-yyyy',
     'JS_SHORT_DATE_FORMAT_2' => 'DD-MM-YYYY',
     'PHP_SHORT_DATE_FORMAT' => 'd-m-Y',

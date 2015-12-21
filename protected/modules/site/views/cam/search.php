@@ -8,11 +8,10 @@ $this->title = "Search CAM: {$search_text}";
 $themeUrl = $this->themeUrl;
 
 $cover_image = '';
-if($category_id){
+if ($category_id) {
     $cam_category = CamCategory::model()->findByPk($category_id);
-    $cover_image =  'background: #222 url(' . $cam_category->coverimageurl . ') no-repeat;';
+    $cover_image = 'background: #222 url(' . $cam_category->coverimageurl . ') no-repeat;';
 }
-
 ?>
 
 <div id="inner-banner" class="tt-fullHeight3 category_search" style = "<?php echo $cover_image; ?>">
@@ -49,10 +48,12 @@ echo CHtml::hiddenField('s', $search_text);
                 <div class="in-search-cont">
                     <div class="row">
                         <div class="col-xs-12 col-sm-8 col-md-8 col-lg-7">
-                            <h2> Search Results <?php echo !empty($search_text) ? "for \"{$search_text}\"" : ''; ?></h2>
-                            <h4 id="itemcount">(<?php echo $pages->itemCount; ?> Results Found)</h4>
-                            <?php if(!empty($category_name)){ ?>
-                            <h5>Category: <?php echo $category_name; ?></h5>
+<!--                            <h2> Search Results <?php // echo !empty($search_text) ? "for \"{$search_text}\"" : '';  ?></h2>-->
+<!--                            <h4 id="itemcount">(<?php // echo $pages->itemCount;  ?> Results Found)</h4>-->
+                            <?php if (!empty($category_name)) { ?>
+                                <h2>Category: <?php echo $category_name; ?></h2>
+                            <?php } else { ?>
+                                <h2> All Categories </h2>
                             <?php } ?>
                         </div>
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-3">

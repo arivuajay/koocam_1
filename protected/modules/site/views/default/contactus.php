@@ -55,11 +55,11 @@ EOD;
                     </div>
                     <div class="form-group">
                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
-                            <?php echo $form->textField($model, 'contact_name', array('class' => 'form-control', 'placeholder' => 'Fullname', 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "Fullname")); ?> 
+                            <?php echo $form->textField($model, 'contact_name', array('class' => 'form-control', 'placeholder' => 'Fullname', 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "Fullname", 'disabled'=>!Yii::app()->user->isGuest)); ?> 
                             <?php echo $form->error($model, 'contact_name'); ?> 
                         </div>
                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
-                            <?php echo $form->textField($model, 'contact_email', array('class' => 'form-control', 'placeholder' => 'Email', 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "Email")); ?> 
+                            <?php echo $form->textField($model, 'contact_email', array('class' => 'form-control', 'placeholder' => 'Email', 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "Email", 'disabled'=>!Yii::app()->user->isGuest)); ?> 
                             <?php echo $form->error($model, 'contact_email'); ?> 
                         </div>
                     </div>

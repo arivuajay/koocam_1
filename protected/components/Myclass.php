@@ -234,7 +234,7 @@ class Myclass extends CController {
         $criteria = new CDbCriteria;
         $date = date('Y-m-d');
         $criteria->condition = " date(created_at) = '$date'";
-        
+
         $tot_users = User::model()->current()->count();
         $new_users_per_day = User::model()->current()->count($criteria);
         $sql = "SELECT a.cam_id, b.cam_title, COUNT(a.cam_id) AS most_cam
@@ -247,7 +247,7 @@ class Myclass extends CController {
                 ORDER BY most_cam DESC
                 LIMIT 0,1";
         $most_cam = Yii::app()->db->createCommand($sql)->queryAll();
-        
+
         $sql = "SELECT b.country_name, COUNT(b.country_Id) AS user_count
                 FROM {{user}} a
                 JOIN {{country}} b
@@ -255,12 +255,12 @@ class Myclass extends CController {
                 WHERE a.status IN ('1', '0')
                 GROUP BY b.country_Id";
         $user_country = CHtml::listData(Yii::app()->db->createCommand($sql)->queryAll(), 'country_name', 'user_count');
-        
+
         $new_cams_per_day = Cam::model()->exceptDelete()->count($criteria);
         $deleted_cams_per_day = Cam::model()->deleted()->count($criteria);
         $cams_sold_per_day = Purchase::model()->count($criteria);
         $cam_categories = CamCategory::model()->findAll();
-        
+
         //All Booking
         $admin_process = Yii::app()->db->createCommand()
                 ->select('SUM(book_processing_fees) as total_process_amt')
@@ -268,15 +268,15 @@ class Myclass extends CController {
                 ->andWhere(' book_approve = "1" And book_payment_status = "C"')
                 ->queryRow();
         $admin_process = (!empty($admin_process['total_process_amt'])) ? $admin_process['total_process_amt'] : 0;
-            
+
         //Booking Today
         $admin_process_per_day = Yii::app()->db->createCommand()
                 ->select('SUM(book_processing_fees) as total_process_amt')
                 ->from('{{cam_booking}}')
-                ->andWhere(' book_approve = "1" And book_payment_status = "C" And date(book_date) = "'.$date.'"')
+                ->andWhere(' book_approve = "1" And book_payment_status = "C" And date(book_date) = "' . $date . '"')
                 ->queryRow();
         $admin_process_per_day = (!empty($admin_process_per_day['total_process_amt'])) ? $admin_process_per_day['total_process_amt'] : 0;
-        
+
         //All Service
         $admin_service = Yii::app()->db->createCommand()
                 ->select('SUM(book_service_tax) as total_service_amt')
@@ -284,15 +284,15 @@ class Myclass extends CController {
                 ->andWhere(' book_approve = "1" And book_payment_status = "C"')
                 ->queryRow();
         $admin_service = (!empty($admin_service['total_service_amt'])) ? (float) $admin_service['total_service_amt'] : 0;
-        
+
         //Service Today
         $admin_service_per_day = Yii::app()->db->createCommand()
                 ->select('SUM(book_service_tax) as total_service_amt')
                 ->from('{{cam_booking}}')
-                ->andWhere(' book_approve = "1" And book_payment_status = "C" And date(book_date) = "'.$date.'"')
+                ->andWhere(' book_approve = "1" And book_payment_status = "C" And date(book_date) = "' . $date . '"')
                 ->queryRow();
         $admin_service_per_day = (!empty($admin_service_per_day['total_service_amt'])) ? (float) $admin_service_per_day['total_service_amt'] : 0;
-            
+
         $type_revenue = Transaction::TYPE_REVENUE;
         //Transaction
         $total_revenue = Yii::app()->db->createCommand()
@@ -301,15 +301,15 @@ class Myclass extends CController {
                 ->andWhere(' trans_type = "' . $type_revenue . '"')
                 ->queryRow();
         $total_revenue = (!empty($total_revenue['total_revenue_amt'])) ? $total_revenue['total_revenue_amt'] : 0;
-        
+
         //Transaction Today
         $total_revenue_per_day = Yii::app()->db->createCommand()
                 ->select('SUM(`trans_admin_amount`) as total_revenue_amt')
                 ->from('{{transaction}}')
-                ->andWhere(' trans_type = "' . $type_revenue . '" And date(created_at) = "'.$date.'"')
+                ->andWhere(' trans_type = "' . $type_revenue . '" And date(created_at) = "' . $date . '"')
                 ->queryRow();
         $total_revenue_per_day = (!empty($total_revenue_per_day['total_revenue_amt'])) ? $total_revenue_per_day['total_revenue_amt'] : 0;
-        
+
         $admin_earnings = (float) ($admin_process + $total_revenue);
         $admin_earnings_today = (float) ($admin_process_per_day + $total_revenue_per_day);
 
@@ -327,10 +327,10 @@ class Myclass extends CController {
         $return['total_service'] = $admin_service;
         $return['total_earning_per_day'] = $admin_earnings_today;
         $return['total_service_per_day'] = $admin_service_per_day;
-        
+
         return $return;
     }
-    
+
     public static function getSystemAlert($tone = 1) {
         switch ($tone) {
             case 1:
@@ -346,4 +346,23 @@ class Myclass extends CController {
             Your browser is not supporting audio
         </audio>';
     }
+
+    //echo sum_the_time('01:45:22', '17:27:03');
+    public static function sum_the_time($time1, $time2) {
+        $times = array($time1, $time2);
+        $seconds = 0;
+        foreach ($times as $time) {
+            list($hour, $minute, $second) = explode(':', $time);
+            $seconds += $hour * 3600;
+            $seconds += $minute * 60;
+            $seconds += $second;
+        }
+        $hours = floor($seconds / 3600);
+        $seconds -= $hours * 3600;
+        $minutes = floor($seconds / 60);
+        $seconds -= $minutes * 60;
+        return "{$hours}:{$minutes}:{$seconds}";
+        //return sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds);
+    }
+
 }

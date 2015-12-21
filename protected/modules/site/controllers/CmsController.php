@@ -48,7 +48,18 @@ class CmsController extends Controller {
      */
     public function actionView($slug) {
         $model = $this->loadModelSlug($slug);
-        $this->render('view', compact('model'));
+        $themeUrl = $this->themeUrl;
+        $params = array(
+            "{STEP1}" => CHtml::image("{$themeUrl}/images/step1.png", ''),
+            "{STEP2}" => CHtml::image("{$themeUrl}/images/step2.png", ''),
+            "{STEP3}" => CHtml::image("{$themeUrl}/images/step3.png", ''),
+            "{STEP4}" => CHtml::image("{$themeUrl}/images/step4.png", ''),
+            "{STEP5}" => CHtml::image("{$themeUrl}/images/step5.png", ''),
+            "{STEP6}" => CHtml::image("{$themeUrl}/images/step6.png", ''),
+            "{VIDEO}" => '<iframe width="100%" height="315" src="https://www.youtube.com/embed/it9WajjCmro" frameborder="0" allowfullscreen></iframe>',
+        );
+        $content = strtr($model->cms_description, $params);
+        $this->render('view', compact('model', 'content'));
     }
 
     /**

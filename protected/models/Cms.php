@@ -14,6 +14,7 @@
  * @property string $cover_photo
  * @property string $status
  * @property string $created_at
+ * @property string $cms_variables
  * @property string $modified_at
  */
 class Cms extends RActiveRecord {
@@ -52,7 +53,7 @@ class Cms extends RActiveRecord {
             array('slug, cms_title, cms_tag', 'length', 'max' => 255),
             array('cover_photo', 'length', 'max' => 500),
             array('status', 'length', 'max' => 1),
-            array('cms_meta_keywords, cms_meta_description, modified_at, cover_photo', 'safe'),
+            array('cms_meta_keywords, cms_meta_description, modified_at, cover_photo, cms_variables', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('cms_id, slug, cms_title, cms_description, cms_meta_keywords, cms_meta_description, status, created_at, modified_at, cover_photo', 'safe', 'on' => 'search'),
@@ -84,6 +85,7 @@ class Cms extends RActiveRecord {
             'status' => 'Status',
             'created_at' => 'Created At',
             'modified_at' => 'Modified At',
+            'cms_variables' => 'Variables',
         );
     }
 

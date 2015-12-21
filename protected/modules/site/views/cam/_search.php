@@ -32,9 +32,17 @@ $form = $this->beginWidget('CActiveForm', array(
 </div>
 
 <?php $this->endWidget(); ?>
-<div class="col-xs-9 col-sm-4 col-md-4 col-lg-4 site-feature"> <i class="fa fa-book"></i> More than 1000 courses </div>
-<div class="col-xs-9 col-sm-4 col-md-4 col-lg-4 site-feature"> <i class="fa fa-group"></i> Over 8 million students </div>
-<div class="col-xs-9 col-sm-4 col-md-4 col-lg-4 site-feature"> <i class="fa fa-laptop"></i> Learn at your pace on any device</div>
+
+<div class="col-xs-9 col-sm-4 col-md-4 col-lg-4 site-feature"> 
+    <i class="fa fa-book"></i> More than 1000 cam's 
+</div>
+<div class="col-xs-9 col-sm-3 col-md-3 col-lg-3 site-feature"> 
+    <i class="fa fa-group"></i> All over the world 
+</div>
+<div class="col-xs-9 col-sm-5 col-md-5 col-lg-5 site-feature"> 
+    <i class="fa fa-laptop"></i> Learn everything at your pace online
+</div>
+
 <?php
 $cs = Yii::app()->getClientScript();
 $js = <<< EOD

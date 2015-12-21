@@ -60,6 +60,7 @@ class BookingtempController extends Controller {
 
                 if ($post_data['temp_book_session'] == 2) {
                     $data['temp_book_cam_price'] = 2 * $cam->cam_price;
+                    $data['temp_book_duration'] = 2 * $cam->cam_duration;
                 }
 
                 if ($post_data['temp_book_is_extra'] == "Y") {

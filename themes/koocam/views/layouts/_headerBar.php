@@ -43,7 +43,7 @@ $themeUrl = $this->themeUrl;
                             ?>
                             <ul class="nav navbar-nav">
                                 <li><?php echo CHtml::link(' Sell your time ', array('/site/cam/create')); ?></li>
-                                <li><?php echo CHtml::link(' How its works ', array('/site/default/howitworks')); ?></li>
+                                <li><?php echo CHtml::link(' How its works ', array('/site/cms/view', 'slug' => 'howitworks')); ?></li>
                                 <?php
                                 if (!Yii::app()->user->isGuest) {
                                     $user = User::model()->findByPk(Yii::app()->user->id);

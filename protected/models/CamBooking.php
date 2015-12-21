@@ -275,6 +275,8 @@ class CamBooking extends RActiveRecord {
 
         if ($this->book_approve == '1')
             $this->book_approved_time = date('Y-m-d H:i:s');
+        
+        $this->book_date = $this->book_start_time;
 
         return parent::beforeSave();
     }
@@ -323,10 +325,13 @@ class CamBooking extends RActiveRecord {
         if (!empty($this->cam) && !empty($this->book_session)):
             $cam_price = $this->cam->cam_price;
             $price = 0;
+            $book_duration = 0;
             for ($i = 0; $i < $this->book_session; $i++) {
                 $price = $cam_price + $price;
+                $book_duration = $book_duration + $this->cam->cam_duration;
             }
             $this->book_cam_price = $price;
+            $this->book_duration = $book_duration;
 
             $this->book_extra_price = 0;
             if ($this->book_is_extra)
@@ -336,7 +341,7 @@ class CamBooking extends RActiveRecord {
             $this->book_processing_fees = $price_calculation['processing_fees'];
             $this->book_service_tax = $price_calculation['service_tax'];
             $this->book_total_price = $price_calculation['total_price'];
-            $this->book_duration = $this->cam->cam_duration;
+            
         endif;
     }
 

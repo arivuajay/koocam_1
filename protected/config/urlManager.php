@@ -11,7 +11,7 @@ return array(
     'home' => 'site/default/index',
     'faq' => array('site/default/faq', 'urlSuffix' => '.html'),
     'contactus' => array('site/default/contactus', 'urlSuffix' => '.html'),
-    'howitworks' => array('site/default/howitworks', 'urlSuffix' => '.html'),
+//    'howitworks' => array('site/default/howitworks', 'urlSuffix' => '.html'),
     'chat/<guid:[-\w]+>' => 'site/default/chat',
     'cam/<slug:[-\w]+>' => array('site/cam/view', 'urlSuffix' => '.html'),
     'category/<slug:[-\w]+>' => array('site/camcategory/view', 'urlSuffix' => '.html'),
