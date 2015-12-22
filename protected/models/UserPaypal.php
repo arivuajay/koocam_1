@@ -29,7 +29,7 @@ class UserPaypal extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('user_id', 'required'),
+            array('user_id, paypal_address', 'required'),
             array('user_id', 'numerical', 'integerOnly' => true),
             array('paypal_address', 'email'),
             array('paypal_address', 'length', 'max' => 100),

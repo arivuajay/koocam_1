@@ -73,7 +73,7 @@ $user_paypals = $model->userPaypals;
                                 $receive_email = "email-notification2.png";
                                 if ($model->receive_email_notify)
                                     $receive_email = 'email-notification.png';
-                                echo CHtml::image($themeUrl."/images/{$receive_email}", '')
+                                echo CHtml::image($themeUrl . "/images/{$receive_email}", '')
                                 ?>
                                 Receive notifications to email
                             </div>
@@ -117,24 +117,28 @@ $user_paypals = $model->userPaypals;
                             Paypal Setting 
                         </div>
 
-
                         <div class="form-group">  
                             <?php if (!empty($user_paypals)) { ?>
                                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 age-verify ">
                                     <?php foreach ($user_paypals as $user_paypal) { ?>
                                         <p>  
-                                            <?php echo $user_paypal->paypal_address; ?>  
+                                            <?php echo $user_paypal_address = $user_paypal->paypal_address; ?> 
+                                            &nbsp;
+                                            <a href="#" data-target="#edit_paypal" data-toggle="modal" data-dismiss="#edit_paypal" class="edit-paypal" data-paypal_address = "<?php echo $user_paypal_address ?>" data-paypal_id ="<?php echo $user_paypal->paypal_id ?>" >
+                                                <i class="fa fa-pencil"></i>
+                                            </a>
+                                            &nbsp;
                                             <?php echo CHtml::link('<i class="fa fa-trash"></i>', array('/site/user/paypaldelete', 'paypal_id' => $user_paypal->paypal_id), array('confirm' => 'Are you sure?')) ?>
                                         </p>
                                     <?php } ?>
                                 </div>
                             <?php } ?>
                             <div class="spe-line"> </div>
-                            
+
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-heading"> 
                                 <?php echo CHtml::link('<i class="fa fa-user-times"></i> Deactivate My Account', array('/site/user/accountdeactivate'), array('confirm' => 'Are you sure to deactivate your account?', 'class' => 'label label-default')); ?>
                             </div>
-                            
+
                             <div class="spe-line"> </div>
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-heading"> 
                                 <?php echo CHtml::link('<i class="fa fa-user-times"></i> Delete My Account', array('/site/user/accountdelete'), array('confirm' => 'Are you sure to delete your account ?', 'class' => 'label label-default')); ?>
@@ -156,4 +160,19 @@ $this->renderPartial('_personal_information_form', compact('model', 'user_profil
 $this->renderPartial('_email_address_form', compact('model'));
 $this->renderPartial('_change_password_form', compact('model'));
 $this->renderPartial('_security_question_form', compact('model'));
+$this->renderPartial('_paypal_form', array('model' => 'model', 'paypal_model' => new UserPaypal));
+?>
+
+<?php
+$js = <<< EOD
+    jQuery(document).ready(function ($) {
+        $(".edit-paypal").click(function(){
+            paypal_address = $(this).data("paypal_address");
+            paypal_id = $(this).data("paypal_id");
+            $("#UserPaypal_paypal_address").val(paypal_address);
+            $("#UserPaypal_paypal_id").val(paypal_id);
+        });
+    });
+EOD;
+Yii::app()->clientScript->registerScript('view', $js);
 ?>

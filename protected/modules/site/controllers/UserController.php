@@ -32,7 +32,7 @@ class UserController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('profileupdate', 'sendmessage', 'switchstatus', 'accountsetting', 'editpersonalinformaiton', 'editemailaddress', 'changepassword', 'editsecurityquestionanswer', 'paypaldelete', 'accountdeactivate', 'accountdelete'),
+                'actions' => array('profileupdate', 'sendmessage', 'switchstatus', 'accountsetting', 'editpersonalinformaiton', 'editemailaddress', 'changepassword', 'editsecurityquestionanswer', 'paypaldelete', 'accountdeactivate', 'accountdelete', 'editpaypal'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -166,6 +166,26 @@ class UserController extends Controller {
                 if ($model->save(false)) {
                     Yii::app()->user->setFlash('success', "Security question and answer edited successfully!!!");
                     $this->redirect(array('accountsetting'));
+                }
+            }
+        }
+    }
+
+    public function actionEditpaypal() {
+        $user_paypals = new UserPaypal;
+        $this->performAjaxValidation($user_paypals);
+
+        if (Yii::app()->request->isPostRequest && Yii::app()->request->getPost('UserPaypal')) {
+            $post_data = Yii::app()->request->getPost('UserPaypal');
+            $user_paypals = UserPaypal::model()->findByPk($post_data['paypal_id']);
+            if (!empty($user_paypals)) {
+                $user_paypals->attributes = $post_data;
+                $user_paypals->user_id = Yii::app()->user->id;
+                if ($user_paypals->validate()) {
+                    if ($user_paypals->save(false)) {
+                        Yii::app()->user->setFlash('success', "Paypal address edited successfully!!!");
+                        $this->redirect(array('accountsetting'));
+                    }
                 }
             }
         }
