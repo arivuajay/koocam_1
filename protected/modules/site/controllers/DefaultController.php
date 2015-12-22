@@ -747,7 +747,8 @@ class DefaultController extends Controller {
                 $Subject = $mail->translate(SITENAME . " - Contact Us");
                 $mail->send(ADMIN_EMAIL, $Subject, $message);
                 Yii::app()->user->setFlash('success', "Your message sent successfully!!!");
-                $this->redirect(array('/site/default/contactus'));
+                $this->goHome();
+//                $this->redirect(array('/site/default/contactus'));
             }
         }
         $this->render('contactus', compact('model'));
