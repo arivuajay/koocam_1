@@ -118,7 +118,7 @@ $price_calculation = CamBooking::price_calculation($user_country_id, $cam_price,
                 <div class="booking-form-cont">
                     <div class="row">
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 ">
-                            <span class="text-red-300">  Your booking is rejected by Tutor, Please try again        </span>
+                            <span class="text-red-300">  Your booking is rejected by User, Please try again        </span>
                         </div>
                     </div>
                 </div>

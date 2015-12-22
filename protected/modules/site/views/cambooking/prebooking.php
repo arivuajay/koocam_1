@@ -28,7 +28,7 @@ $themeUrl = $this->themeUrl;
             <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8 col-md-offset-1  col-lg-offset-2 prebooking-cont ">
                 <div class="prebooking-details">
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-5">  
-                        <b> Tutor Name  : </b>  
+                        <b> User Name  : </b>  
                         <?php echo CHtml::link($booking->cam->tutor->username, array("/site/user/profile", "slug" => $booking->cam->tutor->slug)); ?>
                     </div>
                     <div class="col-xs-12 col-sm-6 col-md-6 col-lg-7">  
@@ -215,7 +215,7 @@ $js = <<< EOD
                                 window.location = '{$paypal_process}' + '/' + temp_guid + '/book_id/' + book_id;
                             }
                             if(data.user_before_paypal_status == "rejected"){
-                                alert("You booking is rejected by Tutor, Please try again");
+                                alert("You booking is rejected by User, Please try again");
                                 location.reload();
                             }
                         },

@@ -497,7 +497,7 @@ class DefaultController extends Controller {
                     $return['end_learner_chat'] = 1;
                 }
 
-                //End Tutor Chat Screen
+                //End User Chat Screen
                 $learnerEnded = $this->learnerEnded();
                 if (!empty($learnerEnded)) {
                     $return['end_tutor_chat'] = 1;
@@ -519,7 +519,7 @@ class DefaultController extends Controller {
 //                    $return['system_alert'] = Myclass::getSystemAlert(2);
                 }
 
-                //Tutor before paypal confirmation
+                //User before paypal confirmation
                 $tutorstartnowalert = $this->tutorBeforePaypalAlert();
                 if (!empty($tutorstartnowalert)) {
                     $booking_data = unserialize($tutorstartnowalert->temp_value);
