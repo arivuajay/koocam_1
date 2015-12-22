@@ -765,6 +765,36 @@ class DefaultController extends Controller {
 //                    User::switchStatus($latest_finished_booking->cam->tutor_id, 'A');
 //            }
 //        }
+//        
+        //PreBooking Reminder
+        $current_date_time = date('Y-m-d H:i:s');
+        $plus_current_time = date("Y-m-d H:i", strtotime("+30 minutes"));
+
+        $check_prebooking = CamBooking::model()->active()->pending()->findAll('DATE_FORMAT(book_start_time, "%Y-%m-%d %H:%i") = :plus_time', array(':plus_time' => $plus_current_time));
+
+        if (!empty($check_prebooking)) {
+            foreach ($check_prebooking as $prebooking) {
+                $tutor = $prebooking->cam->tutor;
+                $learner = $prebooking->bookUser;
+                $book_date = date(PHP_SHORT_DATE_FORMAT, strtotime($prebooking->book_date));
+
+                $mail = new Sendmail;
+                $trans_array = array(
+                    "{SITENAME}" => SITENAME,
+                    "{USERNAME}" => $learner->fullname,
+                    "{EMAIL_ID}" => $learner->email,
+                    "{TUTOR}" => $tutor->fullname,
+                    "{CAM}" => $prebooking->cam->cam_title,
+                    "{BOOK_DATE}" => $book_date,
+                    "{FROM_TIME}" => date('H:i', strtotime($prebooking->book_start_time)),
+                    "{TO_TIME}" => date('H:i', strtotime($prebooking->book_end_time)),
+                    "{BOOK_URL}" => Yii::app()->createAbsoluteUrl("/site/cambooking/prebooking", array("book_guid" => $prebooking->book_guid)),
+                );
+                $message = $mail->getMessage('cam_booking_learner', $trans_array);
+                $Subject = $mail->translate("Reminder mail - Booking For CAM ({$prebooking->cam->cam_title})");
+                $mail->send($learner->email, $Subject, $message);
+            }
+        }
 
         $idle_users = TempSession::model()->findAll('last_activity_time < :lastTime', array(':lastTime' => date('Y-m-d H:i:s', strtotime('-' . User::USER_MAX_IDLE_MIN . ' minutes'))));
         foreach ($idle_users as $temp_session) {
