@@ -33,7 +33,8 @@ $themeUrl = $this->themeUrl;
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 heading-cont">
                 <h2> Popular CATEGORY <br/>
-                    <span> Lorem ipsum dolor sit amet, consectetur adipiscing elit. </span></h2>
+                    <span>&nbsp;</span>
+                </h2>
             </div>
             <?php
             $categories = CamCategory::popularCategory();
@@ -86,9 +87,9 @@ $themeUrl = $this->themeUrl;
                     </div>
                 </div>
             <?php endforeach; ?>
-            <div class="explore-btn"> 
-                <?php echo CHtml::link('Browse All Categories', array('/site/cam/search', 'category_id' => 0), array('class' => 'btn btn-default  btn-lg explorebtn')); ?>
-            </div>
+<!--            <div class="explore-btn"> 
+                <?php // echo CHtml::link('Browse All Categories', array('/site/cam/search', 'category_id' => 0), array('class' => 'btn btn-default  btn-lg explorebtn')); ?>
+            </div>-->
         </div>
     </div>
 </div>
@@ -99,7 +100,8 @@ $themeUrl = $this->themeUrl;
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 heading-cont">
                 <h2> top Instructor <br>
-                    <span> Lorem ipsum dolor sit amet, consectetur adipiscing elit. </span></h2>
+                    <span> &nbsp; </span>
+                </h2>
             </div>
             <?php
             $cams = Cam::topInstructors();

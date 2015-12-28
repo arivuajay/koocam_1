@@ -24,18 +24,18 @@
                     <div class = "form-group form-control-material static">
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <?php echo $form->labelEx($user_profile, 'prof_firstname'); ?>
-                            <?php echo $form->textField($user_profile, 'prof_firstname', array('class' => 'form-control', 'size' => 50, 'maxlength' => 50)); ?>
+                            <?php echo $form->textField($user_profile, 'prof_firstname', array('class' => 'form-control', 'size' => 50, 'maxlength' => 50, 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "Your firstname")); ?>
                             <?php echo $form->error($user_profile, 'prof_firstname'); ?>
                         </div>
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <?php echo $form->labelEx($user_profile, 'prof_lastname'); ?>
-                            <?php echo $form->textField($user_profile, 'prof_lastname', array('class' => 'form-control', 'size' => 50, 'maxlength' => 50)); ?>
+                            <?php echo $form->textField($user_profile, 'prof_lastname', array('class' => 'form-control', 'size' => 50, 'maxlength' => 50, 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "Your lastname")); ?>
 
                             <?php echo $form->error($user_profile, 'prof_lastname'); ?>
                         </div>
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4">
                             <?php echo $form->labelEx($user_profile, 'prof_tag'); ?>
-                            <?php echo $form->textField($user_profile, 'prof_tag', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100)); ?>
+                            <?php echo $form->textField($user_profile, 'prof_tag', array('class' => 'form-control', 'size' => 60, 'maxlength' => 100, 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "describe yourself - in one sentence")); ?>
                             <?php echo $form->error($user_profile, 'prof_tag'); ?>
                         </div>
                     </div>
@@ -43,7 +43,7 @@
                     <div class = "form-group form-control-material static">
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <?php echo $form->labelEx($user_profile, 'prof_about'); ?>
-                            <?php echo $form->textArea($user_profile, 'prof_about', array('class' => 'form-control', 'rows' => 3, 'cols' => 50)); ?>
+                            <?php echo $form->textArea($user_profile, 'prof_about', array('class' => 'form-control', 'rows' => 3, 'cols' => 50, 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "describe yourself")); ?>
                             <?php echo $form->error($user_profile, 'prof_about'); ?>
                         </div>
                     </div>
@@ -61,7 +61,7 @@
                             }
                             ?>
                             <?php echo $form->labelEx($user_profile, 'prof_languages'); ?> 
-                            <?php echo $form->dropDownList($user_profile, 'prof_languages', Language::getLanguagesList(), array('class' => 'selectpicker', 'prompt' => '', 'multiple' => true, 'options' => $selected)); ?> 
+                            <?php echo $form->dropDownList($user_profile, 'prof_languages', Language::getLanguagesList(), array('class' => 'selectpicker', 'multiple' => true, 'options' => $selected)); ?> 
                             <?php echo $form->error($user_profile, 'prof_languages'); ?>
                         </div>
                     </div>
@@ -69,7 +69,7 @@
                     <div class = "form-group form-control-material static">
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <?php echo $form->labelEx($user_profile, 'prof_interests'); ?> 
-                            <?php echo $form->textArea($user_profile, 'prof_interests', array('class' => 'form-control', 'rows' => 3, 'cols' => 50)); ?>
+                            <?php echo $form->textArea($user_profile, 'prof_interests', array('class' => 'form-control', 'rows' => 3, 'cols' => 50, 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "describe your interests")); ?>
                             <?php echo $form->error($user_profile, 'prof_interests'); ?>
                         </div>
                     </div>

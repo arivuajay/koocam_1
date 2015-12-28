@@ -65,7 +65,7 @@ $is_not_my_profile = !Yii::app()->user->isGuest && Yii::app()->user->id != $mode
             </div>
             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 course-details">
                 <h2> About <?php echo $model->fullname; ?> </h2>
-                <p class="date"> Date of Join : <?php echo $model->created_at; ?></p>
+                <p class="date"> Date of Join : <?php echo date("Y-m-d", strtotime($model->created_at)) ; ?></p>
                 <p><?php echo $user_profile->prof_about; ?></p>
                 <h4> Country </h4>
                 <p> <?php echo $model->userCountry->country_name; ?> </p>
@@ -103,5 +103,5 @@ if ($is_not_my_profile) {
 ?>
 
 <script type="text/javascript">var switchTo5x = true;</script>
-<script type="text/javascript" src="http://w.sharethis.com/button/buttons.js"></script>
+<script type="text/javascript" src="https://ws.sharethis.com/button/buttons.js"></script>
 <script type="text/javascript">stLight.options({publisher: "b111ba58-0a07-447e-92ed-da6eda1af9b3", doNotHash: false, doNotCopy: false, hashAddressBar: false, servicePopup: true});</script>

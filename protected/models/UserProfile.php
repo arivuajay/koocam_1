@@ -96,7 +96,7 @@ class UserProfile extends RActiveRecord {
             'user_id' => 'User',
             'prof_firstname' => 'Firstname',
             'prof_lastname' => 'Lastname',
-            'prof_tag' => 'Tag',
+            'prof_tag' => 'Title',
             'prof_address' => 'Address',
             'prof_phone' => 'Phone',
             'prof_skype' => 'Skype',

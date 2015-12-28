@@ -255,7 +255,7 @@ class Cam extends RActiveRecord {
             'modified_at' => 'Modified At',
             'created_by' => 'Created By',
             'modified_by' => 'Modified By',
-            'is_video' => 'Video or Photo',
+            'is_video' => 'Video or Photo (photo limitation of ' . self::CAM_ALLOW_FILE_SIZE . 'MB)',
             'cam_youtube_url' => 'Video URL',
         );
     }
