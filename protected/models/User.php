@@ -47,7 +47,7 @@ class User extends RActiveRecord {
     public $repeat_password;
     public $confirm_password;
     public $i_agree;
-    
+
     const USER_MAX_IDLE_MIN = 60;
     const CAM_PER_USER = 20;
 
@@ -59,7 +59,6 @@ class User extends RActiveRecord {
         }
         parent::init();
     }
-
 
     public function getFullname() {
         if ($this->userProf->prof_firstname == '' && $this->userProf->prof_lastname == '') {
@@ -91,7 +90,7 @@ class User extends RActiveRecord {
     public function scopes() {
         $alias = $this->getTableAlias(false, false);
         $user_id = Yii::app()->user->id;
-        
+
         return array(
             'active' => array('condition' => "$alias.status = '1'"),
             'inactive' => array('condition' => "$alias.status = '0'"),
@@ -116,6 +115,22 @@ class User extends RActiveRecord {
                 'match', 'not' => true, 'pattern' => '/[^a-zA-Z_-]/',
                 'message' => 'Invalid characters in username.(Spaces not Allowed)',
             ),
+            array(
+                'username',
+                'length',
+                'min' => 6,
+                'max' => 20,
+                'tooShort' => "{attribute} is too short (minimum is 6 characters).",
+                'tooLong' => "{attribute} is too long (maximum is 20 characters)."
+            ),
+            array(
+                'password_hash',
+                'length',
+                'min' => 6,
+                'max' => 20,
+                'tooShort' => "{attribute} is too short (minimum is 6 characters).",
+                'tooLong' => "{attribute} is too long (maximum is 20 characters)."
+            ),
             array('username, email, password_hash', 'required', 'on' => 'insert'),
             array('username, email, password_hash', 'required', 'on' => 'admin_add'),
             array('username, email', 'required', 'on' => 'admin_edit'),
@@ -130,10 +145,8 @@ class User extends RActiveRecord {
             array('old_password', 'findPasswords', 'on' => 'changePwd'),
             array('repeat_password', 'compare', 'compareAttribute' => 'new_password', 'on' => 'changePwd'),
             array('security_question_id, answer', 'required', 'on' => 'account_setting_security'),
-            
             array('new_password, repeat_password', 'required', 'on' => 'reset'),
             array('repeat_password', 'compare', 'compareAttribute' => 'new_password', 'on' => 'reset'),
-            
             array('created_at, modified_at, user_activation_key, user_login_ip, user_last_login, is_auto_timezone, user_locale_id, user_timezone_id, i_agree, user_rating, country_id, old_password, new_password, repeat_password, security_question_id, answer, receive_email_notify', 'safe'),
             array('i_agree', 'compare', 'compareValue' => true, 'message' => 'You must agree to the terms and conditions', 'on' => 'register'),
             // The following rule is used by search().
@@ -390,4 +403,5 @@ class User extends RActiveRecord {
         }
         return "<div title='{$title}' data-placement='bottom' data-toggle='tooltip' class='{$class}' data-original-title='{$title}'> </div>";
     }
+
 }

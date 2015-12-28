@@ -755,19 +755,27 @@ class DefaultController extends Controller {
     }
 
     public function actionCron() {
-//        $latest_finished_bookings = CamBooking::model()->active()->completed()->findAll('DATE(book_end_time) = :CURRENT and book_end_time < :finished_time', array(':CURRENT' => date('Y-m-d'), ':finished_time' => date('Y-m-d H:i:s')));
-//        if (!empty($latest_finished_bookings)) {
-//            foreach ($latest_finished_bookings as $latest_finished_booking) {
-//                if($latest_finished_booking->bookUser->live_status == "B")
-//                    User::switchStatus($latest_finished_booking->book_user_id, 'A');
-//                
-//                if($latest_finished_booking->cam->tutor->live_status == "B")
-//                    User::switchStatus($latest_finished_booking->cam->tutor_id, 'A');
-//            }
-//        }
-//        
-        //PreBooking Reminder
         $current_date_time = date('Y-m-d H:i:s');
+        
+        //Check busy user have any session
+        $busy_users = User::model()->findAll("live_status = :status", array(":status" => "B"));
+        if (!empty($busy_users)) {
+            foreach ($busy_users as $busy_user) {
+                $condition = "(book_start_time <= :current_time And book_end_time >= :current_time)";
+                $condition .= " AND (book_user_id = :user_id OR cam.tutor_id = :user_id) ";
+
+                $is_booking = CamBooking::model()->active()->with('cam')->findAll(array(
+                            'condition' => $condition,
+                            'params' => array(':current_time' => $current_date_time, ':user_id' => $busy_user->user_id)
+                ));
+               
+                if(empty($is_booking)){
+                    User::switchStatus($busy_user->user_id, 'A');
+                }
+            }
+        }
+        
+        //PreBooking Reminder
         $plus_current_time = date("Y-m-d H:i", strtotime("+30 minutes"));
 
         $check_prebooking = CamBooking::model()->active()->pending()->findAll('DATE_FORMAT(book_start_time, "%Y-%m-%d %H:%i") = :plus_time', array(':plus_time' => $plus_current_time));
