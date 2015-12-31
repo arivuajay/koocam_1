@@ -49,6 +49,11 @@ class CmsController extends Controller {
     public function actionView($slug) {
         $model = $this->loadModelSlug($slug);
         $themeUrl = $this->themeUrl;
+        $video_frame = '';
+        if(isset($model->youtube_video_url) && !empty($model->youtube_video_url)){
+            $video_frame = '<div id="player" class="youtube-player"></div>';
+        }
+        
         $params = array(
             "{STEP1}" => CHtml::image("{$themeUrl}/images/step1.png", ''),
             "{STEP2}" => CHtml::image("{$themeUrl}/images/step2.png", ''),
@@ -56,7 +61,7 @@ class CmsController extends Controller {
             "{STEP4}" => CHtml::image("{$themeUrl}/images/step4.png", ''),
             "{STEP5}" => CHtml::image("{$themeUrl}/images/step5.png", ''),
             "{STEP6}" => CHtml::image("{$themeUrl}/images/step6.png", ''),
-            "{VIDEO}" => '<iframe width="100%" height="315" src="https://www.youtube.com/embed/it9WajjCmro" frameborder="0" allowfullscreen></iframe>',
+            "{VIDEO}" => ($video_frame ? $video_frame : ""),
         );
         $content = strtr($model->cms_description, $params);
         $this->render('view', compact('model', 'content'));

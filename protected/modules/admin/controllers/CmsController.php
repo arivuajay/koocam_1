@@ -28,7 +28,7 @@ class CmsController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('index', 'view', 'create', 'update', 'delete'),
+                'actions' => array('index', 'view', 'update', 'delete'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users

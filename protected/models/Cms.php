@@ -12,6 +12,7 @@
  * @property string $cms_meta_description
  * @property string $cms_tag
  * @property string $cover_photo
+ * @property string $youtube_video_url
  * @property string $status
  * @property string $created_at
  * @property string $cms_variables
@@ -19,13 +20,15 @@
  */
 class Cms extends RActiveRecord {
 
+    public $video_id;
+
     /**
      * @return string the associated database table name
      */
     public function tableName() {
         return '{{cms}}';
     }
-    
+
     public function behaviors() {
         return array(
             'NUploadFile' => array(
@@ -54,6 +57,7 @@ class Cms extends RActiveRecord {
             array('cover_photo', 'length', 'max' => 500),
             array('status', 'length', 'max' => 1),
             array('cms_meta_keywords, cms_meta_description, modified_at, cover_photo, cms_variables', 'safe'),
+            array('youtube_video_url', 'url', 'validSchemes' => array('https')),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('cms_id, slug, cms_title, cms_description, cms_meta_keywords, cms_meta_description, status, created_at, modified_at, cover_photo', 'safe', 'on' => 'search'),
@@ -83,6 +87,7 @@ class Cms extends RActiveRecord {
             'cms_meta_description' => 'Meta Description',
             'cms_tag' => 'Tag',
             'status' => 'Status',
+            'youtube_video_url' => 'Video URL',
             'created_at' => 'Created At',
             'modified_at' => 'Modified At',
             'cms_variables' => 'Variables',
@@ -140,6 +145,15 @@ class Cms extends RActiveRecord {
                 'pageSize' => PAGE_SIZE,
             )
         ));
+    }
+
+    protected function afterFind() {
+        if ($this->youtube_video_url) {
+            parse_str(parse_url($this->youtube_video_url, PHP_URL_QUERY), $my_array_of_vars);
+            $this->video_id = $my_array_of_vars['v'];
+        }
+
+        return parent::afterFind();
     }
 
 }

@@ -647,7 +647,7 @@ class DefaultController extends Controller {
     }
 
     protected function idleWarning() {
-        if (strtotime(Yii::app()->user->getState("last_activity")) <= strtotime(date('Y-m-d H:i:s', strtotime('-' . User::USER_MAX_IDLE_MIN . ' minutes')))) {
+        if (strtotime(Yii::app()->user->getState("last_activity")) <= strtotime(date('Y-m-d H:i:s', strtotime('-' . User::USER_MAX_IDLE_MIN_WARNINIG . ' minutes')))) {
             return true;
         }
         return false;

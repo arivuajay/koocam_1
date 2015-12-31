@@ -38,47 +38,9 @@ $themeUrl = $this->themeUrl;
             </div>
             <?php
             $categories = CamCategory::popularCategory();
-            $col = array(
-                0 => array(
-                    'xs' => 12,
-                    'sm' => 4,
-                    'md' => 4,
-                    'lg' => 4,
-                ),
-                1 => array(
-                    'xs' => 12,
-                    'sm' => 4,
-                    'md' => 4,
-                    'lg' => 4,
-                ),
-                2 => array(
-                    'xs' => 12,
-                    'sm' => 4,
-                    'md' => 4,
-                    'lg' => 4,
-                ),
-                3 => array(
-                    'xs' => 12,
-                    'sm' => 6,
-                    'md' => 6,
-                    'lg' => 6,
-                ),
-                4 => array(
-                    'xs' => 12,
-                    'sm' => 3,
-                    'md' => 3,
-                    'lg' => 3,
-                ),
-                5 => array(
-                    'xs' => 12,
-                    'sm' => 3,
-                    'md' => 3,
-                    'lg' => 3,
-                ),
-            );
             foreach ($categories as $key => $category):
                 ?>
-                <div class="col-xs-<?php echo $col[$key]['xs'] ?> col-sm-<?php echo $col[$key]['sm'] ?> col-md-<?php echo $col[$key]['md'] ?> col-lg-<?php echo $col[$key]['lg'] ?> cate-cont">
+                <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 cate-cont">
                     <div class="cate-img">
                         <div class="cate-bg"> 
                             <?php echo CHtml::link($category->cat_name, array('/site/cam/search', 'category_id' => $category->cat_id)); ?>
@@ -116,22 +78,9 @@ $themeUrl = $this->themeUrl;
 
 <div class="counts-cont">
     <div class="container">
-        <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3 counts-txt">
-            <p> <i class="fa fa-globe"></i> </p>
-            <b class="counter"> 94,532 </b><br/>
-            <span> Foreign followers </span> </div>
-        <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3 counts-txt">
-            <p> <i class="fa fa-graduation-cap"></i> </p>
-            <b class="counter">11,223 </b><br/>
-            <span> Classes complete </span> </div>
-        <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3 counts-txt">
-            <p> <i class="fa fa-group"></i> </p>
-            <b class="counter">282,673 </b><br/>
-            <span> Students enrolled </span> </div>
-        <div class="col-xs-6 col-sm-3 col-md-3 col-lg-3 counts-txt">
-            <p> <i class="fa fa-briefcase"></i></p>
-            <b class="counter">745 </b><br/>
-            <span> instructor </span> </div>
+        <?php 
+        echo Cms::model()->findByPk(6)->cms_description;
+        ?>
     </div>
 </div>
 <!--Counts --> 

@@ -49,6 +49,7 @@ class User extends RActiveRecord {
     public $i_agree;
 
     const USER_MAX_IDLE_MIN = 60;
+    const USER_MAX_IDLE_MIN_WARNINIG = 59;
     const CAM_PER_USER = 20;
 
     public function init() {

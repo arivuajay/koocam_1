@@ -34,6 +34,13 @@
                     <?php echo $form->labelEx($model, 'cms_variables'); ?>
                 </div>
             <?php } ?>
+            <?php if ($model->youtube_video_url) { ?>
+                <div class = "form-group form-control-material static">
+                    <?php echo $form->textField($model, 'youtube_video_url', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255, 'placeholder' => 'Ex:(Video link: https://www.youtube.com/watch?v=XGSy3_Czz8k)', 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "Ex:(Video link: https://www.youtube.com/watch?v=XGSy3_Czz8k)")); ?>
+                    <?php echo $form->labelEx($model, 'youtube_video_url'); ?>
+                    <?php echo $form->error($model, 'youtube_video_url'); ?>
+                </div>
+            <?php } ?>
             <div class = "form-group form-control-material static" style="height: 350px">
                 <?php echo $form->labelEx($model, 'cms_description'); ?><br />
                 <?php // echo $form->textArea($model, 'cms_description', array('class' => 'form-control', 'rows' => 6, 'cols' => 50)); ?>

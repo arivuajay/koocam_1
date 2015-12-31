@@ -57,7 +57,8 @@
 
                 </div>
                 <div class="text-left">
-                    <span class="label label-primary">My Bookings</span>&nbsp;&nbsp;<span class="label label-warning">My Jobs</span>
+                    <span class="label label-primary">My Bookings</span>&nbsp;&nbsp;
+                    <span class="label label-warning"><?php echo CHtml::link('My Jobs', array("/site/cambooking/myjobs"))?></span>
                 </div>
             </div>
             <!--            <div class="modal-footer">

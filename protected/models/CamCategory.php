@@ -20,8 +20,8 @@
  */
 class CamCategory extends RActiveRecord {
 
-    const IMG_WIDTH = 500;
-    const IMG_HEIGHT = 440;
+    const IMG_WIDTH = 640;
+    const IMG_HEIGHT = 540;
     const COVER_IMG_WIDTH = 1600;
     const COVER_IMG_HEIGHT = 600;
 
@@ -109,7 +109,7 @@ class CamCategory extends RActiveRecord {
             'cat_id' => 'Cat',
             'cat_name' => 'Category Name',
             'cat_description' => 'Category Description',
-            'cat_image' => 'Category Image',
+            'cat_image' => 'Category Image (640 X 540)',
             'cat_cover_image' => 'Cover Image (1600 X 600)',
             'status' => 'Status',
             'created_at' => 'Created At',
@@ -179,9 +179,9 @@ class CamCategory extends RActiveRecord {
 
     public static function popularCategory($limit = 6) {
         return CamCategory::model()->active()->findAll(array(
-//                    'select' => '*, rand() as rand',
+                    'select' => '*, rand() as rand',
                     'limit' => $limit,
-//                    'order' => 'rand'
+                    'order' => 'rand'
         ));
     }
 
@@ -189,7 +189,7 @@ class CamCategory extends RActiveRecord {
         if (!empty($this->cat_image))
             $path = UPLOAD_DIR . $this->cat_image;
         if (!isset($path) || !is_file($path))
-            $path = 'themes/koocam/images/cam-img.jpg';
+            $path = 'themes/koocam/images/cam-cat-img.jpg';
         return CHtml::image(Yii::app()->createAbsoluteUrl($path), '', $htmlOptions);
     }
 
@@ -210,16 +210,16 @@ class CamCategory extends RActiveRecord {
     }
 
     protected function afterSave() {
-        if ($this->cat_image && isset($_FILES['CamCategory']['name']['cat_image']) && !empty($_FILES['CamCategory']['name']['cat_image'])) {
-            $camcategory_path = UPLOAD_DIR;
-            $source = UPLOAD_DIR . $this->cat_image;
-
-            $width1 = self::IMG_WIDTH;
-            $height1 = self::IMG_HEIGHT;
-
-            $img = new Img;
-            $img->resampleGD($source, $camcategory_path, $this->cat_image, $width1, $height1, 1, 0);
-        }
+//        if ($this->cat_image && isset($_FILES['CamCategory']['name']['cat_image']) && !empty($_FILES['CamCategory']['name']['cat_image'])) {
+//            $camcategory_path = UPLOAD_DIR;
+//            $source = UPLOAD_DIR . $this->cat_image;
+//
+//            $width1 = self::IMG_WIDTH;
+//            $height1 = self::IMG_HEIGHT;
+//
+//            $img = new Img;
+//            $img->resampleGD($source, $camcategory_path, $this->cat_image, $width1, $height1, 1, 0);
+//        }
 
         return parent::afterSave();
     }
