@@ -119,3 +119,8 @@ a.view-comment, a.write-comment{
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.withme{
+   font-size: 14px;
+   font-weight: 400;
+}

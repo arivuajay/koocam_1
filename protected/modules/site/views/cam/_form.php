@@ -22,7 +22,10 @@ $categories = CamCategory::getCategoryList();
             <div class="form-group">
                 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
                     <?php echo $form->labelEx($model, 'cam_title'); ?>
-                    <?php echo $form->textField($model, 'cam_title', array('class' => 'form-control', 'placeholder' => 'Cam Title', 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "Cam Title")); ?> 
+                    <div class="input-group"> 
+                        <span class="input-group-addon withme">With me you will </span> 
+                        <?php echo $form->textField($model, 'cam_title', array('class' => 'form-control', 'placeholder' => '', 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "Add an exciting title to your kam!")); ?>
+                    </div>
                     <?php echo $form->error($model, 'cam_title'); ?> 
                 </div>
                 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
@@ -88,18 +91,18 @@ $categories = CamCategory::getCategoryList();
                 <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 ">
                     <?php echo $form->labelEx($model, 'cam_duration'); ?>
                     <div class="input-group" data-max="<?php echo Cam::CAM_MAX_DURATION ?>" data-min="<?php echo Cam::CAM_MIN_DURATION ?>" data-start-incr="0">
-                        <span class="input-group-addon" data-incr="5">-</span>
+                        <span class="input-group-addon minus_plus" data-incr="5">-</span>
                         <?php echo $form->textField($model, 'cam_duration', array('class' => 'form-control numberonly', 'placeholder' => 'Minutes', 'maxlength' => 2)); ?> 
-                        <span class="input-group-addon" data-incr="5">+</span>
+                        <span class="input-group-addon minus_plus" data-incr="5">+</span>
                     </div>
                     <?php echo $form->error($model, 'cam_duration'); ?> 
                 </div>
                 <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 ">
                     <?php echo $form->labelEx($model, 'cam_price'); ?>
                     <div class="input-group" data-max="<?php echo Cam::CAM_MAX_AMT ?>" data-min="<?php echo Cam::CAM_MIN_AMT ?>" data-start-incr="4">
-                        <span class="input-group-addon" data-incr="1">-</span>
+                        <span class="input-group-addon minus_plus" data-incr="1">-</span>
                         <?php echo $form->textField($model, 'cam_price', array('class' => 'form-control numberonly', 'placeholder' => 'Price')); ?> 
-                        <span class="input-group-addon" data-incr="1">+</span>
+                        <span class="input-group-addon minus_plus" data-incr="1">+</span>
                     </div>
                     <?php echo $form->error($model, 'cam_price'); ?> 
                 </div>
@@ -176,7 +179,7 @@ $js = <<< EOD
                return false;
         });
         
-        $(".input-group-addon").on("click", function () {
+        $(".minus_plus").on("click", function () {
             var button = $(this);
             var input_group = button.closest('.input-group');
             var oldValue = input_group.find("input").val();

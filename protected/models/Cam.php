@@ -6,6 +6,7 @@
  * The followings are the available columns in table '{{cam}}':
  * @property integer $cam_id
  * @property integer $tutor_id
+ * @property string $cam_title_prefix
  * @property string $cam_title
  * @property integer $cat_id
  * @property string $cam_media
@@ -145,7 +146,7 @@ class Cam extends RActiveRecord {
             array('extra_file', 'file', 'maxSize' => 1024 * 1024 * self::EXTRA_ALLOW_FILE_SIZE, 'tooLarge' => 'File has to be smaller than ' . self::CAM_ALLOW_FILE_SIZE . 'MB', 'allowEmpty' => true),
             array('cam_price', 'priceValidate'),
 //            array('modified_at', 'date', 'format' => Yii::app()->localtime->getLocalDateTimeFormat('short', 'short')),
-            array('cam_description, cam_duration, created_at, modified_at, is_extra, extra_price, extra_description, tutorUserName, camCategory, extra_file, cam_important, cam_rating, is_video, cam_youtube_url', 'safe'),
+            array('cam_description, cam_duration, created_at, modified_at, is_extra, extra_price, extra_description, tutorUserName, camCategory, extra_file, cam_important, cam_rating, is_video, cam_youtube_url, cam_title_prefix', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('cam_id, tutor_id, cam_title, cat_id, cam_media, cam_tag, cam_description, cam_duration, cam_price, cam_avail_visual, status, created_at, modified_at, created_by, modified_by, cam_youtube_url', 'safe', 'on' => 'search'),
@@ -344,6 +345,12 @@ class Cam extends RActiveRecord {
     }
 
     protected function afterFind() {
+        if(Yii::app()->controller->id == "cam" && (Yii::app()->controller->action->id == "create" || Yii::app()->controller->action->id == "update")){
+            $this->cam_title = $this->cam_title;
+        } else {
+            $this->cam_title = $this->cam_title_prefix . " " . $this->cam_title;
+        }
+        
         if ($this->is_extra == 'Y') {
             $this->extra_price = $this->camExtras->extra_price;
             $this->extra_description = $this->camExtras->extra_description;
@@ -448,8 +455,9 @@ class Cam extends RActiveRecord {
             $url = Yii::app()->createAbsoluteUrl($path);
         }else if ($this->is_video == 'Y' && !empty($this->cam_youtube_url)) {
             $url = "https://img.youtube.com/vi/{$this->video_id}/mqdefault.jpg";
-            $htmlOptions = array_merge($htmlOptions, $extraOptions);
+            
         }
+        $htmlOptions = array_merge($htmlOptions, $extraOptions);
         return CHtml::image($url, '', $htmlOptions);
     }
 

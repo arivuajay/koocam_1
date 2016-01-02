@@ -5,7 +5,8 @@ $this->title = 'Dashboard';
 $this->breadcrumbs = array(
     $this->title
 );
-$result = Myclass::dashBoardResults(); ?>
+$result = Myclass::dashBoardResults();
+?>
 
 <div class="container-fluid">
     <!--    <div class="page-section">
@@ -103,6 +104,9 @@ $result = Myclass::dashBoardResults(); ?>
         <div class="item col-xs-12 col-lg-6">
 
             <div class="panel panel-default paper-shadow" data-z="0.5">
+                <button title="" data-toggle="tooltip" class="btn btn-primary btn-sm daterange pull-right" type="button" data-original-title="Date range" id="reportrange">
+                    <i class="fa fa-calendar"></i>
+                </button>
                 <div class="panel-heading">
                     <h4 class="text-headline margin-none">Financial Information</h4>
                     <p class="text-subhead text-light">recent performance</p>
@@ -111,11 +115,16 @@ $result = Myclass::dashBoardResults(); ?>
                     <li class="list-group-item media v-middle">
                         <div class="media-body">
                             <h4 class="text-subhead margin-none">
-                                Number Cams sold today
+                                Number Cams sold
                             </h4>
+                            <div class="caption">
+                                <span class="text-light date_range">Today</span>
+                            </div>
                         </div>
                         <div class="media-right text-center">
-                            <div class="text-display-1 text-amber-900"><?php echo $result['cams_sold_per_day']; ?></div>
+                            <div class="text-display-1 text-amber-900" id="no-of-cams-sold">
+                                <?php echo $result['cams_sold_per_day']; ?>
+                            </div>
                             <!--<span class="caption text-light">Failed</span>-->
                         </div>
                     </li>
@@ -142,27 +151,37 @@ $result = Myclass::dashBoardResults(); ?>
                     <li class="list-group-item media v-middle">
                         <div class="media-body">
                             <h4 class="text-subhead margin-none">
-                                Profits Today
+                                Profits
                             </h4>
+                            <div class="caption">
+                                <span class="text-light date_range">Today</span>
+                            </div>
                         </div>
                         <div class="media-right text-center">
-                            <div class="text-display-1 text-brown-300">$<?php echo $result['total_earning_per_day']; ?></div>
+                            <div class="text-display-1 text-brown-300">
+                                $<span id="profit-amount"><?php echo $result['total_earning_per_day']; ?></span>
+                            </div>
                         </div>
                     </li>
                     <li class="list-group-item media v-middle">
                         <div class="media-body">
                             <h4 class="text-subhead margin-none">
-                                Service Tax Today
+                                Service Tax
                             </h4>
+                              <div class="caption">
+                                <span class="text-light date_range">Today</span>
+                            </div>                              
                         </div>
                         <div class="media-right text-center">
-                            <div class="text-display-1 text-amber-500">$<?php echo $result['total_service_per_day']; ?></div>
+                            <div class="text-display-1 text-amber-500">
+                                $<span id="tax-amount"><?php echo $result['total_service_per_day']; ?></span>
+                            </div>
                         </div>
                     </li>
                 </ul>
             </div>
         </div>
-        
+
     </div>
 
     <div class="row">
@@ -194,7 +213,7 @@ $result = Myclass::dashBoardResults(); ?>
                 </div>
             </div>
         </div>
-    
+
         <div class="item col-xs-12 col-lg-6">
             <div class="panel panel-default paper-shadow" data-z="0.5">
                 <div class="panel-heading">
@@ -265,4 +284,49 @@ $result = Myclass::dashBoardResults(); ?>
         </div>
     </div>
 </div>
-
+<style>
+    .range_inputs { font-size: 0px; }
+    .range_inputs * { display: none; }
+    .ranges li:last-child { display: none; }
+</style>
+<?php
+$financial_url = Yii::app()->createAbsoluteUrl('/admin/default/financialinformation');
+$js = <<< EOD
+    jQuery(document).ready(function ($) {
+        $('#reportrange').daterangepicker(
+            {
+                ranges: {
+                    'Today': [ moment(), moment() ],
+                    'Yesterday': [ moment().subtract('days', 1), moment().subtract('days', 1) ],
+                    'Last 7 Days': [ moment().subtract('days', 6), moment() ],
+                    'Last 30 Days': [ moment().subtract('days', 29), moment() ],
+                    'This Month': [ moment().startOf('month'), moment().endOf('month') ],
+                    'Last Month': [ moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]
+                },
+                startDate: moment().subtract('days', 29),
+                endDate: moment()
+            },
+            function (start, end) {
+                var from_date = start.format('YYYY-MM-DD');
+                var to_date = end.format('YYYY-MM-DD');
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'json',
+                    url: '$financial_url',
+                    data: {from: from_date, to: to_date},
+                    success:function(data){
+                        $('.date_range').html('From :' + from_date + ' - To :' + to_date);
+                        $('#no-of-cams-sold').html(data.no_of_cams_sold);
+                        $('#profit-amount').html(data.total_earning_per_day);
+                        $('#tax-amount').html(data.total_service_per_day);
+                    },
+                    error: function(data) {
+                        alert('Something went wrong. Try again');
+                    },
+                });
+            }
+        );
+    });
+EOD;
+Yii::app()->clientScript->registerScript('_booking_form', $js);
+?>

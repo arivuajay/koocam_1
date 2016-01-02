@@ -331,6 +331,47 @@ class Myclass extends CController {
         return $return;
     }
 
+    public static function adminFinancialInformation($from, $to) {
+        $return = array();
+        
+        $criteria = new CDbCriteria;
+        $criteria->condition = " DATE(created_at) >= '$from' and DATE(created_at) <= '$to'";
+        $no_of_cams_sold = Purchase::model()->count($criteria);
+
+        //Booking between from and to
+        $admin_process_per_day = Yii::app()->db->createCommand()
+                ->select('SUM(book_processing_fees) as total_process_amt')
+                ->from('{{cam_booking}}')
+                ->andWhere(' book_approve = "1" And book_payment_status = "C" And date(book_date) >= "' . $from . '" And date(book_date) <= "' . $to . '"')
+                ->queryRow();
+        $admin_process_per_day = (!empty($admin_process_per_day['total_process_amt'])) ? $admin_process_per_day['total_process_amt'] : 0;
+
+        //Service between from and to
+        $admin_service_per_day = Yii::app()->db->createCommand()
+                ->select('SUM(book_service_tax) as total_service_amt')
+                ->from('{{cam_booking}}')
+                ->andWhere(' book_approve = "1" And book_payment_status = "C"  And date(book_date) >= "' . $from . '" And date(book_date) <= "' . $to . '"')
+                ->queryRow();
+        $admin_service_per_day = (!empty($admin_service_per_day['total_service_amt'])) ? (float) $admin_service_per_day['total_service_amt'] : 0;
+
+        $type_revenue = Transaction::TYPE_REVENUE;
+        //Transaction between from and to
+        $total_revenue_per_day = Yii::app()->db->createCommand()
+                ->select('SUM(`trans_admin_amount`) as total_revenue_amt')
+                ->from('{{transaction}}')
+                ->andWhere(' trans_type = "' . $type_revenue . '" And date(created_at) >= "' . $from . '" And date(created_at) <= "' . $to . '"')
+                ->queryRow();
+        $total_revenue_per_day = (!empty($total_revenue_per_day['total_revenue_amt'])) ? $total_revenue_per_day['total_revenue_amt'] : 0;
+
+        $admin_earnings_today = (float) ($admin_process_per_day + $total_revenue_per_day);
+
+        $return['no_of_cams_sold'] = $no_of_cams_sold;
+        $return['total_earning_per_day'] = $admin_earnings_today;
+        $return['total_service_per_day'] = $admin_service_per_day;
+
+        return $return;
+    }
+
     public static function getSystemAlert($tone = 1) {
         switch ($tone) {
             case 1:

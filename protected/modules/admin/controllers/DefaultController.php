@@ -32,7 +32,7 @@ class DefaultController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('logout', 'index', 'profile', 'changePassword'),
+                'actions' => array('logout', 'index', 'profile', 'changePassword', 'financialinformation'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -45,6 +45,12 @@ class DefaultController extends Controller {
 
     public function actionIndex() {
         $this->render('index');
+    }
+
+    public function actionFinancialinformation() {
+        if (Yii::app()->request->isAjaxRequest) {
+           echo json_encode(Myclass::adminFinancialInformation($_POST['from'], $_POST['to']));
+        } exit;
     }
 
     public function actionLogin() {
@@ -85,7 +91,7 @@ class DefaultController extends Controller {
                 $this->refresh();
             }
         }
-        
+
         $this->render('profile', compact('model'));
     }
 
@@ -164,7 +170,7 @@ class DefaultController extends Controller {
             'model' => $model,
         ));
     }
-    
+
     public function actionScreens($path) {
         if ($path) {
             $this->render('screens', compact('path'));
@@ -194,4 +200,5 @@ class DefaultController extends Controller {
             Yii::app()->end();
         }
     }
+
 }
