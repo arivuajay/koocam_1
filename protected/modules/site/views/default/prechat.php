@@ -23,6 +23,8 @@ $themeUrl = $this->themeUrl;
             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 col-md-offset-3  col-lg-offset-3 prebooking-cont ">
                 <?php echo CHtml::image($themeUrl.'/images/progress_bar.GIF', 'Please Wait.....'); ?>
                 <h2 id="prog_sts"> <?php echo $temp_booking->progress; ?> </h2>
+                <br />
+                <?php echo CHtml::link('Go to Home', array('/site/default/index'), array('class' => 'btb btn-lg btn-success hide', 'id' => 'go_home')); ?>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8 col-md-offset-1  col-lg-offset-2 prebooking-cont ">
                 <div class="prebooking-details">
@@ -59,6 +61,9 @@ $js = <<< EOD
                     $('#prog_sts').html(data.status_txt);
                     if(data.status == 'C'){
                         window.location.href = data.chat_url;
+                    }else if(data.status == 'F'){
+                        $('.prebooking-cont img').remove();
+                        $('#go_home').removeClass('hide');
                     }
                 },
                 error: function(data) {

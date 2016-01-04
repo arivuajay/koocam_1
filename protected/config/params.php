@@ -49,7 +49,7 @@ return array(
     'GOOGLE_SECRET_ID' => $google_sec_id,
     
     //Paypal values
-    'SANDBOXVALUE'  => TRUE,
+    'SANDBOXVALUE'  => false,
     'CURRENCY'      => 'USD',
-    'BUSINESSEMAIL' => 'vasanth@arkinfotec.com', 
+    'BUSINESSEMAIL' => 'seotopil@gmail.com', 
 );

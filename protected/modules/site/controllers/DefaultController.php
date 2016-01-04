@@ -754,7 +754,7 @@ class DefaultController extends Controller {
 
     public function actionCron() {
         $current_date_time = date('Y-m-d H:i:s');
-        
+
         //Check busy user have any session
         $busy_users = User::model()->findAll("live_status = :status", array(":status" => "B"));
         if (!empty($busy_users)) {
@@ -763,16 +763,16 @@ class DefaultController extends Controller {
                 $condition .= " AND (book_user_id = :user_id OR cam.tutor_id = :user_id) ";
 
                 $is_booking = CamBooking::model()->active()->with('cam')->findAll(array(
-                            'condition' => $condition,
-                            'params' => array(':current_time' => $current_date_time, ':user_id' => $busy_user->user_id)
+                    'condition' => $condition,
+                    'params' => array(':current_time' => $current_date_time, ':user_id' => $busy_user->user_id)
                 ));
-               
-                if(empty($is_booking)){
+
+                if (empty($is_booking)) {
                     User::switchStatus($busy_user->user_id, 'A');
                 }
             }
         }
-        
+
         //PreBooking Reminder
         $plus_current_time = date("Y-m-d H:i", strtotime("+30 minutes"));
 
@@ -855,6 +855,8 @@ class DefaultController extends Controller {
                         $return['chat_url'] = Yii::app()->createAbsoluteUrl('/site/default/chat', array('guid' => $booking_data['book_guid']));
                         $return['status'] = 'C';
                     }
+                } elseif ($temp_booking->progress_status == 3) {
+                    $return['status'] = 'F';
                 }
             }
         }

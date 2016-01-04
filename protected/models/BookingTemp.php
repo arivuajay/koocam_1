@@ -138,6 +138,7 @@ class BookingTemp extends RActiveRecord {
             0 => 'Payment Progressing',
             1 => 'Waiting for Payment Gateway Response',
             2 => 'Payment Completed',
+            3 => 'Payment Cancelled',
         );
         return $progress[$this->progress_status];
     }

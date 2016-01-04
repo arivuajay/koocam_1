@@ -100,10 +100,10 @@ class BookingtempController extends Controller {
     }
 
     public function actionProcesspaypal($temp_guid, $book_id = '') {
-        if($book_id){
+        if ($book_id) {
             CamBooking::model()->findByPk($book_id)->delete();
         }
-        
+
         $booking_temp = BookingTemp::model()->findByAttributes(array('temp_guid' => $temp_guid, "status" => "1"));
 
         if (!empty($booking_temp)) {
@@ -112,7 +112,7 @@ class BookingtempController extends Controller {
 
             $paypalManager = new Paypal;
             $returnUrl = Yii::app()->createAbsoluteUrl('/site/bookingtemp/paypalreturn', array('slug' => $cam->slug));
-            $cancelUrl = Yii::app()->createAbsoluteUrl('/site/bookingtemp/paypalcancel', array('slug' => $cam->slug));
+            $cancelUrl = Yii::app()->createAbsoluteUrl('/site/bookingtemp/paypalcancel', array('temp_guid' => $temp_guid, 'slug' => $cam->slug));
             $notifyUrl = Yii::app()->createAbsoluteUrl('/site/bookingtemp/paypalnotify');
 
             $paypalManager->addField('item_name', $cam->cam_title . '-' . BookingTemp::TEMP_BOOKING_KEY);
@@ -126,7 +126,11 @@ class BookingtempController extends Controller {
         }
     }
 
-    public function actionPaypalcancel($slug) {
+    public function actionPaypalcancel($temp_guid, $slug) {
+        $booking_temp = BookingTemp::model()->findByAttributes(array('temp_guid' => $temp_guid));
+        $booking_temp->progress_status = 3;
+        $booking_temp->save(false);
+        
         Yii::app()->user->setFlash('danger', 'Your booking has been cancelled. Please try again.');
         $this->redirect(array('/site/cam/view', 'slug' => $slug));
     }
@@ -135,16 +139,15 @@ class BookingtempController extends Controller {
         if (isset($_POST["txn_id"]) && isset($_POST["payment_status"])) {
             if ($_POST["payment_status"] == "Pending" || $_POST["payment_status"] == "Completed") {
                 $booking_temp = BookingTemp::model()->findByAttributes(array('temp_guid' => $_POST['custom']));
-                if($booking_temp->progress_status != 2){
+                if ($booking_temp->progress_status != 2) {
                     $booking_temp->progress_status = 1;
                 }
                 $booking_temp->user_return_status = '1';
                 $booking_temp->save(false);
                 $this->redirect(array('/site/default/prechat', 'temp_guid' => $booking_temp->temp_guid));
-                
+
 //                $booking_temp = BookingTemp::model()->findByAttributes(array('temp_guid' => $_POST['custom']));
 //                $booking_data = unserialize($booking_temp->temp_value);
-
 //                $book_guid = isset($booking_data['book_guid']) ? $booking_data['book_guid'] : '';
 //                if ($book_guid) {
 //                    $booking_temp->delete();
@@ -190,12 +193,12 @@ class BookingtempController extends Controller {
                 $booking_data['book_guid'] = $booking_model->book_guid;
                 Transaction::bookingTransaction($booking_model->book_id);
                 Purchase::insertPurchase($booking_model->book_id);
-                
+
                 CamTokens::generateToken($booking_model->book_guid);
-                
+
                 $booking_temp->temp_value = serialize($booking_data);
                 $booking_temp->progress_status = 2;
-                
+
                 $booking_temp->save(false);
             }
         }
