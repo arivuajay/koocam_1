@@ -30,6 +30,17 @@ $this->rightCornerLink = CHtml::link('<i class="fa fa-reply"></i> Back', array('
                     'value' => $model->sender->email
                 ),
                 array(
+                    'name' => 'Cam',
+                    'type' => 'raw',
+                    'value' => CHtml::link($model->book->cam->cam_title, array('/admin/cam/view', 'id' => $model->book->cam_id), array('target' => '_blank'))
+//                    'value' => $model->book->cam->cam_title
+                ),
+//                array(
+//                    'name' => 'Purchase',
+//                    'type' => 'raw',
+//                    'value' => CHtml::link('View Purchase Details', array('/admin/purchase/view', 'id' => $model->book->camPurchase->purchase_id), array('target' => '_blank'))
+//                ),
+                array(
                     'name' => 'abuse_type',
                     'value' => $model->Abusetypes
                 ),

@@ -87,6 +87,8 @@ class ReportAbuse extends RActiveRecord {
         $criteria->compare('abuse_message', $this->abuse_message, true);
         $criteria->compare('created_at', $this->created_at, true);
         $criteria->compare('modified_at', $this->modified_at, true);
+        
+        $criteria->order = 'created_at DESC';
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

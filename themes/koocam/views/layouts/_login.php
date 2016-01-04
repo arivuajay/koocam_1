@@ -13,12 +13,14 @@
                             'htmlOptions' => array('role' => 'form', 'class' => ''),
                             'clientOptions' => array(
                                 'validateOnSubmit' => true,
+                                'hideErrorMessage' => false,
                             ),
                             'enableAjaxValidation' => true,
                         ));
                 if(empty($model->username) && isset(Yii::app()->request->cookies['koo_username'])){
                     $model->username = Yii::app()->request->cookies['koo_username'];
                 }
+//                echo $form->errorSummary($model);
                 ?>
 
                 <div class="form-group"> 

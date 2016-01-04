@@ -20,21 +20,29 @@ $this->breadcrumbs = array(
                     ),
                     array(
                         'header' => 'Sender',
-                        'value' => function($data) use ($model){
-                            echo CHtml::link($data->sender->username, array('/admin/user/view', 'id' => $data->sender->user_id), array('target' => '_blank'));
+                        'value' => function($data) {
+                            echo $data->sender->username;
+//                            echo CHtml::link($data->sender->username, array('/admin/user/view', 'id' => $data->sender->user_id), array('target' => '_blank'));
                         }
                     ),
                     array(
+                        'header' => 'Cam',
+                        'type' => 'raw',
+//                    'value' => CHtml::link($model->book->cam->cam_title, array('/admin/cam/view', 'id' => $model->book->cam_id), array('target' => '_blank'))
+                        'value' => '$data->book->cam->cam_title'
+                    ),
+                    array(
                         'name' => 'abuse_type',
-                        'value' => function($data) use ($model){
+                        'value' => function($data) use ($model) {
                             echo $data->abusetypes;
                         }
                     ),
                     'abuse_message',
                     array(
                         'header' => 'Abuser',
-                        'value' => function($data) use ($model){
-                            echo CHtml::link($data->abuser->username, array('/admin/user/view', 'id' => $data->abuser->user_id), array('target' => '_blank'));
+                        'value' => function($data) {
+                            echo $data->abuser->username;
+//                            echo CHtml::link($data->abuser->username, array('/admin/user/view', 'id' => $data->abuser->user_id), array('target' => '_blank'));
                         }
                     ),
                     'created_at',
