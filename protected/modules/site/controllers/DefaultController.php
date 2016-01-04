@@ -74,8 +74,6 @@ class DefaultController extends Controller {
         if (isset($_POST['LoginForm'])) {
             $model->attributes = $_POST['LoginForm'];
             if ($model->validate() && $model->login()):
-                User::switchStatus(Yii::app()->user->id, 'A');
-                TempSession::insertSession(Yii::app()->user->id);
                 Yii::app()->user->setFlash('success', "You logged in successfully!!!");
                 if (isset(Yii::app()->session['refer_url'])) {
                     $refer_url = Yii::app()->session['refer_url'];

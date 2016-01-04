@@ -33,7 +33,7 @@ $themeUrl = $this->themeUrl;
                             <?php if (!empty($purchase->book->camComment)) { ?>
                                 <p>
                                     <?php
-                                    echo CHtml::link('View Comment', 'javascript:void(0)', array('data-comment-id' => $purchase->book->camComment->com_id, 'class' => 'btn btn-primary view-comment btn-xs'));
+                                    echo CHtml::link('View Comment', 'javascript:void(0)', array('data-comment-id' => $purchase->book->camComment->com_id, 'class' => 'btn btn-success view-comment btn-xs'));
                                     ?>
                                 </p>
                                 <?php

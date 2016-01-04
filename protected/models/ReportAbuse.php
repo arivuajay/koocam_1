@@ -117,7 +117,7 @@ class ReportAbuse extends RActiveRecord {
     protected function afterSave() {
         if ($this->isNewRecord) {
             $mail = new Sendmail;
-            
+
             $learner = $this->book->bookUser;
             $tutor = $this->book->cam->tutor;
             $cam = $this->book->cam;
@@ -201,13 +201,40 @@ class ReportAbuse extends RActiveRecord {
         } else if ($is_learner) {
             $this->abuser_role = 'tutor';
         }
-        
+
         return parent::beforeSave();
     }
 
     protected function afterFind() {
         $this->abuse_type = CJSON::decode($this->abuse_type);
         return parent::afterFind();
+    }
+
+    public function getSender() {
+        if ($this->abuser_role == 'tutor') {
+            $user = $this->book->bookUser;
+        } else if ($this->abuser_role == 'learner') {
+            $user = $this->book->cam->tutor;
+        }
+        return $user;
+    }
+
+    public function getAbuser() {
+        if ($this->abuser_role == 'tutor') {
+            $user = $this->book->cam->tutor;
+        } else if ($this->abuser_role == 'learner') {
+            $user = $this->book->bookUser;
+        }
+        return $user;
+    }
+
+    public function getAbusetypes() {
+        $types = '';
+        foreach ($this->abuse_type as $type) {
+            $types .= self::getAbusetypename($type).', ';
+        }
+        $types = rtrim($types, ', ');
+        return $types;
     }
 
 }

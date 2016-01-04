@@ -52,7 +52,7 @@ class HybridAuthIdentity extends CUserIdentity {
 //                        "id" => FB_APP_ID,
 //                        "secret" => FB_SECRET_ID
                     ),
-                    "scope"   => "email, user_about_me, user_birthday, user_hometown", // optional
+                    "scope" => "email, user_about_me, user_birthday, user_hometown", // optional
                     "display" => "popup"
                 ),
                 "Live" => array(
@@ -107,17 +107,18 @@ class HybridAuthIdentity extends CUserIdentity {
         return true;
     }
 
-    public function processLogin() {        
+    public function processLogin() {
         if (!empty($this->userProfile)) {
-            $newrecord = false;
             $model = User::model()->find("email = '{$this->userProfile->email}'");
 
             if (is_null($model)):
-                $newrecord = true;
                 $model = new User();
+                $result = $this->registerNewUser($model);
+
+            else:
+                $result = $model;
             endif;
 
-            $result = $this->registerNewUser($model, $newrecord);
             $identity = new UserIdentity($result->username, 'anonyms');
             $identity->autoLogin();
             Yii::app()->user->login($identity);
@@ -131,37 +132,33 @@ class HybridAuthIdentity extends CUserIdentity {
         }
     }
 
-    public function registerNewUser($model, $newrecord) {
-        if ($newrecord):
-            $model->username = $this->userProfile->firstName;
-            $model->email = $this->userProfile->email;
-            $password = Myclass::getRandomString('8');
-            $model->password_hash = Myclass::encrypt($password);
-            $model->status = 1;
-        else:
-            $model->status = 1;
-        endif;
-        
+    public function registerNewUser($model) {
+        $model->username = $this->userProfile->firstName;
+        $model->email = $this->userProfile->email;
+        $model->password_hash = Myclass::getRandomString('8');
+//            $model->password_hash = Myclass::encrypt($password);
+        $model->status = 1;
+
         if ($model->validate()) {
             $model->save(false);
-            if($newrecord){
-                $user_profile = new UserProfile;
-                $user_profile->user_id = $model->user_id;
-                $user_profile->prof_firstname = $this->userProfile->firstName;
-                $user_profile->prof_lastname = $this->userProfile->lastName;
-                $user_profile->prof_address = $this->userProfile->address;
-                $user_profile->prof_phone = $this->userProfile->phone;
-                
-                if ($user_profile->validate()) {
-                    $user_profile->save(false);
-                }
+
+            $user_profile = new UserProfile;
+            $user_profile->user_id = $model->user_id;
+            $user_profile->prof_firstname = $this->userProfile->firstName;
+            $user_profile->prof_lastname = $this->userProfile->lastName;
+            $user_profile->prof_address = $this->userProfile->address;
+            $user_profile->prof_phone = $this->userProfile->phone;
+
+            if ($user_profile->validate()) {
+                $user_profile->save(false);
             }
+
             return $model;
         } else {
             echo CHtml::errorSummary($model);
             exit;
         }
-        
+
 //        if (!empty($this->userProfile->photoURL) && ($newrecord || empty($patient->profile_picture))):
 //            if ($image = $patient->urlImageSave($this->userProfile->photoURL, rand()))
 //                $model->user_avatar = $image;

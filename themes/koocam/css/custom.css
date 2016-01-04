@@ -124,3 +124,11 @@ a.view-comment, a.write-comment{
    font-size: 14px;
    font-weight: 400;
 }
+
+.OT_publisher button.OT_mute, .OT_subscriber button.OT_mute {
+  background-position: 15px 7px !important;
+}
+
+.OT_publisher .OT_mute, .OT_subscriber .OT_mute {
+  height: 34px !important;
+}
