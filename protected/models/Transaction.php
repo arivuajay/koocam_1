@@ -322,7 +322,7 @@ class Transaction extends RActiveRecord {
         );
         $message = $mail->getMessage('cash_withdraw_notification', $trans_array);
         $Subject = $mail->translate("Cashwithdraw Request From {$username}");
-        $mail->send(ADMIN_EMAIL, $Subject, $message);
+        $mail->send(ADMIN_WITHDRAW_EMAIL, $Subject, $message);
 
         //To User
         $trans_array = array(

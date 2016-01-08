@@ -78,7 +78,12 @@ $themeUrl = $this->themeUrl;
                         <div class="col-xs-6 col-sm-3 col-md-2 col-lg-2 "> 
                             <div class="purchase-price"> 
 <!--                                <h2> $ <?php // echo (float) $book->book_total_price; ?> </h2>-->
-                                <h2> $ <?php echo (float) ($book->book_cam_price + $book->book_extra_price); ?> </h2>
+                                <?php 
+                                $price = (float) $book->book_cam_price;
+                                if($book->book_is_extra == 'Y')
+                                    $price = (float) ($book->book_cam_price + $book->book_extra_price);
+                                ?>
+                                <h2> $ <?php echo $price; ?> </h2>
                                 <span> <i class="fa fa-clock-o"></i> <?php echo $book->book_duration; ?> min</span>
                             </div>
                         </div>
