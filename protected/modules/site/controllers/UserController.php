@@ -127,6 +127,8 @@ class UserController extends Controller {
         if (Yii::app()->request->isPostRequest && Yii::app()->request->getPost('User')) {
             $model->attributes = Yii::app()->request->getPost('User');
             $model->user_id = Yii::app()->user->id;
+            unset($model->username);
+            unset($model->password_hash);
             if ($model->validate()) {
                 if ($model->save(false)) {
                     Yii::app()->user->setFlash('success', "Email address edited successfully!!!");
@@ -143,6 +145,8 @@ class UserController extends Controller {
 
         if (isset($_POST['User'])) {
             $model->attributes = $_POST['User'];
+            unset($model->username);
+            unset($model->password_hash);
             $valid = $model->validate();
             if ($valid) {
                 $model->password_hash = Myclass::encrypt($model->new_password);
@@ -162,6 +166,8 @@ class UserController extends Controller {
         if (Yii::app()->request->isPostRequest && Yii::app()->request->getPost('User')) {
             $model->attributes = Yii::app()->request->getPost('User');
             $model->user_id = Yii::app()->user->id;
+            unset($model->username);
+            unset($model->password_hash);
             if ($model->validate()) {
                 if ($model->save(false)) {
                     Yii::app()->user->setFlash('success', "Security question and answer edited successfully!!!");
