@@ -108,7 +108,9 @@ if ($balance > 0)
                                                 <?php echo CHtml::link($my_payment->booking->cam->cam_title, array('/site/cam/view', 'slug' => $my_payment->booking->cam->slug)); ?>
                                             </p>
                                             <p class="paid">
-                                                User Paid : <?php echo $my_payment->booking->book_total_price ?> $ 
+                                                User Paid : 
+                                                    <?php echo $my_payment->trans_admin_amount + $my_payment->trans_user_amount; ?>
+                                                    <?php // echo $my_payment->booking->book_total_price ?> $ 
                                             </p>
                                             <p>(Inc. Processing & Service Tax)</p>
                                         </td>
