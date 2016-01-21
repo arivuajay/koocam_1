@@ -112,7 +112,7 @@ if ($balance > 0)
                                                     <?php echo $my_payment->trans_admin_amount + $my_payment->trans_user_amount; ?>
                                                     <?php // echo $my_payment->booking->book_total_price ?> $ 
                                             </p>
-                                            <p>(Inc. Processing & Service Tax)</p>
+<!--                                            <p>(Inc. Processing & Service Tax)</p>-->
                                         </td>
                                         <td><?php echo $my_payment->trans_admin_amount; ?></td>
                                         <td><?php echo $my_payment->trans_user_amount; ?></td>

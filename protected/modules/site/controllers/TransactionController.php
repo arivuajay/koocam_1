@@ -41,7 +41,7 @@ class TransactionController extends Controller {
         $this->layout = '//layouts/user_dashboard';
         $model = new Transaction('withdraw');
         
-        $my_payments = Transaction::model()->myPayments()->findAll();
+        $my_payments = Transaction::model()->myPayments()->findAll(array('order' => 'created_at DESC'));
         $this->render('mypayments', compact('model', 'my_payments'));
     }
 
