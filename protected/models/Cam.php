@@ -423,10 +423,13 @@ class Cam extends RActiveRecord {
             $this->validatorList->add(CValidator::createValidator('numerical', $this, 'extra_price', array('min' => self::EXTRA_MIN_AMT, 'max' => self::EXTRA_MAX_AMT, 'integerOnly' => false)));
         }
         if ($this->is_video == 'Y') {
-            $this->validatorList->add(CValidator::createValidator('required', $this, 'cam_youtube_url'));
+//            $this->validatorList->add(CValidator::createValidator('required', $this, 'cam_youtube_url'));
             $this->validatorList->add(CValidator::createValidator('isEmbeddableYoutubeURL', $this, 'cam_youtube_url'));
         } else {
-            $this->validatorList->add(CValidator::createValidator('file', $this, 'cam_media', array('types' => self::CAM_ALLOW_FILE_TYPES, 'maxSize' => 1024 * 1024 * self::CAM_ALLOW_FILE_SIZE, 'tooLarge' => 'File has to be smaller than ' . self::CAM_ALLOW_FILE_SIZE . 'MB', 'allowEmpty' => $this->is_video == 'Y', 'on' => 'create')));
+//            $this->validatorList->add(CValidator::createValidator('file', $this, 'cam_media', array('types' => self::CAM_ALLOW_FILE_TYPES, 'maxSize' => 1024 * 1024 * self::CAM_ALLOW_FILE_SIZE, 'tooLarge' => 'File has to be smaller than ' . self::CAM_ALLOW_FILE_SIZE . 'MB', 'allowEmpty' => $this->is_video == 'Y', 'on' => 'create')));
+            
+            $this->validatorList->add(CValidator::createValidator('file', $this, 'cam_media', array('types' => self::CAM_ALLOW_FILE_TYPES, 'maxSize' => 1024 * 1024 * self::CAM_ALLOW_FILE_SIZE, 'tooLarge' => 'File has to be smaller than ' . self::CAM_ALLOW_FILE_SIZE . 'MB', 'allowEmpty' => true, 'on' => 'create')));
+            
             $this->validatorList->add(CValidator::createValidator('file', $this, 'cam_media', array('types' => self::CAM_ALLOW_FILE_TYPES, 'maxSize' => 1024 * 1024 * self::CAM_ALLOW_FILE_SIZE, 'tooLarge' => 'File has to be smaller than ' . self::CAM_ALLOW_FILE_SIZE . 'MB', 'allowEmpty' => $this->is_video == 'Y', 'on' => 'admin_create')));
         }
 
@@ -442,6 +445,9 @@ class Cam extends RActiveRecord {
             $url = Yii::app()->createAbsoluteUrl($path);
         }else if ($this->is_video == 'Y' && !empty($this->cam_youtube_url)) {
             $url = "https://img.youtube.com/vi/{$this->video_id}/default.jpg";
+        } else {
+            $path = 'themes/koocam/images/cam-img.jpg';
+            $url = Yii::app()->createAbsoluteUrl($path);
         }
         return CHtml::image($url, '', $htmlOptions);
     }
@@ -455,7 +461,9 @@ class Cam extends RActiveRecord {
             $url = Yii::app()->createAbsoluteUrl($path);
         }else if ($this->is_video == 'Y' && !empty($this->cam_youtube_url)) {
             $url = "https://img.youtube.com/vi/{$this->video_id}/mqdefault.jpg";
-            
+        } else {
+            $path = 'themes/koocam/images/cam-img.jpg';
+            $url = Yii::app()->createAbsoluteUrl($path);
         }
         $htmlOptions = array_merge($htmlOptions, $extraOptions);
         return CHtml::image($url, '', $htmlOptions);

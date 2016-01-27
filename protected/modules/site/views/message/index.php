@@ -39,10 +39,10 @@ $this->breadcrumbs = array(
                                             <?php echo $mdisplay; ?>
                                         </div>
                                         <?php if ($messages['cam_id']) { ?>
-                                        <?php $cam = Cam::model()->findByPk($messages['cam_id']);?>
+                                            <?php $cam = Cam::model()->findByPk($messages['cam_id']); ?>
                                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 message-from message-cam"> 
                                                 <b> Cam: </b> 
-                                                <?php 
+                                                <?php
                                                 echo CHtml::link($cam->cam_title, array('/site/cam/view', 'slug' => $cam->slug))
                                                 ?>
                                             </div>
@@ -60,45 +60,45 @@ $this->breadcrumbs = array(
                                         </span> 
                                     </div>
                                     <div class="mesage-details-2">
-        <?php $message_date = Yii::app()->localtime->fromUTC($messages['created_at']); ?>
+                                        <?php $message_date = Yii::app()->localtime->fromUTC($messages['created_at']); ?>
                                         <p> 
                                             <i class="fa fa-clock-o"></i> 
-        <?php echo date("H:i", strtotime($message_date)); ?> 
+                                            <?php echo date("H:i", strtotime($message_date)); ?> 
                                             &nbsp;<span> <?php echo date("d M, Y", strtotime($message_date)); ?></span> 
                                         </p>
                                     </div>
                                 </div>
                             </div>
                         </div>
-        <?php
-    }
-} else {
-    echo "<h4 class = 'text-center'>No Message</h3>";
-}
-?>
+                        <?php
+                    }
+                } else {
+                    echo "<h4 class = 'text-center'>No Message</h3>";
+                }
+                ?>
             </div>
         </div>
-<?php if (!empty($model)) { ?>
+        <?php if (!empty($model)) { ?>
             <div class="pagination-cont">
                 <nav>
-    <?php
-    $this->widget('CLinkPager', array(
-        'pages' => $dataProvider->pagination,
-        "cssFile" => false,
-        'header' => '',
-        'htmlOptions' => array('class' => 'pagination'),
-        'prevPageLabel' => '<span aria-hidden="true">«</span></a>',
-        'firstPageLabel' => '<span aria-hidden="true">« First</span></a>',
-        'nextPageLabel' => '<span aria-hidden="true">»</span>',
-        'lastPageLabel' => '<span aria-hidden="true">Last »</span>',
-        'selectedPageCssClass' => 'active',
-        'selectedPageCssClass' => 'active',
-        'maxButtonCount' => 5,
-        'id' => 'link_pager',
-    ));
-    ?>
+                    <?php
+                    $this->widget('CLinkPager', array(
+                        'pages' => $dataProvider->pagination,
+                        "cssFile" => false,
+                        'header' => '',
+                        'htmlOptions' => array('class' => 'pagination'),
+                        'prevPageLabel' => '<span aria-hidden="true">«</span></a>',
+                        'firstPageLabel' => '<span aria-hidden="true">« First</span></a>',
+                        'nextPageLabel' => '<span aria-hidden="true">»</span>',
+                        'lastPageLabel' => '<span aria-hidden="true">Last »</span>',
+                        'selectedPageCssClass' => 'active',
+                        'selectedPageCssClass' => 'active',
+                        'maxButtonCount' => 5,
+                        'id' => 'link_pager',
+                    ));
+                    ?>
                 </nav>
             </div>
-<?php } ?>
+        <?php } ?>
     </div>
 </div>

@@ -31,7 +31,6 @@ if ($balance > 0)
 
             <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 total-expense"> 
                 <?php
-                
                 if ($expense > 0 || $revenue > 0) {
                     $this->Widget('ext.highcharts.HighchartsWidget', array(
                         'options' => array(
@@ -109,10 +108,10 @@ if ($balance > 0)
                                             </p>
                                             <p class="paid">
                                                 User Paid : 
-                                                    <?php echo $my_payment->trans_admin_amount + $my_payment->trans_user_amount; ?>
-                                                    <?php // echo $my_payment->booking->book_total_price ?> $ 
+                                                <?php echo $my_payment->trans_admin_amount + $my_payment->trans_user_amount; ?>
+                                                <?php // echo $my_payment->booking->book_total_price ?> $ 
                                             </p>
-<!--                                            <p>(Inc. Processing & Service Tax)</p>-->
+            <!--                                            <p>(Inc. Processing & Service Tax)</p>-->
                                         </td>
                                         <td><?php echo $my_payment->trans_admin_amount; ?></td>
                                         <td><?php echo $my_payment->trans_user_amount; ?></td>
@@ -138,6 +137,26 @@ if ($balance > 0)
                             <?php } ?>
                         <?php } ?>
                     </table>
+                    <div class="pagination-cont">
+                        <nav>
+                            <?php
+                            $this->widget('CLinkPager', array(
+                                'pages' => $pages,
+                                "cssFile" => false,
+                                'header' => '',
+                                'htmlOptions' => array('class' => 'pagination'),
+                                'prevPageLabel' => '<span aria-hidden="true">«</span></a>',
+                                'firstPageLabel' => '<span aria-hidden="true">« First</span></a>',
+                                'nextPageLabel' => '<span aria-hidden="true">»</span>',
+                                'lastPageLabel' => '<span aria-hidden="true">Last »</span>',
+                                'selectedPageCssClass' => 'active',
+                                'selectedPageCssClass' => 'active',
+                                'maxButtonCount' => 5,
+                                'id' => 'link_pager',
+                            ));
+                            ?>
+                        </nav>
+                    </div>
                 </div>
             </div>
         </div>

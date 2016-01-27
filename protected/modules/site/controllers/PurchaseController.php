@@ -52,7 +52,7 @@ class PurchaseController extends Controller {
         
         $cam_comments = new CamComments();
         
-        $this->render('mypurchase', compact('results', 'cam_comments'));
+        $this->render('mypurchase', compact('results', 'cam_comments', 'pages'));
     }
 
 

@@ -341,7 +341,7 @@ class CamController extends Controller {
         $pages->applyLimit($criteria);
         $results = Cam::model()->mine()->exceptDelete()->findAll($criteria);
 
-        $this->render('mycams', compact('results'));
+        $this->render('mycams', compact('results', 'pages'));
     }
 
 }

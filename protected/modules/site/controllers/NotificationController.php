@@ -63,7 +63,7 @@ class NotificationController extends Controller {
                 $notifn_model->saveAttributes(array('notifn_read' => 'Y'));
             }
         }
-        $this->render('index', compact('results'));
+        $this->render('index', compact('results', 'pages'));
     }
     /**
      * 

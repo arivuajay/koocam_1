@@ -47,12 +47,13 @@ $categories = CamCategory::getCategoryList();
                 ?>
                 <div id="youtube_div" class="col-xs-12 col-sm-6 col-md-6 col-lg-6 <?php echo $url_hide ?>">
                     <?php echo $form->labelEx($model, 'cam_youtube_url'); ?>
+<!--                    <span class="required">*</span>-->
                     <?php echo $form->textField($model, 'cam_youtube_url', array('class' => 'form-control', 'placeholder' => 'http://www.youtube.com/watch?v=XGSy3_Czz8k', 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "Ex:(Video link: http://www.youtube.com/watch?v=XGSy3_Czz8k)")); ?> 
                     <?php // echo $form->error($model, 'cam_youtube_url'); ?> 
                 </div>
                 <div id="image_div" class="col-xs-12 col-sm-6 col-md-6 col-lg-6 <?php echo $media_hide ?>">
                     <?php echo $form->labelEx($model, 'cam_media'); ?>
-                    <span class="required">*</span>
+<!--                    <span class="required">*</span>-->
                     <span class="btn btn-default btn-file">
                         <i class="fa fa-upload"></i>  
                         <span id="Cam_cam_media_value">Upload Photo </span>

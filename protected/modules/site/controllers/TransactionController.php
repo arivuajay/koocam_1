@@ -39,10 +39,19 @@ class TransactionController extends Controller {
 
     public function actionMypayments() {
         $this->layout = '//layouts/user_dashboard';
-        $model = new Transaction('withdraw');
         
-        $my_payments = Transaction::model()->myPayments()->findAll(array('order' => 'created_at DESC'));
-        $this->render('mypayments', compact('model', 'my_payments'));
+        $model = new Transaction('withdraw');
+
+        $criteria = new CDbCriteria;
+        $alias = $model->getTableAlias(false, false);
+        $criteria->order = 'created_at DESC';
+        
+        $pages = new CPagination(Transaction::model()->myPayments()->count($criteria));
+        $pages->pageSize = 10;
+        $pages->applyLimit($criteria);
+        
+        $my_payments = Transaction::model()->myPayments()->findAll($criteria);
+        $this->render('mypayments', compact('model', 'my_payments', 'pages'));
     }
 
     public function actionWithdraw() {

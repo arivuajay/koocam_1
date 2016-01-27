@@ -19,7 +19,7 @@ $defaultImage = $model->camimage;
         echo CHtml::image($themeUrl.'/images/video-chat2.png', 'Visual Chat Not Available');
         echo '</div>';
     }
-    if ($model->is_video == 'N') {
+    if (empty($model->is_video) || $model->is_video == 'N') {
         echo $defaultImage;
     } else {
         echo '<div id="player" class="youtube-player"></div>';

@@ -96,6 +96,7 @@ $js = <<< EOD
                             $(this).html(event.strftime(t_clock_html));
                         }).on('finish.countdown', function(event){
                             $('#idle-warning-message').html('Session Time Expired.. You are logged out.');
+                            $("#refresh-link").hide();
                             $.ajax({
                                 type: 'POST',
                                 url: '$logout_url',
@@ -194,7 +195,7 @@ Yii::app()->clientScript->registerScript('_ajaxrun', $js);
                             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-12">                
                                 <?php echo CHtml::link('Stay Logged in', '', array('class' => 'btn btn-danger', 'id' => 'stay_loggedin')); ?>
                                 <?php echo CHtml::link('Login', '#', array('data-toggle' => "modal", 'data-target' => ".bs-example-modal-sm1", 'data-dismiss' => "#idle-warning", 'id' => 'login_again', 'class' => 'hide btn btn-primary after_logout')); ?>
-                                <?php echo CHtml::link('Refresh', Yii::app()->controller->homeUrl, array('data-toggle' => "modal", 'class' => 'hide btn btn-success after_logout')); ?>
+                                <?php echo CHtml::link('Refresh', Yii::app()->controller->homeUrl, array('data-toggle' => "modal", 'class' => 'hide btn btn-success after_logout', 'id' => 'refresh-link')); ?>
                             </div> 
                             
                         </div>

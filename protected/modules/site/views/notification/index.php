@@ -112,30 +112,30 @@ $this->breadcrumbs = array(
                             </div>
                         </div>
                     </div>
-        <?php
-        $i++;
-    }
-}
-?>
+                    <?php
+                    $i++;
+                }
+            }
+            ?>
         </div>
         <div class="pagination-cont">
             <nav>
-<?php
-$this->widget('CLinkPager', array(
-    'pages' => $dataProvider->pagination,
-    "cssFile" => false,
-    'header' => '',
-    'htmlOptions' => array('class' => 'pagination'),
-    'prevPageLabel' => '<span aria-hidden="true">«</span></a>',
-    'firstPageLabel' => '<span aria-hidden="true">« First</span></a>',
-    'nextPageLabel' => '<span aria-hidden="true">»</span>',
-    'lastPageLabel' => '<span aria-hidden="true">Last »</span>',
-    'selectedPageCssClass' => 'active',
-    'selectedPageCssClass' => 'active',
-    'maxButtonCount' => 5,
-    'id' => 'link_pager',
-));
-?>
+                <?php
+                $this->widget('CLinkPager', array(
+                    'pages' => $pages,
+                    "cssFile" => false,
+                    'header' => '',
+                    'htmlOptions' => array('class' => 'pagination'),
+                    'prevPageLabel' => '<span aria-hidden="true">«</span></a>',
+                    'firstPageLabel' => '<span aria-hidden="true">« First</span></a>',
+                    'nextPageLabel' => '<span aria-hidden="true">»</span>',
+                    'lastPageLabel' => '<span aria-hidden="true">Last »</span>',
+                    'selectedPageCssClass' => 'active',
+                    'selectedPageCssClass' => 'active',
+                    'maxButtonCount' => 5,
+                    'id' => 'link_pager',
+                ));
+                ?>
             </nav>
         </div>
     </div>
@@ -148,7 +148,7 @@ $this->widget('CLinkPager', array(
                 <h4 class="modal-title" id="myModalLabel">View Booking Details</h4>
             </div>
             <div class="modal-body">
-<?php // echo $form->errorSummary($booking_model);      ?>
+                <?php // echo $form->errorSummary($booking_model);      ?>
 
                 <div class="popup-calendaer-cont" id="book-cont-popup">
 
