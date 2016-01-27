@@ -784,6 +784,7 @@ class DefaultController extends Controller {
                 $learner = $prebooking->bookUser;
                 $book_date = date(PHP_SHORT_DATE_FORMAT, strtotime($prebooking->book_date));
 
+                //Learner Reminder Mail
                 $mail = new Sendmail;
                 $trans_array = array(
                     "{SITENAME}" => SITENAME,
@@ -799,6 +800,22 @@ class DefaultController extends Controller {
                 $message = $mail->getMessage('cam_booking_learner', $trans_array);
                 $Subject = $mail->translate("Reminder mail - Booking For CAM ({$prebooking->cam->cam_title})");
                 $mail->send($learner->email, $Subject, $message);
+
+                //Tutor Reminder Mail
+                $tutor_mail = new Sendmail;
+                $tutor_trans_array = array(
+                    "{SITENAME}" => SITENAME,
+                    "{USERNAME}" => $tutor->fullname,
+                    "{EMAIL_ID}" => $tutor->email,
+                    "{LEARNER}" => $learner->fullname,
+                    "{CAM}" => $prebooking->cam->cam_title,
+                    "{BOOK_DATE}" => $book_date,
+                    "{FROM_TIME}" => date('H:i', strtotime($prebooking->book_start_time)),
+                    "{TO_TIME}" => date('H:i', strtotime($prebooking->book_end_time)),
+                );
+                $tutor_message = $tutor_mail->getMessage('cam_booking_tutor', $tutor_trans_array);
+                $tutor_Subject = $tutor_mail->translate("Reminder mail - Booking For Your CAM ({$prebooking->cam->cam_title})");
+                $tutor_mail->send($tutor->email, $tutor_Subject, $tutor_message);
             }
         }
 
