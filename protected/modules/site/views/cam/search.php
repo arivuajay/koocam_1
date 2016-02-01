@@ -4,13 +4,17 @@
 /* @var $cam Cam */
 /* @var $form CActiveForm */
 /* @var $category CamCategory */
-$this->title = "Search CAM: {$search_text}";
+if(!empty($category_name))
+    $this->title = SITENAME . " | " . $category_name;
+else
+    $this->title = SITENAME . " | All Categories" ;
+
 $themeUrl = $this->themeUrl;
 
 $cover_image = '';
 if ($category_id) {
     $cam_category = CamCategory::model()->findByPk($category_id);
-    $cover_image = 'background: #222 url(' . $cam_category->coverimageurl . ') no-repeat;';
+    $cover_image = 'background: #222 url(' . $cam_category->coverimageurl . ') no-repeat scroll center center / cover ;';
 }
 ?>
 

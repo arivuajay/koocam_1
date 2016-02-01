@@ -19,11 +19,28 @@
         $cs->registerCssFile($themeUrl . '/css/notification/smoke.min.css');
         $cs->registerCssFile($themeUrl . '/css/dropdowns-enhancement.css');
         ?>
+        <script>
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+                a = s.createElement(o),
+                        m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', 'UA-73142306-1', 'auto');
+            ga('send', 'pageview');
+
+        </script>
     </head>
     <body>
         <?php $this->renderPartial('//layouts/_headerBar'); ?>
         <div class="body-cont">
-            <?php echo $content; ?>
+        <?php echo $content; ?>
         </div>
         <?php $this->renderPartial('//layouts/_footer'); ?>
         <?php
@@ -51,7 +68,7 @@
         $cs->registerScriptFile($themeUrl . '/js/jquery.titlealert.min.js', $cs_pos_end);
 
         $login = Yii::app()->createAbsoluteUrl('/site/default/signupsocial');
-        
+
         $js = <<< EOD
             jQuery(document).ready(function ($) {
                 $('.raty-icons').addClass('hide');

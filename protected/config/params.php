@@ -41,7 +41,7 @@ return array(
 
     'PAGE_SIZE' => '10',
 
-    'SITENAME' => 'Koocam',
+    'SITENAME' => 'KOOCAM',
     
     'FB_APP_ID' => $fb_app_id,
     'FB_SECRET_ID' => $fb_sec_id,

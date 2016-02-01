@@ -50,10 +50,10 @@ class CmsController extends Controller {
         $model = $this->loadModelSlug($slug);
         $themeUrl = $this->themeUrl;
         $video_frame = '';
-        if(isset($model->youtube_video_url) && !empty($model->youtube_video_url)){
+        if (isset($model->youtube_video_url) && !empty($model->youtube_video_url)) {
             $video_frame = '<div id="player" class="youtube-player"></div>';
         }
-        
+
         $params = array(
             "{STEP1}" => CHtml::image("{$themeUrl}/images/step1.png", ''),
             "{STEP2}" => CHtml::image("{$themeUrl}/images/step2.png", ''),
@@ -64,6 +64,12 @@ class CmsController extends Controller {
             "{VIDEO}" => ($video_frame ? $video_frame : ""),
         );
         $content = strtr($model->cms_description, $params);
+        if (!empty($model->cms_meta_keywords)) {
+            Yii::app()->clientScript->registerMetaTag($model->cms_meta_keywords, 'keywords');
+        }
+        if (!empty($model->cms_meta_description)) {
+            Yii::app()->clientScript->registerMetaTag($model->cms_meta_description, 'description');
+        }
         $this->render('view', compact('model', 'content'));
     }
 

@@ -543,7 +543,7 @@ class DefaultController extends Controller {
                 if ($this->idleWarning() && $_POST['idle_open'] == 0) {
                     $return['idle_warning'] = 1;
                     $created_at_time = strtotime(Yii::app()->localtime->getLocalNow("Y/m/d H:i:s"));
-                    $end_time = $created_at_time + (15); // 15 seconds greater from created
+                    $end_time = $created_at_time + (600); // 600 seconds (10 mins) greater from created
                     $end_time_format = date("Y/m/d H:i:s", $end_time);
                     $return['idle_warning_countdown'] = $end_time_format;
                 }

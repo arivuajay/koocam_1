@@ -119,7 +119,7 @@ class User extends RActiveRecord {
             array(
                 'username',
                 'length',
-                'min' => 6,
+                'min' => 2,
                 'max' => 20,
                 'tooShort' => "{attribute} is too short (minimum is 6 characters).",
                 'tooLong' => "{attribute} is too long (maximum is 20 characters)."
