@@ -132,3 +132,7 @@ a.view-comment, a.write-comment{
 .OT_publisher .OT_mute, .OT_subscriber .OT_mute {
   height: 34px !important;
 }
+
+.howitworks_steps{
+    min-height: 478px;
+}

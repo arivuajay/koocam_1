@@ -15,7 +15,7 @@
                         <li><?php echo CHtml::link(' Privacy Policy ', array('/site/cms/view', 'slug' => 'privacy-policy')); ?></li>
                         <li><?php echo CHtml::link(' FAQ ', array('/site/default/faq')); ?></li>
                     </ul>
-                    <p> Copyrights © 2015. Koocam.com. Allrights reserved </p>
+                    <p> Copyrights © <?php echo date("Y"); ?>. Koocam.com. Allrights reserved </p>
                 </div>
             </div>
         </div>

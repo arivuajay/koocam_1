@@ -51,5 +51,5 @@ return array(
     //Paypal values
     'SANDBOXVALUE'  => false,
     'CURRENCY'      => 'USD',
-    'BUSINESSEMAIL' => 'seotopil@gmail.com', 
+    'BUSINESSEMAIL' => 'seotopil@gmail.com',
 );

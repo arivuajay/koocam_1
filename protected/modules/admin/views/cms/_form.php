@@ -34,7 +34,7 @@
                     <?php echo $form->labelEx($model, 'cms_variables'); ?>
                 </div>
             <?php } ?>
-            <?php if ($model->youtube_video_url) { ?>
+            <?php if ($model->youtube_video_url || $model->cms_id == 5) { ?>
                 <div class = "form-group form-control-material static">
                     <?php echo $form->textField($model, 'youtube_video_url', array('class' => 'form-control', 'size' => 60, 'maxlength' => 255, 'placeholder' => 'Ex:(Video link: https://www.youtube.com/watch?v=XGSy3_Czz8k)', 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "Ex:(Video link: https://www.youtube.com/watch?v=XGSy3_Czz8k)")); ?>
                     <?php echo $form->labelEx($model, 'youtube_video_url'); ?>
