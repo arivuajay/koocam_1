@@ -17,4 +17,8 @@ return array(
     'category/<slug:[-\w]+>' => array('site/camcategory/view', 'urlSuffix' => '.html'),
     'page/<slug:[-\w]+>' => array('site/cms/view', 'urlSuffix' => '.html'),
     'profile/<slug:[-\w]+>' => array('site/user/profile', 'urlSuffix' => '.html'),
+    'k4einxwnzzxu'                            =>'admin',
+    'k4einxwnzzxu/<_c:\w+>/<_a:\w+>/<id:\d+>' =>'admin/<_c>/<_a>/<id>',
+    'k4einxwnzzxu/<_c:\w+>/<_a:\w+>'          =>'admin/<_c>/<_a>',
+    'k4einxwnzzxu/<_c:\w+>'                   =>'admin/<_c>',
 );
