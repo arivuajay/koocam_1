@@ -83,12 +83,16 @@ $categories = CamCategory::getCategoryList();
                     <?php echo $form->error($model, 'cam_description'); ?> 
                 </div>
             </div>
-            <div class="form-group"> 
-                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
+
+            <div class="form-group">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">  
                     <?php echo $form->labelEx($model, 'cam_important'); ?>
-                    <?php echo $form->textField($model, 'cam_important', array('class' => 'form-control', 'placeholder' => 'What the buyer must have/do for this cam Example: your cam is backing; the buyer must have 1/2 cup rice, 100-gram butter and etc.', 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "What the buyer must have/do for this cam Example: your cam is backing; the buyer must have 1/2 cup rice, 100-gram butter and etc.")); ?> 
+                    <?php echo $form->textArea($model, 'cam_important', array('class' => 'form-control', 'placeholder' => 'What the buyer must have/do for this cam Example: your cam is backing; the buyer must have 1/2 cup rice, 100-gram butter and etc.', 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "What the buyer must have/do for this cam Example: your cam is backing; the buyer must have 1/2 cup rice, 100-gram butter and etc.")); ?> 
                     <?php echo $form->error($model, 'cam_important'); ?> 
                 </div>
+            </div>
+
+            <div class="form-group"> 
                 <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 ">
                     <?php echo $form->labelEx($model, 'cam_duration'); ?>
                     <div class="input-group" data-max="<?php echo Cam::CAM_MAX_DURATION ?>" data-min="<?php echo Cam::CAM_MIN_DURATION ?>" data-start-incr="0">
@@ -108,6 +112,7 @@ $categories = CamCategory::getCategoryList();
                     <?php echo $form->error($model, 'cam_price'); ?> 
                 </div>
             </div>
+
             <div class="form-group">
                 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                     <?php echo $form->checkBox($model, 'is_extra', array('value' => 'Y', 'uncheckValue' => 'N')); ?>&nbsp;&nbsp;<?php echo $form->labelEx($model, 'is_extra', array('data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => " Share more information with the user!")); ?>
@@ -117,16 +122,18 @@ $categories = CamCategory::getCategoryList();
             $hide = $model->is_extra == 'N' ? 'hide' : '';
             ?>
             <div class="form-group <?php echo $hide; ?>" id="extras_div">
+                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                    <?php echo $form->labelEx($model, 'extra_description'); ?>
+                    <?php echo $form->textArea($model, 'extra_description', array('class' => 'form-control', 'placeholder' => 'extra file', 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "Share any additional information with the user")); ?> 
+                    <?php echo $form->error($model, 'extra_description'); ?> 
+                </div>
+                
                 <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3 ">
                     <?php echo $form->labelEx($model, 'extra_price'); ?>
                     <?php echo $form->textField($model, 'extra_price', array('class' => 'form-control numberonly', 'placeholder' => 'Extra File Price', 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => " Extra Price")); ?> 
                     <?php echo $form->error($model, 'extra_price'); ?> 
                 </div>
-                <div class="col-xs-12 col-sm-3 col-md-3 col-lg-6 ">
-                    <?php echo $form->labelEx($model, 'extra_description'); ?>
-                    <?php echo $form->textField($model, 'extra_description', array('class' => 'form-control', 'placeholder' => 'extra file', 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "Share any additional information with the user")); ?> 
-                    <?php echo $form->error($model, 'extra_description'); ?> 
-                </div>
+                
                 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-3 ">
                     <label>&nbsp;   </label>
                     <span class="btn btn-default btn-file">
@@ -140,11 +147,11 @@ $categories = CamCategory::getCategoryList();
             <div class="form-group">
                 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 age-verify ">
                     <?php echo $form->radioButton($model, 'cam_avail_visual', array('value' => 'Y', 'uncheckValue' => 'N')); ?>
-                    <?php echo CHtml::image($themeUrl.'/images/chat-icon.png', '', array('width' => "26", 'height' => "22")); ?> Will be available on visual chat 
+                    <?php echo CHtml::image($themeUrl . '/images/chat-icon.png', '', array('width' => "26", 'height' => "22")); ?> Will be available on visual chat 
                 </div>
                 <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 age-verify ">
                     <?php echo $form->radioButton($model, 'cam_avail_visual', array('value' => 'N', 'uncheckValue' => 'Y')); ?>
-                    <?php echo CHtml::image($themeUrl.'/images/chat-icon2.png', '', array('width' => "26", 'height' => "22")); ?> Will be not available on visual chat 
+                    <?php echo CHtml::image($themeUrl . '/images/chat-icon2.png', '', array('width' => "26", 'height' => "22")); ?> Will be not available on visual chat 
                 </div>
             </div>
             <div class="form-group">

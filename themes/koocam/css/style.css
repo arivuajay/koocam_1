@@ -1242,7 +1242,7 @@ label {
 	background: url(../images/aboutus.jpg) no-repeat center center !important;
 }
 .faq-banner {
-	background: url(../images/faq.jpg) no-repeat center center !important;
+	background: url(../images/faq.jpg) no-repeat center center / cover !important;
 }
 .privacy-banner {
 	background: url(../images/terms-conditions.jpg) no-repeat center center !important;
@@ -2158,7 +2158,7 @@ input[type=button] {
 }
 
 .contactus-banner {
-	background: url(../images/contact.jpg) no-repeat center center !important;
+	background: url(../images/contact.jpg) no-repeat center center / cover !important;
 }
 
 .video-chat {
