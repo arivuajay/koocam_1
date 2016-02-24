@@ -86,8 +86,10 @@ if (!empty($model->mylastpaypal)) {
                     'success' => 'function(data) {
                         $("#AjaxLoader").hide();
                         if(data.status=="success"){
-                            alert("confirm, and your request is in progress");
-                            window.location.reload();
+                            $("#withdraw-modal").modal("hide");
+                            $("#withdraw-confirm-modal").modal("show");
+//                            alert("confirm, and your request is in progress");
+//                            window.location.reload();
                         }
                         else{
                             $.each(data, function(key, val) {
@@ -108,6 +110,24 @@ if (!empty($model->mylastpaypal)) {
     </div>
 </div>
 <?php $this->endWidget(); ?>
+
+<div class="modal grow modal-backdrop-white fade" id="withdraw-confirm-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"  data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Confirmation</h4>
+            </div>
+            <div class="modal-body">
+                <p>Your request is in progress</p>
+            </div>
+            <div class="modal-footer">
+                <?php echo CHtml::link("Ok", array("/site/transaction/mypayments"), array('class' => 'btn btn-red')); ?>
+                <!--<button type="button" class="btn  btn-cancel" data-dismiss="modal">Cancel</button>-->
+                <?php // echo CHtml::submitButton('Send Request', array('class' => 'btn btn-red')); ?>
+            </div>
+        </div>
+    </div>
+</div>
 
 <?php
 $cs = Yii::app()->getClientScript();

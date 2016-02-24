@@ -73,6 +73,10 @@ $this->rightCornerLink = CHtml::link('<i class="fa fa-plus"></i> Create purchase
                                 'url' => 'Yii::app()->createUrl("/admin/purchase/changereceiptstatus",array("purchase_id"=>$data->purchase_id))',
                                 'click' => "function(){
 						if(!confirm('Are you sure?' )) return false;
+                                                $('#send_button')
+                                                    .removeClass('btn-danger')
+                                                    .addClass('btn-warning')
+                                                    .html('Processing...');
                                                 $.fn.yiiGridView.update('purchase-grid', {
                                                         type:'GET',
                                                         url:$(this).attr('href'),
@@ -85,6 +89,7 @@ $this->rightCornerLink = CHtml::link('<i class="fa fa-plus"></i> Create purchase
                                 'options' => array(
                                     'title' => 'Click to send receipt',
                                     'class' => "btn btn-danger btn-flat",
+                                    'id' => 'send_button'
                                 ),
                             ),
                             'sent' => array(

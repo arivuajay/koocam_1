@@ -65,6 +65,11 @@ $user_paypals = $model->userPaypals;
                             </span>
                         </div>
                         <div class="form-group">
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 ">
+                                <b>Provide the following information to receive invoices via email</b>
+                            </div>
+                        </div>
+                        <div class="form-group">
                             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
                                 <label> Company Name </label>
                                 <p> 
@@ -77,6 +82,8 @@ $user_paypals = $model->userPaypals;
                                     <?php echo ($user_profile->company_id) ? $user_profile->company_id : '-'; ?> 
                                 </p>
                             </div>
+                        </div>
+                        <div class="form-group">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 ">
                                 <label> Company Address </label>
                                 <p>  
