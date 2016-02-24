@@ -2,7 +2,7 @@ RewriteEngine on
 
 # SSL here
 RewriteCond %{SERVER_PORT} 80
-RewriteRule ^(.*)$ https://www.koocam.com/$1 [R,L]
+#RewriteRule ^(.*)$ https://www.koocam.com/$1 [R,L]
 
 # if a directory or a file exists, use it directly
 RewriteCond %{REQUEST_FILENAME} !-f

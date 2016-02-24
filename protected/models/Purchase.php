@@ -5,6 +5,7 @@
  *
  * The followings are the available columns in table '{{purchase}}':
  * @property integer $purchase_id
+ * @property string $order_id
  * @property integer $book_id
  * @property integer $user_id
  * @property string $created_at
@@ -15,6 +16,10 @@
  * @property CamBooking $book
  */
 class Purchase extends RActiveRecord {
+    
+    public $booking_date;
+    public $booking_duration;
+    public $booking_session;
 
     //PAGE LIMIT
     const MY_PURCHASE_LIMIT = 9;
@@ -29,11 +34,12 @@ class Purchase extends RActiveRecord {
     public function scopes() {
         $alias = $this->getTableAlias(false, false);
         $user_id = Yii::app()->user->id;
-        
+
         return array(
             'mine' => array('condition' => "$alias.user_id = $user_id"),
         );
     }
+
     /**
      * @return array validation rules for model attributes.
      */
@@ -41,12 +47,12 @@ class Purchase extends RActiveRecord {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('book_id, user_id', 'required'),
+            array('book_id, user_id, order_id', 'required'),
             array('book_id, user_id', 'numerical', 'integerOnly' => true),
-            array('created_at, modified_at', 'safe'),
+            array('created_at, modified_at, order_id, booking_date, booking_duration, booking_session, receipt_status', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('purchase_id, book_id, user_id, created_at, modified_at', 'safe', 'on' => 'search'),
+            array('purchase_id, book_id, user_id, created_at, modified_at, order_id, booking_date, booking_duration, booking_session', 'safe', 'on' => 'search'),
         );
     }
 
@@ -68,10 +74,12 @@ class Purchase extends RActiveRecord {
     public function attributeLabels() {
         return array(
             'purchase_id' => 'Purchase',
+            'order_id' => 'Purchase ID',
             'book_id' => 'Book',
             'user_id' => 'User',
             'created_at' => 'Created At',
             'modified_at' => 'Modified At',
+            'receipt_status' => 'Receipt Status',
         );
     }
 
@@ -91,12 +99,21 @@ class Purchase extends RActiveRecord {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
+        $criteria->with = array( 'book' );
+        $alias = $this->getTableAlias(false, false);
 
         $criteria->compare('purchase_id', $this->purchase_id);
+        $criteria->compare('order_id', $this->order_id, true);
         $criteria->compare('book_id', $this->book_id);
         $criteria->compare('user_id', $this->user_id);
         $criteria->compare('created_at', $this->created_at, true);
         $criteria->compare('modified_at', $this->modified_at, true);
+        
+        $criteria->compare('book.book_date', $this->booking_date, true);
+        $criteria->compare('book.book_duration', $this->booking_duration);
+        $criteria->compare('book.book_session', $this->booking_session);
+
+        $criteria->order = "{$alias}.created_at DESC";
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -130,8 +147,29 @@ class Purchase extends RActiveRecord {
             $purchase = Purchase::model()->findByAttributes(array('book_id' => $book_id, 'user_id' => $cam_booking->book_user_id));
             if (empty($purchase)) {
                 $model = new Purchase;
-                $model->attributes = array('book_id' => $book_id, 'user_id' => $cam_booking->book_user_id);
+                $model->attributes = array(
+                    'order_id' => Myclass::getPurchaseID(),
+                    'book_id' => $book_id,
+                    'user_id' => $cam_booking->book_user_id
+                );
                 $model->save(false);
+
+                //Learner Purchase Complete Mail
+                $mail = new Sendmail;
+                $trans_array = array(
+                    "{SITENAME}" => SITENAME,
+                    "{ORDER_ID}" => $model->order_id,
+                    "{USERNAME}" => $cam_booking->bookUser->username,
+                    "{CAM}" => $cam_booking->cam->cam_title,
+                    "{PURCHASE_DATE}" => date('Y-m-d', strtotime($cam_booking->book_date)),
+                );
+                $message = $mail->getMessage('cam_purchase_confirmation', $trans_array);
+                $Subject = $mail->translate("{SITENAME}: Your Cam Purchase Confirmation");
+                $attachment = '';
+                if ($cam_booking->book_is_extra == 'Y') {
+                    $attachment = UPLOAD_DIR . '/users/' . $cam_booking->cam->tutor_id . $cam_booking->cam->camExtras->extra_file;
+                }
+                $mail->send($cam_booking->bookUser->email, $Subject, $message, '', '', $attachment);
             }
         }
     }

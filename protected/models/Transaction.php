@@ -182,22 +182,6 @@ class Transaction extends RActiveRecord {
             $learner_transaction->trans_user_amount = $cam_booking->book_total_price;
             $learner_transaction->save(false);
 
-            //Learner Purchase Complete Mail
-            $mail = new Sendmail;
-            $trans_array = array(
-                "{SITENAME}" => SITENAME,
-                "{USERNAME}" => $cam_booking->bookUser->username,
-                "{CAM}" => $cam_booking->cam->cam_title,
-                "{PURCHASE_DATE}" => date('Y-m-d', strtotime($cam_booking->book_date)),
-            );
-            $message = $mail->getMessage('cam_purchase_confirmation', $trans_array);
-            $Subject = $mail->translate("{SITENAME}: Your Cam Purchase Confirmation");
-            $attachment = '';
-            if ($cam_booking->book_is_extra == 'Y') {
-                $attachment = UPLOAD_DIR . '/users/' . $cam_booking->cam->tutor_id . $cam_booking->cam->camExtras->extra_file;
-            }
-            $mail->send($cam_booking->bookUser->email, $Subject, $message, '', '', $attachment);
-
             //Tutor Transaction - Revenue
             //Tutor Revenue only the user cam price / extra price, Not include the user procession / service fees.
             $book_total_price_tutor = $cam_booking->beforetaxamount;

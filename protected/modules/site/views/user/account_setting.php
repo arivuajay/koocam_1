@@ -55,7 +55,36 @@ $user_paypals = $model->userPaypals;
                         </div>
                     </div>
 
-                    <div class="form-group">  
+                    <div class="form-group">
+                        <!--Billing Information Section-->
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-heading"> Billing Information
+                            <span>
+                                <a href="#" data-target="#edit_billing_information" data-toggle="modal" data-dismiss="#edit_billing_information" class="label label-danger edit-pro"> 
+                                    <i class="fa fa-pencil"></i> edit 
+                                </a>
+                            </span>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
+                                <label> Company Name </label>
+                                <p> 
+                                    <?php echo ($user_profile->company_name) ? $user_profile->company_name : '-'; ?> 
+                                </p>
+                            </div>
+                            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6 ">
+                                <label> Company ID </label>
+                                <p>  
+                                    <?php echo ($user_profile->company_id) ? $user_profile->company_id : '-'; ?> 
+                                </p>
+                            </div>
+                            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 ">
+                                <label> Company Address </label>
+                                <p>  
+                                    <?php echo ($user_profile->company_address) ? $user_profile->company_address : '-'; ?> 
+                                </p>
+                            </div>
+                        </div>
+
                         <!--Email Address Section-->
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 form-heading"> Email Address
                             <span>
@@ -157,6 +186,7 @@ if (empty($user_profile))
     $user_profile = new UserProfile;
 
 $this->renderPartial('_personal_information_form', compact('model', 'user_profile'));
+$this->renderPartial('_billing_information_form', compact('model', 'user_profile'));
 $this->renderPartial('_email_address_form', compact('model'));
 $this->renderPartial('_change_password_form', compact('model'));
 $this->renderPartial('_security_question_form', compact('model'));

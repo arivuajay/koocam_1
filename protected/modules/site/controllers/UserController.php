@@ -32,7 +32,7 @@ class UserController extends Controller {
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
-                'actions' => array('profileupdate', 'sendmessage', 'switchstatus', 'accountsetting', 'editpersonalinformaiton', 'editemailaddress', 'changepassword', 'editsecurityquestionanswer', 'paypaldelete', 'accountdeactivate', 'accountdelete', 'editpaypal'),
+                'actions' => array('profileupdate', 'sendmessage', 'switchstatus', 'accountsetting', 'editpersonalinformaiton', 'editemailaddress', 'changepassword', 'editsecurityquestionanswer', 'paypaldelete', 'accountdeactivate', 'accountdelete', 'editpaypal', 'editbillinginformaiton'),
                 'users' => array('@'),
             ),
             array('deny', // deny all users
@@ -114,6 +114,27 @@ class UserController extends Controller {
             if ($user_profile->validate()) {
                 if ($user_profile->save()) {
                     Yii::app()->user->setFlash('success', "Personal information edited successfully!!!");
+                    $this->redirect(array('accountsetting'));
+                }
+            }
+        }
+    }
+    
+    public function actionEditbillinginformaiton() {
+        $model = $this->loadModel(Yii::app()->user->id);
+        $user_profile = $model->userProf;
+        if (empty($user_profile)) {
+            $user_profile = new UserProfile;
+        }
+        $user_profile->scenario = 'billing_information';
+        $this->performAjaxValidation($user_profile);
+        
+        if (Yii::app()->request->isPostRequest && Yii::app()->request->getPost('UserProfile')) {
+            $user_profile->attributes = Yii::app()->request->getPost('UserProfile');
+            $user_profile->user_id = Yii::app()->user->id;
+            if ($user_profile->validate()) {
+                if ($user_profile->save()) {
+                    Yii::app()->user->setFlash('success', "Billing information edited successfully!!!");
                     $this->redirect(array('accountsetting'));
                 }
             }

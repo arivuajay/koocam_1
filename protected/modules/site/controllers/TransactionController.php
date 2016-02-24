@@ -39,17 +39,17 @@ class TransactionController extends Controller {
 
     public function actionMypayments() {
         $this->layout = '//layouts/user_dashboard';
-        
+
         $model = new Transaction('withdraw');
 
         $criteria = new CDbCriteria;
         $alias = $model->getTableAlias(false, false);
         $criteria->order = 'created_at DESC';
-        
+
         $pages = new CPagination(Transaction::model()->myPayments()->count($criteria));
         $pages->pageSize = 10;
         $pages->applyLimit($criteria);
-        
+
         $my_payments = Transaction::model()->myPayments()->findAll($criteria);
         $this->render('mypayments', compact('model', 'my_payments', 'pages'));
     }
@@ -64,16 +64,22 @@ class TransactionController extends Controller {
             $model->trans_type = 'W';
             $model->status = '0';
             if ($model->validate()) {
-                if ($model->save(false)) {
-                    $model->cashwithdrawMail();
-                    Yii::app()->user->setFlash('success', "Request Sent Successfully. We will get back to you soon.");
-                } else {
-                    Yii::app()->user->setFlash('danger', "Failed to send request. Try again later");
-                }
-                $this->redirect(array('/site/transaction/mypayments'));
+                $model->save(false);
+                $model->cashwithdrawMail();
+                echo CJSON::encode(array(
+                    'status' => 'success'
+                ));
+                Yii::app()->end();
+
+//                $this->redirect(array('/site/transaction/mypayments'));
+            } else {
+                $error = CActiveForm::validate($model);
+                if ($error != '[]')
+                    echo $error;
+                Yii::app()->end();
             }
         }
-        $this->render('mypayments', compact('model'));
+//        $this->render('mypayments', compact('model'));
     }
 
     /**

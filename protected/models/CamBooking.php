@@ -179,6 +179,7 @@ class CamBooking extends RActiveRecord {
             'modified_at' => 'Modified At',
             'book_session' => 'Session',
             'is_message' => 'Is message',
+            'book_service_tax' => '17 % Status',
         );
     }
 

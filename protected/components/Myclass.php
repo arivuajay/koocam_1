@@ -26,6 +26,20 @@ class Myclass extends CController {
         }
         return $final_rand;
     }
+    
+    public static function getPurchaseID($length = 6) {
+        $new_guid = strtoupper(Myclass::getRandomString($length));
+        do {
+            $exist_count = Purchase::model()->countByAttributes(array('order_id' => $new_guid));
+            if ($exist_count > 0) {
+                $old_guid = $new_guid;
+                $new_guid = Myclass::getRandomString($length);
+            } else {
+                break;
+            }
+        } while ($old_guid != $new_guid);
+        return $new_guid;
+    }
 
     public static function slugify($text) {
         // replace non letter or digits by -

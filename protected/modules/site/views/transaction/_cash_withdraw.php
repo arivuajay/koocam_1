@@ -10,18 +10,19 @@ $form = $this->beginWidget('CActiveForm', array(
     'action' => array('/site/transaction/withdraw'),
     'htmlOptions' => array('role' => 'form', 'class' => ''),
     'enableAjaxValidation' => true,
-    'clientOptions' => array(
-        'validateOnSubmit' => true,
-        'hideErrorMessage' => true,
-    ),
+    'enableClientValidation' => true,
+//    'clientOptions' => array(
+//        'validateOnSubmit' => true,
+//        'hideErrorMessage' => true,
+//    ),
         ));
 
 $paypal_address = UserPaypal::getUserpaypal();
 $paypal_address['others@others.other'] = 'Add New Paypal';
 
 $selected = array();
-if(!empty($model->mylastpaypal)){
-    $selected[$model->mylastpaypal] = array('selected'=>true);
+if (!empty($model->mylastpaypal)) {
+    $selected[$model->mylastpaypal] = array('selected' => true);
 }
 ?>
 <div class="modal fade" id="withdraw-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -43,8 +44,8 @@ if(!empty($model->mylastpaypal)){
                                 <?php echo $form->error($model, 'paypal_address'); ?>
                             </div>
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                                <?php echo $form->labelEx($model, 'trans_user_amount');  ?>
-                                <?php echo $form->textField($model, 'trans_user_amount', array('class' => 'form-control numberonly', 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "Withdraw Amount. Minimum ".Transaction::MIN_WITHDRAW_AMT." $")); ?>
+                                <?php echo $form->labelEx($model, 'trans_user_amount'); ?>
+                                <?php echo $form->textField($model, 'trans_user_amount', array('class' => 'form-control numberonly', 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "Withdraw Amount. Minimum " . Transaction::MIN_WITHDRAW_AMT . " $")); ?>
                                 <?php echo $form->error($model, 'trans_user_amount'); ?>
                             </div>
                         </div>
@@ -73,8 +74,35 @@ if(!empty($model->mylastpaypal)){
 
             </div>
             <div class="modal-footer">
+                <div id="AjaxLoader" style="display: none">
+                    <img src="<?php echo $this->themeUrl; ?>/images/ajax-loader.gif">
+                </div>
+
                 <button type="button" class="btn  btn-cancel" data-dismiss="modal">Cancel</button>
-                <?php echo CHtml::submitButton(' Send Request', array('class' => 'btn btn-red')); ?>
+                <?php
+                echo CHtml::ajaxSubmitButton('Send Request', CHtml::normalizeUrl(array('/site/transaction/withdraw', 'render' => true)), array(
+                    'dataType' => 'json',
+                    'type' => 'post',
+                    'success' => 'function(data) {
+                        $("#AjaxLoader").hide();
+                        if(data.status=="success"){
+                            alert("confirm, and your request is in progress");
+                            window.location.reload();
+                        }
+                        else{
+                            $.each(data, function(key, val) {
+                                $("#cash-withdraw-form #"+key+"_em_").text(val);                                             
+                                $("#cash-withdraw-form #"+key+"_em_").show();
+                            });
+                        }       
+                    }',
+                    'beforeSend' => 'function(){                        
+                        $("#AjaxLoader").show();
+                    }'
+                        ), array('id' => 'mybtn', 'class' => 'btn btn-red'));
+                ?>
+
+                <?php // echo CHtml::submitButton(' Send Request', array('class' => 'btn btn-red')); ?>
             </div>
         </div>
     </div>

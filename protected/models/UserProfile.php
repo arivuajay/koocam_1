@@ -19,6 +19,9 @@
  * @property double $prof_rating
  * @property string $prof_picture
  * @property string $prof_cover_photo
+ * @property string $company_name
+ * @property string $company_id
+ * @property string $company_address
  * @property string $created_at
  * @property string $modified_at
  * @property integer $created_by
@@ -68,7 +71,8 @@ class UserProfile extends RActiveRecord {
             array('prof_phone', 'length', 'max' => 30),
             array('prof_picture, prof_cover_photo', 'length', 'max' => 500),
             array('prof_website', 'url'),
-            array('prof_address, prof_about, prof_interests, created_at, modified_at, country_id', 'safe'),
+            array('company_name, company_id, company_address', 'required', 'on' => 'billing_information'),
+            array('prof_address, prof_about, prof_interests, created_at, modified_at, country_id, company_name, company_id, company_address', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('prof_id, user_id, prof_firstname, prof_lastname, prof_tag, prof_address, prof_phone, prof_skype, prof_website, prof_about, prof_languages, prof_interests, prof_rating, prof_picture, prof_cover_photo, created_at, modified_at, created_by, modified_by', 'safe', 'on' => 'search'),
@@ -112,6 +116,9 @@ class UserProfile extends RActiveRecord {
             'created_by' => 'Created By',
             'modified_by' => 'Modified By',
             'country_id' => 'Country',
+            'company_name' => 'Company Name',
+            'company_id' => 'Company Id',
+            'company_address' => 'Company Address',
         );
     }
 

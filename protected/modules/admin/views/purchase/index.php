@@ -6,6 +6,7 @@ $this->title = 'Purchases';
 $this->breadcrumbs = array(
     $this->title,
 );
+
 $this->rightCornerLink = CHtml::link('<i class="fa fa-plus"></i> Create purchase', array('/admin/purchase/create'), array("class" => "btn btn-warning pull-right"));
 ?>
 
@@ -20,67 +21,108 @@ $this->rightCornerLink = CHtml::link('<i class="fa fa-plus"></i> Create purchase
                         'header' => '',
                     ),
                     'book.bookUser.username',
+                    'order_id',
                     array(
                         'name' => 'book.cam.cam_title',
-//                        'filter' => CHtml::activeTextField((new CamBooking), 'cam', array('class' => 'form-control')),
                         'value' => '$data->book->cam->cam_title'
                     ),
                     array(
-                        'name' => 'book.book_date',
-                        'filter' => CHtml::activeTextField($model, 'book', array('class' => 'form-control')),
+                        'name' => 'booking_date',
                         'value' => function($data) {
-                    echo date(PHP_SHORT_DATE_FORMAT, strtotime($data->book->book_date));
-                }),
-//                        array(
-//                            'name' => 'book.book_start_time',
-//                            'value' => function($data) {
-//                                echo date('H:i', strtotime($data->book->book_start_time));
-//                        }),
-//                        array(
-//                            'name' => 'book.book_end_time',
-//                            'value' => function($data) {
-//                                echo date('H:i', strtotime($data->book->book_end_time));
-//                        }),
+                            echo date(PHP_SHORT_DATE_FORMAT, strtotime($data->book->book_date));
+                        }
+                    ),
                     array(
-                        'name' => 'book.book_duration',
-                        'filter' => CHtml::activeTextField($model, 'book', array('class' => 'form-control')),
+                        'name' => 'booking_duration',
                         'value' => '$data->book->book_duration',
                     ),
                     array(
-                        'name' => 'book.book_session',
-                        'filter' => CHtml::activeTextField($model, 'book', array('class' => 'form-control')),
+                        'name' => 'booking_session',
                         'value' => '$data->book->book_session',
                     ),
                     array(
                         'name' => 'book.book_total_price',
-                        'filter' => CHtml::activeTextField($model, 'book', array('class' => 'form-control')),
+                        'filter' => false,
                         'value' => '$data->book->book_total_price',
                     ),
                     array(
                         'name' => 'book.book_is_extra',
                         'value' => function($data) {
                             echo $data->book->book_is_extra == 'Y' ? '<i class="fa fa-circle text-green-500"></i>' : '<i class="fa fa-circle text-red-500"></i>';
-                        }),
-//                          'book_cam_price',
-//                          'book_extra_price',
-//                          'book_message',
-//                          'book_approve',
-//                          'book_approved_time',
-//                          'book_declined_time',
-//                          'book_payment_status',
-//                          'book_payment_info',
-//                          'book_duration',
-//                          'created_at',
+                        }
+                    ),
+                    array(
+                        'header' => 'Is chat opened',
+                        'value' => function($data) {
+                            if ($data->book->camTokens->tutor_attendance == '1' && $data->book->camTokens->learner_attendance == '1') {
+                                echo '<span class="label label-info">Opened</span>';
+                            } else {
+                                echo '<span class="label label-warning">Not Opened</span>';
+                            }
+                        }
+                    ),
+                    array(
+                        'header' => 'Receipt Status',
+                        'class' => 'booster.widgets.TbButtonColumn',
+                        'htmlOptions' => array('class' => 'text-center'),
+                        'template' => '{send}&nbsp;&nbsp;{sent}',
+                        'buttons' => array(
+                            'send' => array(
+                                'label' => 'Click to send receipt',
+                                'visible' => '$data->receipt_status == "0"',
+                                'url' => 'Yii::app()->createUrl("/admin/purchase/changereceiptstatus",array("purchase_id"=>$data->purchase_id))',
+                                'click' => "function(){
+						if(!confirm('Are you sure?' )) return false;
+                                                $.fn.yiiGridView.update('purchase-grid', {
+                                                        type:'GET',
+                                                        url:$(this).attr('href'),
+                                                        success:function(text,status) {
+                                                            $.fn.yiiGridView.update('purchase-grid');
+                                                        }
+                                                });
+						return false;
+					}",
+                                'options' => array(
+                                    'title' => 'Click to send receipt',
+                                    'class' => "btn btn-danger btn-flat",
+                                ),
+                            ),
+                            'sent' => array(
+                                'label' => '<i class="fa fa-check"></i>&nbsp;Receipt Sent',
+                                'visible' => '$data->receipt_status == "1"',
+                                'options' => array(
+                                    'title' => 'Receipt Sent',
+                                    'class' => "btn btn-success btn-flat disabled",
+                                ),
+                            ),
+                        ),
+                    ),
                     array(
                         'header' => 'Action',
-                        'class' => 'application.components.MyActionButtonColumn',
+                        'class' => 'booster.widgets.TbButtonColumn',
                         'htmlOptions' => array('class' => 'text-center'),
-                        'template' => '{view}',
+                        'template' => '{view}{delete}',
+                        'buttons' => array(
+                            'view' => array(
+                                'options' => array('class' => 'btn btn-primary btn-xs')
+                            ),
+                            'delete' => array(
+                                'options' => array('class' => 'btn btn-danger btn-xs'),
+                                'visible' => function($row_number, $data) {
+                            if ($data->book->camTokens->tutor_attendance == '1' && $data->book->camTokens->learner_attendance == '1') {
+                                return false;
+                            }
+                            return true;
+                        },
+                            ),
+                        ),
                     )
                 );
 
                 $this->widget('application.components.MyExtendedGridView', array(
+                    'id' => 'purchase-grid',
                     'filter' => $model,
+                    'enableSorting' => false,
                     'type' => 'striped bordered',
                     'dataProvider' => $model->search(),
                     'responsiveTable' => true,
