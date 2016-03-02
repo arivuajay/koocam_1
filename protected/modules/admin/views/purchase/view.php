@@ -21,6 +21,11 @@ $this->rightCornerLink = CHtml::link('<i class="fa fa-reply"></i> Back', array('
             'attributes' => array(
                 'user.username',
                 'user.email',
+                array(
+                    'name' => 'user.userProf.receive_invoice_email',
+                    'type' => 'raw',
+                    'value' => $model->user->userProf->receive_invoice_email == '0' ? '<span class="label label-danger">No</span>' : '<span class="label label-success">Yes</span>'
+                ),
                 'user.userProf.company_name',
                 'user.userProf.company_id',
                 'user.userProf.company_address',

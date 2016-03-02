@@ -131,6 +131,10 @@
                 $('[data-toggle="popover"]').popover();
                 $('.raty-icons').removeClass('hide');
             });
+                
+            $('.selectpicker').selectpicker({
+                dropupAuto: false,
+            });
 
 
 EOD;
