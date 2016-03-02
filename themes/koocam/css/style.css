@@ -2307,3 +2307,7 @@ input[type=button] {
 {
 	font-size:16px;
 }
+
+.search-btn span {
+    display: none;
+}

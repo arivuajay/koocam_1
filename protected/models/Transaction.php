@@ -123,6 +123,7 @@ class Transaction extends RActiveRecord {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
+        $alias = $this->getTableAlias(false, false);
 
         $criteria->compare('trans_id', $this->trans_id);
         $criteria->compare('user_id', $this->user_id);
@@ -141,6 +142,8 @@ class Transaction extends RActiveRecord {
             $type_expense = Transaction::TYPE_EXPENSE;
             $criteria->condition = "trans_type != '$type_expense'";
         }
+        
+        $criteria->order = "{$alias}.created_at DESC";
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

@@ -263,6 +263,45 @@
 	width:100%;
 }
 
+.logo
+{
+ z-index:1;
+ position:relative;
+}
+
+ .ddl-select {
+ display:block;
+}
+
+.search-bg .input-group .form-control {
+  float: none;
+}
+
+.search-bg .dropdown-toggle {
+  width: 100% !important;
+}
+
+.search-bg  .input-group {
+  display: block !important;
+}
+
+.search-bg .input-group-btn {
+  width: 100%;
+  display: block !important;
+}
+
+.search-bg .search-btn {
+ width:100%;
+ border-radius:0px;
+ margin-left:0px;
+ z-index:1;
+ position:relative;
+}
+
+.search-btn span {
+    display: inline-block;
+}
+
 }
 @media (min-width:768px) and (max-width:991px) {
  .nav > li > a {

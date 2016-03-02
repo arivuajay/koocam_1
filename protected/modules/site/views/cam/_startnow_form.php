@@ -90,7 +90,7 @@ $price_calculation = CamBooking::price_calculation($user_country_id, $cam_price,
                 <button type="button" class="btn  btn-cancel" data-dismiss="modal">Cancel</button>
                 <?php
                 echo CHtml::ajaxSubmitButton(
-                        'Pay Now !', array('/site/bookingtemp/booking'), array(
+                        'Start Now !', array('/site/bookingtemp/booking'), array(
                     'type' => 'POST',
                     'dataType' => 'json',
                     'success' => 'function(data) {

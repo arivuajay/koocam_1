@@ -52,7 +52,7 @@ $themeUrl = $this->themeUrl;
                     ?>
                     <div class="explore-btn <?php echo $hide_class; ?>" id="display_startnow"> 
                         <a class="btn btn-default  btn-lg explorebtn " href="#" data-target="#prebookingstartnow" data-toggle="modal"> 
-                            <i class="fa fa-money"></i> Pay Now
+                            <i class="fa fa-money"></i> Start Now
                         </a> 
                     </div>
                 </div>
@@ -148,7 +148,7 @@ $price_calculation = CamBooking::price_calculation($user_country_id, $cam_price,
             <div class="modal-footer" id="start-now-buttons">
                 <?php
                 echo CHtml::ajaxSubmitButton(
-                        'Pay Now !', array('/site/bookingtemp/booking'), array(
+                        'Start Now !', array('/site/bookingtemp/booking'), array(
                     'type' => 'POST',
                     'dataType' => 'json',
                     'success' => 'function(data) {

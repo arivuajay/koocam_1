@@ -22,6 +22,14 @@
                     ?>
 
                     <div class = "form-group form-control-material static">
+                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <?php echo $form->checkBox($user_profile, 'receive_invoice_email'); ?>
+                            <?php echo $form->labelEx($user_profile, 'receive_invoice_email'); ?>
+                            <?php echo $form->error($user_profile, 'receive_invoice_email'); ?>
+                        </div>
+                    </div>
+
+                    <div class = "form-group form-control-material static">
                         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
                             <?php echo $form->labelEx($user_profile, 'company_name'); ?>
                             <?php echo $form->textField($user_profile, 'company_name', array('class' => 'form-control', 'size' => 50, 'maxlength' => 50, 'data-trigger' => "hover", 'data-container' => "body", 'data-toggle' => "popover", 'data-placement' => "bottom", 'data-content' => "Your Company Name")); ?>
@@ -33,7 +41,7 @@
                             <?php echo $form->error($user_profile, 'company_id'); ?>
                         </div>
                     </div>
-                    
+
                     <div class = "form-group form-control-material static">
                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <?php echo $form->labelEx($user_profile, 'company_address'); ?>
@@ -41,7 +49,7 @@
                             <?php echo $form->error($user_profile, 'company_address'); ?>
                         </div>
                     </div>
-                    
+
                     <div class="form-group">
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 ">
                             <?php echo CHtml::submitButton('Edit', array('class' => 'btn btn-default btn-lg explorebtn form-btn')); ?>
@@ -49,7 +57,7 @@
                     </div>
                     <?php $this->endWidget(); ?>
                 </div>
-                
+
             </div>
         </div>
     </div>

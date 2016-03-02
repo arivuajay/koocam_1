@@ -130,12 +130,14 @@ class PurchaseController extends Controller {
     }
 
     public function actionChangereceiptstatus() {
-        if (Yii::app()->request->isAjaxRequest) {
-            $purchase = $this->loadModel($_GET['purchase_id']);
+        if (Yii::app()->request->isPostRequest && Yii::app()->request->getPost('Purchase')) {
+            $post = Yii::app()->request->getPost('Purchase');
+            $purchase = $this->loadModel($post['purchase_id']);
             $purchase->receipt_status = '1';
             $purchase->save(false);
+            Yii::app()->user->setFlash('success', 'Updated Successfully!!!');
+            $this->redirect(array('/admin/purchase/index'));
         }
-        exit;
     }
 
     /**

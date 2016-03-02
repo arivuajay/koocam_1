@@ -24,7 +24,7 @@ $form = $this->beginWidget('CActiveForm', array(
                 ?>
             </div>
             <span class="input-group-btn">
-                <?php echo CHtml::tag('button', array('class' => 'btn btn-info search-btn', 'type' => 'submit'), '<i class="fa fa-search fa-fw"></i>'); ?>
+                <?php echo CHtml::tag('button', array('class' => 'btn btn-info search-btn', 'type' => 'submit'), '<i class="fa fa-search fa-fw"></i><span>Search</span>'); ?>
             </span>
         </div>
         <div class="text-danger hide" id="search_error">Enter some text to search !!! </div>
