@@ -192,7 +192,7 @@ class BookingtempController extends Controller {
             if ($booking_model->save(false)) {
                 $booking_data['book_guid'] = $booking_model->book_guid;
                 Transaction::bookingTransaction($booking_model->book_id);
-                Purchase::insertPurchase($booking_model->book_id);
+                Purchase::insertPurchase($booking_model->book_id, $_POST['txn_id']);
 
                 CamTokens::generateToken($booking_model->book_guid);
 

@@ -141,14 +141,15 @@ class Purchase extends RActiveRecord {
         ));
     }
 
-    public static function insertPurchase($book_id) {
+    public static function insertPurchase($book_id, $txn_id) {
         $cam_booking = CamBooking::model()->findByPk($book_id);
         if (!empty($cam_booking)) {
             $purchase = Purchase::model()->findByAttributes(array('book_id' => $book_id, 'user_id' => $cam_booking->book_user_id));
             if (empty($purchase)) {
                 $model = new Purchase;
                 $model->attributes = array(
-                    'order_id' => Myclass::getPurchaseID(),
+//                    'order_id' => Myclass::getPurchaseID(),
+                    'order_id' => $txn_id,
                     'book_id' => $book_id,
                     'user_id' => $cam_booking->book_user_id
                 );
