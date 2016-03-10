@@ -72,7 +72,7 @@ $user_paypals = $model->userPaypals;
                                     $receive_invoice_email = 'email-notification.png';
                                 echo CHtml::image($themeUrl . "/images/{$receive_invoice_email}", '')
                                 ?>
-                                Receive invoices via email
+                                Provide the following information to receive invoices  via email
                             </div>
                         </div>
                         <div class="form-group">

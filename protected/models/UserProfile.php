@@ -119,7 +119,7 @@ class UserProfile extends RActiveRecord {
             'company_name' => 'Company Name',
             'company_id' => 'Company Id',
             'company_address' => 'Company Address',
-            'receive_invoice_email' => 'Receive invoices via email',
+            'receive_invoice_email' => 'Provide the following information to receive invoices  via email',
         );
     }
 
