@@ -116,12 +116,12 @@ class PurchaseController extends Controller {
         $purchase = $this->loadModel($id);
         $camBooking = $purchase->book;
 
-        if ($camBooking->camTokens->tutor_attendance == '0' || $camBooking->camTokens->learner_attendance == '0') {
-            $transaction = Transaction::model()->deleteAll('book_id = :book_id', array(":book_id" => $camBooking->book_id));
-            $purchase->delete();
-            $camBooking->delete();
-        }
-
+//        if ($camBooking->camTokens->tutor_attendance == '0' || $camBooking->camTokens->learner_attendance == '0') {
+        $transaction = Transaction::model()->deleteAll('book_id = :book_id', array(":book_id" => $camBooking->book_id));
+        $purchase->delete();
+        $camBooking->delete();
+//        }
+        
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
         if (!isset($_GET['ajax'])) {
             Yii::app()->user->setFlash('success', 'Purchase Deleted Successfully!!!');

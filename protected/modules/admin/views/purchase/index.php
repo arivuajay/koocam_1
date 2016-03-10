@@ -120,12 +120,12 @@ $this->rightCornerLink = CHtml::link('<i class="fa fa-plus"></i> Create purchase
                             ),
                             'delete' => array(
                                 'options' => array('class' => 'btn btn-danger btn-xs'),
-                                'visible' => function($row_number, $data) {
-                            if ($data->book->camTokens->tutor_attendance == '1' && $data->book->camTokens->learner_attendance == '1') {
-                                return false;
-                            }
-                            return true;
-                        },
+//                                'visible' => function($row_number, $data) {
+//                            if ($data->book->camTokens->tutor_attendance == '1' && $data->book->camTokens->learner_attendance == '1') {
+//                                return false;
+//                            }
+//                            return true;
+//                        },
                             ),
                         ),
                     )
