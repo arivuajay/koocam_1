@@ -39,6 +39,7 @@ class CamBooking extends RActiveRecord {
     public $minutes;
     public $dist_date;
     public $is_message;
+    public $cam_booking_tutor_id;
 
     const CAM_BOOKING_SESSION = 2;
     const HOUR_MIN = 0;
@@ -105,7 +106,7 @@ class CamBooking extends RActiveRecord {
 //            array('hours', 'durationValidate'),
             array('book_start_time', 'bookingValidate'),
 //            array('book_start_time', 'date', 'format' => Yii::app()->localtime->getLocalDateTimeFormat('short', 'short')),
-            array('book_approved_time, book_payment_info, modified_at, book_session, is_message, book_message, book_declined_time, book_duration', 'safe'),
+            array('book_approved_time, book_payment_info, modified_at, book_session, is_message, book_message, book_declined_time, book_duration, cam_booking_tutor_id', 'safe'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('book_id, book_guid, cam_id, book_user_id, book_date, book_start_time, book_end_time, book_is_extra, book_cam_price, book_extra_price, book_total_price, book_message, book_approve, book_approved_time, book_payment_status, book_payment_info, created_at, modified_at', 'safe', 'on' => 'search'),
@@ -218,6 +219,11 @@ class CamBooking extends RActiveRecord {
         $criteria->compare('book_payment_info', $this->book_payment_info, true);
         $criteria->compare('created_at', $this->created_at, true);
         $criteria->compare('modified_at', $this->modified_at, true);
+        
+        if(isset($this->cam_booking_tutor_id) && $this->cam_booking_tutor_id != '')
+            $criteria->compare('cam.tutor_id', $this->cam_booking_tutor_id);
+
+        $criteria->with = array('cam');
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

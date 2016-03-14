@@ -70,7 +70,7 @@ class UserController extends Controller {
         
         $job_model = new CamBooking('search');
         $job_model->unsetAttributes();
-        $job_model->cam->tutor_id = $id;
+        $job_model->cam_booking_tutor_id = $id;
 
         $payments_model = new Transaction('search');
         $payments_model->unsetAttributes();

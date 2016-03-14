@@ -228,7 +228,7 @@ class Cam extends RActiveRecord {
             'camComments' => array(self::HAS_MANY, 'CamComments', 'cam_id'),
             'camExtras' => array(self::HAS_ONE, 'CamExtra', 'cam_id'),
             'tutor' => array(self::BELONGS_TO, 'User', 'tutor_id'),
-            'camBookings' => array(self::HAS_MANY, 'CamBooking', 'book_id'),
+            'camBookings' => array(self::HAS_MANY, 'CamBooking', 'cam_id'),
         );
     }
 
