@@ -140,7 +140,7 @@ class Transaction extends RActiveRecord {
         
         if($this->userPayments){
             $type_expense = Transaction::TYPE_EXPENSE;
-            $criteria->condition = "trans_type != '$type_expense'";
+            $criteria->addCondition("trans_type != '$type_expense'");
         }
         
         $criteria->order = "{$alias}.created_at DESC";

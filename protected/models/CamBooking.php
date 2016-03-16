@@ -200,25 +200,26 @@ class CamBooking extends RActiveRecord {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
+        $alias = $this->getTableAlias(false, false);
 
-        $criteria->compare('book_id', $this->book_id);
-        $criteria->compare('book_guid', $this->book_guid, true);
-        $criteria->compare('cam_id', $this->cam_id);
-        $criteria->compare('book_user_id', $this->book_user_id);
-        $criteria->compare('book_date', $this->book_date, true);
-        $criteria->compare('book_start_time', $this->book_start_time, true);
-        $criteria->compare('book_end_time', $this->book_end_time, true);
-        $criteria->compare('book_is_extra', $this->book_is_extra, true);
-        $criteria->compare('book_cam_price', $this->book_cam_price, true);
-        $criteria->compare('book_extra_price', $this->book_extra_price, true);
-        $criteria->compare('book_total_price', $this->book_total_price, true);
-        $criteria->compare('book_message', $this->book_message, true);
-        $criteria->compare('book_approve', $this->book_approve, true);
-        $criteria->compare('book_approved_time', $this->book_approved_time, true);
-        $criteria->compare('book_payment_status', $this->book_payment_status, true);
-        $criteria->compare('book_payment_info', $this->book_payment_info, true);
-        $criteria->compare('created_at', $this->created_at, true);
-        $criteria->compare('modified_at', $this->modified_at, true);
+        $criteria->compare($alias . '.book_id', $this->book_id);
+        $criteria->compare($alias . '.book_guid', $this->book_guid, true);
+        $criteria->compare($alias . '.cam_id', $this->cam_id);
+        $criteria->compare($alias . '.book_user_id', $this->book_user_id);
+        $criteria->compare($alias . '.book_date', $this->book_date, true);
+        $criteria->compare($alias . '.book_start_time', $this->book_start_time, true);
+        $criteria->compare($alias . '.book_end_time', $this->book_end_time, true);
+        $criteria->compare($alias . '.book_is_extra', $this->book_is_extra, true);
+        $criteria->compare($alias . '.book_cam_price', $this->book_cam_price, true);
+        $criteria->compare($alias . '.book_extra_price', $this->book_extra_price, true);
+        $criteria->compare($alias . '.book_total_price', $this->book_total_price, true);
+        $criteria->compare($alias . '.book_message', $this->book_message, true);
+        $criteria->compare($alias . '.book_approve', $this->book_approve, true);
+        $criteria->compare($alias . '.book_approved_time', $this->book_approved_time, true);
+        $criteria->compare($alias . '.book_payment_status', $this->book_payment_status, true);
+        $criteria->compare($alias . '.book_payment_info', $this->book_payment_info, true);
+        $criteria->compare($alias . '.created_at', $this->created_at, true);
+        $criteria->compare($alias . '.modified_at', $this->modified_at, true);
         
         if(isset($this->cam_booking_tutor_id) && $this->cam_booking_tutor_id != '')
             $criteria->compare('cam.tutor_id', $this->cam_booking_tutor_id);

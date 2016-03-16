@@ -28,7 +28,7 @@
                 <div class="form-group forgot-password"> 
                     <a href="#" data-toggle="modal" data-target=".bs-example-modal-sm1" data-dismiss=".bs-example-modal-sm2" id="forgot-login-button"> Login ? </a> 
                 </div>
-                
+
                 <div class="form-group"> 
                     <?php
                     echo CHtml::ajaxSubmitButton(

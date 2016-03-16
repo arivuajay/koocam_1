@@ -57,6 +57,7 @@ $this->rightCornerLink = CHtml::link('<i class="fa fa-plus"></i> Create cam', ar
                         'class' => 'application.components.MyActionButtonColumn',
                         'htmlOptions' => array('class' => 'text-center', 'style' => 'width: 150px;'),
                         'template' => '{view}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{update}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{delete}',
+                        'afterDelete'=>'function(link,success,data){ if(data == "1") alert("This cam contains some bookings, So you can\'t delete this cam"); }'
                     )
                 );
 

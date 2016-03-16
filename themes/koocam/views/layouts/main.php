@@ -70,31 +70,39 @@
         $login = Yii::app()->createAbsoluteUrl('/site/default/signupsocial');
 
         $js = <<< EOD
+            $('.modal').on('hidden.bs.modal', function (e) {
+                $("body").removeClass("modal-open");
+            });
+
+            $('.modal').on('shown.bs.modal', function (e) {
+                $("body").addClass("modal-open");
+            });
+                
+            $('.oAuthLogin').click(function(e) {
+                var _frameUrl = "$login?provider=" + $(this).data('provider');
+                window.open(_frameUrl, "SignIn", "width=580,height=480,toolbar=0,scrollbars=1,status=0,resizable=0,location=0,menuBar=0,left=400,top=150");
+                e.preventDefault();
+                return false;
+            });
+
+            $('#login-button').on('click', function(){
+                $('.bs-example-modal-sm').modal('toggle');
+            });
+
+            $('#signup-button').on('click', function(){
+                $('.bs-example-modal-sm1').modal('toggle');
+            });
+
+            $('#forgot-button').on('click', function(){
+                $('.bs-example-modal-sm1').modal('toggle');
+            });
+
+            $('#forgot-login-button').on('click', function(){
+                $('.bs-example-modal-fg2').modal('toggle');
+            });
+                
             jQuery(document).ready(function ($) {
                 $('.raty-icons').addClass('hide');
-                
-                $('.oAuthLogin').click(function(e) {
-                    var _frameUrl = "$login?provider=" + $(this).data('provider');
-                    window.open(_frameUrl, "SignIn", "width=580,height=480,toolbar=0,scrollbars=1,status=0,resizable=0,location=0,menuBar=0,left=400,top=150");
-                    e.preventDefault();
-                    return false;
-                });
-                
-                $('#login-button').on('click', function(){
-                    $('.bs-example-modal-sm').modal('toggle');
-                });
-                
-                $('#signup-button').on('click', function(){
-                    $('.bs-example-modal-sm1').modal('toggle');
-                });
-                
-                $('#forgot-button').on('click', function(){
-                    $('.bs-example-modal-sm1').modal('toggle');
-                });
-                
-                $('#forgot-login-button').on('click', function(){
-                    $('.bs-example-modal-fg2').modal('toggle');
-                });
                 
                 $('input:checkbox:not(.simple),input:radio').iCheck({
                     checkboxClass: 'icheckbox_flat-blue',
@@ -135,7 +143,6 @@
             $('.selectpicker').selectpicker({
                 dropupAuto: false,
             });
-
 
 EOD;
 
