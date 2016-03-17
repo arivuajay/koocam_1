@@ -57,7 +57,7 @@ $this->rightCornerLink = CHtml::link('<i class="fa fa-plus"></i> Create cam', ar
                         'class' => 'application.components.MyActionButtonColumn',
                         'htmlOptions' => array('class' => 'text-center', 'style' => 'width: 150px;'),
                         'template' => '{view}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{update}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{delete}',
-                        'afterDelete'=>'function(link,success,data){ if(data == "1") alert("This cam contains some bookings, So you can\'t delete this cam"); }'
+                        'afterDelete'=>'function(link,success,data){ alert(data); }'
                     )
                 );
 
@@ -68,7 +68,8 @@ $this->rightCornerLink = CHtml::link('<i class="fa fa-plus"></i> Create cam', ar
                     'responsiveTable' => true,
                     "itemsCssClass" => "table v-middle",
                     'template' => '<div class="panel panel-default"><div class="table-responsive">{items}{pager}</div></div>',
-                    'columns' => $gridColumns
+                    'columns' => $gridColumns,
+                    'rowCssClassExpression'=> '($data->status == 2) ? "info text-danger" : ""',
                         )
                 );
                 ?>

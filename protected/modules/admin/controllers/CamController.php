@@ -176,19 +176,29 @@ class CamController extends Controller {
      * @param integer $id the ID of the model to be deleted
      */
     public function actionDelete($id) {
-        $cam = $this->loadModel($id);
+//        $cam = $this->loadModel($id);
+//        
+//        if(!empty($cam->camBookings)){
+//            echo '1';
+//            exit;
+//        }
+//        $cam->delete();
         
-        if(!empty($cam->camBookings)){
-            echo '1';
-            exit;
-        }
-        $cam->delete();
+        $model = $this->loadModel($id);
+
+        $valid = $model->saveAttributes(array('status' => '2'));
+        if ($valid):
+            echo "Cam Deleted successfully";
+        else:
+            echo "Failed to delete. Try again later.";
+        endif;
 
         // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
         if (!isset($_GET['ajax'])) {
             Yii::app()->user->setFlash('success', 'Cam Deleted Successfully!!!');
             $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('/admin/cam/index'));
         }
+        exit;
     }
 
     /**
