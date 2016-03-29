@@ -29,6 +29,9 @@ class Controller extends CController {
     public $themeUrl = '';
     public $title = '';
     public $rightCornerLink = '';
+    public $ogvideo = '';
+    public $ogimage = '';
+    public $ogurl = '';
 
     public function init() {
         parent::init();

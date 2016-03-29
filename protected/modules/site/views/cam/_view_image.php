@@ -3,6 +3,9 @@
 /* @var $model Cam */
 
 $defaultImage = $model->camimage;
+$this->ogurl = Yii::app()->createAbsoluteUrl('/site/cam/view', array('slug' => $model->slug));
+$this->ogimage = $model->ogcamimage;
+$this->ogvideo = $model->ogcamvideo;
 ?>
 <div class="course-img">
     <div class="price-bg"> <?php echo $model->cam_duration; ?> min<br/>

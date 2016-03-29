@@ -217,7 +217,7 @@ class CamController extends Controller {
     }
 
     public function loadModelSlug($slug) {
-        $model = Cam::model()->findByAttributes(array('slug' => $slug));
+        $model = Cam::model()->active()->findByAttributes(array('slug' => $slug));
         if ($model === null)
             throw new CHttpException(404, 'The requested page does not exist.');
         return $model;

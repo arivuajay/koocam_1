@@ -345,12 +345,12 @@ class Cam extends RActiveRecord {
     }
 
     protected function afterFind() {
-        if(Yii::app()->controller->id == "cam" && (Yii::app()->controller->action->id == "create" || Yii::app()->controller->action->id == "update")){
+        if (Yii::app()->controller->id == "cam" && (Yii::app()->controller->action->id == "create" || Yii::app()->controller->action->id == "update")) {
             $this->cam_title = $this->cam_title;
         } else {
             $this->cam_title = $this->cam_title_prefix . " " . $this->cam_title;
         }
-        
+
         if ($this->is_extra == 'Y') {
             $this->extra_price = $this->camExtras->extra_price;
             $this->extra_description = $this->camExtras->extra_description;
@@ -370,7 +370,7 @@ class Cam extends RActiveRecord {
 
         parse_str(parse_url($this->cam_youtube_url, PHP_URL_QUERY), $my_array_of_vars);
         $this->video_id = $my_array_of_vars['v'];
-        
+
         return parent::afterFind();
     }
 
@@ -427,9 +427,9 @@ class Cam extends RActiveRecord {
             $this->validatorList->add(CValidator::createValidator('isEmbeddableYoutubeURL', $this, 'cam_youtube_url'));
         } else {
 //            $this->validatorList->add(CValidator::createValidator('file', $this, 'cam_media', array('types' => self::CAM_ALLOW_FILE_TYPES, 'maxSize' => 1024 * 1024 * self::CAM_ALLOW_FILE_SIZE, 'tooLarge' => 'File has to be smaller than ' . self::CAM_ALLOW_FILE_SIZE . 'MB', 'allowEmpty' => $this->is_video == 'Y', 'on' => 'create')));
-            
+
             $this->validatorList->add(CValidator::createValidator('file', $this, 'cam_media', array('types' => self::CAM_ALLOW_FILE_TYPES, 'maxSize' => 1024 * 1024 * self::CAM_ALLOW_FILE_SIZE, 'tooLarge' => 'File has to be smaller than ' . self::CAM_ALLOW_FILE_SIZE . 'MB', 'allowEmpty' => true, 'on' => 'create')));
-            
+
             $this->validatorList->add(CValidator::createValidator('file', $this, 'cam_media', array('types' => self::CAM_ALLOW_FILE_TYPES, 'maxSize' => 1024 * 1024 * self::CAM_ALLOW_FILE_SIZE, 'tooLarge' => 'File has to be smaller than ' . self::CAM_ALLOW_FILE_SIZE . 'MB', 'allowEmpty' => $this->is_video == 'Y', 'on' => 'admin_create')));
         }
 
@@ -450,6 +450,30 @@ class Cam extends RActiveRecord {
             $url = Yii::app()->createAbsoluteUrl($path);
         }
         return CHtml::image($url, '', $htmlOptions);
+    }
+
+    public function getOgcamimage() {
+        if ($this->is_video == 'N' && empty($this->cam_youtube_url)) {
+            if (!empty($this->cam_media))
+                $path = UPLOAD_DIR . '/users/' . $this->tutor_id . $this->cam_media;
+            if (!isset($path) || !is_file($path))
+                $path = 'themes/koocam/images/cam-img.jpg';
+            $url = Yii::app()->createAbsoluteUrl($path);
+        }else if ($this->is_video == 'Y' && !empty($this->cam_youtube_url)) {
+            $url = "http://img.youtube.com/vi/{$this->video_id}/hqdefault.jpg";
+        } else {
+            $path = 'themes/koocam/images/cam-img.jpg';
+            $url = Yii::app()->createAbsoluteUrl($path);
+        }
+        return $url;
+    }
+
+    public function getOgcamvideo() {
+        $url = '';
+        if ($this->is_video == 'Y' && !empty($this->cam_youtube_url)) {
+            $url = $this->cam_youtube_url;
+        }
+        return $url;
     }
 
     public function getCamthumb($htmlOptions = array(), $extraOptions = array()) {
