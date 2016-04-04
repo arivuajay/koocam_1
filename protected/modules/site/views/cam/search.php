@@ -12,9 +12,13 @@ else
 $themeUrl = $this->themeUrl;
 
 $cover_image = '';
+
 if ($category_id) {
     $cam_category = CamCategory::model()->findByPk($category_id);
     $cover_image = 'background: #222 url(' . $cam_category->coverimageurl . ') no-repeat scroll center center / cover ;';
+    
+    $this->ogurl = Yii::app()->createAbsoluteUrl('/site/cam/search', array('category_id' => $category_id));
+    $this->ogimage = $cam_category->coverimageurl;
 }
 ?>
 

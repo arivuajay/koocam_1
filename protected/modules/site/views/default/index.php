@@ -5,6 +5,8 @@
 
 $this->title = 'Koocam - Home';
 $themeUrl = $this->themeUrl;
+$this->ogurl = Yii::app()->createAbsoluteUrl('/site/default/index');
+$this->ogimage = Yii::app()->createAbsoluteUrl('/') . $themeUrl . '/images/share_logo.jpg';
 ?>
 
 <div id="home" class="tt-fullHeight">
