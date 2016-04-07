@@ -18,8 +18,8 @@ if ($category_id) {
     $cover_image = 'background: #222 url(' . $cam_category->coverimageurl . ') no-repeat scroll center center / cover ;';
     
     $this->ogurl = Yii::app()->createAbsoluteUrl('/site/cam/search', array('category_id' => $category_id));
-    $this->ogimage = $cam_category->coverimageurl;
 }
+$this->ogimage = Yii::app()->createAbsoluteUrl('/') . $themeUrl . '/images/logo_share.jpg';
 ?>
 
 <div id="inner-banner" class="tt-fullHeight3 category_search" style = "<?php echo $cover_image; ?>">
