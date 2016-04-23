@@ -661,7 +661,8 @@ class DefaultController extends Controller {
 
     protected function tutorBeforePaypalAlert() {
         $tutor_id = Yii::app()->user->id;
-        $current_date = date("Y-m-d H:i:s");
+//        $current_date = date("Y-m-d H:i:s");
+        $current_date = Yii::app()->localtime->getUTCNow('Y-m-d H:i:s');
         $temp_booking = BookingTemp::model()->find(array(
             "condition" => "tutor_id = :tutor_id AND status = :status AND created_at > :lasttime",
             "params" => array(":tutor_id" => $tutor_id, ":status" => "0", ":lasttime" => date("Y-m-d H:i:s", strtotime("-3 minutes", strtotime($current_date))))
