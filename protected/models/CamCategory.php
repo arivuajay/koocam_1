@@ -146,6 +146,8 @@ class CamCategory extends RActiveRecord {
         $criteria->compare($alias . '.modified_at', $this->modified_at, true);
         $criteria->compare($alias . '.created_by', $this->created_by);
         $criteria->compare($alias . '.modified_by', $this->modified_by);
+        
+        $criteria->order = "{$alias}.created_at DESC";
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

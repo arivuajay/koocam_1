@@ -36,7 +36,7 @@ $this->breadcrumbs = array(
                                     </div>
                                     <div class="row">
                                         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 message-txt"> 
-                                            <?php echo $mdisplay; ?>
+                                            <?php echo nl2br($mdisplay); ?>
                                         </div>
                                         <?php if ($messages['cam_id']) { ?>
                                             <?php $cam = Cam::model()->findByPk($messages['cam_id']); ?>

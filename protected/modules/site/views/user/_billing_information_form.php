@@ -15,9 +15,9 @@
                         'action' => $this->createUrl('/site/user/editbillinginformaiton'),
                         'htmlOptions' => array('role' => 'form', 'class' => ''),
                         'clientOptions' => array(
-                            'validateOnSubmit' => true,
+                            'validateOnSubmit' => false,
                         ),
-                        'enableAjaxValidation' => true,
+                        'enableAjaxValidation' => false,
                     ));
                     ?>
 
@@ -52,7 +52,7 @@
 
                     <div class="form-group">
                         <div class="col-xs-12 col-sm-4 col-md-4 col-lg-4 ">
-                            <?php echo CHtml::submitButton('Edit', array('class' => 'btn btn-default btn-lg explorebtn form-btn')); ?>
+                            <?php echo CHtml::submitButton('Done', array('class' => 'btn btn-default btn-lg explorebtn form-btn')); ?>
                         </div>
                     </div>
                     <?php $this->endWidget(); ?>

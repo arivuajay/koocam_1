@@ -21,9 +21,9 @@
 class Contactus extends RActiveRecord {
 
     public $verifyCode;
-    
+
     public function init() {
-        if(!Yii::app()->user->isGuest){
+        if (!Yii::app()->user->isGuest) {
             $user = User::model()->findByPk(Yii::app()->user->id);
             $this->contact_email = $user->email;
             $this->contact_name = $user->username;
@@ -77,7 +77,7 @@ class Contactus extends RActiveRecord {
             array('contact_name, contact_email', 'length', 'max' => 255),
             array('contact_category', 'length', 'max' => 2),
             array('created_at, modified_at, verifyCode, status, contact_reply', 'safe'),
-            array('verifyCode', 'captcha', 'allowEmpty' => !CCaptcha::checkRequirements(), 'captchaAction'=>'/site/default/captcha', 'skipOnError'=>true, 'on' => 'user'),
+            array('verifyCode', 'captcha', 'allowEmpty' => !CCaptcha::checkRequirements(), 'captchaAction' => '/site/default/captcha', 'skipOnError' => true, 'on' => 'user'),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
             array('contact_id, contact_name, contact_email, contact_message, user_id, contact_category, created_at, modified_at, verifyCode, status, contact_reply', 'safe', 'on' => 'search'),
@@ -130,6 +130,7 @@ class Contactus extends RActiveRecord {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
         $criteria = new CDbCriteria;
+        $alias = $this->getTableAlias(false, false);
 
         $criteria->compare('contact_id', $this->contact_id);
         $criteria->compare('contact_name', $this->contact_name, true);
@@ -139,6 +140,8 @@ class Contactus extends RActiveRecord {
         $criteria->compare('contact_category', $this->contact_category, true);
         $criteria->compare('created_at', $this->created_at, true);
         $criteria->compare('modified_at', $this->modified_at, true);
+
+        $criteria->order = "{$alias}.created_at DESC";
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,

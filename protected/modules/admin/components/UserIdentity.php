@@ -63,6 +63,8 @@ class UserIdentity extends CUserIdentity {
         $this->_id = $admin->admin_id;
         $this->setState('name', $admin->username);
         $this->setState('id', $admin->admin_id);
+        Yii::app()->localtime->Locale = 'en_us';
+        Yii::app()->localtime->TimeZone = 'Asia/Jerusalem';
         return;
     }
 }

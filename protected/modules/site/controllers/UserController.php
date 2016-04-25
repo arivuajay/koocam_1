@@ -126,8 +126,9 @@ class UserController extends Controller {
         if (empty($user_profile)) {
             $user_profile = new UserProfile;
         }
-        $user_profile->scenario = 'billing_information';
-        $this->performAjaxValidation($user_profile);
+        //Hide by Nad. at 2016-04-25
+//        $user_profile->scenario = 'billing_information';
+//        $this->performAjaxValidation($user_profile);
         
         if (Yii::app()->request->isPostRequest && Yii::app()->request->getPost('UserProfile')) {
             $user_profile->attributes = Yii::app()->request->getPost('UserProfile');

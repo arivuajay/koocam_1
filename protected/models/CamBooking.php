@@ -225,6 +225,8 @@ class CamBooking extends RActiveRecord {
             $criteria->compare('cam.tutor_id', $this->cam_booking_tutor_id);
 
         $criteria->with = array('cam');
+        
+        $criteria->order = "{$alias}.created_at DESC";
 
         return new CActiveDataProvider($this, array(
             'criteria' => $criteria,
@@ -356,6 +358,7 @@ class CamBooking extends RActiveRecord {
     public function sendMailtoTutor() {
         $tutor = $this->cam->tutor;
         $learner = $this->bookUser;
+        Yii::app()->localtime->TimeZone = $tutor->userTimezone->name;
         $book_date = date(PHP_SHORT_DATE_FORMAT, strtotime($this->book_date));
 
         $mail = new Sendmail;
@@ -369,6 +372,7 @@ class CamBooking extends RActiveRecord {
             "{FROM_TIME}" => date('H:i', strtotime(Yii::app()->localtime->fromUTC($this->book_start_time))),
             "{TO_TIME}" => date('H:i', strtotime(Yii::app()->localtime->fromUTC($this->book_end_time))),
         );
+        
         $message = $mail->getMessage('cam_booking_tutor', $trans_array);
         $Subject = $mail->translate("New Booking For Your CAM ({$this->cam->cam_title})");
         $mail->send($tutor->email, $Subject, $message);
@@ -377,6 +381,7 @@ class CamBooking extends RActiveRecord {
     public function sendMailtoLearner() {
         $tutor = $this->cam->tutor;
         $learner = $this->bookUser;
+        Yii::app()->localtime->TimeZone = $learner->userTimezone->name;
         $book_date = date(PHP_SHORT_DATE_FORMAT, strtotime($this->book_date));
         
         $mail = new Sendmail;

@@ -143,6 +143,7 @@ $js = <<< EOD
                 data:{'user_id' : $user_id},
                 success:function(data){
                     $('#idle-warning').modal('toggle');
+                    location.reload(); 
                 },
                 error: function(data) {
                 },
@@ -189,7 +190,7 @@ Yii::app()->clientScript->registerScript('_ajaxrun', $js);
                         <p> <a href="#" class="btn btn-default"> <b id="logout_clock"></b></a> </p> 
                     </div>
                     <div class="clearfix"></div>
-                    <p> <h4 id="idle-warning-message">Kindly Click the below link and Stay Logged in.. Otherwise you will be logged out within 15 seconds.</h4> </p>
+                    <p> <h4 id="idle-warning-message">Kindly Click the below link and Stay Logged in.. Otherwise you will be logged out within 10 mins.</h4> </p>
                     <div class="form-group">
                         <div class="row"> 
                             <div class="col-xs-6 col-sm-6 col-md-6 col-lg-12">                

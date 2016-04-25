@@ -35,7 +35,7 @@ if ($u2 != $session_userid) {
                                         <b> <a href="#"><?php echo $user->profileimage ?></a></b> 
                                     </div>
                                     <div class="col-xs-12 col-sm-7 col-md-9 col-lg-9">
-                                        <?php echo $minfos['message']; ?>
+                                        <?php echo nl2br($minfos['message']); ?>
                                     </div>
                                     <div class="col-xs-12 col-sm-3 col-md-2 col-lg-2">
                                         <div class="replymsg-details">
